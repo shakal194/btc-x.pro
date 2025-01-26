@@ -39,12 +39,12 @@ export default function Footer() {
 
         {/* Правый блок с кнопками */}
         <div className='flex items-center space-x-4'>
-          <div className='group relative flex h-[65px] w-[65px] items-center justify-center rounded-full border border-[#FE9900] bg-[#111111] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r'>
-            <Link
-              href='https://www.instagram.com/btc_x.pro'
-              target='_blank'
-              rel='noopener noreferrer'
-            >
+          <Link
+            href='https://www.instagram.com/btc_x.pro'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <div className='group relative flex h-[65px] w-[65px] items-center justify-center rounded-full border border-[#FE9900] bg-[#111111] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r'>
               <svg
                 width='23'
                 height='23'
@@ -68,15 +68,14 @@ export default function Footer() {
                   </clipPath>
                 </defs>
               </svg>
-            </Link>
-          </div>
-
-          <div className='group relative flex h-[65px] w-[65px] items-center justify-center rounded-full border border-[#FE9900] bg-[#111111] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r'>
-            <Link
-              href='https://t.me/+7_3pToHuJwJhZTVi'
-              target='_blank'
-              rel='noopener noreferrer'
-            >
+            </div>
+          </Link>
+          <Link
+            href='https://t.me/+7_3pToHuJwJhZTVi'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <div className='group relative flex h-[65px] w-[65px] items-center justify-center rounded-full border border-[#FE9900] bg-[#111111] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r'>
               <svg
                 width='23'
                 height='19'
@@ -87,15 +86,14 @@ export default function Footer() {
               >
                 <path d='M1.06126 9.75476L6.04493 11.4473L17.8767 4.21393C18.0482 4.10903 18.224 4.34197 18.076 4.47813L9.11849 12.7231L8.78538 17.3391C8.76002 17.6902 9.183 17.8857 9.43403 17.6389L12.1921 14.9268L17.234 18.7436C17.7774 19.1551 18.5644 18.8651 18.711 18.1994L22.2217 2.25891C22.4219 1.34955 21.5309 0.58221 20.6613 0.915227L1.0359 8.4303C0.420262 8.66607 0.43703 9.54279 1.06126 9.75476Z' />
               </svg>
-            </Link>
-          </div>
-
-          <div className='group relative flex h-[65px] w-[65px] items-center justify-center rounded-full border border-[#FE9900] bg-[#111111] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r'>
-            <Link
-              href='https://www.youtube.com/@BTC-X'
-              target='_blank'
-              rel='noopener noreferrer'
-            >
+            </div>
+          </Link>
+          <Link
+            href='https://www.youtube.com/@BTC-X'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <div className='group relative flex h-[65px] w-[65px] items-center justify-center rounded-full border border-[#FE9900] bg-[#111111] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r'>
               <svg
                 width='23'
                 height='17'
@@ -106,15 +104,14 @@ export default function Footer() {
               >
                 <path d='M21.4887 2.22301C20.7066 1.2933 19.2626 0.914062 16.5049 0.914062H6.49456C3.67377 0.914062 2.20533 1.31776 1.42617 2.30758C0.666504 3.27265 0.666504 4.69462 0.666504 6.66265V10.4137C0.666504 14.2264 1.56784 16.1622 6.49456 16.1622H16.505C18.8964 16.1622 20.2216 15.8276 21.0789 15.0071C21.9581 14.1657 22.3332 12.792 22.3332 10.4137V6.66265C22.3332 4.58719 22.2744 3.15684 21.4887 2.22301ZM14.5766 9.05605L10.0309 11.4318C9.92928 11.4849 9.81815 11.5112 9.70716 11.5112C9.5815 11.5112 9.45611 11.4774 9.34505 11.4102C9.13593 11.2834 9.00824 11.0568 9.00824 10.8123V6.07611C9.00824 5.83205 9.13558 5.60559 9.34428 5.47881C9.55305 5.35202 9.8127 5.34336 10.0293 5.45589L14.575 7.81629C14.8062 7.93637 14.9515 8.17512 14.9518 8.43561C14.9521 8.69631 14.8075 8.93541 14.5766 9.05605Z' />
               </svg>
-            </Link>
-          </div>
-
-          <div className='group relative flex h-[65px] w-[65px] items-center justify-center rounded-full border border-[#FE9900] bg-[#111111] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r'>
-            <Link
-              href='https://www.instagram.com/btc_x.pro'
-              target='_blank'
-              rel='noopener noreferrer'
-            >
+            </div>
+          </Link>
+          <Link
+            href='https://www.instagram.com/btc_x.pro'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <div className='group relative flex h-[65px] w-[65px] items-center justify-center rounded-full border border-[#FE9900] bg-[#111111] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r'>
               <svg
                 width='23'
                 height='23'
@@ -139,8 +136,8 @@ export default function Footer() {
                   transform='rotate(-34.928 5.62329 3.23828)'
                 />
               </svg>
-            </Link>
-          </div>
+            </div>
+          </Link>
         </div>
       </div>
       <div className='mb-[60px] border-[0.5px] border-white opacity-[20%]'></div>

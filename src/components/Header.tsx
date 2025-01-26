@@ -3,8 +3,8 @@ import Link from 'next/link';
 
 export default function Header() {
   return (
-    <header className='bg-black py-4 text-white'>
-      <div className='container mx-auto flex w-[1340px] items-center justify-between rounded-lg border border-gray-400 px-5 py-3 backdrop-blur-md'>
+    <header className='bg-black text-white'>
+      <div className='container mx-auto mt-4 flex w-[1340px] items-center justify-between rounded-lg border border-gray-400 px-5 py-3 backdrop-blur-md'>
         <nav className='flex items-center space-x-6'>
           <Link
             href='#'
