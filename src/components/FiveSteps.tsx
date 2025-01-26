@@ -3,8 +3,8 @@ import Link from 'next/link';
 
 export default function FiveSteps() {
   return (
-    <section className='rounded-b-xl bg-[#F4F4F4] py-16 text-black'>
-      <div className='container mx-auto my-16 w-[1340px] px-4'>
+    <section className='rounded-b-xl bg-[#F4F4F4] py-[100px] pb-[100px] text-black'>
+      <div className='container mx-auto w-[1340px] px-4'>
         <div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
           <div className='rounded-xl px-[45px] py-[60px] shadow-lg'>
             <p className='mb-[24px] w-[250px] font-ibm opacity-[33%]'>
@@ -169,7 +169,7 @@ export default function FiveSteps() {
                           alt='Star'
                           width={15}
                           height={15}
-                          className='rounded-full'
+                          className='h-[15px] w-[15px] rounded-full'
                         />
                       ))}
                     </div>

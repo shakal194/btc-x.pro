@@ -4,7 +4,7 @@ import Link from 'next/link';
 export default function PlatformStats() {
   return (
     <>
-      <section className='rounded-t-xl bg-[#F4F4F4] py-16 text-black'>
+      <section className='rounded-t-xl bg-[#F4F4F4] py-[100px] pb-[100px] text-black'>
         <div className='container mx-auto w-[1340px] px-4'>
           {/* Статистика */}
           <div className='mb-12 flex items-center justify-between'>
@@ -30,6 +30,7 @@ export default function PlatformStats() {
                       alt='Live Icon'
                       width={6}
                       height={6}
+                      className='h-[6px] w-[6px]'
                     ></Image>
                     <p className='ml-[3px] font-ibm leading-[130%] tracking-tight text-[#69DF40]'>
                       Live
@@ -62,6 +63,7 @@ export default function PlatformStats() {
                       alt='Live Icon'
                       width={6}
                       height={6}
+                      className='h-[6px] w-[6px]'
                     ></Image>
                     <p className='ml-[3px] font-ibm leading-[130%] tracking-tight text-[#69DF40]'>
                       Live
@@ -124,6 +126,7 @@ export default function PlatformStats() {
                     alt='Arrow'
                     width={42}
                     height={42}
+                    className='h-[42px] w-[42px]'
                   ></Image>
                   <div className='rounded-full border px-5 py-3 text-center'>
                     <p>Коли виводите гроші з нашої торгової площадки</p>
@@ -136,7 +139,7 @@ export default function PlatformStats() {
                     alt='Arrow'
                     width={42}
                     height={42}
-                    className='rotate-180'
+                    className='h-[42px] w-[42px] rotate-180'
                   ></Image>
                   <div className='rounded-full border px-5 py-3 text-center'>
                     <p>Коли берете кредитне плече</p>
@@ -177,16 +180,14 @@ export default function PlatformStats() {
                     вас не можуть ліквідувати
                   </span>
                 </p>
-                <div className='w-[217px] rounded-full border px-5 py-3 text-center'>
-                  <Link
-                    href='https://onelink.to/js2s8h'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className='text-primary font-bold leading-[100%] transition'
-                  >
-                    Перейти в додаток
-                  </Link>
-                </div>
+                <Link
+                  href='https://onelink.to/js2s8h'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='w-[217px] rounded-full border px-5 py-3 text-center text-primary font-bold leading-[100%] transition hover:bg-[#FD6B06] hover:text-white'
+                >
+                  Перейти в додаток
+                </Link>
               </div>
             </div>
             {/* Блок 3 */}
@@ -221,22 +222,20 @@ export default function PlatformStats() {
                   </span>{' '}
                   щоб ви могли зосередитися на своїх фінансових цілях.
                 </p>
-                <div className='w-[217px] rounded-full border px-5 py-3 text-center'>
-                  <Link
-                    href='https://onelink.to/js2s8h'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className='text-primary font-bold leading-[100%] transition'
-                  >
-                    Перейти в додаток
-                  </Link>
-                </div>
+                <Link
+                  href='https://onelink.to/js2s8h'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='w-[217px] rounded-full border px-5 py-3 text-center text-primary font-bold leading-[100%] transition hover:bg-[#FD6B06] hover:text-white'
+                >
+                  Перейти в додаток
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </section>
-      <section className='bg-white py-16 text-black'>
+      <section className='bg-white py-[100px] text-black'>
         {/* Миссия */}
         <div className='container mx-auto mt-16 flex w-[1020px] flex-col items-center'>
           <p className='w-[250px] text-center font-ibm opacity-[33%]'>

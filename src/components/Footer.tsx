@@ -9,28 +9,28 @@ export default function Footer() {
         <div className='flex items-center space-x-6'>
           <Link
             href='#'
-            className='text-primary leading-[110%] transition hover:text-white'
+            className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             rel='noopener noreferrer'
           >
             Про нас
           </Link>
           <Link
             href='#'
-            className='text-primary leading-[110%] transition hover:text-white'
+            className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             rel='noopener noreferrer'
           >
             Реферальна програма
           </Link>
           <Link
             href='#'
-            className='text-primary leading-[110%] transition hover:text-white'
+            className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             rel='noopener noreferrer'
           >
             Airdrop
           </Link>{' '}
           <Link
             href='#'
-            className='text-primary leading-[110%] transition hover:text-white'
+            className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             rel='noopener noreferrer'
           >
             Підтримка
@@ -44,13 +44,13 @@ export default function Footer() {
             target='_blank'
             rel='noopener noreferrer'
           >
-            <div className='group relative flex h-[65px] w-[65px] items-center justify-center rounded-full border border-[#FE9900] bg-[#111111] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r'>
+            <div className='group relative flex h-[65px] w-[65px] items-center justify-center rounded-full border border-[#FE9900] bg-[#111111] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r focus:bg-gradient-to-r'>
               <svg
                 width='23'
                 height='23'
                 viewBox='0 0 23 23'
                 xmlns='http://www.w3.org/2000/svg'
-                className='text-white transition-colors group-hover:text-black'
+                className='text-white transition group-hover:text-black group-focus:text-black'
                 fill='currentColor'
               >
                 <g clipPath='url(#clip0_700_5853)'>
@@ -75,13 +75,13 @@ export default function Footer() {
             target='_blank'
             rel='noopener noreferrer'
           >
-            <div className='group relative flex h-[65px] w-[65px] items-center justify-center rounded-full border border-[#FE9900] bg-[#111111] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r'>
+            <div className='group relative flex h-[65px] w-[65px] items-center justify-center rounded-full border border-[#FE9900] bg-[#111111] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r focus:bg-gradient-to-r'>
               <svg
                 width='23'
                 height='19'
                 viewBox='0 0 23 19'
                 xmlns='http://www.w3.org/2000/svg'
-                className='text-white transition-colors group-hover:text-black'
+                className='text-white transition-colors group-hover:text-black group-focus:text-black'
                 fill='currentColor'
               >
                 <path d='M1.06126 9.75476L6.04493 11.4473L17.8767 4.21393C18.0482 4.10903 18.224 4.34197 18.076 4.47813L9.11849 12.7231L8.78538 17.3391C8.76002 17.6902 9.183 17.8857 9.43403 17.6389L12.1921 14.9268L17.234 18.7436C17.7774 19.1551 18.5644 18.8651 18.711 18.1994L22.2217 2.25891C22.4219 1.34955 21.5309 0.58221 20.6613 0.915227L1.0359 8.4303C0.420262 8.66607 0.43703 9.54279 1.06126 9.75476Z' />
@@ -93,13 +93,13 @@ export default function Footer() {
             target='_blank'
             rel='noopener noreferrer'
           >
-            <div className='group relative flex h-[65px] w-[65px] items-center justify-center rounded-full border border-[#FE9900] bg-[#111111] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r'>
+            <div className='group relative flex h-[65px] w-[65px] items-center justify-center rounded-full border border-[#FE9900] bg-[#111111] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r focus:bg-gradient-to-r'>
               <svg
                 width='23'
                 height='17'
                 viewBox='0 0 23 17'
                 xmlns='http://www.w3.org/2000/svg'
-                className='text-white transition-colors group-hover:text-black'
+                className='text-white transition-colors group-hover:text-black group-focus:text-black'
                 fill='currentColor'
               >
                 <path d='M21.4887 2.22301C20.7066 1.2933 19.2626 0.914062 16.5049 0.914062H6.49456C3.67377 0.914062 2.20533 1.31776 1.42617 2.30758C0.666504 3.27265 0.666504 4.69462 0.666504 6.66265V10.4137C0.666504 14.2264 1.56784 16.1622 6.49456 16.1622H16.505C18.8964 16.1622 20.2216 15.8276 21.0789 15.0071C21.9581 14.1657 22.3332 12.792 22.3332 10.4137V6.66265C22.3332 4.58719 22.2744 3.15684 21.4887 2.22301ZM14.5766 9.05605L10.0309 11.4318C9.92928 11.4849 9.81815 11.5112 9.70716 11.5112C9.5815 11.5112 9.45611 11.4774 9.34505 11.4102C9.13593 11.2834 9.00824 11.0568 9.00824 10.8123V6.07611C9.00824 5.83205 9.13558 5.60559 9.34428 5.47881C9.55305 5.35202 9.8127 5.34336 10.0293 5.45589L14.575 7.81629C14.8062 7.93637 14.9515 8.17512 14.9518 8.43561C14.9521 8.69631 14.8075 8.93541 14.5766 9.05605Z' />
@@ -111,13 +111,13 @@ export default function Footer() {
             target='_blank'
             rel='noopener noreferrer'
           >
-            <div className='group relative flex h-[65px] w-[65px] items-center justify-center rounded-full border border-[#FE9900] bg-[#111111] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r'>
+            <div className='group relative flex h-[65px] w-[65px] items-center justify-center rounded-full border border-[#FE9900] bg-[#111111] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r focus:bg-gradient-to-r'>
               <svg
                 width='23'
                 height='23'
                 viewBox='0 0 23 23'
                 xmlns='http://www.w3.org/2000/svg'
-                className='text-white transition-colors group-hover:text-black'
+                className='text-white transition-colors group-hover:text-black group-focus:text-black'
                 fill='currentColor'
               >
                 <path d='M13.2524 10.0509L20.1085 2.02344H18.4835L12.532 8.99333L7.77612 2.02344H2.29175L9.48237 12.5643L2.29175 20.9818H3.91675L10.2028 13.6205L15.2254 20.9818H20.7098L13.2524 10.0509ZM11.0275 12.6564L10.2989 11.6069L4.50175 3.25573H6.99748L11.6748 9.99542L12.4033 11.0449L18.4849 19.8064H15.9891L11.0275 12.6564Z' />
@@ -154,25 +154,25 @@ export default function Footer() {
                 height={140}
               />
               <p className='mt-[30px] text-[16px] leading-[130%]'>
-                BTC-X.PRO, LLC
+                ТОВ &quot;ВТС-Х&quot;
               </p>
             </div>
             <div className='w-[521px]'>
               <p className='text-[16px] leading-[130%] opacity-[33%]'>
-                BTC-X, LLC (old name ITM-UA, Private Enterprise), a company
-                incorporated in Ukraine, that provides BTC-X.PRO mobile trading
-                platform has the following legal data.
+                ТОВ &quot;ВТС-Х&quot; (стара назва Приватне підприємство
+                &quot;ІТМ-ЮА&quot;), зареєстроване в Україні, надає мобільну
+                торгову платформу BTC-X.PRO та має наступні юридичні дані.
               </p>
               <p className='mt-4 text-[16px] leading-[130%] opacity-[33%]'>
-                USROU code of the legal entity: 45260571
+                Код ЄДРПОУ юридичної особи: 45260571
               </p>
               <p className='mt-4 text-[16px] leading-[130%] opacity-[33%]'>
-                IBAN: UA29305299000026001010407651
+                IBAN: UA293052990000026001010407651
               </p>
               <p className='mt-4 text-[16px] leading-[130%] opacity-[33%]'>
-                Legal address and location of activity: Ukraine, 50103,
-                Dnipropetrovsk region, city of Kryvyi Rih, Tilhy Stepana str.,
-                building 71
+                Юридична адреса та місцезнаходження: Україна, 50103,
+                Дніпропетровська обл., місто Кривий Ріг, вул. Степана Тільги,
+                буд. 71
               </p>
             </div>
           </div>
@@ -184,7 +184,7 @@ export default function Footer() {
                     href='#'
                     target='_blank'
                     rel='noopener noreferrer'
-                    className='text-[16px] text-sm leading-[130%] opacity-[33%]'
+                    className='text-[16px] text-sm leading-[130%] opacity-[33%] hover:text-[#FD6B06] hover:opacity-100 focus:text-[#FD6B06] focus:opacity-100'
                   >
                     Умови та положення
                   </Link>
@@ -194,7 +194,7 @@ export default function Footer() {
                     href='#'
                     target='_blank'
                     rel='noopener noreferrer'
-                    className='text-[16px] text-sm leading-[130%] opacity-[33%]'
+                    className='text-[16px] text-sm leading-[130%] opacity-[33%] hover:text-[#FD6B06] hover:opacity-100 focus:text-[#FD6B06] focus:opacity-100'
                   >
                     Політика конфіденційності
                   </Link>
@@ -204,7 +204,7 @@ export default function Footer() {
                     href='#'
                     target='_blank'
                     rel='noopener noreferrer'
-                    className='text-[16px] text-sm leading-[130%] opacity-[33%]'
+                    className='text-[16px] text-sm leading-[130%] opacity-[33%] hover:text-[#FD6B06] hover:opacity-100 focus:text-[#FD6B06] focus:opacity-100'
                   >
                     AML/CTF & KYC
                   </Link>
@@ -214,7 +214,7 @@ export default function Footer() {
             <div>
               <Link
                 href='mailto:admin@btc-x.pro'
-                className='text-[16px] leading-[130%]'
+                className='text-[16px] leading-[130%] hover:text-[#FD6B06] focus:text-[#FD6B06]'
               >
                 admin@btc-x.pro
               </Link>
@@ -241,7 +241,7 @@ export default function Footer() {
             />
             <button
               type='submit'
-              className='rounded-full bg-white px-6 py-2 font-medium text-black'
+              className='rounded-full bg-white px-6 py-2 font-medium text-black hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white focus:outline-none focus:ring'
             >
               Підписатися на оновлення
             </button>
@@ -250,25 +250,29 @@ export default function Footer() {
 
         <div className='mb-[40px] border-[0.5px] border-white opacity-[20%]'></div>
         <div className='text-[16px] leading-[130%] opacity-[33%]'>
-          BTC-X.PRO allows users to benefit economically from the price
-          movements of financial instruments without the need to physically own
-          them. Definitions such as &quot;trade&quot;, &quot;deal&quot;,
-          &quot;buy&quot; and &quot;sell&quot; used by BTC-X.PRO should be
-          understood as risks associated with positions in various financial
-          instruments that are subject to price fluctuations, without ownership
-          of the underlying financial instrument. A BTC-X.PRO user who has an
-          open long position in a stock or ETF at the time the market opens on
-          the ex-dividend date will pay the declared dividend amount for each
-          share of his position. As with any trading in stocks, commodities and
-          cryptocurrencies, &quot;trading&quot; with BTC-X.PRO carries a level
-          of risk that may not be suitable for all persons interested in
-          trading. You may lose some or all of your investment capital, so you
-          should not speculate with capital that you cannot afford to lose. You
-          should consult an independent financial advisor before taking any
-          risks or &quot;trading&quot; with BTC-X.PRO. The information contained
-          on this site does not apply to residents of the United States or
-          Canada and may not be used in any country or jurisdiction where such
-          use or access is prohibited under applicable law.
+          BTC-X.PRO дозволяє користувачам отримувати економічну вигоду від руху
+          цін фінансових інструментів без необхідності їх матеріального
+          володіння. Визначення, такі як &quot;торгівля&quot;,
+          &quot;угоди&quot;, &quot;купувати&quot; і &quot;продавати&quot;, що
+          використовуються BTC-X.PRO, слід розуміти як ризики, пов&apos;язані з
+          позиціями різноманітних фінансових інструментів, які піддіються
+          коливанню цін, без права власності на базовий фінансовий інструмент.
+          Користувач BTC-X.PRO, у якого є відкрита лонг позиція по акції або ETF
+          на момент відкриття ринку у день дати екс-девідендів, отримає
+          оголошену суму дивідендів за кожну акцію його позиції. Користувач, у
+          якого є відкрита шорт позиція по акції або ETF на момент відкриття
+          ринка в день дати екс-дивідендів, заплатить оголошену суму дивідендів
+          за кожну акцію його позиції. Як і при будь-якій торгівлі акціями,
+          сировинними товарами та криптовалютами, &quot;торгівля&quot; за
+          допомогою BTC-X.PRO несе рівень ризику, що може не підходити для всих
+          осіб, зацікавлених в торгівлі. Ви можете втратити частину або весь
+          свій інвестиційний капітал, тому вам не варто спекулювати капіталом,
+          який ви не можете дозволити собі втратити. Вам слід проконсультуватися
+          з незалежним фінансовим консультантом перш ніж приймати ризики або
+          &quot;торгувати&quot; з BTC-X.PRO. Інформація, розміщена на цьому
+          сайті, не застосовується до жителів США або Канади та не може бути
+          використана в будь-якій країні чи юрисдикції, де таке використання або
+          доступ заборонені відповідно до діючого законодавства.
         </div>
       </div>
     </footer>

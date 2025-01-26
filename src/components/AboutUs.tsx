@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function AboutUs() {
   return (
-    <div className='bg-black px-4 py-16 text-white'>
+    <div className='bg-black px-4 py-[100px] text-white'>
       <div className='container mx-auto w-[1340px]'>
         {/* О нас */}
         <div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
@@ -29,7 +29,7 @@ export default function AboutUs() {
               alt='Команда BTC-X'
               width={400}
               height={300}
-              className='rounded-lg'
+              className='h-[300px] w-[400px] rounded-lg'
             />
             <p className='mt-[10px] w-[250px] font-ibm opacity-[33%]'>
               Команда BTC-X

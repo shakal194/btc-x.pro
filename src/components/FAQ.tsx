@@ -4,7 +4,7 @@ import Link from 'next/link';
 export default function FAQAndFooter() {
   return (
     <section className='rounded-t-xl bg-[#F4F4F4] py-[100px] text-black'>
-      <div className='container mx-auto my-16 w-[1340px] px-4'>
+      <div className='container mx-auto w-[1340px] px-4'>
         <div className='flex justify-between'>
           <h2 className='mb-6 text-[50px] font-bold leading-[110%]'>
             Відповіді на часті запитання

@@ -3,26 +3,26 @@ import Link from 'next/link';
 
 export default function Header() {
   return (
-    <header className='bg-black text-white'>
+    <header className='relative z-50 text-white'>
       <div className='container mx-auto mt-4 flex w-[1340px] items-center justify-between rounded-lg border border-gray-400 px-5 py-3 backdrop-blur-md'>
         <nav className='flex items-center space-x-6'>
           <Link
             href='#'
-            className='text-primary leading-[110%] transition hover:text-white'
+            className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             rel='noopener noreferrer'
           >
             Про нас
           </Link>
           <Link
             href='#'
-            className='text-primary leading-[110%] transition hover:text-white'
+            className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             rel='noopener noreferrer'
           >
             Airdrop
           </Link>
           <Link
             href='#'
-            className='text-primary leading-[110%] transition hover:text-white'
+            className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             rel='noopener noreferrer'
           >
             Реферальна програма
@@ -37,7 +37,7 @@ export default function Header() {
               alt='Logo'
               width={30}
               height={45}
-              className='object-contain'
+              className='h-[45px] w-[30px] cursor-pointer object-contain'
             />
           </Link>
         </div>
@@ -46,12 +46,12 @@ export default function Header() {
         <div className='flex items-center space-x-4'>
           <Link
             href='#'
-            className='text-primary leading-[110%] transition hover:text-white'
+            className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
           >
             Підтримка
           </Link>
           <div className='relative'>
-            <button className='flex items-center text-primary leading-[110%] transition hover:text-white'>
+            <button className='flex items-center text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'>
               UA <span className='ml-1'>▼</span>
             </button>
             {/* Dropdown для языков (можно позже реализовать) */}
@@ -60,7 +60,7 @@ export default function Header() {
             href='https://onelink.to/js2s8h'
             target='_blank'
             rel='noopener noreferrer'
-            className='rounded-full border px-5 py-3 text-primary font-bold leading-[110%] transition'
+            className='rounded-full border px-5 py-3 text-primary font-bold leading-[110%] transition hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white'
           >
             Перейти в додаток
           </Link>

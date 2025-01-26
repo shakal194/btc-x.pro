@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <main className='bg-black text-white'>
       {/* Hero Section */}
-      <section className='bg-black py-[60px]'>
+      <section className='bg-black py-[100px]'>
         <div className='container relative mx-auto w-[1340px] px-4'>
           <div className='flex gap-2'>
             <div className='z-20'>
@@ -64,7 +64,7 @@ export default function Home() {
             <div className='relative h-[500px] w-full'>
               <div className='absolute inset-0 mx-auto h-[669px] w-[826px] rounded-full bg-[#46210D] opacity-50 blur-2xl'></div>
             </div>
-            <div className='pointer-events-none absolute right-[-450px] top-[-150px] z-10'>
+            <div className='pointer-events-none absolute right-[-190px] top-[-150px] z-10'>
               <Image
                 src='/hero.png'
                 alt='Phone'
@@ -77,7 +77,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className='py-12'>
+      <section className='py-[100px]'>
         <div className='container mx-auto w-[1340px] px-4 text-center'>
           <p className='text-[40px] leading-[125%]'>
             Ми — платформа для торгівлі та інвестування без комісій і зборів за
@@ -112,7 +112,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className='py-12'>
+      <section className='py-[100px]'>
         <div className='container mx-auto flex w-[1340px] px-4'>
           <div className='w-[610px]'>
             <h2 className='mb-8 text-3xl font-bold md:text-4xl'>
