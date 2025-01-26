@@ -1,101 +1,217 @@
-import Image from "next/image";
+import Image from 'next/image';
+import Link from 'next/link';
+import PlatformStats from '@/components/PlatformStats';
+import FiveSteps from '@/components/FiveSteps';
+import AboutUs from '@/components/AboutUs';
+import FAQ from '@/components/FAQ';
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <main className='bg-black text-white'>
+      {/* Hero Section */}
+      <section className='bg-black py-[60px]'>
+        <div className='container mx-auto w-[1340px] px-4'>
+          <div className='flex gap-2'>
+            <div>
+              <div className='w-[716px]'>
+                <h1 className='text-[75px] font-bold leading-[110%] tracking-tight'>
+                  ТОРГУЙТЕ БЕЗ КОМІСІЇ ПРОТЯГОМ УСЬОГО{' '}
+                  <span className='bg-gradient-to-r from-[#FFC996] via-[#FD6B06] to-[#963706] bg-clip-text text-transparent'>
+                    2025 РОКУ
+                  </span>
+                </h1>
+              </div>
+              <div className='relative mt-[186px] w-[435px] rounded-lg bg-gradient-to-r from-[#553300] to-[#FE9900] p-[1px]'>
+                <div className='rounded-lg bg-black px-[25px] py-6'>
+                  <p className='max-w-3xl text-primary font-semibold text-gray-300'>
+                    Завантажте додаток BTC-X і отримайте доступ до торгівлі
+                    прямо зараз.
+                  </p>
+                  <div className='my-6 border-t opacity-[33%]'></div>
+                  <div className='flex justify-between'>
+                    <Link
+                      href='https://apps.apple.com/ua/app/btc-x-pro/id6479724977'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className=''
+                    >
+                      <Image
+                        src='/appstore_white.png'
+                        alt='App Store'
+                        width={185}
+                        height={55}
+                        className='h-[55px] w-[185px]'
+                      />
+                    </Link>
+                    <Link
+                      href='https://play.google.com/store/apps/details?id=btcx.pro'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className=''
+                    >
+                      <Image
+                        src='/googleplay_white.png'
+                        alt='Google Play'
+                        width={185}
+                        height={55}
+                        className='h-[55px] w-[185px]'
+                      />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className='relative mt-12'>
+              <Image src='/phone.png' alt='Phone' width={300} height={600} />
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </section>
+
+      <section className='py-12'>
+        <div className='container mx-auto w-[1340px] px-4 text-center'>
+          <p className='text-[40px] leading-[125%]'>
+            Ми — платформа для торгівлі та інвестування без комісій і зборів за
+            кредитні плечі (ф&apos;ючерси, маржа) за спотовими
+          </p>
+          <p className='align-center flex justify-center text-[40px] leading-[125%]'>
+            цінами таких бірж, як: Binance, OKX, Coinbase
+            <span className='relative ml-4 flex items-center justify-start'>
+              <Image
+                src='/binanceIcon.png'
+                alt='Binance'
+                width={45}
+                height={45}
+                className='relative z-10 -ml-2'
+              />
+              <Image
+                src='/okxIcon.png'
+                alt='OKX'
+                width={45}
+                height={45}
+                className='relative z-20 -ml-3'
+              />
+              <Image
+                src='/coinbaseIcon.png'
+                alt='Coinbase'
+                width={45}
+                height={45}
+                className='relative z-30 -ml-3'
+              />
+            </span>
+          </p>
+        </div>
+      </section>
+
+      <section className='py-12'>
+        <div className='container mx-auto flex w-[1340px] px-4'>
+          <div className='w-[610px]'>
+            <h2 className='mb-8 text-3xl font-bold md:text-4xl'>
+              Торгуй, інвестуй і заробляй в одному місці
+            </h2>
+            <p className='w-[250px] font-ibm opacity-[33%]'>
+              ВТС-Х — всі ринки та інструменти в одному місці
+            </p>
+          </div>
+          <div className='grid'>
+            {/* Feature 1 */}
+            <div className='relative mb-[25px] w-[670px] overflow-auto rounded-lg bg-gradient-to-r from-[#553300] to-[#FE9900] p-[1px]'>
+              <div className='flex rounded-lg bg-black'>
+                <div className='w-2/3 px-[25px] py-6'>
+                  <h3 className='mb-[40px] text-2xl font-bold text-white'>
+                    01. Crypto
+                  </h3>
+                  <p className='text-base leading-[130%]'>
+                    Завойовуйте найдинамічніші ринки, які працюють 24/7.
+                    Торгуйте за точними спотовими цінами провідних бірж, без
+                    зайвих комісій.
+                  </p>
+                  <p className='mt-4 text-base leading-[130%] opacity-[33%]'>
+                    *Використовуйте кредитне плече для збільшення прибутків без
+                    ризику ліквідації.
+                  </p>
+                </div>
+                <Image
+                  src='/crypto.png'
+                  alt='Crypto'
+                  width={480}
+                  height={480}
+                  className='w-[480px] overflow-auto'
+                />
+              </div>
+            </div>
+            {/* Feature 2 */}
+            <div className='relative mb-[25px] w-[670px] overflow-auto rounded-lg bg-gradient-to-r from-[#553300] to-[#FE9900] p-[1px]'>
+              <div className='flex rounded-lg bg-gradient-to-r from-[#EDEDED] to-[#AFAFAF]'>
+                <div className='w-2/3 px-[25px] py-6'>
+                  <h3 className='mb-[40px] text-2xl font-bold text-black'>
+                    02. Futures
+                  </h3>
+                  <p className='text-base leading-[130%] text-black'>
+                    Отримуйте доступ до глобальних ринків сировини та фондових
+                    індексів.
+                  </p>
+                  <p className='mt-4 text-base leading-[130%] text-black'>
+                    Торгуйте з чесними умовами{' '}
+                    <span className='text-[#FE9900]'>
+                      та відсутністю прихованих зборів
+                    </span>
+                    , використовуючи інструменти професійного рівня.
+                  </p>
+                </div>
+                <Image
+                  src='/futures.png'
+                  alt='Futures'
+                  width={480}
+                  height={480}
+                  className='overflow-auto'
+                />
+              </div>
+            </div>
+            {/* Feature 3 */}
+            <div className='relative mb-[25px] w-[670px] overflow-auto rounded-lg bg-gradient-to-r from-[#553300] to-[#FE9900] p-[1px]'>
+              <div className='flex rounded-lg bg-black'>
+                <div className='w-2/3 px-[25px] py-6'>
+                  <h3 className='mb-[40px] text-2xl font-bold text-white'>
+                    03. MEM Coins
+                  </h3>
+                  <p className='text-base leading-[130%]'>
+                    Опануй найволатильніший ринок і зроби на ньому ІКСИ.
+                    Використовуйте волатильність цих активів, щоб отримувати
+                    високі прибутки.
+                  </p>
+                </div>
+                <Image
+                  src='/Mask group.png'
+                  alt='MEM Coins'
+                  width={602}
+                  height={225}
+                  className='h-[225px] w-[602px] overflow-auto'
+                />
+              </div>
+            </div>
+            {/* Feature 4 */}
+            <div className='relative w-[670px] overflow-auto rounded-lg bg-gradient-to-r from-[#553300] to-[#FE9900] p-[1px]'>
+              <div className='flex rounded-lg bg-black'>
+                <div className='w-2/3 px-[25px] py-6'>
+                  <h3 className='mb-[40px] text-2xl font-bold text-white'>
+                    04. Stocks
+                  </h3>
+                  <p className='text-base leading-[130%]'>
+                    Торгуйте улюбленими компаніями або відкривайте короткі
+                    позиції, щоб отримувати прибуток навіть у моменти, коли
+                    ринок падає.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <PlatformStats />
+      <FiveSteps />
+      <AboutUs />
+      <FAQ />
+    </main>
   );
 }

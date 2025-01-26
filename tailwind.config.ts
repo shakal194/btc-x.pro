@@ -12,6 +12,12 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontSize: {
+        primary: "18px",
+      },
+      fontFamily: {
+        ibm: ["IBM_Plex_Sans"], // Используем CSS-переменную
+      },
     },
   },
   plugins: [],
