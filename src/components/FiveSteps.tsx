@@ -127,7 +127,7 @@ export default function FiveSteps() {
             </div>
           </div>
           {/* Image Section */}
-          <div className='relative h-[700]'>
+          <div className='relative h-[700px]'>
             {/* Фоновое изображение */}
             <Image
               src='/client.png'

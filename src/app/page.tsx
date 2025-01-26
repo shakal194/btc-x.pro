@@ -10,9 +10,9 @@ export default function Home() {
     <main className='bg-black text-white'>
       {/* Hero Section */}
       <section className='bg-black py-[60px]'>
-        <div className='container mx-auto w-[1340px] px-4'>
+        <div className='container relative mx-auto w-[1340px] px-4'>
           <div className='flex gap-2'>
-            <div>
+            <div className='z-20'>
               <div className='w-[716px]'>
                 <h1 className='text-[75px] font-bold leading-[110%] tracking-tight'>
                   ТОРГУЙТЕ БЕЗ КОМІСІЇ ПРОТЯГОМ УСЬОГО{' '}
@@ -61,8 +61,17 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className='relative mt-12'>
-              <Image src='/phone.png' alt='Phone' width={300} height={600} />
+            <div className='relative h-[500px] w-full'>
+              <div className='absolute inset-0 mx-auto h-[669px] w-[826px] rounded-full bg-[#46210D] opacity-50 blur-2xl'></div>
+            </div>
+            <div className='pointer-events-none absolute right-[-450px] top-[-150px] z-10'>
+              <Image
+                src='/hero.png'
+                alt='Phone'
+                width={1268}
+                height={951}
+                className='relative h-[951px] w-[1268px]'
+              />
             </div>
           </div>
         </div>
