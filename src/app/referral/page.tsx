@@ -203,7 +203,7 @@ export default function Home() {
                   />
 
                   {/* Текст */}
-                  <div className='absolute bottom-[-50] left-0 w-full px-4 text-center text-white transition-transform duration-300 ease-in-out group-hover:-translate-y-20'>
+                  <div className='absolute bottom-[-50px] left-0 w-full px-4 text-center text-white transition-transform duration-300 ease-in-out group-hover:-translate-y-20'>
                     <h4 className='mb-[20px] text-[22px] leading-[120%]'>
                       {program.text}
                     </h4>
