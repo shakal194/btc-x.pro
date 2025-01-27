@@ -131,7 +131,7 @@ export default function FiveSteps() {
             {/* Фоновое изображение */}
             <Image
               src='/client.png'
-              alt='Start Image'
+              alt='Client image'
               width={670}
               height={700}
               className='rounded-lg'

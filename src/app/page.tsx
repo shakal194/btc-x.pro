@@ -66,7 +66,7 @@ export default function Home() {
             </div>
             <div className='pointer-events-none absolute right-[-190px] top-[-150px] z-10'>
               <Image
-                src='/hero.png'
+                src='/hero_main_page.png'
                 alt='Phone'
                 width={1268}
                 height={951}
@@ -87,21 +87,21 @@ export default function Home() {
             цінами таких бірж, як: Binance, OKX, Coinbase
             <span className='relative ml-4 flex items-center justify-start'>
               <Image
-                src='/binanceIcon.png'
+                src='/binance_icon.png'
                 alt='Binance'
                 width={45}
                 height={45}
                 className='relative z-10 -ml-2'
               />
               <Image
-                src='/okxIcon.png'
+                src='/okx_icon.png'
                 alt='OKX'
                 width={45}
                 height={45}
                 className='relative z-20 -ml-3'
               />
               <Image
-                src='/coinbaseIcon.png'
+                src='/coinbase_icon.png'
                 alt='Coinbase'
                 width={45}
                 height={45}
@@ -191,7 +191,7 @@ export default function Home() {
                   </p>
                 </div>
                 <Image
-                  src='/Mask group.png'
+                  src='/memcoin.png'
                   alt='MEM Coins'
                   width={602}
                   height={225}

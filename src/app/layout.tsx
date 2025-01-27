@@ -33,7 +33,7 @@ export default function RootLayout({
           href='https://onelink.to/js2s8h'
           target='_blank'
           rel='noopener noreferrer'
-          className='group sticky bottom-0 left-1/2 flex h-[72px] w-[354px] -translate-x-1/2 items-center justify-evenly rounded-full bg-[#1F1F1F]'
+          className='group sticky bottom-0 left-1/2 z-30 flex h-[72px] w-[354px] -translate-x-1/2 items-center justify-evenly rounded-full bg-[#1F1F1F]'
         >
           <Image
             src='/Logo.png'

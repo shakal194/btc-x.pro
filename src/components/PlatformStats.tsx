@@ -26,7 +26,7 @@ export default function PlatformStats() {
                 <div>
                   <div className='flex'>
                     <Image
-                      src='/liveIcon.svg'
+                      src='/live_icon.svg'
                       alt='Live Icon'
                       width={6}
                       height={6}
@@ -59,7 +59,7 @@ export default function PlatformStats() {
                 <div>
                   <div className='flex'>
                     <Image
-                      src='/liveIcon.svg'
+                      src='/live_icon.svg'
                       alt='Live Icon'
                       width={6}
                       height={6}
@@ -156,7 +156,7 @@ export default function PlatformStats() {
             <div className='grid grid-cols-1 items-start gap-8 lg:grid-cols-2'>
               <div>
                 <Image
-                  src='/tradePower.png'
+                  src='/trade_power.png'
                   alt='0 comission'
                   width={630}
                   height={290}

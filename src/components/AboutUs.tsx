@@ -25,7 +25,7 @@ export default function AboutUs() {
               крипти.{' '}
             </p>
             <Image
-              src='/ourTeam.png'
+              src='/our_team.png'
               alt='Команда BTC-X'
               width={400}
               height={300}
@@ -52,7 +52,7 @@ export default function AboutUs() {
           <div className='relative'>
             {/* Фоновое изображение */}
             <Image
-              src='/ourMission.png'
+              src='/our_mission.png'
               alt='Our Mission'
               width={670}
               height={700}

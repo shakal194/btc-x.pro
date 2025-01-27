@@ -21,7 +21,7 @@ export default function Header() {
             Airdrop
           </Link>
           <Link
-            href='#'
+            href='./referral'
             className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             rel='noopener noreferrer'
           >
@@ -33,7 +33,7 @@ export default function Header() {
         <div>
           <Link href='/' rel='noopener noreferrer'>
             <Image
-              src='/Logo.png' // Замените на путь к вашему логотипу
+              src='/logo_header.png' // Замените на путь к вашему логотипу
               alt='Logo'
               width={30}
               height={45}
