@@ -61,16 +61,14 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className='relative h-[500px] w-full'>
-              <div className='absolute inset-0 mx-auto h-[669px] w-[826px] rounded-full bg-[#46210D] opacity-50 blur-2xl'></div>
-            </div>
-            <div className='pointer-events-none absolute right-[-190px] top-[-150px] z-10'>
+
+            <div className='pointer-events-none absolute -right-[225px] top-[-190px] z-10 w-[110%]'>
               <Image
                 src='/hero_main_page.png'
                 alt='Phone'
                 width={1268}
                 height={951}
-                className='relative h-[951px] w-[1268px]'
+                className='relative w-[1268px]'
               />
             </div>
           </div>
@@ -156,11 +154,11 @@ export default function Home() {
                   <h3 className='mb-[40px] text-2xl font-bold text-black'>
                     02. Futures
                   </h3>
-                  <p className='text-base leading-[130%] text-black'>
+                  <p className='text-base font-medium leading-[130%] text-black'>
                     Отримуйте доступ до глобальних ринків сировини та фондових
                     індексів.
                   </p>
-                  <p className='mt-4 text-base leading-[130%] text-black'>
+                  <p className='mt-4 text-base font-medium leading-[130%] text-black'>
                     Торгуйте з чесними умовами{' '}
                     <span className='text-[#FE9900]'>
                       та відсутністю прихованих зборів
@@ -178,41 +176,47 @@ export default function Home() {
               </div>
             </div>
             {/* Feature 3 */}
-            <div className='relative mb-[25px] w-[670px] overflow-auto rounded-lg bg-gradient-to-r from-[#553300] to-[#FE9900] p-[1px]'>
-              <div className='flex rounded-lg bg-black'>
-                <div className='w-2/3 px-[25px] py-6'>
-                  <h3 className='mb-[40px] text-2xl font-bold text-white'>
+            <div className='z-20 mb-[25px] w-[670px] overflow-hidden rounded-lg bg-gradient-to-r from-[#553300] to-[#FE9900] p-[1px]'>
+              <div className='relative flex rounded-lg bg-black'>
+                <div className='z-10 w-2/3 px-[25px] py-6'>
+                  <h3 className='mb-[40px] text-2xl font-bold font-medium text-white'>
                     03. MEM Coins
                   </h3>
-                  <p className='text-base leading-[130%]'>
+                  <p className='text-base font-medium leading-[130%]'>
                     Опануй найволатильніший ринок і зроби на ньому ІКСИ.
                     Використовуйте волатильність цих активів, щоб отримувати
                     високі прибутки.
                   </p>
                 </div>
                 <Image
-                  src='/memcoin.png'
+                  src='/card 3.png'
                   alt='MEM Coins'
-                  width={602}
-                  height={225}
-                  className='h-[225px] w-[602px] overflow-auto'
+                  width={670}
+                  height={218}
+                  className='absolute h-[218px] w-[670px]'
                 />
               </div>
             </div>
             {/* Feature 4 */}
-            <div className='relative w-[670px] overflow-auto rounded-lg bg-gradient-to-r from-[#553300] to-[#FE9900] p-[1px]'>
-              <div className='flex rounded-lg bg-black'>
-                <div className='w-2/3 px-[25px] py-6'>
-                  <h3 className='mb-[40px] text-2xl font-bold text-white'>
-                    04. Stocks
-                  </h3>
-                  <p className='text-base leading-[130%]'>
-                    Торгуйте улюбленими компаніями або відкривайте короткі
-                    позиції, щоб отримувати прибуток навіть у моменти, коли
-                    ринок падає.
-                  </p>
-                </div>
+
+            <div className='relative flex rounded-lg bg-black'>
+              <div className='z-10 w-[45%] px-[25px] py-6'>
+                <h3 className='mb-[40px] text-2xl font-bold font-medium text-black'>
+                  04. Stocks
+                </h3>
+                <p className='text-base font-medium leading-[130%] text-black'>
+                  Торгуйте улюбленими компаніями або відкривайте короткі
+                  позиції, щоб отримувати прибуток навіть у моменти, коли ринок
+                  падає.
+                </p>
               </div>
+              <Image
+                src='/stocks.png'
+                alt='Stock'
+                width={670}
+                height={218}
+                className='absolute h-[218px] w-[670px] object-cover'
+              />
             </div>
           </div>
         </div>

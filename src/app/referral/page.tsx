@@ -1,10 +1,5 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import PlatformStats from '@/components/PlatformStats';
-import FiveSteps from '@/components/FiveSteps';
-import AboutUs from '@/components/AboutUs';
-import FAQ from '@/components/FAQ';
-import { title } from 'process';
 
 export default function Home() {
   return (
@@ -62,7 +57,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className='pointer-events-none absolute right-[0px] top-[-150px] z-10'>
+            <div className='pointer-events-none absolute left-1/2 top-1/4 z-10 w-[110%] -translate-x-1/2 -translate-y-1/4'>
               <Image
                 src='/hero_ref_page.png'
                 alt='Phone'

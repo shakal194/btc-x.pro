@@ -36,7 +36,7 @@ export default function RootLayout({
           className='group sticky bottom-0 left-1/2 z-30 flex h-[72px] w-[354px] -translate-x-1/2 items-center justify-evenly rounded-full bg-[#1F1F1F]'
         >
           <Image
-            src='/logo.png'
+            src='/logo_header.png'
             alt='Logo'
             width={30}
             height={45}

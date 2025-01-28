@@ -238,7 +238,7 @@ export default function PlatformStats() {
       <section className='bg-white py-[100px] text-black'>
         {/* Миссия */}
         <div className='container mx-auto mt-16 flex w-[1020px] flex-col items-center'>
-          <p className='w-[250px] text-center font-ibm opacity-[33%]'>
+          <p className='mb-[30px] w-[250px] text-center font-ibm opacity-[33%]'>
             ВТС-Х — довіра, яку підтверджують результати
           </p>
           <h4 className='text-center text-[40px] font-bold leading-[125%] tracking-tight'>

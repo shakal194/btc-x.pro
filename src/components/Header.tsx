@@ -14,14 +14,14 @@ export default function Header() {
             Про нас
           </Link>
           <Link
-            href='#'
+            href='/airdrop'
             className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             rel='noopener noreferrer'
           >
             Airdrop
           </Link>
           <Link
-            href='./referral'
+            href='/referral'
             className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             rel='noopener noreferrer'
           >
