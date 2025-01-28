@@ -61,7 +61,7 @@ export default function AboutUs() {
           </div>
           <div className='flex flex-col justify-between rounded-xl px-[45px] shadow-lg'>
             <div>
-              <div className='mb-[40px] border-[0.5px] border-white opacity-[33%]'></div>
+              <div className='mb-[40px] border-t border-white opacity-[33%]'></div>
               <p className='text-primary leading-[120%]'>
                 Почніть свою подорож у світ вигідної торгівлі, завантаживши наш
                 додаток із App Store або Google Play. Встановіть його та

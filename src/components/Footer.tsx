@@ -8,7 +8,7 @@ export default function Footer() {
         {/* Левый блок с ссылками */}
         <div className='flex items-center space-x-6'>
           <Link
-            href='#'
+            href='about-us'
             className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             rel='noopener noreferrer'
           >
@@ -140,7 +140,7 @@ export default function Footer() {
           </Link>
         </div>
       </div>
-      <div className='mb-[60px] border-[0.5px] border-white opacity-[20%]'></div>
+      <div className='mb-[60px] border-t border-white opacity-[20%]'></div>
       <div className='container mx-auto w-[1340px] px-4'>
         {/* Верхний блок */}
         <div className='mb-8 flex flex-col items-start justify-between border-b border-gray-800 pb-8 md:flex-row md:items-center'>

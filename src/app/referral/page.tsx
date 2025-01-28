@@ -80,7 +80,7 @@ export default function Home() {
               Простий гайд для збільшення твого прибутку
             </p>
           </div>
-          <div className='my-[40px] border-[0.5px] border-black opacity-[33%]'></div>
+          <div className='my-[40px] border-t border-black opacity-[33%]'></div>
           {/* Блоки контента */}
           <div className='space-y-12'>
             {/* Блок 1 */}
@@ -243,7 +243,7 @@ export default function Home() {
                 <h2 className='text-[40px] font-semibold leading-[110%]'>
                   В нашій системі присутні два рівні рефералів:
                 </h2>
-                <div className='my-[40px] border-[0.5px] border-black opacity-[33%]'></div>
+                <div className='my-[40px] border-t border-black opacity-[33%]'></div>
                 <ul>
                   <li className='relative pl-5 text-[22px] font-semibold leading-[120%]'>
                     <span className='absolute left-0 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-[#FE9900]'></span>
@@ -268,7 +268,7 @@ export default function Home() {
                 <h2 className='mb-4 text-[50px] font-semibold leading-[110%] tracking-tight'>
                   Більше про реферальну програму BTC-X
                 </h2>
-                <div className='my-[40px] border opacity-[33%]'></div>
+                <div className='my-[40px] border-t opacity-[33%]'></div>
                 <div className='mb-[20px] rounded-lg border border-[#999999] px-[30px] py-[30px]'>
                   <h3 className='mb-[29px] text-[22px] leading-[120%]'>
                     Як і коли я отримаю виплати за реферальною програмою?

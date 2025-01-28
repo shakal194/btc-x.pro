@@ -13,7 +13,7 @@ export default function FiveSteps() {
             <h2 className='mb-4 text-[50px] font-bold leading-[110%]'>
               5 кроків для легкого старту з BTC-X
             </h2>
-            <div className='my-[40px] border border-black opacity-[33%]'></div>
+            <div className='my-[40px] border-t border-black opacity-[33%]'></div>
             <div className='space-y-6'>
               <div className='mb-5 p-[30px]'>
                 <span className='rounded-full border px-[20px] py-[4px]'>

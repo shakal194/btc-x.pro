@@ -66,7 +66,7 @@ export default function Home() {
                 для аірдропу — це 50 000 000 токенів
               </p>
             </div>
-            <div className='my-[40px] border-[0.5px] border-black opacity-[33%]'></div>
+            <div className='my-[40px] border-t border-black opacity-[33%]'></div>
             {/* Блоки контента */}
             <div className='mb-[140px]'>
               {/* Блок 1 */}
@@ -154,7 +154,7 @@ export default function Home() {
                 Досягайте вищих рангів, щоб отримати ще більше
               </p>
             </div>
-            <div className='my-[40px] border-[0.5px] border-black opacity-[33%]'></div>
+            <div className='my-[40px] border-t border-black opacity-[33%]'></div>
             <div className='grid grid-cols-2 gap-16'>
               <div className='flex flex-col justify-between'>
                 <h3 className='text-[22px] font-semibold leading-[120%]'>
@@ -408,7 +408,7 @@ export default function Home() {
                 <h2 className='mb-4 text-[50px] font-bold leading-[110%]'>
                   Формування ціни токену BTCXT перед запуском
                 </h2>
-                <div className='my-[40px] border opacity-[33%]'></div>
+                <div className='my-[40px] border-t opacity-[33%]'></div>
                 <div className='space-y-6'>
                   <div className='mb-5 p-[30px]'>
                     <p className='leading-[130%] text-white/30'>
@@ -488,7 +488,7 @@ export default function Home() {
                   <h3 className='text-[50px] font-semibold leading-[120%] tracking-tight'>
                     Не прогавте можливість отримати токени BTC-X
                   </h3>
-                  <div className='my-[40px] border-[0.5px] border-white opacity-[33%]'></div>
+                  <div className='my-[40px] border-t border-white opacity-[33%]'></div>
                   <p className='text-primary leading-[120%] text-white/30'>
                     Беріть участь в аірдропі, торгуйте на BTC-X, запрошуйте
                     друзів і заробляйте більше! Чим вищий ваш торговий обсяг,

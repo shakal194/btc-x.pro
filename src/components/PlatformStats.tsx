@@ -15,7 +15,7 @@ export default function PlatformStats() {
               ВТС-Х — довіра, яку підтверджують результати
             </p>
           </div>
-          <div className='my-[40px] border-[0.5px] border-black opacity-[33%]'></div>
+          <div className='my-[40px] border-t border-black opacity-[33%]'></div>
           <div className='mb-12'>
             <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4'>
               {/* Карточка 1 */}
@@ -100,7 +100,7 @@ export default function PlatformStats() {
           {/* Блоки контента */}
           <div className='space-y-12'>
             {/* Блок 1 */}
-            <div className='my-4 border border-black opacity-[33%]'></div>
+            <div className='my-4 border-t border-black opacity-[33%]'></div>
             <div className='grid grid-cols-1 items-start gap-8 lg:grid-cols-2'>
               <div>
                 <Image
@@ -152,7 +152,7 @@ export default function PlatformStats() {
               </div>
             </div>
             {/* Блок 2 */}
-            <div className='my-4 border border-black opacity-[33%]'></div>
+            <div className='my-4 border-t border-black opacity-[33%]'></div>
             <div className='grid grid-cols-1 items-start gap-8 lg:grid-cols-2'>
               <div>
                 <Image
@@ -191,7 +191,7 @@ export default function PlatformStats() {
               </div>
             </div>
             {/* Блок 3 */}
-            <div className='my-4 border border-black opacity-[33%]'></div>
+            <div className='my-4 border-t border-black opacity-[33%]'></div>
             <div className='grid grid-cols-1 items-start gap-8 lg:grid-cols-2'>
               <div>
                 <Image

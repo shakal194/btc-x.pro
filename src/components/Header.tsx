@@ -7,7 +7,7 @@ export default function Header() {
       <div className='container mx-auto mt-4 flex w-[1340px] items-center justify-between rounded-lg border border-gray-400 px-5 py-3 backdrop-blur-md'>
         <nav className='flex items-center space-x-6'>
           <Link
-            href='#'
+            href='about-us'
             className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             rel='noopener noreferrer'
           >
