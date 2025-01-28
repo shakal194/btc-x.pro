@@ -39,7 +39,12 @@ export default function Home() {
           <div className='container mx-auto w-[1340px] px-4'>
             <div className='relative mb-[150px]'>
               {/*<h1 className='text-[400px] font-bold opacity-[2%]'>ВТСХT</h1>*/}
-              <Image src='/btcxt.png' alt='BTCXT' width={1340} height={328} />
+              <Image
+                src='/btcxt.png'
+                alt='BTCX TOKEN'
+                width={1340}
+                height={328}
+              />
               <div className='container absolute top-10 mx-auto flex w-[1210px] flex-col items-center'>
                 <p className='mb-[30px] w-[250px] text-center font-ibm opacity-[33%]'>
                   Що таке ВТСХT?
