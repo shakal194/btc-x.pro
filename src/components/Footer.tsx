@@ -4,7 +4,7 @@ import Link from 'next/link';
 export default function Footer() {
   return (
     <footer className='bg-black py-[40px] text-white lg:py-[70px]'>
-      <div className='container mx-auto items-baseline justify-between px-5 lg:mb-[40px] lg:flex lg:w-[1340px] lg:py-3'>
+      <div className='container mx-auto items-baseline justify-between px-5 lg:mb-[40px] lg:flex lg:py-3'>
         <div className='mr-[30px] flex items-center lg:hidden'>
           <Image
             src='/logo_footer.png' // Замените на путь к вашему логотипу
@@ -222,7 +222,7 @@ export default function Footer() {
           </Link>
         </div>
       </div>
-      <div className='container mx-auto flex flex-col-reverse px-4 lg:block lg:w-[1340px]'>
+      <div className='container mx-auto flex flex-col-reverse px-4 lg:block'>
         {/* Верхний блок */}
         <div className='mb-8 flex flex-col items-start justify-between border-b border-gray-800 pb-8 md:flex-row md:items-center'>
           {/* Логотип и информация о компании */}
@@ -332,7 +332,7 @@ export default function Footer() {
 
         <div className='my-[25px] border-t border-white opacity-[20%] lg:mb-[40px]'></div>
       </div>
-      <div className='container mx-auto px-4 text-[9px] leading-[130%] opacity-[33%] lg:w-[1340px] lg:text-font16Leading130'>
+      <div className='container mx-auto px-4 text-[9px] leading-[130%] opacity-[33%] lg:text-font16Leading130'>
         BTC-X.PRO дозволяє користувачам отримувати економічну вигоду від руху
         цін фінансових інструментів без необхідності їх матеріального володіння.
         Визначення, такі як &quot;торгівля&quot;, &quot;угоди&quot;,

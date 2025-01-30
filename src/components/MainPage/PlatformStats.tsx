@@ -5,7 +5,7 @@ export default function PlatformStats() {
   return (
     <>
       <section className='rounded-t-xl bg-[#F4F4F4] pt-[30px] text-black lg:py-[100px]'>
-        <div className='container mx-auto px-4 lg:w-[1340px]'>
+        <div className='container mx-auto px-4'>
           {/* Статистика */}
           <div className='mb-[20px] flex flex-col-reverse justify-between lg:mb-12 lg:flex-row lg:items-center'>
             <h2 className='mb-6 text-font30Leading110 lg:text-font50Leading110'>
@@ -19,8 +19,8 @@ export default function PlatformStats() {
           <div className='mb-12'>
             <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4'>
               {/* Карточка 1 */}
-              <div className='flex h-[200px] w-full flex-col justify-between rounded-lg bg-gray-100 p-5 shadow lg:w-[324px]'>
-                <p className='text-font16Leading120 text-font22Leading120 lg:w-[196px]'>
+              <div className='flex h-[200px] w-full flex-col justify-between rounded-lg bg-gray-100 p-5 shadow'>
+                <p className='text-font16Leading120 text-font22Leading120'>
                   Торговий обсяг (USD), 24 год.
                 </p>
                 <div>
@@ -42,7 +42,7 @@ export default function PlatformStats() {
                 </div>
               </div>
               {/* Карточка 2 */}
-              <div className='flex h-[200px] w-full flex-col justify-between rounded-lg bg-gray-100 p-5 shadow lg:w-[324px]'>
+              <div className='flex h-[200px] w-full flex-col justify-between rounded-lg bg-gray-100 p-5 shadow'>
                 <p className='text-font16Leading120 text-font22Leading120'>
                   Торгових пар,{' '}
                   <span className='opacity-[33%]'>
@@ -54,8 +54,8 @@ export default function PlatformStats() {
                 </h3>
               </div>
               {/* Карточка 3 */}
-              <div className='flex h-[200px] w-full flex-col justify-between rounded-lg bg-gray-100 p-5 shadow lg:w-[324px]'>
-                <p className='text-font16Leading120 text-font22Leading120 lg:w-[196px]'>
+              <div className='flex h-[200px] w-full flex-col justify-between rounded-lg bg-gray-100 p-5 shadow'>
+                <p className='text-font16Leading120 text-font22Leading120'>
                   Зареєстрованих користувачів
                 </p>
                 <div>
@@ -77,7 +77,7 @@ export default function PlatformStats() {
                 </div>
               </div>
               {/* Карточка 4 */}
-              <div className='flex h-[200px] w-full flex-col justify-between rounded-lg bg-gray-100 p-5 shadow lg:w-[324px]'>
+              <div className='flex h-[200px] w-full flex-col justify-between rounded-lg bg-gray-100 p-5 shadow'>
                 <p className='text-font16Leading120 text-font22Leading120'>
                   Країн обслуговування —{' '}
                   <span className='opacity-[33%]'>
@@ -122,6 +122,7 @@ export default function PlatformStats() {
                   alt='0 comission'
                   width={630}
                   height={290}
+                  className='w-full'
                 ></Image>
               </div>
               <div className='grid-row-4 grid gap-x-4 gap-y-[34px]'>
@@ -133,8 +134,8 @@ export default function PlatformStats() {
                     [ 01 ]
                   </p>
                 </div>
-                <div className='flex flex-wrap text-primary leading-[120%]'>
-                  <div className='rounded-full border px-5 py-3 text-center'>
+                <div className='flex items-center text-[13px] leading-[100%] leading-[120%] lg:text-primary'>
+                  <div className='rounded-full border px-3 py-2 text-center'>
                     <p>Вхід у угоду</p>
                   </div>
                   <Image
@@ -144,10 +145,12 @@ export default function PlatformStats() {
                     height={42}
                     className='h-[42px] w-[42px]'
                   ></Image>
-                  <div className='rounded-full border px-5 py-3 text-center'>
+                  <div className='rounded-full border px-3 py-2 text-center'>
                     <p>Коли виводите гроші з нашої торгової площадки</p>
                   </div>
-                  <div className='rounded-full border px-5 py-3 text-center'>
+                </div>
+                <div className='flex items-center text-[13px] leading-[100%] leading-[120%] lg:text-primary'>
+                  <div className='rounded-full border px-3 py-2 text-center'>
                     <p>Вихід із угоди</p>
                   </div>
                   <Image
@@ -157,7 +160,7 @@ export default function PlatformStats() {
                     height={42}
                     className='h-[42px] w-[42px] rotate-180'
                   ></Image>
-                  <div className='rounded-full border px-5 py-3 text-center'>
+                  <div className='rounded-full border px-3 py-2 text-center'>
                     <p>Коли берете кредитне плече</p>
                   </div>
                 </div>
@@ -181,9 +184,10 @@ export default function PlatformStats() {
               <div>
                 <Image
                   src='/trade_power.png'
-                  alt='0 comission'
+                  alt='Trade power'
                   width={630}
                   height={290}
+                  className='w-full'
                 ></Image>
               </div>
               <div className='grid-row-4 grid gap-x-8 gap-y-[50px]'>
@@ -210,7 +214,7 @@ export default function PlatformStats() {
                   href='https://onelink.to/js2s8h'
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='w-[217px] rounded-full border px-5 py-3 text-center text-primary font-bold leading-[100%] transition hover:bg-[#FD6B06] hover:text-white'
+                  className='w-[217px] rounded-full border px-3 py-2 text-center text-primary font-bold leading-[100%] transition hover:bg-[#FD6B06] hover:text-white'
                 >
                   Перейти в додаток
                 </Link>
@@ -230,9 +234,10 @@ export default function PlatformStats() {
               <div>
                 <Image
                   src='/price.png'
-                  alt='0 comission'
+                  alt='Real prices'
                   width={630}
                   height={290}
+                  className='w-full'
                 />
               </div>
               <div className='grid-row-4 grid gap-8'>
@@ -262,7 +267,7 @@ export default function PlatformStats() {
                   href='https://onelink.to/js2s8h'
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='w-[217px] rounded-full border px-5 py-3 text-center text-primary font-bold leading-[100%] transition hover:bg-[#FD6B06] hover:text-white'
+                  className='w-[217px] rounded-full border px-3 py-2 text-center text-primary font-bold leading-[100%] transition hover:bg-[#FD6B06] hover:text-white'
                 >
                   Перейти в додаток
                 </Link>
@@ -274,7 +279,7 @@ export default function PlatformStats() {
       </section>
       <section className='bg-[#F4F4F4] py-[120px] text-black lg:py-[100px]'>
         {/* Миссия */}
-        <div className='container mx-auto flex flex-col items-center lg:mt-16 lg:w-[1020px] lg:w-[1340px]'>
+        <div className='container mx-auto flex flex-col items-center lg:mt-16 lg:w-[1020px]'>
           <p className='mb-[15px] w-[250px] text-center font-ibm text-ibm13Leading130 opacity-[33%] lg:mb-[30px] lg:text-ibm16Leading130'>
             ВТС-Х — довіра, яку підтверджують результати
           </p>

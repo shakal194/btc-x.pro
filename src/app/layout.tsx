@@ -23,8 +23,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en' suppressHydrationWarning>
-      <body className={manrope.className}>
+    <html lang='en' suppressHydrationWarning className=''>
+      <body className={`overflow-x-hidden ${manrope.className}`}>
         <Header />
         <NextUIProviders>{children}</NextUIProviders>
         <FooterSection />

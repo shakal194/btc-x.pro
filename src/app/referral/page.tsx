@@ -7,7 +7,7 @@ export default function Home() {
     <main className='bg-black text-white'>
       {/* Hero Section */}
       <section className='bg-black py-[100px]'>
-        <div className='container relative mx-auto px-4 lg:w-[1340px]'>
+        <div className='container relative mx-auto px-4'>
           <div className='flex'>
             <div className='z-20'>
               <div className='w-[1013px]'>
@@ -44,7 +44,7 @@ export default function Home() {
         </div>
       </section>
       <section className='relative z-20 rounded-xl bg-[#F4F4F4] py-[100px] pb-[100px] text-black'>
-        <div className='container mx-auto px-4 lg:w-[1340px]'>
+        <div className='container mx-auto px-4'>
           {/* Статистика */}
           <div className='mb-12 flex items-center justify-between'>
             <h2 className='mb-6 text-font30Leading110 lg:text-font50Leading110'>
@@ -58,7 +58,7 @@ export default function Home() {
           {/* Блоки контента */}
           <div className='space-y-12'>
             {/* Блок 1 */}
-            {/*<div className='grid grid-cols-1 items-start gap-8 lg:grid-cols-3'>*/}
+            {/*<div className='grid grid-cols-1 items-start gap-8  lg:grid-cols-3'>*/}
             <div className='flex justify-between'>
               <div className='flex flex-col justify-evenly'>
                 <div className='flex h-[65px] w-[65px] items-center justify-center rounded-full border border-black/30'>
@@ -135,7 +135,7 @@ export default function Home() {
         </div>
       </section>
       <section className='pt-[100px]'>
-        <div className='container mx-auto px-4 lg:w-[1340px]'>
+        <div className='container mx-auto px-4'>
           <div className='mb-12 flex items-center justify-between'>
             <h2 className='mb-6 w-[654px] text-font30Leading110 tracking-tight lg:text-font50Leading110'>
               Для кого підходить наша реферальна програма :
@@ -201,7 +201,7 @@ export default function Home() {
         </div>
       </section>
       <section className='py-[100px]'>
-        <div className='container mx-auto px-4 lg:w-[1340px]'>
+        <div className='container mx-auto px-4'>
           <div className='mb-12 flex items-center justify-between'>
             <h2 className='mb-6 w-[753px] text-font30Leading110 tracking-tight lg:text-font50Leading110'>
               Як працює наша крипто-реферальна програма?
@@ -293,7 +293,7 @@ export default function Home() {
         </div>
       </section>
       <section className='rounded-t-xl bg-[#F4F4F4] py-[100px] text-black'>
-        <div className='container mx-auto px-4 lg:w-[1340px]'>
+        <div className='container mx-auto px-4'>
           <div className='flex justify-between'>
             <div className='flex flex-col justify-between'>
               <h2 className='text-font30Leading110 lg:text-font50Leading110'>

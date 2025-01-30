@@ -7,7 +7,7 @@ export default function Home() {
       <main className='bg-black text-white'>
         {/* Hero Section */}
         <section className='bg-black pt-[100px]'>
-          <div className='container relative mx-auto px-4 lg:w-[1340px]'>
+          <div className='container relative mx-auto px-4'>
             <div className='flex'>
               <div className='z-20 mx-auto grid grid-cols-2 gap-4'>
                 <div className='flex w-[540px] flex-col'>
@@ -52,7 +52,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <div className='container z-20 mx-auto mt-[170px] lg:w-[1340px]'>
+        <div className='container z-20 mx-auto mt-[170px]'>
           {/* О нас */}
           <div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
             <div>
@@ -142,7 +142,7 @@ export default function Home() {
           </div>
         </div>
         <section className='rounded-t-xl bg-[#F4F4F4] py-[100px] pb-[100px] text-black'>
-          <div className='container mx-auto w-[1340px] px-4 lg:w-[1340px]'>
+          <div className='container mx-auto px-4'>
             {/* Статистика */}
             <div className='mb-12 flex items-center justify-between'>
               <h2 className='mb-6 text-font30Leading110 lg:text-font50Leading110'>

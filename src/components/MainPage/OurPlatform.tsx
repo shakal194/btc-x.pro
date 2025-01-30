@@ -2,8 +2,8 @@ import Image from 'next/image';
 
 export default function OurPlatformSection() {
   return (
-    <section className='mt-[653px] lg:mt-0 lg:py-[100px]'>
-      <div className='container mx-auto px-4 text-center lg:w-[1340px]'>
+    <section className='relative z-10 mt-[653px] lg:mt-0 lg:py-[100px]'>
+      <div className='container mx-auto px-4 text-center'>
         <p className='text-primary leading-[125%] tracking-tight lg:text-[40px]'>
           Ми — платформа для торгівлі та інвестування без комісій і зборів за
           кредитні плечі (ф&apos;ючерси, маржа) за спотовими

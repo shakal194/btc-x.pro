@@ -4,7 +4,7 @@ import StoreButtons from '../ui/StoreButtons';
 export default function FAQAndFooter() {
   return (
     <section className='rounded-t-xl bg-[#F4F4F4] py-[30px] text-black lg:py-[100px]'>
-      <div className='container mx-auto px-4 lg:w-[1340px]'>
+      <div className='container mx-auto px-4'>
         <div className='justify-between lg:flex'>
           <h2 className='mb-6 text-font30Leading110 lg:text-font50Leading110'>
             Відповіді на часті запитання

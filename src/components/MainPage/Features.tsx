@@ -3,8 +3,8 @@ import Image from 'next/image';
 export default function FeaturesSection() {
   return (
     <section className='py-[100px]'>
-      <div className='container mx-auto px-4 lg:flex lg:w-[1340px]'>
-        <div className='lg:w-[610px]'>
+      <div className='container mx-auto gap-8 px-4 lg:flex'>
+        <div className=''>
           <h2 className='mb-8 text-[30px] text-font30Leading110 lg:text-font50Leading110'>
             Торгуй, інвестуй і заробляй в одному місці
           </h2>

@@ -4,7 +4,7 @@ import StoreButtons from '@/components/ui/StoreButtons';
 export default function FiveSteps() {
   return (
     <section className='rounded-b-xl bg-[#F4F4F4] pb-[55px] text-black lg:py-[100px]'>
-      <div className='container mx-auto px-4 lg:w-[1340px]'>
+      <div className='container mx-auto px-4'>
         <div className='flex flex-col-reverse gap-8 lg:grid lg:grid-cols-2'>
           <div className='rounded-xl px-[10px] py-[30px] shadow-lg lg:px-[45px] lg:py-[60px]'>
             <p className='mb-[24px] w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
@@ -14,7 +14,7 @@ export default function FiveSteps() {
               6 кроків для легкого старту з BTC-X
             </h2>
             <div className='my-[20px] border-t border-black opacity-[33%] lg:my-[40px]'></div>
-            <div className='lg:space-y-6'>
+            <div className='xl:space-y-6'>
               <div className='mb-[10px] p-[15px] lg:mb-5 lg:p-[30px]'>
                 <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] leading-[130%] lg:px-[20px] lg:py-[4px]'>
                   Крок 1

@@ -7,7 +7,7 @@ export default function Home() {
       <main className='bg-black text-white'>
         {/* Hero Section */}
         <section className='bg-black py-[100px]'>
-          <div className='container relative mx-auto w-[1340px] px-4 lg:w-[1340px]'>
+          <div className='container relative mx-auto px-4'>
             <div className='flex'>
               <div className='z-20 mx-auto'>
                 <div className='flex w-[1003px] flex-col items-center text-center'>
@@ -36,7 +36,7 @@ export default function Home() {
           </div>
         </section>
         <section className='relative z-20 rounded-xl bg-[#F4F4F4] py-[100px] text-black'>
-          <div className='container mx-auto w-[1340px] px-4 lg:w-[1340px]'>
+          <div className='container mx-auto px-4'>
             <div className='relative mb-[150px]'>
               {/*<h1 className='text-[400px] font-bold opacity-[2%]'>ВТСХT</h1>*/}
               <Image
@@ -45,7 +45,7 @@ export default function Home() {
                 width={1340}
                 height={328}
               />
-              <div className='container absolute top-10 mx-auto flex w-[1210px] flex-col items-center lg:w-[1340px]'>
+              <div className='container absolute top-10 mx-auto flex w-[1210px] flex-col items-center'>
                 <p className='mb-[30px] w-[250px] text-center font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
                   Що таке ВТСХT?
                 </p>
@@ -70,7 +70,7 @@ export default function Home() {
             {/* Блоки контента */}
             <div className='mb-[140px]'>
               {/* Блок 1 */}
-              {/*<div className='grid grid-cols-1 items-start gap-8 lg:grid-cols-3'>*/}
+              {/*<div className='grid grid-cols-1 items-start gap-8  lg:grid-cols-3'>*/}
               <div className='flex justify-between'>
                 <div className='w-[75%]'>
                   <div className='mb-[28px] flex w-full justify-between'>
@@ -339,7 +339,7 @@ export default function Home() {
           </div>
         </section>
         <section className='pt-[100px]'>
-          <div className='container mx-auto px-4 lg:w-[1340px]'>
+          <div className='container mx-auto px-4'>
             <div className='mb-12 flex justify-between'>
               <p className='w-[180px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
                 Коли буде запущено токен BTCXT ?

@@ -4,7 +4,7 @@ import Link from 'next/link';
 export default function AboutUs() {
   return (
     <div className='bg-black px-4 py-[65px] text-white lg:py-[100px]'>
-      <div className='container mx-auto lg:w-[1340px]'>
+      <div className='container mx-auto'>
         {/* О нас */}
         <div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
           <div className='flex items-center justify-between lg:block'>
@@ -102,7 +102,7 @@ export default function AboutUs() {
         >
           Перейти в додаток
         </Link>
-        <div className='container mx-auto mb-[40px] mt-[90px] flex flex-col items-center lg:mt-16 lg:w-[1340px]'>
+        <div className='container mx-auto mb-[40px] mt-[90px] flex flex-col items-center lg:mt-16'>
           <p className='mb-[6px] w-[106px] text-center font-ibm text-ibm13Leading130 opacity-[33%] lg:mb-[13px] lg:w-[250px] lg:text-ibm16Leading130'>
             Приєднуйся до ком’юніті BTC-X
           </p>
