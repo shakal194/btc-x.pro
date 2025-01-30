@@ -4,27 +4,27 @@ import Link from 'next/link';
 export default function PlatformStats() {
   return (
     <>
-      <section className='rounded-t-xl bg-[#F4F4F4] py-[100px] pb-[100px] text-black'>
-        <div className='container mx-auto w-[1340px] px-4'>
+      <section className='rounded-t-xl bg-[#F4F4F4] pt-[30px] text-black lg:py-[100px]'>
+        <div className='container mx-auto px-4 lg:w-[1340px]'>
           {/* Статистика */}
-          <div className='mb-12 flex items-center justify-between'>
-            <h2 className='mb-6 text-[50px] font-bold leading-[110%]'>
+          <div className='mb-[20px] flex flex-col-reverse justify-between lg:mb-12 lg:flex-row lg:items-center'>
+            <h2 className='mb-6 text-font30Leading110 lg:text-font50Leading110'>
               Наша платформа в цифрах:
             </h2>
-            <p className='w-[250px] font-ibm opacity-[33%]'>
+            <p className='mb-[10px] w-[145px] font-ibm text-ibm13Leading130 opacity-[33%] lg:mb-0 lg:w-[250px] lg:text-ibm16Leading130'>
               ВТС-Х — довіра, яку підтверджують результати
             </p>
           </div>
-          <div className='my-[40px] border-t border-black opacity-[33%]'></div>
+          <div className='my-[25px] border-t border-black opacity-[33%] lg:my-[40px]'></div>
           <div className='mb-12'>
             <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4'>
               {/* Карточка 1 */}
-              <div className='flex h-[200px] w-[324px] flex-col justify-between rounded-lg bg-gray-100 p-5 shadow'>
-                <p className='w-[196px] text-[22px] font-semibold leading-[120%]'>
+              <div className='flex h-[200px] w-full flex-col justify-between rounded-lg bg-gray-100 p-5 shadow lg:w-[324px]'>
+                <p className='text-font16Leading120 text-font22Leading120 lg:w-[196px]'>
                   Торговий обсяг (USD), 24 год.
                 </p>
                 <div>
-                  <div className='flex'>
+                  <div className='flex items-center'>
                     <Image
                       src='/live_icon.svg'
                       alt='Live Icon'
@@ -32,32 +32,34 @@ export default function PlatformStats() {
                       height={6}
                       className='h-[6px] w-[6px]'
                     ></Image>
-                    <p className='ml-[3px] font-ibm leading-[130%] tracking-tight text-[#69DF40]'>
+                    <p className='ml-[3px] font-ibm text-ibm13Leading130 leading-[130%] tracking-tight text-[#69DF40] lg:text-ibm16Leading130'>
                       Live
                     </p>
                   </div>
-                  <h3 className='text-[50px] font-bold leading-[120%]'>
+                  <h3 className='text-[45px] font-semibold leading-[120%] lg:text-[50px] lg:font-bold'>
                     11 956 78
                   </h3>
                 </div>
               </div>
               {/* Карточка 2 */}
-              <div className='flex h-[200px] w-[324px] flex-col justify-between rounded-lg bg-gray-100 p-5 shadow'>
-                <p className='text-[22px] font-semibold leading-[120%]'>
+              <div className='flex h-[200px] w-full flex-col justify-between rounded-lg bg-gray-100 p-5 shadow lg:w-[324px]'>
+                <p className='text-font16Leading120 text-font22Leading120'>
                   Торгових пар,{' '}
                   <span className='opacity-[33%]'>
                     включаючи крипту, мем-коїни, акції
                   </span>
                 </p>
-                <h3 className='text-[50px] font-bold leading-[120%]'>54</h3>
+                <h3 className='text-[45px] font-semibold leading-[120%] lg:text-[50px] lg:font-bold'>
+                  54
+                </h3>
               </div>
               {/* Карточка 3 */}
-              <div className='flex h-[200px] w-[324px] flex-col justify-between rounded-lg bg-gray-100 p-5 shadow'>
-                <p className='w-[196px] text-[22px] font-semibold leading-[120%]'>
+              <div className='flex h-[200px] w-full flex-col justify-between rounded-lg bg-gray-100 p-5 shadow lg:w-[324px]'>
+                <p className='text-font16Leading120 text-font22Leading120 lg:w-[196px]'>
                   Зареєстрованих користувачів
                 </p>
                 <div>
-                  <div className='flex'>
+                  <div className='flex items-center'>
                     <Image
                       src='/live_icon.svg'
                       alt='Live Icon'
@@ -65,33 +67,37 @@ export default function PlatformStats() {
                       height={6}
                       className='h-[6px] w-[6px]'
                     ></Image>
-                    <p className='ml-[3px] font-ibm leading-[130%] tracking-tight text-[#69DF40]'>
+                    <p className='ml-[3px] font-ibm text-ibm13Leading130 leading-[130%] tracking-tight text-[#69DF40] lg:text-ibm16Leading130'>
                       Live
                     </p>
                   </div>
-                  <h3 className='text-[50px] font-bold leading-[120%]'>
+                  <h3 className='text-[45px] font-semibold leading-[120%] lg:text-[50px] lg:font-bold'>
                     11 654
                   </h3>
                 </div>
               </div>
               {/* Карточка 4 */}
-              <div className='flex h-[200px] w-[324px] flex-col justify-between rounded-lg bg-gray-100 p-5 shadow'>
-                <p className='text-[22px] font-semibold leading-[120%]'>
+              <div className='flex h-[200px] w-full flex-col justify-between rounded-lg bg-gray-100 p-5 shadow lg:w-[324px]'>
+                <p className='text-font16Leading120 text-font22Leading120'>
                   Країн обслуговування —{' '}
                   <span className='opacity-[33%]'>
                     ВТС-Х міжнародна платформа
                   </span>
                 </p>
-                <h3 className='text-[50px] font-bold leading-[120%]'>15</h3>
+                <h3 className='text-[45px] font-semibold leading-[120%] lg:text-[50px] lg:font-bold'>
+                  15
+                </h3>
               </div>
             </div>
           </div>
 
           {/* Заголовок и подзаголовок */}
-          <div className='mb-12'>
+          <div className='mb-[25px] lg:mb-12'>
             <div className='flex justify-between'>
-              <p className='w-[250px] font-ibm opacity-[33%]'>Наші переваги</p>
-              <h2 className='mb-4 w-[630px] text-[50px] font-semibold leading-[110%] tracking-tight'>
+              <p className='hidden w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:block lg:text-ibm16Leading130'>
+                Наші переваги
+              </p>
+              <h2 className='mb-4 text-font30Leading110 tracking-tight lg:w-[630px] lg:text-font50Leading110'>
                 Дійсно без жодних комісій та зборів протягом усього 2025 року
               </h2>
             </div>
@@ -102,6 +108,14 @@ export default function PlatformStats() {
             {/* Блок 1 */}
             <div className='my-4 border-t border-black opacity-[33%]'></div>
             <div className='grid grid-cols-1 items-start gap-8 lg:grid-cols-2'>
+              <div className='flex items-center justify-between lg:hidden'>
+                <h4 className='w-[231px] text-font18Leading130 lg:w-[394px] lg:text-font30Leading130'>
+                  ВИ НЕ ПЛАТИТЕ КОМІСІЮ ЗА ВСІ ВИДИ ПОСЛУГ:
+                </h4>
+                <p className='font-ibm text-ibm13Leading130 leading-[130%] tracking-tight opacity-[33%] lg:text-ibm16Leading130'>
+                  [ 01 ]
+                </p>
+              </div>
               <div>
                 <Image
                   src='/comission.png'
@@ -110,12 +124,14 @@ export default function PlatformStats() {
                   height={290}
                 ></Image>
               </div>
-              <div className='flex h-full flex-col justify-between'>
-                <div className='flex items-center justify-between'>
-                  <h4 className='w-[394px] text-[30px] font-bold leading-[130%]'>
-                    Ви не платите комісію за всі види послуг:
+              <div className='grid-row-4 grid gap-x-4 gap-y-[34px]'>
+                <div className='hidden items-center justify-between lg:flex'>
+                  <h4 className='w-[231px] text-font18Leading130 lg:w-[394px] lg:text-font30Leading130'>
+                    ВИ НЕ ПЛАТИТЕ КОМІСІЮ ЗА ВСІ ВИДИ ПОСЛУГ:
                   </h4>
-                  <p className='font-ibm opacity-[33%]'>[ 01 ]</p>
+                  <p className='font-ibm text-ibm13Leading130 leading-[130%] tracking-tight opacity-[33%] lg:text-ibm16Leading130'>
+                    [ 01 ]
+                  </p>
                 </div>
                 <div className='flex flex-wrap text-primary leading-[120%]'>
                   <div className='rounded-full border px-5 py-3 text-center'>
@@ -154,6 +170,14 @@ export default function PlatformStats() {
             {/* Блок 2 */}
             <div className='my-4 border-t border-black opacity-[33%]'></div>
             <div className='grid grid-cols-1 items-start gap-8 lg:grid-cols-2'>
+              <div className='flex items-center justify-between lg:hidden'>
+                <h4 className='w-[231px] text-font18Leading130 lg:w-[394px] lg:text-font30Leading130'>
+                  ТОРГОВЕЛЬНА СИЛА
+                </h4>
+                <p className='font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
+                  [ 02 ]
+                </p>
+              </div>
               <div>
                 <Image
                   src='/trade_power.png'
@@ -162,12 +186,14 @@ export default function PlatformStats() {
                   height={290}
                 ></Image>
               </div>
-              <div className='flex h-full flex-col justify-between'>
-                <div className='flex items-center justify-between'>
-                  <h4 className='w-[394px] text-[30px] font-bold leading-[130%]'>
-                    Торговельна сила
+              <div className='grid-row-4 grid gap-x-8 gap-y-[50px]'>
+                <div className='hidden items-center justify-between lg:flex'>
+                  <h4 className='w-[231px] text-font18Leading130 lg:w-[394px] lg:text-font30Leading130'>
+                    ТОРГОВЕЛЬНА СИЛА
                   </h4>
-                  <p className='font-ibm opacity-[33%]'>[ 02 ]</p>
+                  <p className='font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
+                    [ 02 ]
+                  </p>
                 </div>
                 <p>
                   Це максимальна сума в USDT яка може бути використана для всіх
@@ -193,20 +219,30 @@ export default function PlatformStats() {
             {/* Блок 3 */}
             <div className='my-4 border-t border-black opacity-[33%]'></div>
             <div className='grid grid-cols-1 items-start gap-8 lg:grid-cols-2'>
+              <div className='flex items-center justify-between lg:hidden'>
+                <h4 className='w-[231px] text-font18Leading130 lg:w-[394px] lg:text-font30Leading130'>
+                  СПРАВЖНІ ЦІНИ
+                </h4>
+                <p className='font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
+                  [ 03 ]
+                </p>
+              </div>
               <div>
                 <Image
                   src='/price.png'
                   alt='0 comission'
                   width={630}
                   height={290}
-                ></Image>
+                />
               </div>
-              <div className='flex h-full flex-col justify-between'>
-                <div className='flex items-center justify-between'>
-                  <h4 className='w-[394px] text-[30px] font-bold leading-[130%]'>
-                    Справжні ціни
+              <div className='grid-row-4 grid gap-8'>
+                <div className='hidden items-center justify-between lg:flex'>
+                  <h4 className='w-[231px] text-font18Leading130 lg:w-[394px] lg:text-font30Leading130'>
+                    СПРАВЖНІ ЦІНИ
                   </h4>
-                  <p className='font-ibm opacity-[33%]'>[ 03 ]</p>
+                  <p className='font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
+                    [ 03 ]
+                  </p>
                 </div>
                 <p>
                   Інші торгові платформи та брокерські компанії штучно
@@ -232,16 +268,17 @@ export default function PlatformStats() {
                 </Link>
               </div>
             </div>
+            <div className='my-4 border-t border-black opacity-[33%]'></div>
           </div>
         </div>
       </section>
-      <section className='bg-white py-[100px] text-black'>
+      <section className='bg-[#F4F4F4] py-[120px] text-black lg:py-[100px]'>
         {/* Миссия */}
-        <div className='container mx-auto mt-16 flex w-[1020px] flex-col items-center'>
-          <p className='mb-[30px] w-[250px] text-center font-ibm opacity-[33%]'>
+        <div className='container mx-auto flex flex-col items-center lg:mt-16 lg:w-[1020px] lg:w-[1340px]'>
+          <p className='mb-[15px] w-[250px] text-center font-ibm text-ibm13Leading130 opacity-[33%] lg:mb-[30px] lg:text-ibm16Leading130'>
             ВТС-Х — довіра, яку підтверджують результати
           </p>
-          <h4 className='text-center text-[40px] font-bold leading-[125%] tracking-tight'>
+          <h4 className='text-center text-[18px] font-medium leading-[125%] tracking-tight lg:text-[40px] lg:font-bold'>
             Місія BTC-X — зробити фінансову торгівлю доступною, прозорою та
             вигідною для кожного, поєднуючи інновації, простоту та справедливі
             умови

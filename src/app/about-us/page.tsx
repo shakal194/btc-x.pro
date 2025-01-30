@@ -1,5 +1,5 @@
+import StoreButtons from '@/components/ui/StoreButtons';
 import Image from 'next/image';
-import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -7,52 +7,25 @@ export default function Home() {
       <main className='bg-black text-white'>
         {/* Hero Section */}
         <section className='bg-black pt-[100px]'>
-          <div className='container relative mx-auto w-[1340px] px-4'>
+          <div className='container relative mx-auto px-4 lg:w-[1340px]'>
             <div className='flex'>
               <div className='z-20 mx-auto grid grid-cols-2 gap-4'>
                 <div className='flex w-[540px] flex-col'>
-                  <h1 className='mb-[88px] bg-gradient-to-r from-[#FFFFFF] to-[#999999] bg-clip-text text-[75px] font-bold leading-[110%] tracking-tight text-transparent'>
+                  <h1 className='mb-[88px] bg-gradient-to-r from-[#FFFFFF] to-[#999999] bg-clip-text text-font75Leading110 text-transparent'>
                     BTC-X — КОМАНДА, НА ЯКУ{' '}
                     <span className='bg-gradient-to-r from-[#FFC996] via-[#FD6B06] to-[#963706] bg-clip-text text-transparent'>
                       МОЖНА ПОКЛАСТИСЯ
                     </span>
-                  </h1>{' '}
+                  </h1>
                   <div className='relative w-[435px] rounded-lg bg-gradient-to-r from-[#553300] to-[#FE9900] p-[1px]'>
                     <div className='rounded-lg bg-black px-[25px] py-6'>
-                      <p className='max-w-3xl text-primary font-semibold text-gray-300'>
+                      <p className='max-w-3xl text-[13px] font-medium leading-[130%] opacity-[30%] lg:text-primary lg:font-semibold lg:opacity-100'>
                         Завантажуйте додаток BTC-X — довіряйте найкращим у світі
                         фінансів
                       </p>
                       <div className='my-6 border-t opacity-[33%]'></div>
                       <div className='flex justify-between'>
-                        <Link
-                          href='https://apps.apple.com/ua/app/btc-x-pro/id6479724977'
-                          target='_blank'
-                          rel='noopener noreferrer'
-                          className=''
-                        >
-                          <Image
-                            src='/appstore_white.png'
-                            alt='App Store'
-                            width={185}
-                            height={55}
-                            className='h-[55px] w-[185px]'
-                          />
-                        </Link>
-                        <Link
-                          href='https://play.google.com/store/apps/details?id=btcx.pro'
-                          target='_blank'
-                          rel='noopener noreferrer'
-                          className=''
-                        >
-                          <Image
-                            src='/googleplay_white.png'
-                            alt='Google Play'
-                            width={185}
-                            height={55}
-                            className='h-[55px] w-[185px]'
-                          />
-                        </Link>
+                        <StoreButtons theme='dark' />
                       </div>
                     </div>
                   </div>
@@ -79,19 +52,19 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <div className='container z-20 mx-auto mt-[170px] w-[1340px]'>
+        <div className='container z-20 mx-auto mt-[170px] lg:w-[1340px]'>
           {/* О нас */}
           <div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
             <div>
-              <h2 className='mb-6 text-[50px] font-bold leading-[110%]'>
+              <h2 className='mb-6 text-font30Leading110 lg:text-font50Leading110'>
                 Про нас
               </h2>
-              <p className='w-[250px] font-ibm opacity-[33%]'>
+              <p className='w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
                 BTC-X — ваш надійний провідник у світі трейдингу
               </p>
             </div>
             <div>
-              <p className='mb-[30px] text-[30px] leading-[120%]'>
+              <p className='mb-[30px] text-font18Leading130 lg:text-font30Leading130'>
                 Ми — команда цифрових ентузіастів із глибоким досвідом у
                 фінансових ринках, яка успішно співпрацює з провідними
                 компаніями криптовалютної індустрії та технологій.
@@ -103,14 +76,14 @@ export default function Home() {
                 height={273}
                 className='h-[273px] w-[412px] rounded-lg'
               />
-              <p className='mt-[10px] w-[250px] font-ibm opacity-[33%]'>
+              <p className='mt-[10px] w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
                 Founder BTC-X
               </p>
             </div>
           </div>
           {/* Наша цель */}
           <div className='mb-[60px] mt-[148px]'>
-            <h2 className='text-[50px] font-semibold leading-[110%] tracking-tight text-white/30'>
+            <h2 className='text-font30Leading110 text-white/30 lg:text-font50Leading110'>
               Цей досвід надихнув нас створити BTC-X — проєкту, що пропонує
               унікальну перевагу: торгівлю маржинальними позиціями{' '}
               <span className='bg-gradient-to-r from-[#FFC996] via-[#FD6B06] to-[#963706] bg-clip-text text-transparent'>
@@ -143,18 +116,18 @@ export default function Home() {
               <div className='flex items-center gap-8'>
                 <Image src='/qr.png' alt='QR Code' width={169} height={169} />
                 <div>
-                  <h2 className='mb-[40px] text-[50px] font-bold leading-[110%]'>
+                  <h2 className='mb-[40px] text-font30Leading110 lg:text-font50Leading110'>
                     Заробляй разом з нами{' '}
                   </h2>
-                  <p className='w-[250px] font-ibm opacity-[33%]'>
+                  <p className='w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
                     Скануй щоб завантажити
                   </p>
                 </div>
               </div>
             </div>
           </div>
-          <div className='container mx-auto mb-[40px] mt-16 flex w-[1190px] flex-col items-center'>
-            <p className='w-[375px] text-center font-ibm opacity-[33%]'>
+          <div className='container mx-auto mb-[40px] mt-16 flex flex-col items-center lg:w-[1190px]'>
+            <p className='w-[375px] text-center font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
               Наша місія — це не просто ціль, а глобальне завдання, яке формує
               майбутнє.
             </p>
@@ -163,46 +136,19 @@ export default function Home() {
               активами. Саме тому наш додаток доступний для завантаження в App
               Store та Google Play майже у всьому світі.
             </h4>
-            <div className='flex justify-between'>
-              <Link
-                href='https://apps.apple.com/ua/app/btc-x-pro/id6479724977'
-                target='_blank'
-                rel='noopener noreferrer'
-                className='mr-[15px]'
-              >
-                <Image
-                  src='/appstore_white.png'
-                  alt='App Store'
-                  width={185}
-                  height={55}
-                  className='h-[55px] w-[185px]'
-                />
-              </Link>
-              <Link
-                href='https://play.google.com/store/apps/details?id=btcx.pro'
-                target='_blank'
-                rel='noopener noreferrer'
-                className=''
-              >
-                <Image
-                  src='/googleplay_white.png'
-                  alt='Google Play'
-                  width={185}
-                  height={55}
-                  className='h-[55px] w-[185px]'
-                />
-              </Link>
+            <div className='grid grid-cols-2 gap-4'>
+              <StoreButtons theme='dark' />
             </div>
           </div>
         </div>
         <section className='rounded-t-xl bg-[#F4F4F4] py-[100px] pb-[100px] text-black'>
-          <div className='container mx-auto w-[1340px] px-4'>
+          <div className='container mx-auto w-[1340px] px-4 lg:w-[1340px]'>
             {/* Статистика */}
             <div className='mb-12 flex items-center justify-between'>
-              <h2 className='mb-6 text-[50px] font-bold leading-[110%]'>
+              <h2 className='mb-6 text-font30Leading110 lg:text-font50Leading110'>
                 Ми надаємо можливість:
               </h2>
-              <p className='w-[250px] font-ibm opacity-[33%]'>
+              <p className='w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
                 BTC-X — це про круті можливості та доступ до сучасних фінансових
                 інструментів
               </p>
@@ -216,7 +162,7 @@ export default function Home() {
                     <p className='mb-[20px] text-[20px] font-semibold leading-[110%]'>
                       Торгувати фінансовими активами
                     </p>
-                    <p className='w-[348px] text-[16px] font-medium leading-[110%] text-black/50'>
+                    <p className='w-[348px] text-font16Leading110 text-black/50'>
                       Купуйте та продавайте різні фінансові активи за спотовими
                       цінами, використовуючи дані з провідних глобальних і
                       криптовалютних бірж у реальному часі
@@ -234,9 +180,9 @@ export default function Home() {
                 <div className='relative flex h-[255px] flex-col rounded-lg bg-gray-100 p-5 shadow'>
                   <div className='z-10'>
                     <p className='mb-[20px] text-[20px] font-semibold leading-[110%]'>
-                      Торгувати без косімій
+                      Торгувати без комісій
                     </p>
-                    <p className='text-[16px] font-medium leading-[110%] text-black/50'>
+                    <p className='text-font16Leading110 text-black/50'>
                       Торгувати без комісій як на спотовому ринку, так і на
                       ф&apos;ючерсах, включаючи акції та мемкоїни.{' '}
                     </p>
@@ -255,7 +201,7 @@ export default function Home() {
                     <p className='mb-[20px] text-[20px] font-semibold leading-[110%]'>
                       Збільшувати прибуток з кредитним плечем
                     </p>
-                    <p className='text-[16px] font-medium leading-[110%] text-black/50'>
+                    <p className='text-font16Leading110 text-black/50'>
                       Торгувати з кредитним плечем без додаткових комісій, що
                       значно збільшує потенційний прибуток.
                     </p>
@@ -293,7 +239,7 @@ export default function Home() {
                     від 0.1% до 0.5%. Це означає, що при торгівлі на $1000, ви
                     могли б заплатити від $1 до $5 лише за комісію.
                   </h3>
-                  <p className='w-[302px] font-ibm opacity-[33%]'>
+                  <p className='w-[302px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
                     Забудь про комісії — торгуй вигідно та без обмежень із BTC-X
                   </p>
                 </div>
@@ -306,18 +252,18 @@ export default function Home() {
               <div className='grid grid-cols-1 items-start gap-8 lg:grid-cols-2'>
                 <div className='flex h-full flex-col justify-between'>
                   <div className='flex items-center justify-between'>
-                    <h4 className='text-[50px] font-semibold leading-[110%] tracking-tight'>
+                    <h4 className='text-font30Leading110 lg:text-font50Leading110'>
                       Торгівля з кредитним плечем та комісія
                     </h4>
                   </div>
-                  <p className='w-[427px] font-ibm opacity-[33%]'>
+                  <p className='w-[427px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
                     Якщо комісія складає 0.1%, ви заплатите $10 за угоду на
                     $10,000. Якщо комісія складає 0.5% ви заплатите $50 за ту
                     саму угоду
                   </p>
                 </div>
                 <div>
-                  <h3 className='mb-[40px] text-[22px] font-semibold leading-[120%]'>
+                  <h3 className='mb-[40px] text-font16Leading120 text-font22Leading120'>
                     Якщо ви використовуєте кредитне плече, наприклад, 10x, то
                     при угоді на $1000 ви{' '}
                     <span className='text-[#FE9900]'>
@@ -335,13 +281,13 @@ export default function Home() {
                   ></Image>
                   <div className='mb-[34px] flex items-center'>
                     <div className='mr-[5px] h-[28px] w-[28px] rounded-full bg-[#FE9900]'></div>
-                    <p className='text-[22px] font-semibold leading-[120%]'>
+                    <p className='text-font16Leading120 text-font22Leading120'>
                       - Сума ваших вкладень
                     </p>
                   </div>{' '}
                   <div className='flex items-center'>
                     <div className='mr-[5px] h-[28px] w-[28px] rounded-full bg-[#131313]'></div>
-                    <p className='text-[22px] font-semibold leading-[120%]'>
+                    <p className='text-font16Leading120 text-font22Leading120'>
                       - Сума угоди з кредитним плечем 10Х
                     </p>
                   </div>

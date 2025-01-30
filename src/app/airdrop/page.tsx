@@ -1,5 +1,5 @@
+import StoreButtons from '@/components/ui/StoreButtons';
 import Image from 'next/image';
-import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -7,7 +7,7 @@ export default function Home() {
       <main className='bg-black text-white'>
         {/* Hero Section */}
         <section className='bg-black py-[100px]'>
-          <div className='container relative mx-auto w-[1340px] px-4'>
+          <div className='container relative mx-auto w-[1340px] px-4 lg:w-[1340px]'>
             <div className='flex'>
               <div className='z-20 mx-auto'>
                 <div className='flex w-[1003px] flex-col items-center text-center'>
@@ -17,7 +17,7 @@ export default function Home() {
                       BTCXT
                     </span>
                   </h1>
-                  <p className='text-ibm w-[512px] text-base leading-[130%] opacity-[44%]'>
+                  <p className='text-ibm w-[512px] text-font16Leading130 opacity-[44%]'>
                     [ Це додатковий стимул для залучення нових користувачів та
                     винагороди за активність на платформі ]
                   </p>
@@ -36,7 +36,7 @@ export default function Home() {
           </div>
         </section>
         <section className='relative z-20 rounded-xl bg-[#F4F4F4] py-[100px] text-black'>
-          <div className='container mx-auto w-[1340px] px-4'>
+          <div className='container mx-auto w-[1340px] px-4 lg:w-[1340px]'>
             <div className='relative mb-[150px]'>
               {/*<h1 className='text-[400px] font-bold opacity-[2%]'>ВТСХT</h1>*/}
               <Image
@@ -45,8 +45,8 @@ export default function Home() {
                 width={1340}
                 height={328}
               />
-              <div className='container absolute top-10 mx-auto flex w-[1210px] flex-col items-center'>
-                <p className='mb-[30px] w-[250px] text-center font-ibm opacity-[33%]'>
+              <div className='container absolute top-10 mx-auto flex w-[1210px] flex-col items-center lg:w-[1340px]'>
+                <p className='mb-[30px] w-[250px] text-center font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
                   Що таке ВТСХT?
                 </p>
                 <h4 className='text-center text-[40px] font-semibold leading-[125%] tracking-tight'>
@@ -57,7 +57,7 @@ export default function Home() {
               </div>
             </div>
             <div className='mb-12 flex items-end justify-between'>
-              <h2 className='w-[514px] text-[50px] font-bold leading-[110%] tracking-tight'>
+              <h2 className='w-[514px] text-font30Leading110 tracking-tight lg:text-font50Leading110'>
                 Як отримати токени BTCXT через airdrop?
               </h2>
               <p className='w-[339px] text-primary font-semibold leading-[110%]'>
@@ -75,21 +75,15 @@ export default function Home() {
                 <div className='w-[75%]'>
                   <div className='mb-[28px] flex w-full justify-between'>
                     <div className='flex items-center justify-center rounded-full px-[20px] py-[10px] shadow-lg'>
-                      <p className='text-base font-semibold leading-[110%]'>
-                        Крок 1
-                      </p>
+                      <p className='text-font16Leading110'>Крок 1</p>
                     </div>
                     <div className='my-auto w-[20%] border border-2 border-b border-dashed'></div>
                     <div className='flex items-center justify-center rounded-full px-[20px] py-[10px] shadow-lg'>
-                      <p className='text-base font-semibold leading-[110%]'>
-                        Крок 2
-                      </p>
+                      <p className='text-font16Leading110'>Крок 2</p>
                     </div>
                     <div className='my-auto w-[20%] border border-2 border-b border-dashed'></div>
                     <div className='flex items-center justify-center rounded-full px-[20px] py-[10px] shadow-lg'>
-                      <p className='text-base font-semibold leading-[110%]'>
-                        Крок 3
-                      </p>
+                      <p className='text-font16Leading110'>Крок 3</p>
                     </div>
                     <div className='my-auto w-[20%] border border-2 border-b border-dashed'></div>
                   </div>
@@ -98,7 +92,7 @@ export default function Home() {
                       <h4 className='mb-[15px] text-[20px] font-semibold leading-[120%]'>
                         Завантажте додаток BTC-X
                       </h4>
-                      <p className='text-base leading-[130%] opacity-[50%]'>
+                      <p className='text-font16Leading130 opacity-[50%]'>
                         Почніть свою подорож у світ вигідної торгівлі,
                         завантаживши наш додаток із App Store або Google Play.
                       </p>
@@ -107,7 +101,7 @@ export default function Home() {
                       <h4 className='mb-[15px] text-[20px] font-semibold leading-[120%]'>
                         Торгуйте на платформі BTC-X
                       </h4>
-                      <p className='text-base leading-[130%] opacity-[50%]'>
+                      <p className='text-font16Leading130 opacity-[50%]'>
                         Кожен ваш торговий обсяг приносить вам бали, які потім
                         конвертуються в токени BTCXT.
                       </p>
@@ -116,7 +110,7 @@ export default function Home() {
                       <h4 className='mb-[15px] text-[20px] font-semibold leading-[120%]'>
                         Запрошуйте рефералів
                       </h4>
-                      <p className='text-base leading-[130%] opacity-[50%]'>
+                      <p className='text-font16Leading130 opacity-[50%]'>
                         Ваш торговий обсяг приносить бали, які автоматично
                         конвертуються в токени BTCXT.
                       </p>
@@ -147,24 +141,24 @@ export default function Home() {
               </div>
             </div>
             <div className='mb-12 flex items-end justify-between'>
-              <h2 className='w-[514px] text-[50px] font-bold leading-[110%] tracking-tight'>
+              <h2 className='w-[514px] text-font30Leading110 tracking-tight lg:text-font50Leading110'>
                 Рейтинг та винагороди
               </h2>
-              <p className='w-[250px] font-ibm opacity-[33%]'>
+              <p className='w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
                 Досягайте вищих рангів, щоб отримати ще більше
               </p>
             </div>
             <div className='my-[40px] border-t border-black opacity-[33%]'></div>
             <div className='grid grid-cols-2 gap-16'>
               <div className='flex flex-col justify-between'>
-                <h3 className='text-[22px] font-semibold leading-[120%]'>
+                <h3 className='text-font16Leading120 text-font22Leading120'>
                   Чим більше ви торгуєте,{' '}
                   <span className='text-[#FE9900]'>тим вище ваш ранг,</span> а
                   отже, тим більше балів ви отримаєте. Кожен ранг{' '}
                   <span className='text-[#FE9900]'>дає вам доступ</span> до
                   більшої кількості токенів BTCXT
                 </h3>
-                <p className='text-ibm text-[16px] leading-[130%] text-black/50'>
+                <p className='text-ibm text-font16Leading130 text-black/50'>
                   Не забувайте: ви отримуєте більше балів за активну торгівлю та
                   за торгівлю ваших рефералів. Ваш ранг та кількість отриманих
                   забувайте: ви отримуєте більше балів Не за активну торгівлю
@@ -174,14 +168,10 @@ export default function Home() {
               <div className='w-[608px]'>
                 <div className='mb-[20px] flex justify-between'>
                   <div className='flex items-center justify-center rounded-full border px-[20px] py-[10px]'>
-                    <p className='text-base font-semibold leading-[110%]'>
-                      Ранг
-                    </p>
+                    <p className='text-font16Leading110'>Ранг</p>
                   </div>
                   <div className='flex items-center justify-center rounded-full border px-[20px] py-[10px]'>
-                    <p className='text-base font-semibold leading-[110%]'>
-                      Обсяг за весь час
-                    </p>
+                    <p className='text-font16Leading110'>Обсяг за весь час</p>
                   </div>
                 </div>
                 <div className='mb-[10px] flex items-center justify-between rounded-full bg-white px-[11px] py-[11px] text-black/30'>
@@ -349,9 +339,9 @@ export default function Home() {
           </div>
         </section>
         <section className='pt-[100px]'>
-          <div className='container mx-auto w-[1340px] px-4'>
+          <div className='container mx-auto px-4 lg:w-[1340px]'>
             <div className='mb-12 flex justify-between'>
-              <p className='w-[180px] font-ibm opacity-[33%]'>
+              <p className='w-[180px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
                 Коли буде запущено токен BTCXT ?
               </p>
               <h2 className='mb-6 w-[664px] text-[40px] font-semibold leading-[125%] tracking-tight text-white/30'>
@@ -365,7 +355,7 @@ export default function Home() {
             </div>
             <div className='mb-[20px] flex'>
               <div className='mr-[15px] flex items-center justify-center rounded-full border border-white/30 px-[20px] py-[10px]'>
-                <p className='text-base font-semibold leading-[110%]'>
+                <p className='text-font16Leading110'>
                   Торговий об&apos;єм USD / 24 год
                 </p>
               </div>
@@ -377,7 +367,7 @@ export default function Home() {
                   height={6}
                   className='h-[6px] w-[6px]'
                 ></Image>
-                <p className='ml-[3px] font-ibm leading-[130%] tracking-tight text-[#69DF40]'>
+                <p className='ml-[3px] font-ibm text-ibm13Leading130 leading-[130%] tracking-tight text-[#69DF40] lg:text-ibm16Leading130'>
                   Live
                 </p>
               </div>
@@ -388,7 +378,7 @@ export default function Home() {
               </h2>
             </div>
             <div className='mx-auto mb-[320px] flex w-[1126px] flex-col items-center text-center font-medium'>
-              <p className='mb-[33px] w-[257px] font-ibm opacity-[33%]'>
+              <p className='mb-[33px] w-[257px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
                 ВТС-Х — всі ринки та інструменти в одному місці
               </p>
               <h3 className='text-[40px] leading-[125%] tracking-tight'>
@@ -402,10 +392,10 @@ export default function Home() {
             </div>
             <div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
               <div className='rounded-xl px-[45px] py-[60px] shadow-lg'>
-                <p className='mb-[24px] w-[250px] font-ibm opacity-[33%]'>
+                <p className='mb-[24px] w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
                   Як визначається ціна токенів BTCXT?
                 </p>
-                <h2 className='mb-4 text-[50px] font-bold leading-[110%]'>
+                <h2 className='mb-4 text-font30Leading110 lg:text-font50Leading110'>
                   Формування ціни токену BTCXT перед запуском
                 </h2>
                 <div className='my-[40px] border-t opacity-[33%]'></div>
@@ -417,34 +407,7 @@ export default function Home() {
                       відображає реальну ринкову активність.
                     </p>
                     <div className='mt-5 flex justify-evenly'>
-                      <Link
-                        href='https://apps.apple.com/ua/app/btc-x-pro/id6479724977'
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        className=''
-                      >
-                        <Image
-                          src='/appstore_white.png'
-                          alt='App Store'
-                          width={185}
-                          height={55}
-                          className='h-[55px] w-[185px]'
-                        />
-                      </Link>
-                      <Link
-                        href='https://play.google.com/store/apps/details?id=btcx.pro'
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        className=''
-                      >
-                        <Image
-                          src='/googleplay_white.png'
-                          alt='Google Play'
-                          width={185}
-                          height={55}
-                          className='h-[55px] w-[185px]'
-                        />
-                      </Link>
+                      <StoreButtons theme='dark' />
                     </div>
                   </div>
                 </div>
@@ -455,7 +418,7 @@ export default function Home() {
                   <h3 className='font-semiboldtext-[20px] mb-[15px] leading-[120%]'>
                     Торгуйте на платформі BTC-X
                   </h3>
-                  <p className='text-[16px] font-medium leading-[130%] text-white/50'>
+                  <p className='text-font16Leading130 text-white/50'>
                     Ціна токенів BTCXT визначається на основі спреду між ціною
                     покупки та продажу для всіх закритих позицій користувачів на
                     платформі
@@ -498,10 +461,10 @@ export default function Home() {
                 <div className='flex items-center gap-8'>
                   <Image src='/qr.png' alt='QR Code' width={169} height={169} />
                   <div>
-                    <h2 className='mb-[40px] text-[50px] font-bold leading-[110%]'>
+                    <h2 className='mb-[40px] text-font30Leading110 lg:text-font50Leading110'>
                       Заробляй з нами
                     </h2>
-                    <p className='w-[250px] font-ibm opacity-[33%]'>
+                    <p className='w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
                       Скануй щоб завантажити
                     </p>
                   </div>
@@ -510,7 +473,7 @@ export default function Home() {
             </div>
 
             <div className='relative mx-auto pb-6 text-white before:absolute before:bottom-0 before:left-1/2 before:h-[1px] before:w-[1440px] before:-translate-x-1/2 before:bg-gradient-to-r before:from-[#FE9900] before:via-[#FD6B06] before:to-[#FE9900]'>
-              <h1 className='text-center text-[30px] font-semibold leading-[120%] text-white/30'>
+              <h1 className='text-center text-font18Leading130 text-white/30 lg:text-font30Leading130'>
                 Заробляй разом з BTC-X /
               </h1>
             </div>

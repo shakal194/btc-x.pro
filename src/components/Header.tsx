@@ -4,8 +4,8 @@ import Link from 'next/link';
 export default function Header() {
   return (
     <header className='relative z-50 text-white'>
-      <div className='container mx-auto mt-4 flex w-[1340px] items-center justify-between rounded-lg border border-gray-400 px-5 py-3 backdrop-blur-md'>
-        <nav className='flex items-center space-x-6'>
+      <div className='container mx-auto mt-4 flex items-center justify-between rounded-lg border border-gray-400 px-5 py-3 backdrop-blur-md lg:w-[1340px]'>
+        <nav className='hidden items-center space-x-6 lg:flex'>
           <Link
             href='about-us'
             className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
@@ -30,20 +30,28 @@ export default function Header() {
         </nav>
 
         {/* Логотип */}
-        <div>
-          <Link href='/' rel='noopener noreferrer'>
+        <div className=''>
+          <Link
+            href='/'
+            rel='noopener noreferrer'
+            className='flex items-center lg:block'
+          >
             <Image
               src='/logo_header.png' // Замените на путь к вашему логотипу
               alt='Logo'
               width={30}
               height={45}
-              className='h-[45px] w-[30px] cursor-pointer object-contain'
+              className='h-[26px] w-[17px] cursor-pointer object-contain lg:h-[45px] lg:w-[30px]'
             />
+
+            <p className='ml-[5px] text-primary font-semibold leading-[120%] lg:hidden'>
+              BTC-X
+            </p>
           </Link>
         </div>
 
         {/* Правый блок с кнопками */}
-        <div className='flex items-center space-x-4'>
+        <div className='hidden items-center space-x-4 lg:flex'>
           <Link
             href='#'
             className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'

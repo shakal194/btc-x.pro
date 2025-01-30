@@ -1,3 +1,4 @@
+import StoreButtons from '@/components/ui/StoreButtons';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -6,11 +7,11 @@ export default function Home() {
     <main className='bg-black text-white'>
       {/* Hero Section */}
       <section className='bg-black py-[100px]'>
-        <div className='container relative mx-auto w-[1340px] px-4'>
+        <div className='container relative mx-auto px-4 lg:w-[1340px]'>
           <div className='flex'>
             <div className='z-20'>
               <div className='w-[1013px]'>
-                <h1 className='text-[75px] font-bold leading-[110%] tracking-tight'>
+                <h1 className='text-font75Leading110'>
                   Заробляйте{' '}
                   <span className='bg-gradient-to-r from-[#FFC996] via-[#FD6B06] to-[#963706] bg-clip-text text-transparent'>
                     до 55%
@@ -19,41 +20,14 @@ export default function Home() {
                 </h1>
               </div>
               <div className='mt-[100px] w-[435px]'>
-                <p className='max-w-3xl text-primary font-semibold text-gray-300'>
+                <p className='max-w-3xl text-primary font-semibold'>
                   Ми пропонуємо вам унікальну можливість отримувати до 55% від
                   прибутку, який ми отримуємо за угоди запрошених вами
                   користувачів
                 </p>
                 <div className='my-6 border-t opacity-[33%]'></div>
                 <div className='flex justify-between'>
-                  <Link
-                    href='https://apps.apple.com/ua/app/btc-x-pro/id6479724977'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className=''
-                  >
-                    <Image
-                      src='/appstore_white.png'
-                      alt='App Store'
-                      width={185}
-                      height={55}
-                      className='h-[55px] w-[185px]'
-                    />
-                  </Link>
-                  <Link
-                    href='https://play.google.com/store/apps/details?id=btcx.pro'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className=''
-                  >
-                    <Image
-                      src='/googleplay_white.png'
-                      alt='Google Play'
-                      width={185}
-                      height={55}
-                      className='h-[55px] w-[185px]'
-                    />
-                  </Link>
+                  <StoreButtons theme='dark' />
                 </div>
               </div>
             </div>
@@ -70,13 +44,13 @@ export default function Home() {
         </div>
       </section>
       <section className='relative z-20 rounded-xl bg-[#F4F4F4] py-[100px] pb-[100px] text-black'>
-        <div className='container mx-auto w-[1340px] px-4'>
+        <div className='container mx-auto px-4 lg:w-[1340px]'>
           {/* Статистика */}
           <div className='mb-12 flex items-center justify-between'>
-            <h2 className='mb-6 text-[50px] font-bold leading-[110%]'>
+            <h2 className='mb-6 text-font30Leading110 lg:text-font50Leading110'>
               Як це працює?
             </h2>
-            <p className='w-[250px] font-ibm opacity-[33%]'>
+            <p className='w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
               Простий гайд для збільшення твого прибутку
             </p>
           </div>
@@ -88,20 +62,26 @@ export default function Home() {
             <div className='flex justify-between'>
               <div className='flex flex-col justify-evenly'>
                 <div className='flex h-[65px] w-[65px] items-center justify-center rounded-full border border-black/30'>
-                  <p className='text-[30px] leading-[110%]'>01</p>
+                  <p className='text-font18Leading130 lg:text-font30Leading130'>
+                    01
+                  </p>
                 </div>
                 <div className='mx-auto h-[25%] border-2 border-l border-dashed'></div>
                 <div className='flex h-[65px] w-[65px] items-center justify-center rounded-full border border-black/30'>
-                  <p className='text-[30px] leading-[110%]'>02</p>
+                  <p className='text-font18Leading130 lg:text-font30Leading130'>
+                    02
+                  </p>
                 </div>
                 <div className='mx-auto h-[25%] border-2 border-l border-dashed'></div>
                 <div className='flex h-[65px] w-[65px] items-center justify-center rounded-full border border-black/30'>
-                  <p className='text-[30px] leading-[110%]'>03</p>
+                  <p className='text-font18Leading130 lg:text-font30Leading130'>
+                    03
+                  </p>
                 </div>
               </div>
               <div className='flex w-[485px] flex-col justify-between'>
                 <div className='flex flex-col justify-between'>
-                  <h4 className='mb-[20px] text-[30px] font-semibold leading-[110%]'>
+                  <h4 className='mb-[20px] text-font18Leading130 lg:text-font30Leading130'>
                     Реєстрація та верифікація
                   </h4>
                   <p className='text-primary leading-[120%] opacity-[50%]'>
@@ -110,7 +90,7 @@ export default function Home() {
                   </p>
                 </div>
                 <div className='flex flex-col justify-between'>
-                  <h4 className='mb-[20px] text-[30px] font-semibold leading-[110%]'>
+                  <h4 className='mb-[20px] text-font18Leading130 lg:text-font30Leading130'>
                     Отримай реферальний код
                   </h4>
                   <p className='text-primary leading-[120%] opacity-[50%]'>
@@ -120,7 +100,7 @@ export default function Home() {
                   </p>
                 </div>{' '}
                 <div className='flex flex-col justify-between'>
-                  <h4 className='mb-[20px] text-[30px] font-semibold leading-[110%]'>
+                  <h4 className='mb-[20px] text-font18Leading130 lg:text-font30Leading130'>
                     Діліться можливостями
                   </h4>
                   <p className='text-primary leading-[120%] opacity-[50%]'>
@@ -141,11 +121,11 @@ export default function Home() {
             </div>
           </div>
           <div className='mb-12 mt-[150px] flex w-full items-center justify-between'>
-            <p className='h-[63px] w-[174px] font-ibm opacity-[33%]'>
+            <p className='h-[63px] w-[174px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
               BTC-X ділиться з вами до 55% свого доходу
             </p>
             <div className='w-[885px]'>
-              <h2 className='mb-6 text-[50px] font-semibold leading-[110%] tracking-tight'>
+              <h2 className='mb-6 text-font30Leading110 tracking-tight lg:text-font50Leading110'>
                 Чим більший торговий обсяг ваших рефералів, тим більше ви
                 заробляєте
               </h2>
@@ -155,12 +135,12 @@ export default function Home() {
         </div>
       </section>
       <section className='pt-[100px]'>
-        <div className='container mx-auto w-[1340px] px-4'>
+        <div className='container mx-auto px-4 lg:w-[1340px]'>
           <div className='mb-12 flex items-center justify-between'>
-            <h2 className='mb-6 w-[654px] text-[50px] font-semibold leading-[110%] tracking-tight'>
+            <h2 className='mb-6 w-[654px] text-font30Leading110 tracking-tight lg:text-font50Leading110'>
               Для кого підходить наша реферальна програма :
             </h2>
-            <p className='w-[250px] font-ibm opacity-[33%]'>
+            <p className='w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
               Долучайтесь до нашої реферальної програми BTC-X
             </p>
           </div>
@@ -221,12 +201,12 @@ export default function Home() {
         </div>
       </section>
       <section className='py-[100px]'>
-        <div className='container mx-auto w-[1340px] px-4'>
+        <div className='container mx-auto px-4 lg:w-[1340px]'>
           <div className='mb-12 flex items-center justify-between'>
-            <h2 className='mb-6 w-[753px] text-[50px] font-semibold leading-[110%] tracking-tight'>
+            <h2 className='mb-6 w-[753px] text-font30Leading110 tracking-tight lg:text-font50Leading110'>
               Як працює наша крипто-реферальна програма?
             </h2>
-            <p className='w-[395px] font-ibm opacity-[33%]'>
+            <p className='w-[395px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
               Ваше винагородження нараховується з обсягу угод запрошених вами
               користувачів.
             </p>
@@ -245,12 +225,12 @@ export default function Home() {
                 </h2>
                 <div className='my-[40px] border-t border-black opacity-[33%]'></div>
                 <ul>
-                  <li className='relative pl-5 text-[22px] font-semibold leading-[120%]'>
+                  <li className='relative pl-5 text-font16Leading120 text-font22Leading120'>
                     <span className='absolute left-0 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-[#FE9900]'></span>
                     <span className='text-[#FE9900]'>35%</span> з угод ваших
                     безпосередніх рефералів.
                   </li>
-                  <li className='relative pl-5 text-[22px] font-semibold leading-[120%]'>
+                  <li className='relative pl-5 text-font16Leading120 text-font22Leading120'>
                     <span className='absolute left-0 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-[#FE9900]'></span>
                     <span className='text-[#FE9900]'>20%</span> з угод рефералів
                     ваших рефералів.
@@ -262,10 +242,10 @@ export default function Home() {
           <div className='mt-[200px] grid grid-cols-1 items-start gap-8 lg:grid-cols-2'>
             <div className='relative overflow-auto rounded-3xl bg-gradient-to-r from-[#553300] to-[#FE9900] p-[1px]'>
               <div className='rounded-3xl bg-[#111111] px-[46px] py-[54px]'>
-                <p className='mb-[24px] w-[250px] font-ibm opacity-[33%]'>
+                <p className='mb-[24px] w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
                   BTC-X — ваш надійний провідник у світі трейдингу
                 </p>
-                <h2 className='mb-4 text-[50px] font-semibold leading-[110%] tracking-tight'>
+                <h2 className='mb-4 text-font30Leading110 tracking-tight lg:text-font50Leading110'>
                   Більше про реферальну програму BTC-X
                 </h2>
                 <div className='my-[40px] border-t opacity-[33%]'></div>
@@ -313,10 +293,10 @@ export default function Home() {
         </div>
       </section>
       <section className='rounded-t-xl bg-[#F4F4F4] py-[100px] text-black'>
-        <div className='container mx-auto w-[1340px] px-4'>
+        <div className='container mx-auto px-4 lg:w-[1340px]'>
           <div className='flex justify-between'>
             <div className='flex flex-col justify-between'>
-              <h2 className='text-[50px] font-semibold leading-[110%] tracking-tight'>
+              <h2 className='text-font30Leading110 lg:text-font50Leading110'>
                 Переваги нашої реферальної програми:
               </h2>
               <div>
@@ -326,7 +306,7 @@ export default function Home() {
                   height={140}
                   alt='Bitcoin coin'
                 />
-                <p className='mt-[15px] w-[250px] font-ibm opacity-[33%]'>
+                <p className='mt-[15px] w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
                   Долучайтесь до нашої реферальної програми BTC-X
                 </p>
               </div>
@@ -363,7 +343,7 @@ export default function Home() {
                     </div>
                     {/* Текст */}
                     <div className='ml-4 w-[500px]'>
-                      <h3 className='mb-[20px] text-[30px] leading-[120%]'>
+                      <h3 className='mb-[20px] text-font18Leading130 lg:text-font30Leading130'>
                         {program.title}
                       </h3>
                       <p className='text-primary leading-[120%] text-black/50'>
@@ -383,7 +363,7 @@ export default function Home() {
               height={133}
               className='mx-auto'
             />
-            <h2 className='mb-[49px] text-[105px] font-semibold leading-[110%] tracking-tight'>
+            <h2 className='mb-[49px] text-[105px] text-font30Leading110 lg:text-font50Leading110'>
               Приєднуйся до BTC-X
             </h2>
             <h3 className='mx-auto w-[525px] text-[22px] leading-[120%] opacity-[33%]'>
@@ -391,34 +371,7 @@ export default function Home() {
               програмою
             </h3>
             <div className='mt-5 flex justify-center gap-4'>
-              <Link
-                href='https://apps.apple.com/ua/app/btc-x-pro/id6479724977'
-                target='_blank'
-                rel='noopener noreferrer'
-                className=''
-              >
-                <Image
-                  src='/appstore_white.png'
-                  alt='App Store'
-                  width={185}
-                  height={55}
-                  className='h-[55px] w-[185px]'
-                />
-              </Link>
-              <Link
-                href='https://play.google.com/store/apps/details?id=btcx.pro'
-                target='_blank'
-                rel='noopener noreferrer'
-                className=''
-              >
-                <Image
-                  src='/googleplay_white.png'
-                  alt='Google Play'
-                  width={185}
-                  height={55}
-                  className='h-[55px] w-[185px]'
-                />
-              </Link>
+              <StoreButtons theme='dark' />
             </div>
           </div>
         </div>
