@@ -188,7 +188,7 @@ export default function PlatformStats() {
                   width={630}
                   height={290}
                   className='w-full'
-                ></Image>
+                />
               </div>
               <div className='grid-row-4 grid gap-x-4 gap-y-[34px]'>
                 <div className='hidden items-center justify-between xl:flex'>

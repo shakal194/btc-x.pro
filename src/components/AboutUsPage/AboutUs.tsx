@@ -1,0 +1,124 @@
+import Image from 'next/image';
+import StoreButtons from '@/components/ui/StoreButtons';
+
+export default function AboutUsSection() {
+  return (
+    <section className='bg-black xl:py-[100px]'>
+      <div className='container z-20 mx-auto mt-[248px] px-4 md:mt-[60px] xl:mt-[170px]'>
+        {/* О нас */}
+        <div className='grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4 xl:gap-8'>
+          <div className='flex flex-col-reverse gap-2 md:flex-col'>
+            <h2 className='text-font30Leading110 lg:mb-6 lg:text-font50Leading110'>
+              Про нас
+            </h2>
+            <p className='w-[168px] font-ibm text-ibm13Leading130 opacity-[33%] lg:w-[250px] lg:text-ibm16Leading130'>
+              BTC-X — ваш надійний провідник у світі трейдингу
+            </p>
+          </div>
+          <div className='my-[16px] border-t opacity-[33%] md:hidden'></div>
+          <div>
+            <p className='mb-[30px] text-[13px] leading-[130%] md:text-font18Leading130 lg:text-font30Leading130'>
+              Ми — команда цифрових ентузіастів із глибоким досвідом у
+              фінансових ринках, яка успішно співпрацює з провідними компаніями
+              криптовалютної індустрії та технологій.
+            </p>
+            <Image
+              src='/founder_btc-x.png'
+              alt='Founder BTC-X'
+              width={412}
+              height={273}
+              className='h-[273px] w-[412px] rounded-lg'
+            />
+            <p className='mt-[10px] w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
+              Founder BTC-X
+            </p>
+          </div>
+        </div>
+        {/* Наша цель */}
+        <div className='mt-[90px] xl:mb-[60px] xl:mt-[148px]'>
+          <h2 className='mb-[20px] text-font18Leading130 text-white/30 md:text-font30Leading110 lg:text-font50Leading110'>
+            Цей досвід надихнув нас створити BTC-X — проєкту, що пропонує
+            унікальну перевагу: торгівлю маржинальними позиціями{' '}
+            <span className='bg-gradient-to-r from-[#FFC996] via-[#FD6B06] to-[#963706] bg-clip-text text-transparent'>
+              без комісії протягом усього 2025 року.
+            </span>
+          </h2>
+        </div>
+        <div className='md:grid md:grid-cols-2 md:gap-4 lg:grid-cols-1 lg:gap-8'>
+          <div className='grid grid-cols-1 gap-8 lg:grid-cols-2'>
+            {/* Image Section */}
+            <div className='relative'>
+              {/* Фоновое изображение */}
+              <Image
+                src='/about_us_team.png'
+                alt='Our Team'
+                width={630}
+                height={480}
+                className='w-[630px] rounded-lg object-cover md:h-full lg:h-[480px]'
+              />
+            </div>
+            <div className='hidden flex-col justify-between lg:flex'>
+              <div>
+                <div className='mb-[40px] border-t border-white opacity-[33%]'></div>
+                <p className='text-primary leading-[120%]'>
+                  Поєднуючи експертність та інноваційний підхід ми працюємо над
+                  створенням зручних і прозорих рішень, щоб зробити фінансові
+                  технології доступними для кожного користувача.
+                </p>
+              </div>
+              <div className='flex items-center gap-8'>
+                <Image src='/qr.png' alt='QR Code' width={169} height={169} />
+                <div>
+                  <h2 className='mb-[40px] text-font30Leading110 xl:text-font50Leading110'>
+                    Заробляй разом з нами{' '}
+                  </h2>
+                  <p className='w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
+                    Скануй щоб завантажити
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className='container mx-auto mt-[90px] flex flex-col items-center md:mt-0 lg:flex-row xl:mt-16 xl:w-[1190px] xl:flex-col'>
+            <div className='md:flex md:flex-col md:items-center'>
+              <p className='mb-[25px] w-[234px] text-center font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130 xl:mb-[40px] xl:w-[375px]'>
+                Наша місія — це не просто ціль, а глобальне завдання, яке формує
+                майбутнє.
+              </p>
+              <div className='flex items-center'>
+                <Image
+                  src='/about_us_btcx.png'
+                  alt='BTC-X Icon'
+                  width={63}
+                  height={63}
+                  className='mr-[5px] h-[63px] w-[63px] xl:hidden'
+                />
+                <h4 className='col-span-3 text-font16Leading120 xl:hidden'>
+                  Ми хочемо, щоб усі могли легко та безпечно працювати з
+                  фінансовими активами.
+                </h4>
+                <h4 className='mb-[40px] hidden text-center text-[40px] font-semibold leading-[125%] tracking-tight xl:block'>
+                  Ми хочемо, щоб усі могли легко та безпечно працювати з
+                  фінансовими активами. Саме тому наш додаток доступний для
+                  завантаження в App Store та Google Play майже у всьому світі.
+                </h4>
+              </div>
+            </div>
+            <div className='my-[25px] w-full border-t border-white opacity-[33%] lg:hidden'></div>
+            <div className='relative w-full rounded-lg bg-gradient-to-r from-[#553300] to-[#FE9900] p-[1px] lg:w-[435px] xl:w-auto xl:bg-none'>
+              <div className='rounded-lg bg-black px-[25px] py-6'>
+                <p className='mb-[20px] text-[13px] font-medium leading-[130%] opacity-[33%] lg:text-primary lg:font-semibold lg:opacity-100 xl:hidden'>
+                  Саме тому наш додаток доступний для завантаження в App Store
+                  та Google Play майже у всьому світі.
+                </p>
+                <div className='grid grid-cols-2 gap-4'>
+                  <StoreButtons theme='dark' />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

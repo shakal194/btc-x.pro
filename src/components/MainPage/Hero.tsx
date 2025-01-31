@@ -46,7 +46,7 @@ export default function HeroSection() {
               className='w-[1280px]'
             />
           </div>
-          <div className='pointer-events-none absolute -left-1/2 z-10 hidden translate-x-1/2 lg:top-[-190px] lg:block'>
+          <div className='pointer-events-none absolute -left-1/2 z-10 hidden translate-x-1/2 lg:top-[-190px] lg:block xl:left-3/4 xl:-translate-x-2/3'>
             <Image
               src='/hero_main_page.png'
               alt='Hero image'
