@@ -6,7 +6,7 @@ export default function AboutUs() {
     <div className='bg-black px-4 py-[65px] text-white lg:py-[100px]'>
       <div className='container mx-auto'>
         {/* О нас */}
-        <div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
+        <div className='grid grid-cols-1 gap-8 xl:grid-cols-2'>
           <div className='flex items-center justify-between lg:block'>
             <h2 className='text-font30Leading110 lg:mb-6 lg:text-font50Leading110'>
               Про нас
@@ -15,8 +15,8 @@ export default function AboutUs() {
               BTC-X — ваш надійний провідник у світі трейдингу
             </p>
           </div>
-          <div className='my-[20px] border-t opacity-[33%] lg:hidden'></div>
-          <div>
+          <div className='my-[20px] border-t opacity-[33%] xl:hidden'></div>
+          <div className='grid md:grid-cols-2 xl:grid-cols-none'>
             <p className='font16Leading120 mb-[30px] lg:text-font30Leading130'>
               Ми відкриті{' '}
               <span className='text-[#FE9900]'>
@@ -25,16 +25,18 @@ export default function AboutUs() {
               розвиватися та залишатися в курсі трендів у світі фінансів і
               крипти.{' '}
             </p>
-            <Image
-              src='/our_team.png'
-              alt='Команда BTC-X'
-              width={400}
-              height={300}
-              className='h-[300px] w-[400px] rounded-lg'
-            />
-            <p className='mt-[10px] text-center font-ibm text-ibm13Leading130 opacity-[33%] lg:w-[250px] lg:text-left lg:text-ibm16Leading130'>
-              Команда BTC-X
-            </p>
+            <div>
+              <Image
+                src='/our_team.png'
+                alt='Команда BTC-X'
+                width={400}
+                height={300}
+                className='h-[300px] w-[400px] rounded-lg'
+              />
+              <p className='mt-[10px] text-center font-ibm text-ibm13Leading130 opacity-[33%] lg:w-[250px] lg:text-left lg:text-ibm16Leading130'>
+                Команда BTC-X
+              </p>
+            </div>
           </div>
         </div>
         {/* Наша цель */}
@@ -56,14 +58,14 @@ export default function AboutUs() {
               alt='Our Mission'
               width={670}
               height={700}
-              className='hidden rounded-lg lg:block'
+              className='hidden rounded-lg xl:block'
             />
             <Image
               src='/airdrop_btcxtoken.png'
               alt='Our Mission'
               width={130}
               height={145}
-              className='w-full rounded-lg lg:hidden'
+              className='w-full rounded-lg xl:hidden'
             />
           </div>
           <div className='flex flex-col justify-between rounded-xl shadow-lg lg:px-[45px]'>
@@ -75,16 +77,16 @@ export default function AboutUs() {
                 підготуйтеся до нових можливостей.
               </p>
             </div>
-            <div className='flex items-center gap-8'>
+            <div className='flex items-center md:gap-4 xl:gap-8'>
               <Image
                 src='/qr.png'
                 alt='QR Code'
                 width={169}
                 height={169}
-                className='hidden lg:block'
+                className='hidden md:h-[120px] md:w-[120px] lg:block'
               />
               <div className='hidden lg:block'>
-                <h2 className='mb-[40px] text-font30Leading110 lg:text-font50Leading110'>
+                <h2 className='mb-[40px] text-font30Leading110 xl:text-font50Leading110'>
                   Заробляй разом з нами{' '}
                 </h2>
                 <p className='w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
@@ -111,7 +113,7 @@ export default function AboutUs() {
             створюють нову еру фінансових можливостей
           </h4>
         </div>
-        <div className='grid grid-cols-2 gap-4 lg:flex'>
+        <div className='grid grid-cols-2 gap-4 xl:flex'>
           <div className='relative col-span-2 rounded-lg bg-gradient-to-r from-[#FFFFFF]/15 to-[#FFFFFF]/30 p-[1px]'>
             <div className='relative flex items-center justify-between overflow-hidden rounded-lg bg-[#111111] py-[25px] lg:py-[40px] lg:pr-[30px]'>
               {/* Левая часть: Иконка + Текст */}
@@ -171,7 +173,7 @@ export default function AboutUs() {
             </div>
           </div>
           <div className='relative rounded-lg bg-gradient-to-r from-[#FFFFFF]/15 to-[#FFFFFF]/30 p-[1px]'>
-            <div className='flex h-full w-full flex-col items-center rounded-md bg-[#111111] py-[25px] lg:w-[210px] lg:py-[40px]'>
+            <div className='flex h-full w-full flex-col items-center rounded-md bg-[#111111] py-[25px] xl:w-[210px] xl:py-[40px]'>
               <Link
                 href='https://t.me/+7_3pToHuJwJhZTVi'
                 target='_blank'
@@ -209,7 +211,7 @@ export default function AboutUs() {
             </div>
           </div>
           <div className='relative rounded-lg bg-gradient-to-r from-[#FFFFFF]/15 to-[#FFFFFF]/30 p-[1px]'>
-            <div className='flex h-full w-full flex-col items-center rounded-md bg-[#111111] py-[25px] lg:w-[210px] lg:py-[40px]'>
+            <div className='flex h-full w-full flex-col items-center rounded-md bg-[#111111] py-[25px] xl:w-[210px] xl:py-[40px]'>
               <Link
                 href='https://t.me/+7_3pToHuJwJhZTVi'
                 target='_blank'
@@ -268,7 +270,7 @@ export default function AboutUs() {
             </div>
           </div>
           <div className='relative rounded-lg bg-gradient-to-r from-[#FFFFFF]/15 to-[#FFFFFF]/30 p-[1px]'>
-            <div className='flex h-full w-full flex-col items-center rounded-md bg-[#111111] py-[25px] lg:w-[210px] lg:py-[40px]'>
+            <div className='flex h-full w-full flex-col items-center rounded-md bg-[#111111] py-[25px] xl:w-[210px] xl:py-[40px]'>
               <Link
                 href='https://www.instagram.com/btc_x.pro'
                 target='_blank'
@@ -309,8 +311,8 @@ export default function AboutUs() {
               </p>
             </div>
           </div>
-          <div className='flex h-full w-full flex-wrap content-end rounded-md lg:hidden'>
-            <p className='text-[18px] leading-[125%] opacity-[33%]'>
+          <div className='flex h-full w-full flex-wrap content-end rounded-md xl:hidden'>
+            <p className='text-[18px] leading-[125%] opacity-[33%] lg:text-[22px]'>
               Підпишись, у нас цікаво :)
             </p>
           </div>

@@ -3,20 +3,20 @@ import StoreButtons from '@/components/ui/StoreButtons';
 
 export default function FiveSteps() {
   return (
-    <section className='rounded-b-xl bg-[#F4F4F4] pb-[55px] text-black lg:py-[100px]'>
+    <section className='rounded-b-xl bg-[#F4F4F4] pb-[55px] text-black xl:py-[100px]'>
       <div className='container mx-auto px-4'>
-        <div className='flex flex-col-reverse gap-8 lg:grid lg:grid-cols-2'>
-          <div className='rounded-xl px-[10px] py-[30px] shadow-lg lg:px-[45px] lg:py-[60px]'>
-            <p className='mb-[24px] w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
+        <div className='flex flex-col-reverse gap-8 xl:grid xl:grid-cols-2'>
+          <div className='rounded-xl px-[10px] py-[30px] shadow-lg xl:px-[45px] xl:py-[60px]'>
+            <p className='mb-[24px] w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] xl:text-ibm16Leading130'>
               Простий гайд, який полегшить твою торгівлю криптовалютою
             </p>
-            <h2 className='mb-4 text-font30Leading110 lg:text-font50Leading110'>
+            <h2 className='mb-4 text-font30Leading110 xl:text-font50Leading110'>
               6 кроків для легкого старту з BTC-X
             </h2>
-            <div className='my-[20px] border-t border-black opacity-[33%] lg:my-[40px]'></div>
-            <div className='xl:space-y-6'>
-              <div className='mb-[10px] p-[15px] lg:mb-5 lg:p-[30px]'>
-                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] leading-[130%] lg:px-[20px] lg:py-[4px]'>
+            <div className='my-[20px] border-t border-black opacity-[33%] xl:my-[40px]'></div>
+            <div className='grid gap-2 md:grid-cols-2 md:gap-4 xl:grid-cols-none xl:gap-8 xl:space-y-6'>
+              <div className='p-[15px] xl:mb-5 xl:p-[30px]'>
+                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] leading-[130%] xl:px-[20px] xl:py-[4px]'>
                   Крок 1
                 </span>
                 <h3 className='mb-[15px] mt-[28px] text-font16Leading120 text-font22Leading120'>
@@ -31,8 +31,8 @@ export default function FiveSteps() {
                   <StoreButtons theme='light' />
                 </div>
               </div>
-              <div className='mb-[10px] p-[15px] lg:mb-5 lg:p-[30px]'>
-                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] leading-[130%] lg:px-[20px] lg:py-[4px]'>
+              <div className='p-[15px] xl:mb-5 xl:p-[30px]'>
+                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] leading-[130%] xl:px-[20px] xl:py-[4px]'>
                   Крок 2
                 </span>
                 <h3 className='mb-[15px] mt-[28px] text-font16Leading120 text-font22Leading120'>
@@ -45,8 +45,8 @@ export default function FiveSteps() {
                   торгівлі.
                 </p>
               </div>
-              <div className='mb-[10px] p-[15px] lg:mb-5 lg:p-[30px]'>
-                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] leading-[130%] lg:px-[20px] lg:py-[4px]'>
+              <div className='p-[15px] xl:mb-5 xl:p-[30px]'>
+                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] leading-[130%] xl:px-[20px] xl:py-[4px]'>
                   Крок 3
                 </span>
                 <h3 className='mb-[15px] mt-[28px] text-font16Leading120 text-font22Leading120'>
@@ -57,8 +57,8 @@ export default function FiveSteps() {
                   повний доступ до всіх функцій платформи.
                 </p>
               </div>
-              <div className='mb-[10px] p-[15px] lg:mb-5 lg:p-[30px]'>
-                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] leading-[130%] lg:px-[20px] lg:py-[4px]'>
+              <div className='p-[15px] xl:mb-5 xl:p-[30px]'>
+                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] leading-[130%] xl:px-[20px] xl:py-[4px]'>
                   Крок 4
                 </span>
                 <h3 className='mb-[15px] mt-[28px] text-font16Leading120 text-font22Leading120'>
@@ -71,8 +71,8 @@ export default function FiveSteps() {
                   депозиту.
                 </p>
               </div>
-              <div className='mb-[10px] p-[15px] lg:mb-5 lg:p-[30px]'>
-                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] leading-[130%] lg:px-[20px] lg:py-[4px]'>
+              <div className='p-[15px] xl:mb-5 xl:p-[30px]'>
+                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] leading-[130%] xl:px-[20px] xl:py-[4px]'>
                   Крок 5
                 </span>
                 <h3 className='mb-[15px] mt-[28px] text-font16Leading120 text-font22Leading120'>
@@ -84,8 +84,8 @@ export default function FiveSteps() {
                   відсутності комісій ви зосереджуєтеся лише на прибутках.
                 </p>
               </div>
-              <div className='mb-[10px] p-[15px] lg:mb-5 lg:p-[30px]'>
-                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] leading-[130%] lg:px-[20px] lg:py-[4px]'>
+              <div className='p-[15px] xl:mb-5 xl:p-[30px]'>
+                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] leading-[130%] xl:px-[20px] xl:py-[4px]'>
                   Крок 6
                 </span>
                 <h3 className='mb-[15px] mt-[28px] text-font16Leading120 text-font22Leading120'>
@@ -100,27 +100,27 @@ export default function FiveSteps() {
             </div>
           </div>
           {/* Image Section */}
-          <div className='relative lg:h-[700px]'>
+          <div className='relative xl:h-[700px]'>
             {/* Фоновое изображение */}
             <Image
               src='/client.png'
               alt='Client image'
               width={670}
               height={700}
-              className='rounded-lg'
+              className='w-full rounded-lg'
             />
 
             {/* Отзыв */}
 
-            <blockquote className='absolute bottom-[10px] left-1/2 w-[90%] -translate-x-1/2 transform rounded-3xl pb-[15px] pl-[11px] shadow-lg backdrop-blur-lg lg:bottom-[74px] lg:pb-[27px] lg:pl-[40px]'>
+            <blockquote className='absolute bottom-[10px] left-1/2 w-[90%] -translate-x-1/2 transform rounded-3xl pb-[15px] pl-[11px] shadow-lg backdrop-blur-lg xl:bottom-0 xl:pb-[27px] xl:pl-[40px]'>
               <Image
                 src='/quote.svg'
                 alt='quote'
                 width={30}
                 height={22}
-                className='my-[10px] rounded-full lg:mb-[20px] lg:mt-[25px]'
+                className='my-[10px] h-[10px] w-[14px] rounded-full md:my-[14px] md:h-[16px] md:w-[20px] xl:mb-[20px] xl:mt-[25px] xl:h-[22px] xl:w-[30px]'
               />
-              <p className='text-[10px] leading-[120%] text-white lg:text-[22px]'>
+              <p className='text-[10px] leading-[120%] text-white md:text-[16px] xl:text-[22px]'>
                 “Торгівля з BTC-X стала набагато приємнішою завдяки 0% комісій і
                 прозорим умовам.”
               </p>

@@ -12,10 +12,10 @@ export default function FeaturesSection() {
             ВТС-Х — всі ринки та інструменти в одному місці
           </p>
         </div>
-        <div className='grid'>
+        <div className='grid gap-2 md:grid-cols-2 md:gap-4 lg:grid-cols-none'>
           {/* Feature 1 */}
-          <div className='relative mb-[25px] h-[325px] overflow-hidden rounded-lg bg-gradient-to-r from-[#553300] to-[#FE9900] p-[1px] lg:w-[670px]'>
-            <div className='h-[323px] rounded-lg bg-black lg:flex'>
+          <div className='relative h-[300px] overflow-hidden rounded-lg bg-gradient-to-r from-[#553300] to-[#FE9900] p-[1px] lg:w-[670px]'>
+            <div className='h-[298px] rounded-lg bg-black lg:flex'>
               <div className='px-[20px] py-[20px] lg:w-2/3 lg:px-[25px] lg:py-6'>
                 <h3 className='mb-[20px] text-[24px] font-semibold leading-[110%] text-white lg:mb-[40px] lg:text-[40px]'>
                   01. Crypto
@@ -47,7 +47,7 @@ export default function FeaturesSection() {
             </div>
           </div>
           {/* Feature 2 */}
-          <div className='relative mb-[25px] h-[300px] overflow-hidden rounded-lg bg-gradient-to-r from-[#EDEDED] to-[#AFAFAF] lg:flex lg:w-[670px]'>
+          <div className='relative h-[300px] overflow-hidden rounded-lg bg-gradient-to-r from-[#EDEDED] to-[#AFAFAF] lg:flex lg:w-[670px]'>
             <div className='px-[20px] py-[20px] lg:w-2/3 lg:px-[25px] lg:py-6'>
               <h3 className='mb-[20px] text-[24px] font-semibold leading-[110%] text-black lg:mb-[40px] lg:text-[40px]'>
                 02. Futures
@@ -80,8 +80,8 @@ export default function FeaturesSection() {
             />
           </div>
           {/* Feature 3 */}
-          <div className='z-20 mb-[25px] h-[270px] overflow-hidden rounded-lg bg-gradient-to-r from-[#553300] to-[#FE9900] p-[1px] lg:h-[218px] lg:w-[670px]'>
-            <div className='relative h-[268px] rounded-lg bg-black lg:flex lg:h-[216px]'>
+          <div className='z-20 h-[300px] overflow-hidden rounded-lg bg-gradient-to-r from-[#553300] to-[#FE9900] p-[1px] lg:h-[218px] lg:w-[670px]'>
+            <div className='relative h-[298px] rounded-lg bg-black lg:flex lg:h-[216px]'>
               <div className='relative z-10 px-[20px] py-[20px] lg:w-2/3 lg:px-[25px] lg:py-6'>
                 <h3 className='mb-[20px] text-[24px] font-medium font-semibold leading-[110%] text-white lg:mb-[40px] lg:text-[40px]'>
                   03. MEM Coins
@@ -109,9 +109,9 @@ export default function FeaturesSection() {
             </div>
           </div>
           {/* Feature 4 */}
-          <div className='relative flex min-h-[230px] w-full'>
+          <div className='relative flex h-[300px] w-full lg:w-[670px]'>
             {/* Текстовый блок */}
-            <div className='z-10 h-full px-[20px] py-[20px] lg:w-[45%] lg:px-[25px] lg:py-6'>
+            <div className='z-10 h-full rounded-lg px-[20px] py-[20px] lg:w-[45%] lg:px-[25px] lg:py-6'>
               <h3 className='mb-[20px] text-[24px] font-medium font-semibold leading-[110%] text-black lg:mb-[40px] lg:text-[40px]'>
                 04. Stocks
               </h3>
@@ -127,7 +127,7 @@ export default function FeaturesSection() {
               alt='Stock'
               width={670}
               height={218}
-              className='absolute hidden h-[218px] w-[670px] object-cover lg:block'
+              className='absolute hidden h-full w-[670px] rounded-lg object-cover lg:block'
             />
 
             {/* Мобильное изображение */}
