@@ -14,9 +14,10 @@ export default function HeroSection() {
                 </span>
               </h1>
               <p className='text-ibm w-[245px] text-[13px] leading-[130%] opacity-[44%] lg:w-[512px] lg:text-font16Leading130'>
-                <span className='hidden xl:block'>[</span> Це додатковий стимул
-                для залучення нових користувачів та винагороди за активність на
-                платформі <span className='hidden xl:block'>]</span>
+                <span className='hidden xl:contents'>[</span> Це додатковий
+                стимул для залучення нових користувачів та винагороди за
+                активність на платформі{' '}
+                <span className='hidden xl:contents'>]</span>
               </p>
             </div>
           </div>
