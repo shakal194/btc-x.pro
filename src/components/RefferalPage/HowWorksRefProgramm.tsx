@@ -20,19 +20,21 @@ export default function HowWorksRefProgramm() {
               * Це дозволяє вам заробляти на кожному рівні та значно збільшувати
               дохід, чим більше активних трейдерів у вашій мережі.
             </p>
-            <Image
-              src='/diagram_ref_program.png'
-              alt='Referral program'
-              width={630}
-              height={495}
-            />
+            <div className='mx-auto'>
+              <Image
+                src='/diagram_ref_program.png'
+                alt='Referral program'
+                width={630}
+                height={495}
+              />
+            </div>
             <div>
               <div className='flex h-full flex-col justify-between'>
                 <div>
                   <h2 className='text-[18px] font-semibold leading-[120%] lg:text-[40px]'>
                     В нашій системі присутні два рівні рефералів:
                   </h2>
-                  <div className='my-[20px] border-t border-black opacity-[33%] lg:my-[40px]'></div>
+                  <div className='my-[20px] border-t border-black opacity-[33%] xl:my-[40px]'></div>
                   <ul>
                     <li className='relative pl-5 text-[13px] leading-[130%] md:text-font16Leading120 lg:text-font22Leading120'>
                       <span className='absolute left-0 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-[#FE9900]'></span>
