@@ -61,6 +61,12 @@ export default function Header({ locale }: { locale: string }) {
           {/* Правый блок с кнопками */}
           <div className='hidden items-center space-x-4 lg:flex'>
             <Link
+              href={`/${locale}/promo`}
+              className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
+            >
+              {t('promo')}
+            </Link>
+            <Link
               href='#'
               className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             >
