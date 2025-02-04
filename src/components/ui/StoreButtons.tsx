@@ -43,6 +43,7 @@ const StoreButtons: React.FC<{ theme?: 'light' | 'dark' }> = ({
           alt='App Store'
           width={buttonWidth}
           height={buttonHeight}
+          className='h-auto w-auto'
         />
       </Link>
       <Link
@@ -55,6 +56,7 @@ const StoreButtons: React.FC<{ theme?: 'light' | 'dark' }> = ({
           alt='Google Play'
           width={buttonWidth}
           height={buttonHeight}
+          className='h-auto w-auto'
         />
       </Link>
     </>

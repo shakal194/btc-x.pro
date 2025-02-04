@@ -76,7 +76,7 @@ export default function FeaturesSection() {
               alt='Futures'
               width={300}
               height={280}
-              className='absolute -bottom-[10px] left-[10px] lg:hidden'
+              className='absolute -bottom-[10px] left-[10px] h-auto w-auto lg:hidden'
             />
           </div>
           {/* Feature 3 */}
@@ -97,7 +97,7 @@ export default function FeaturesSection() {
                 alt='MEM Coins'
                 width={670}
                 height={218}
-                className='absolute bottom-0 hidden h-[218px] w-[670px] lg:block'
+                className='absolute bottom-0 hidden h-auto w-auto lg:block'
               />
               <Image
                 src='/features_memcoin_mobile.png'
@@ -127,7 +127,7 @@ export default function FeaturesSection() {
               alt='Stock'
               width={670}
               height={218}
-              className='absolute hidden h-full w-[670px] rounded-lg object-cover lg:block'
+              className='absolute hidden h-auto w-[670px] rounded-lg object-cover lg:block'
             />
 
             {/* Мобильное изображение */}

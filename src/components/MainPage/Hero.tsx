@@ -34,7 +34,8 @@ export default function HeroSection() {
               alt='Hero image'
               width={640}
               height={910}
-              className='w-[640px]'
+              className='h-auto w-[640px]'
+              priority={true}
             />
           </div>
           <div className='pointer-events-none absolute left-1/2 z-10 hidden w-full -translate-x-1/2 md:-top-[150%] md:block lg:hidden'>
@@ -43,7 +44,8 @@ export default function HeroSection() {
               alt='Hero image'
               width={1280}
               height={1612}
-              className='w-[1280px]'
+              className='h-auto w-auto'
+              priority={true}
             />
           </div>
           <div className='pointer-events-none absolute -left-1/2 z-10 hidden translate-x-1/2 lg:top-[-190px] lg:block xl:left-3/4 xl:-translate-x-2/3'>
@@ -52,7 +54,8 @@ export default function HeroSection() {
               alt='Hero image'
               width={1268}
               height={951}
-              className='relative w-[1268px] max-w-none'
+              className='relative h-auto w-auto max-w-none'
+              priority={true}
             />
           </div>
         </div>

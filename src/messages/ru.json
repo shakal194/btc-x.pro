@@ -1,0 +1,21 @@
+{
+  "header": {
+    "aboutus": "О Нас",
+    "airdrop": "Airdrop",
+    "referral": "Реферальная программа",
+    "support": "Поддержка",
+    "app": "Перейти в приложение"
+  },
+  "about": {
+    "title": "About Us",
+    "content": "We are a company focused on delivering quality."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "form": {
+      "name": "Your Name",
+      "email": "Your Email",
+      "message": "Your Message"
+    }
+  }
+}

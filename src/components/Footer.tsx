@@ -1,7 +1,10 @@
 import Image from 'next/image';
+//import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
-export default function Footer() {
+export default function Footer({ locale }: { locale: string }) {
+  //const t = useTranslations('header');
+
   return (
     <footer className='bg-black py-[40px] text-white lg:py-[70px]'>
       <div className='container mx-auto items-baseline px-5 md:grid md:grid-rows-2 lg:mb-[40px] lg:flex lg:grid-rows-none lg:justify-between lg:py-3'>
@@ -20,21 +23,21 @@ export default function Footer() {
         {/* Левый блок с ссылками */}
         <div className='flex flex-col space-y-3 md:flex-row md:items-center md:space-x-6 md:space-y-0 lg:justify-between'>
           <Link
-            href='about-us'
+            href={`/${locale}/about-us`}
             className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             rel='noopener noreferrer'
           >
             Про нас
           </Link>
           <Link
-            href='/referral'
+            href={`/${locale}/referral`}
             className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             rel='noopener noreferrer'
           >
             Реферальна програма
           </Link>
           <Link
-            href='/airdrop'
+            href={`/${locale}/airdrop`}
             className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             rel='noopener noreferrer'
           >

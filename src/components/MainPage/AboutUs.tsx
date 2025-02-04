@@ -31,7 +31,7 @@ export default function AboutUs() {
                 alt='Команда BTC-X'
                 width={400}
                 height={300}
-                className='h-[300px] w-[400px] rounded-lg'
+                className='h-auto w-auto rounded-lg'
               />
               <p className='mt-[10px] text-center font-ibm text-ibm13Leading130 opacity-[33%] lg:w-[250px] lg:text-left lg:text-ibm16Leading130'>
                 Команда BTC-X
@@ -161,14 +161,14 @@ export default function AboutUs() {
                 alt='Youtube BTC-X'
                 width={420}
                 height={280}
-                className='hidden object-contain lg:block'
+                className='hidden h-auto w-auto object-contain lg:block'
               />
               <Image
                 src='/youtube-BTC-X_mobile1.png'
                 alt='Youtube BTC-X'
                 width={300}
                 height={327}
-                className='absolute -bottom-20 -right-[50px] lg:hidden'
+                className='absolute -bottom-20 -right-[50px] h-auto w-auto lg:hidden'
               />
             </div>
           </div>

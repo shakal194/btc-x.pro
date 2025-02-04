@@ -1,32 +1,39 @@
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import LocaleSwitcher from '@/components/locale-switcher';
 
-export default function Header() {
+export default function Header({ locale }: { locale: string }) {
+  const t = useTranslations('header');
+
   return (
     <header className='relative z-50 text-white'>
       <div className='container mx-auto mt-4 px-4'>
         <div className='flex items-center justify-between rounded-lg border border-gray-400 px-5 py-3 backdrop-blur-md'>
           <nav className='hidden items-center space-x-6 lg:flex'>
             <Link
-              href='about-us'
+              href={`/${locale}/about-us`}
+              //href='/about-us'
               className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
               rel='noopener noreferrer'
             >
-              Про нас
+              {t('aboutus')}
             </Link>
             <Link
-              href='/airdrop'
+              href={`/${locale}/airdrop`}
+              //href='/airdrop'
               className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
               rel='noopener noreferrer'
             >
-              Airdrop
+              {t('airdrop')}
             </Link>
             <Link
-              href='/referral'
+              href={`/${locale}/referral`}
+              //href='/referral'
               className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
               rel='noopener noreferrer'
             >
-              Реферальна програма
+              {t('referral')}
             </Link>
           </nav>
 
@@ -57,21 +64,16 @@ export default function Header() {
               href='#'
               className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             >
-              Підтримка
+              {t('support')}
             </Link>
-            <div className='relative'>
-              <button className='flex items-center text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'>
-                UA <span className='ml-1'>▼</span>
-              </button>
-              {/* Dropdown для языков (можно позже реализовать) */}
-            </div>
+            <LocaleSwitcher />
             <Link
               href='https://onelink.to/js2s8h'
               target='_blank'
               rel='noopener noreferrer'
               className='rounded-full border px-5 py-3 text-primary font-bold leading-[110%] transition hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white'
             >
-              Перейти в додаток
+              {t('app')}
             </Link>
           </div>
         </div>

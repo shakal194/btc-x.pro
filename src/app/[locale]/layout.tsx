@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { NextUIProviders } from './providers';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import Header from '@/components/Header';
 import FooterSection from '@/components/Footer';
 import { Manrope } from 'next/font/google';
@@ -17,18 +19,26 @@ export const metadata: Metadata = {
   description: 'Криптовалютный сервис',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: { locale: string };
 }>) {
+  const { locale } = await params;
+
+  const messages = await getMessages({ locale });
+
   return (
-    <html lang='en' suppressHydrationWarning className=''>
+    <html lang={locale} suppressHydrationWarning>
       <body className={`overflow-x-hidden ${manrope.className}`}>
-        <Header />
-        <NextUIProviders>{children}</NextUIProviders>
-        <FooterSection />
-        <ButtonFooter />
+        <NextIntlClientProvider messages={messages}>
+          <Header locale={locale} />
+          <NextUIProviders>{children}</NextUIProviders>
+          <FooterSection locale={locale} />
+          <ButtonFooter />
+        </NextIntlClientProvider>
       </body>
     </html>
   );
