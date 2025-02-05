@@ -1,14 +1,18 @@
 import Image from 'next/image';
-//import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export default function Footer({ locale }: { locale: string }) {
-  //const t = useTranslations('header');
+  const t = useTranslations('footer');
 
   return (
     <footer className='bg-black py-[40px] text-white lg:py-[70px]'>
       <div className='container mx-auto items-baseline px-5 md:grid md:grid-rows-2 lg:mb-[40px] lg:flex lg:grid-rows-none lg:justify-between lg:py-3'>
-        <div className='mr-[30px] flex items-center md:hidden'>
+        <Link
+          href='/'
+          rel='noopener noreferrer'
+          className='mr-[30px] flex items-center md:hidden'
+        >
           <Image
             src='/logo_footer.png' // Замените на путь к вашему логотипу
             alt='BTC-X.PRO, LLC'
@@ -16,9 +20,9 @@ export default function Footer({ locale }: { locale: string }) {
             height={50}
           />
           <p className='ml-[10px] w-[140px] text-[13px] font-medium leading-[130%] text-white/30'>
-            BTC-X платформа для торгівлі без комісії
+            {t('footer_mobile_title')}
           </p>
-        </div>
+        </Link>
         <div className='my-[25px] border-t border-white opacity-[20%] md:hidden'></div>
         {/* Левый блок с ссылками */}
         <div className='flex flex-col space-y-3 md:flex-row md:items-center md:space-x-6 md:space-y-0 lg:justify-between'>
@@ -27,35 +31,35 @@ export default function Footer({ locale }: { locale: string }) {
             className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             rel='noopener noreferrer'
           >
-            Про нас
+            {t('aboutus')}
           </Link>
           <Link
             href={`/${locale}/referral`}
             className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             rel='noopener noreferrer'
           >
-            Реферальна програма
+            {t('referral')}
           </Link>
           <Link
             href={`/${locale}/airdrop`}
             className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             rel='noopener noreferrer'
           >
-            Airdrop
+            {t('airdrop')}
           </Link>{' '}
           <Link
             href='#'
             className='text-primary leading-[110%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
             rel='noopener noreferrer'
           >
-            Підтримка
+            {t('support')}
           </Link>
         </div>
         <div className='my-[25px] border-t border-white opacity-[20%] lg:hidden'></div>
         {/* Правый блок с кнопками */}
         <div className='flex items-center justify-between space-x-2 lg:space-x-4'>
           <p className='w-[106px] font-ibm text-ibm13Leading130 opacity-[33%] lg:hidden'>
-            Приєднуйся до ком’юніті BTC-X
+            {t('footer_mobile_subtitle')}
           </p>
           <div className='grid grid-cols-4 gap-2 md:gap-4'>
             <Link
@@ -232,33 +236,31 @@ export default function Footer({ locale }: { locale: string }) {
         <div className='mb-8 flex flex-col items-start justify-between border-b border-gray-800 pb-8 lg:flex-row lg:items-center'>
           {/* Логотип и информация о компании */}
           <div className='mb-6 flex items-start md:mb-0'>
-            <div className='mr-[30px] hidden flex-col items-center lg:flex'>
+            <Link
+              href='/'
+              rel='noopener noreferrer'
+              className='mr-[30px] hidden flex-col items-center lg:flex'
+            >
               <Image
                 src='/logo_footer.png' // Замените на путь к вашему логотипу
                 alt='BTC-X.PRO, LLC'
                 width={140}
                 height={140}
               />
-              <p className='mt-[30px] text-font16Leading130'>
-                ТОВ &quot;ВТС-Х&quot;
-              </p>
-            </div>
+              <p className='mt-[30px] text-font16Leading130'>{t('btc-x')}</p>
+            </Link>
             <div className='lg:w-[521px]'>
               <p className='text-[13px] leading-[130%] opacity-[33%] lg:text-font16Leading130'>
-                ТОВ &quot;ВТС-Х&quot; (стара назва Приватне підприємство
-                &quot;ІТМ-ЮА&quot;), зареєстроване в Україні, надає мобільну
-                торгову платформу BTC-X.PRO та має наступні юридичні дані.
+                {t('btc-x_data')}
               </p>
               <p className='mt-4 text-font16Leading130 opacity-[33%]'>
-                Код ЄДРПОУ юридичної особи: 45260571
+                {t('btc-x_data_1')}
               </p>
               <p className='mt-4 text-font16Leading130 opacity-[33%]'>
-                IBAN: UA293052990000026001010407651
+                {t('btc-x_data_2')}
               </p>
               <p className='mt-4 text-font16Leading130 opacity-[33%]'>
-                Юридична адреса та місцезнаходження: Україна, 50103,
-                Дніпропетровська обл., місто Кривий Ріг, вул. Степана Тільги,
-                буд. 71
+                {t('btc-x_data_3')}
               </p>
             </div>
           </div>
@@ -273,7 +275,7 @@ export default function Footer({ locale }: { locale: string }) {
                     rel='noopener noreferrer'
                     className='text-font16Leading130 opacity-[33%] hover:text-[#FD6B06] hover:opacity-100 focus:text-[#FD6B06] focus:opacity-100'
                   >
-                    Умови та положення
+                    {t('terms')}
                   </Link>
                 </li>
                 <li>
@@ -283,7 +285,7 @@ export default function Footer({ locale }: { locale: string }) {
                     rel='noopener noreferrer'
                     className='text-font16Leading130 opacity-[33%] hover:text-[#FD6B06] hover:opacity-100 focus:text-[#FD6B06] focus:opacity-100'
                   >
-                    Політика конфіденційності
+                    {t('privacy')}
                   </Link>
                 </li>
                 <li>
@@ -293,7 +295,7 @@ export default function Footer({ locale }: { locale: string }) {
                     rel='noopener noreferrer'
                     className='text-font16Leading130 opacity-[33%] hover:text-[#FD6B06] hover:opacity-100 focus:text-[#FD6B06] focus:opacity-100'
                   >
-                    AML/CTF & KYC
+                    {t('aml')}
                   </Link>
                 </li>
               </ul>
@@ -303,7 +305,7 @@ export default function Footer({ locale }: { locale: string }) {
                 href='mailto:admin@btc-x.pro'
                 className='text-font16Leading130 hover:text-[#FD6B06] focus:text-[#FD6B06]'
               >
-                admin@btc-x.pro
+                {t('footer_email')}
               </Link>
             </div>
           </div>
@@ -313,9 +315,9 @@ export default function Footer({ locale }: { locale: string }) {
         <div className='mb-[60px] items-center gap-8 lg:flex'>
           {/* Заголовок */}
           <h1 className='mb-[20px] text-font30Leading110 lg:mb-0 lg:text-font75Leading110'>
-            ТОРГУЙТЕ БЕЗ КОМІСІЇ ПРОТЯГОМ УСЬОГО{' '}
+            {t('footer_title')}{' '}
             <span className='bg-gradient-to-r from-[#FFC996] via-[#FD6B06] to-[#963706] bg-clip-text text-transparent'>
-              2025 РОКУ
+              {t('footer_subtitle')}
             </span>
           </h1>
 
@@ -323,14 +325,14 @@ export default function Footer({ locale }: { locale: string }) {
           <form className='flex flex-col items-center justify-center gap-4 md:flex-row md:justify-between md:rounded-full md:border md:border-gray-700 lg:w-[600px]'>
             <input
               type='email'
-              placeholder='Введіть ваш e-mail'
+              placeholder={t('subscribe_placeholder')}
               className='w-full rounded-full border border-gray-700 bg-black px-4 py-2 text-white focus:outline-none focus:ring sm:w-80 md:border-none'
             />
             <button
               type='submit'
               className='w-full rounded-full bg-white px-6 py-2 text-primary font-bold text-black hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white focus:outline-none focus:ring md:w-auto'
             >
-              Підписатися на оновлення
+              {t('subscribe_button')}
             </button>
           </form>
         </div>
@@ -338,28 +340,7 @@ export default function Footer({ locale }: { locale: string }) {
         <div className='my-[25px] border-t border-white opacity-[20%] lg:mb-[40px]'></div>
       </div>
       <div className='container mx-auto px-4 text-[9px] leading-[130%] opacity-[33%] lg:text-font16Leading130'>
-        BTC-X.PRO дозволяє користувачам отримувати економічну вигоду від руху
-        цін фінансових інструментів без необхідності їх матеріального володіння.
-        Визначення, такі як &quot;торгівля&quot;, &quot;угоди&quot;,
-        &quot;купувати&quot; і &quot;продавати&quot;, що використовуються
-        BTC-X.PRO, слід розуміти як ризики, пов&apos;язані з позиціями
-        різноманітних фінансових інструментів, які піддіються коливанню цін, без
-        права власності на базовий фінансовий інструмент. Користувач BTC-X.PRO,
-        у якого є відкрита лонг позиція по акції або ETF на момент відкриття
-        ринку у день дати екс-девідендів, отримає оголошену суму дивідендів за
-        кожну акцію його позиції. Користувач, у якого є відкрита шорт позиція по
-        акції або ETF на момент відкриття ринка в день дати екс-дивідендів,
-        заплатить оголошену суму дивідендів за кожну акцію його позиції. Як і
-        при будь-якій торгівлі акціями, сировинними товарами та криптовалютами,
-        &quot;торгівля&quot; за допомогою BTC-X.PRO несе рівень ризику, що може
-        не підходити для всих осіб, зацікавлених в торгівлі. Ви можете втратити
-        частину або весь свій інвестиційний капітал, тому вам не варто
-        спекулювати капіталом, який ви не можете дозволити собі втратити. Вам
-        слід проконсультуватися з незалежним фінансовим консультантом перш ніж
-        приймати ризики або &quot;торгувати&quot; з BTC-X.PRO. Інформація,
-        розміщена на цьому сайті, не застосовується до жителів США або Канади та
-        не може бути використана в будь-якій країні чи юрисдикції, де таке
-        використання або доступ заборонені відповідно до діючого законодавства.
+        {t('footer_down')}
       </div>
     </footer>
   );

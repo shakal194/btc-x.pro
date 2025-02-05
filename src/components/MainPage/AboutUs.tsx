@@ -161,14 +161,14 @@ export default function AboutUs() {
                 alt='Youtube BTC-X'
                 width={420}
                 height={280}
-                className='hidden h-auto w-auto object-contain lg:block'
+                className='hidden h-[280px] w-[420px] object-contain lg:block'
               />
               <Image
                 src='/youtube-BTC-X_mobile1.png'
                 alt='Youtube BTC-X'
                 width={300}
                 height={327}
-                className='absolute -bottom-20 -right-[50px] h-auto w-auto lg:hidden'
+                className='absolute -bottom-20 -right-[50px] h-[347px] w-[300px] lg:hidden'
               />
             </div>
           </div>

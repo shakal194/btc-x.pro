@@ -97,7 +97,7 @@ export default function FeaturesSection() {
                 alt='MEM Coins'
                 width={670}
                 height={218}
-                className='absolute bottom-0 hidden h-auto w-auto lg:block'
+                className='absolute bottom-0 hidden h-[218px] w-[670px] lg:block'
               />
               <Image
                 src='/features_memcoin_mobile.png'

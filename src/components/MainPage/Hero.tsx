@@ -44,7 +44,7 @@ export default function HeroSection() {
               alt='Hero image'
               width={1280}
               height={1612}
-              className='h-auto w-auto'
+              className='w-[1280px]'
               priority={true}
             />
           </div>
@@ -54,7 +54,7 @@ export default function HeroSection() {
               alt='Hero image'
               width={1268}
               height={951}
-              className='relative h-auto w-auto max-w-none'
+              className='relative w-[1268px] max-w-none'
               priority={true}
             />
           </div>

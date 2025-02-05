@@ -16,7 +16,7 @@ export default function AboutTokenSection() {
               className='h-[77px] w-[320px] object-cover md:h-[100px] md:w-[500px] xl:h-[328px] xl:w-[1340px]'
             />
           </div>
-          <div className='container mx-auto mb-[45px] flex flex-col items-center px-4 lg:w-[900px] xl:absolute xl:top-10 xl:mb-0 xl:w-[1210px]'>
+          <div className='container mx-auto mb-[45px] flex flex-col items-center px-4 lg:w-[900px] xl:absolute xl:left-1/2 xl:top-10 xl:mb-0 xl:w-[1210px] xl:-translate-x-1/2'>
             <p className='mb-[30px] w-[82px] text-center font-ibm text-ibm13Leading130 opacity-[33%] lg:w-[250px] lg:text-ibm16Leading130'>
               Що таке ВТСХT?
             </p>
@@ -45,7 +45,7 @@ export default function AboutTokenSection() {
           <div className='flex flex-col items-center gap-8 lg:flex-row lg:justify-between'>
             {/* Блок с шагами */}
             <div className='grid grid-cols-5 gap-2 md:grid-cols-2 xl:grid-cols-1'>
-              <div className='mb-[28px] flex w-[75%] flex-col items-center md:w-auto xl:flex-row xl:justify-between'>
+              <div className='mb-[28px] flex w-[77%] flex-col items-center xl:flex-row xl:justify-between'>
                 {/* Крок 1 */}
                 <div className='flex items-center justify-center rounded-full px-[10px] py-[6px] shadow-lg lg:px-[20px] lg:py-[10px]'>
                   <p className='text-[10px] leading-[120%] lg:text-font16Leading110'>

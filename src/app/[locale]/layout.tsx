@@ -17,6 +17,9 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   title: 'BTC-X.PRO',
   description: 'Криптовалютный сервис',
+  icons: {
+    icon: '/favicon.png',
+  },
 };
 
 export default async function RootLayout({

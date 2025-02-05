@@ -35,7 +35,7 @@ export default function FAQAndFooter() {
             height={133}
             className='mx-auto'
           />
-          <h2 className='mb-[49px] hidden text-font30Leading110 lg:block lg:text-[105px]'>
+          <h2 className='mb-[49px] hidden text-font30Leading110 font-semibold lg:block lg:text-[105px]'>
             Заробляй з BTC-X
           </h2>
           <h2 className='mb:[25px] text-font30Leading110 lg:mb-[49px] lg:hidden'>

@@ -1,11 +1,33 @@
 {
   "header": {
-    "aboutus": "About Us",
+    "aboutus": "About us",
     "airdrop": "Airdrop",
     "referral": "Referral program",
     "promo": "Promo",
     "support": "Support",
     "app": "Go to App"
+  },
+  "footer": {
+    "footer_mobile_title": "BTC-X a platform for trading without commission",
+    "footer_mobile_subtitle": "Join the BTC-X community",
+    "aboutus": "About us",
+    "airdrop": "Airdrop",
+    "referral": "Referral program",
+    "support": "Support",
+    "btc-x": "BTC X, LLC",
+    "btc-x_data": "BTC-X, LLC (old name ITM-UA, Private Enterprise), a company incorporated in Ukraine, that provides BTC-X.PRO mobile trading platform has the following legal data.",
+    "btc-x_data_1": "USROU code of the legal entity: 45260571",
+    "btc-x_data_2": "IBAN: UA293052990000026001010407651",
+    "btc-x_data_3": "Legal address and location of activity: Ukraine, 50103, Dnipropetrovsk region, city of Kryviy Rih, Tilhy Stepana str., building 71",
+    "terms": "Terms and Conditions",
+    "privacy": "Privacy Policy",
+    "aml": "AML/CTF & KYC",
+    "footer_email": "admin@btc-x.pro",
+    "footer_title": "TRADE COMISSION-FREE THROUGH OUT THE",
+    "footer_subtitle": "YEAR 2025",
+    "subscribe_placeholder": "Enter your email address",
+    "subscribe_button": "Subscribe for updates",
+    "footer_down": "BTC-X.PRO allows users to benefit economically from the price movements of financial instruments without the need to physically own them. Definitions such as \"trade\", \"deal\", \"buy\" and \"sell\" used by BTC-X.PRO should be understood as risks associated with positions in various financial instruments that are subject to price fluctuations, without ownership of the underlying financial instrument. A BTC-X.PRO user who has an open long position in a stock or ETF at the time the market opens on the ex-dividend date will receive the declared dividend amount for each share of his position. A user who has an open short position in a stock or ETF at the time the market opens on the ex-dividend date will pay the declared dividend amount for each share of his position. As with any trading in stocks, commodities and cryptocurrencies, \"trading\" with BTC-X.PRO carries a level of risk that may not be suitable for all persons interested in trading. You may lose some or all of your investment capital, so you should not speculate with capital that you cannot afford to lose. You should consult an independent financial advisor before taking any risks or \"trading\" with BTC-X.PRO. The information contained on this site does not apply to residents of the United States or Canada and may not be used in any country or jurisdiction where such use or access is prohibited under applicable law."
   },
   "about": {
     "title": "About Us",

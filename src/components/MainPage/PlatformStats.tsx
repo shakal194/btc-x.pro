@@ -125,7 +125,7 @@ export default function PlatformStats() {
                   className='w-full'
                 ></Image>
               </div>
-              <div className='grid-row-4 grid gap-x-4 gap-y-[34px]'>
+              <div className='flex h-full flex-col justify-between gap-2 md:gap-4'>
                 <div className='hidden items-center justify-between xl:flex'>
                   <h4 className='w-[231px] text-font18Leading130 xl:w-[394px] xl:text-font30Leading130'>
                     ВИ НЕ ПЛАТИТЕ КОМІСІЮ ЗА ВСІ ВИДИ ПОСЛУГ:
@@ -134,34 +134,40 @@ export default function PlatformStats() {
                     [ 01 ]
                   </p>
                 </div>
-                <div className='flex items-center text-[13px] leading-[100%] leading-[120%] xl:text-primary'>
-                  <div className='rounded-full border px-3 py-2 text-center'>
-                    <p>Вхід у угоду</p>
+                <div className='flex flex-col justify-between gap-2 md:flex-row md:gap-4 lg:gap-8'>
+                  <div className='flex flex-col items-start gap-2 text-[13px] leading-[100%] leading-[120%] xl:text-primary'>
+                    <div className='flex items-center'>
+                      <Image
+                        src='/arrows.png'
+                        alt='Arrow'
+                        width={42}
+                        height={42}
+                        className='h-[42px] w-[42px] rotate-180'
+                      />
+                      <p className='rounded-full border px-3 py-2 text-center'>
+                        Вхід у угоду
+                      </p>
+                    </div>
+                    <div className='flex items-center'>
+                      <p className='rounded-full border px-3 py-2 text-center'>
+                        Вихід із угоди
+                      </p>
+                      <Image
+                        src='/arrows.png'
+                        alt='Arrow'
+                        width={42}
+                        height={42}
+                        className='h-[42px] w-[42px] rotate-180'
+                      />
+                    </div>
                   </div>
-                  <Image
-                    src='/arrows.png'
-                    alt='Arrow'
-                    width={42}
-                    height={42}
-                    className='h-[42px] w-[42px]'
-                  ></Image>
-                  <div className='rounded-full border px-3 py-2 text-center'>
-                    <p>Коли виводите гроші з нашої торгової площадки</p>
-                  </div>
-                </div>
-                <div className='flex items-center text-[13px] leading-[100%] leading-[120%] xl:text-primary'>
-                  <div className='rounded-full border px-3 py-2 text-center'>
-                    <p>Вихід із угоди</p>
-                  </div>
-                  <Image
-                    src='/arrows.png'
-                    alt='Arrow'
-                    width={42}
-                    height={42}
-                    className='h-[42px] w-[42px] rotate-180'
-                  ></Image>
-                  <div className='rounded-full border px-3 py-2 text-center'>
-                    <p>Коли берете кредитне плече</p>
+                  <div className='grid grid-rows-2 items-start gap-2 text-[13px] leading-[100%] leading-[120%] xl:text-primary'>
+                    <div className='rounded-full border px-3 py-2 text-center'>
+                      <p>Коли виводите гроші з нашої торгової площадки</p>
+                    </div>
+                    <div className='rounded-full border px-3 py-2 text-center'>
+                      <p>Коли берете кредитне плече</p>
+                    </div>
                   </div>
                 </div>
                 <p>
@@ -175,7 +181,7 @@ export default function PlatformStats() {
             <div className='grid grid-cols-1 items-start gap-8 xl:grid-cols-2'>
               <div className='flex items-center justify-between xl:hidden'>
                 <h4 className='w-[231px] text-font18Leading130 xl:w-[394px] xl:text-font30Leading130'>
-                  ТОРГОВЕЛЬНА СИЛА
+                  ТОРГОВА СИЛА
                 </h4>
                 <p className='font-ibm text-ibm13Leading130 opacity-[33%] xl:text-ibm16Leading130'>
                   [ 02 ]
@@ -190,25 +196,22 @@ export default function PlatformStats() {
                   className='w-full'
                 />
               </div>
-              <div className='grid-row-4 grid gap-x-4 gap-y-[34px]'>
+              <div className='flex h-full flex-col justify-between gap-2 md:gap-4'>
                 <div className='hidden items-center justify-between xl:flex'>
                   <h4 className='w-[231px] text-font18Leading130 xl:w-[394px] xl:text-font30Leading130'>
-                    ТОРГОВЕЛЬНА СИЛА
+                    ТОРГОВА СИЛА
                   </h4>
                   <p className='font-ibm text-ibm13Leading130 opacity-[33%] xl:text-ibm16Leading130'>
                     [ 02 ]
                   </p>
                 </div>
                 <p>
-                  Це максимальна сума в USDT яка може бути використана для всіх
-                  відкритих позицій і яка залишається доступною незалежно від
-                  результатів вашої торгівлі.
+                  Це максимальна сума в USDT, яка може бути використана для
+                  відкриття позицій.
                 </p>
                 <p>
-                  Іншими словами, ви ставите кредитне плече на свій депозит, але{' '}
-                  <span className='text-[#FE9900]'>
-                    вас не можуть ліквідувати
-                  </span>
+                  Іншими словами, ви ставите кредитне плече на{' '}
+                  <span className='text-[#FE9900]'>весь свій депозит</span>
                 </p>
                 <Link
                   href='https://onelink.to/js2s8h'
@@ -240,7 +243,7 @@ export default function PlatformStats() {
                   className='w-full'
                 />
               </div>
-              <div className='grid-row-4 grid gap-8'>
+              <div className='flex h-full flex-col justify-between gap-2 md:gap-4'>
                 <div className='hidden items-center justify-between xl:flex'>
                   <h4 className='w-[231px] text-font18Leading130 xl:w-[394px] xl:text-font30Leading130'>
                     СПРАВЖНІ ЦІНИ
