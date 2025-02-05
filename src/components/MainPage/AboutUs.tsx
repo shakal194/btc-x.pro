@@ -213,7 +213,7 @@ export default function AboutUs() {
           <div className='relative rounded-lg bg-gradient-to-r from-[#FFFFFF]/15 to-[#FFFFFF]/30 p-[1px]'>
             <div className='flex h-full w-full flex-col items-center rounded-md bg-[#111111] py-[25px] xl:w-[210px] xl:py-[40px]'>
               <Link
-                href='https://t.me/+7_3pToHuJwJhZTVi'
+                href='https://x.com/btc_x_pro'
                 target='_blank'
                 rel='noopener noreferrer'
               >

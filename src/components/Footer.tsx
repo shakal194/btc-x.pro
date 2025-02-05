@@ -173,7 +173,7 @@ export default function Footer({ locale }: { locale: string }) {
               </div>
             </Link>
             <Link
-              href='https://www.instagram.com/btc_x.pro'
+              href='https://x.com/btc_x_pro'
               target='_blank'
               rel='noopener noreferrer'
             >
