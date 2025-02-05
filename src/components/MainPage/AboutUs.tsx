@@ -104,7 +104,10 @@ export default function AboutUs() {
         >
           Перейти в додаток
         </Link>
-        <div className='container mx-auto mb-[40px] mt-[90px] flex flex-col items-center lg:mt-16'>
+        <div
+          id='social'
+          className='container mx-auto mb-[40px] mt-[90px] flex flex-col items-center lg:mt-16'
+        >
           <p className='mb-[6px] w-[106px] text-center font-ibm text-ibm13Leading130 opacity-[33%] lg:mb-[13px] lg:w-[250px] lg:text-ibm16Leading130'>
             Приєднуйся до ком’юніті BTC-X
           </p>

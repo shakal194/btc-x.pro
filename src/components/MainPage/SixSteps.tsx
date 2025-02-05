@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import StoreButtons from '@/components/ui/StoreButtons';
+import ScrollButton from '@/components/ui/ScrollButton';
 
 export default function FiveSteps() {
   return (
@@ -96,6 +97,7 @@ export default function FiveSteps() {
                   активною трейдинговою спільнотою. Відчуйте силу підтримки
                   однодумців та зростайте разом із BTC-X.
                 </p>
+                <ScrollButton />
               </div>
             </div>
           </div>

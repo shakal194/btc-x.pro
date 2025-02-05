@@ -6,7 +6,7 @@ import { getMessages } from 'next-intl/server';
 import Header from '@/components/Header';
 import FooterSection from '@/components/Footer';
 import { Manrope } from 'next/font/google';
-import ButtonFooter from '@/components/ButtonFooter';
+import ButtonFooter from '@/components/ui/ButtonFooter';
 
 const manrope = Manrope({
   subsets: ['latin'],
