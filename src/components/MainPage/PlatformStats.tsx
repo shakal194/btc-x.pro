@@ -1,8 +1,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import TradePowerLocalizedImage from '@/components/ui/TradePowerLocalizedImage';
 
 export default function PlatformStats() {
+  const t = useTranslations('mainPage.platformStats');
+
   return (
     <>
       <section className='rounded-t-xl bg-[#F4F4F4] pt-[30px] text-black xl:py-[100px]'>
@@ -10,10 +13,10 @@ export default function PlatformStats() {
           {/* Статистика */}
           <div className='mb-[20px] flex flex-col-reverse justify-between xl:mb-12 xl:flex-row xl:items-center'>
             <h2 className='mb-6 text-font30Leading110 xl:text-font50Leading110'>
-              Наша платформа в цифрах:
+              {t('title')}
             </h2>
             <p className='mb-[10px] w-[145px] font-ibm text-ibm13Leading130 opacity-[33%] xl:mb-0 xl:w-[250px] xl:text-ibm16Leading130'>
-              ВТС-Х — довіра, яку підтверджують результати
+              {t('subtitle')}
             </p>
           </div>
           <div className='my-[25px] border-t border-black opacity-[33%] xl:my-[40px]'></div>
@@ -22,7 +25,7 @@ export default function PlatformStats() {
               {/* Карточка 1 */}
               <div className='flex h-[200px] w-full flex-col justify-between rounded-lg bg-gray-100 p-5 shadow'>
                 <p className='text-font16Leading120 xl:text-font22Leading120'>
-                  Торговий обсяг (USD), 24 год.
+                  {t('stats_1_title')}
                 </p>
                 <div>
                   <div className='flex items-center'>
@@ -34,30 +37,28 @@ export default function PlatformStats() {
                       className='h-[6px] w-[6px]'
                     ></Image>
                     <p className='ml-[3px] font-ibm text-ibm13Leading130 leading-[130%] tracking-tight text-[#69DF40] xl:text-ibm16Leading130'>
-                      Live
+                      {t('stats_1_live')}
                     </p>
                   </div>
                   <h3 className='text-[45px] font-semibold leading-[120%] xl:text-[50px] xl:font-bold'>
-                    11 956 78
+                    {t('stats_1_data')}
                   </h3>
                 </div>
               </div>
               {/* Карточка 2 */}
               <div className='flex h-[200px] w-full flex-col justify-between rounded-lg bg-gray-100 p-5 shadow'>
                 <p className='text-font16Leading120 text-font22Leading120'>
-                  Торгових пар,{' '}
-                  <span className='opacity-[33%]'>
-                    включаючи крипту, мем-коїни, акції
-                  </span>
+                  {t('stats_2_title')}{' '}
+                  <span className='opacity-[33%]'>{t('stats_2_subtitle')}</span>
                 </p>
                 <h3 className='text-[45px] font-semibold leading-[120%] xl:text-[50px] xl:font-bold'>
-                  54
+                  {t('stats_2_data')}
                 </h3>
               </div>
               {/* Карточка 3 */}
               <div className='flex h-[200px] w-full flex-col justify-between rounded-lg bg-gray-100 p-5 shadow'>
                 <p className='text-font16Leading120 text-font22Leading120'>
-                  Зареєстрованих користувачів
+                  {t('stats_3_title')}
                 </p>
                 <div>
                   <div className='flex items-center'>
@@ -69,24 +70,22 @@ export default function PlatformStats() {
                       className='h-[6px] w-[6px]'
                     ></Image>
                     <p className='ml-[3px] font-ibm text-ibm13Leading130 leading-[130%] tracking-tight text-[#69DF40] xl:text-ibm16Leading130'>
-                      Live
+                      {t('stats_3_live')}
                     </p>
                   </div>
                   <h3 className='text-[45px] font-semibold leading-[120%] xl:text-[50px] xl:font-bold'>
-                    11 654
+                    {t('stats_3_data')}
                   </h3>
                 </div>
               </div>
               {/* Карточка 4 */}
               <div className='flex h-[200px] w-full flex-col justify-between rounded-lg bg-gray-100 p-5 shadow'>
                 <p className='text-font16Leading120 text-font22Leading120'>
-                  Країн обслуговування —{' '}
-                  <span className='opacity-[33%]'>
-                    ВТС-Х міжнародна платформа
-                  </span>
+                  {t('stats_4_title')}{' '}
+                  <span className='opacity-[33%]'>{t('stats_4_subtitle')}</span>
                 </p>
                 <h3 className='text-[45px] font-semibold leading-[120%] xl:text-[50px] xl:font-bold'>
-                  15
+                  {t('stats_4_data')}
                 </h3>
               </div>
             </div>
@@ -96,10 +95,10 @@ export default function PlatformStats() {
           <div className='mb-[25px] xl:mb-12'>
             <div className='flex justify-between'>
               <p className='hidden w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] xl:block xl:text-ibm16Leading130'>
-                Наші переваги
+                {t('title_2')}
               </p>
               <h2 className='mb-4 text-font30Leading110 tracking-tight xl:w-[630px] xl:text-font50Leading110'>
-                Дійсно без жодних комісій та зборів протягом усього 2025 року
+                {t('subtitle_2')}
               </h2>
             </div>
           </div>
@@ -110,11 +109,11 @@ export default function PlatformStats() {
             <div className='my-4 border-t border-black opacity-[33%]'></div>
             <div className='grid grid-cols-1 items-start gap-8 xl:grid-cols-2'>
               <div className='flex items-center justify-between xl:hidden'>
-                <h4 className='w-[231px] text-font18Leading130 xl:w-[394px] xl:text-font30Leading130'>
-                  ВИ НЕ ПЛАТИТЕ КОМІСІЮ ЗА ВСІ ВИДИ ПОСЛУГ:
+                <h4 className='w-[231px] text-font18Leading130'>
+                  {t('advantage_1_title')}
                 </h4>
-                <p className='font-ibm text-ibm13Leading130 leading-[130%] tracking-tight opacity-[33%] xl:text-ibm16Leading130'>
-                  [ 01 ]
+                <p className='font-ibm text-ibm13Leading130 opacity-[33%]'>
+                  {t('advantage_1_number')}
                 </p>
               </div>
               <div>
@@ -128,11 +127,11 @@ export default function PlatformStats() {
               </div>
               <div className='flex h-full flex-col justify-between gap-2 md:gap-4'>
                 <div className='hidden items-center justify-between xl:flex'>
-                  <h4 className='w-[231px] text-font18Leading130 xl:w-[394px] xl:text-font30Leading130'>
-                    ВИ НЕ ПЛАТИТЕ КОМІСІЮ ЗА ВСІ ВИДИ ПОСЛУГ:
+                  <h4 className='w-[231px] text-font18Leading130 xl:w-2/3 xl:text-font30Leading130'>
+                    {t('advantage_1_title')}
                   </h4>
-                  <p className='font-ibm text-ibm13Leading130 leading-[130%] tracking-tight opacity-[33%] xl:text-ibm16Leading130'>
-                    [ 01 ]
+                  <p className='font-ibm text-ibm13Leading130 opacity-[33%] xl:text-ibm16Leading130'>
+                    {t('advantage_1_number')}
                   </p>
                 </div>
                 <div className='flex flex-col justify-between gap-2 md:flex-row md:gap-4 lg:gap-8'>
@@ -146,12 +145,12 @@ export default function PlatformStats() {
                         className='h-[42px] w-[42px] rotate-180'
                       />
                       <p className='rounded-full border px-3 py-2 text-center'>
-                        Вхід у угоду
+                        {t('advantage_1_subtitle')}
                       </p>
                     </div>
                     <div className='flex items-center'>
                       <p className='rounded-full border px-3 py-2 text-center'>
-                        Вихід із угоди
+                        {t('advantage_1_subtitle_2')}
                       </p>
                       <Image
                         src='/arrows.png'
@@ -164,55 +163,51 @@ export default function PlatformStats() {
                   </div>
                   <div className='grid grid-rows-2 items-start gap-2 text-[13px] leading-[100%] leading-[120%] xl:text-primary'>
                     <div className='rounded-full border px-3 py-2 text-center'>
-                      <p>Коли виводите гроші з нашої торгової площадки</p>
+                      <p>{t('advantage_1_subtitle_3')}</p>
                     </div>
                     <div className='rounded-full border px-3 py-2 text-center'>
-                      <p>Коли берете кредитне плече</p>
+                      <p>{t('advantage_1_subtitle_4')}</p>
                     </div>
                   </div>
                 </div>
-                <p>
-                  Статистика показує, що трейдери втрачають сотні тисяч доларів
-                  на комісіях і не помічають цього!
-                </p>
+                <p>{t('advantage_1_subtitle_5')}</p>
               </div>
             </div>
             {/* Блок 2 */}
             <div className='my-4 border-t border-black opacity-[33%]'></div>
             <div className='grid grid-cols-1 items-start gap-8 xl:grid-cols-2'>
               <div className='flex items-center justify-between xl:hidden'>
-                <h4 className='w-[231px] text-font18Leading130 xl:w-[394px] xl:text-font30Leading130'>
-                  ТОРГОВА СИЛА
+                <h4 className='w-[231px] text-font18Leading130'>
+                  {t('advantage_2_title')}
                 </h4>
-                <p className='font-ibm text-ibm13Leading130 opacity-[33%] xl:text-ibm16Leading130'>
-                  [ 02 ]
+                <p className='font-ibm text-ibm13Leading130 opacity-[33%]'>
+                  {t('advantage_2_number')}
                 </p>
               </div>
               <TradePowerLocalizedImage />
               <div className='flex h-full flex-col justify-between gap-2 md:gap-4'>
                 <div className='hidden items-center justify-between xl:flex'>
-                  <h4 className='w-[231px] text-font18Leading130 xl:w-[394px] xl:text-font30Leading130'>
-                    ТОРГОВА СИЛА
+                  <h4 className='w-[231px] text-font18Leading130 xl:w-2/3 xl:text-font30Leading130'>
+                    {t('advantage_2_title')}
                   </h4>
                   <p className='font-ibm text-ibm13Leading130 opacity-[33%] xl:text-ibm16Leading130'>
-                    [ 02 ]
+                    {t('advantage_2_number')}
                   </p>
                 </div>
+                <p>{t('advantage_2_subtitle')}</p>
                 <p>
-                  Це максимальна сума в USDT, яка може бути використана для
-                  відкриття позицій.
-                </p>
-                <p>
-                  Іншими словами, ви ставите кредитне плече на{' '}
-                  <span className='text-[#FE9900]'>весь свій депозит</span>
+                  {t('advantage_2_subtitle_2')}{' '}
+                  <span className='text-[#FE9900]'>
+                    {t('advantage_2_subtitle_3')}
+                  </span>
                 </p>
                 <Link
                   href='https://onelink.to/js2s8h'
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='w-[217px] rounded-full border px-3 py-2 text-center text-primary font-bold leading-[100%] transition hover:bg-[#FD6B06] hover:text-white'
+                  className='w-[240px] rounded-full border px-3 py-2 text-center text-primary font-bold leading-[100%] transition hover:bg-[#FD6B06] hover:text-white'
                 >
-                  Перейти в додаток
+                  {t('advantage_link')}
                 </Link>
               </div>
             </div>
@@ -220,11 +215,11 @@ export default function PlatformStats() {
             <div className='my-4 border-t border-black opacity-[33%]'></div>
             <div className='grid grid-cols-1 items-start gap-8 xl:grid-cols-2'>
               <div className='flex items-center justify-between xl:hidden'>
-                <h4 className='w-[231px] text-font18Leading130 xl:w-[394px] xl:text-font30Leading130'>
-                  СПРАВЖНІ ЦІНИ
+                <h4 className='w-[231px] text-font18Leading130'>
+                  {t('advantage_3_title')}
                 </h4>
-                <p className='font-ibm text-ibm13Leading130 opacity-[33%] xl:text-ibm16Leading130'>
-                  [ 03 ]
+                <p className='font-ibm text-ibm13Leading130 opacity-[33%]'>
+                  {t('advantage_3_number')}
                 </p>
               </div>
               <div>
@@ -238,34 +233,34 @@ export default function PlatformStats() {
               </div>
               <div className='flex h-full flex-col justify-between gap-2 md:gap-4'>
                 <div className='hidden items-center justify-between xl:flex'>
-                  <h4 className='w-[231px] text-font18Leading130 xl:w-[394px] xl:text-font30Leading130'>
-                    СПРАВЖНІ ЦІНИ
+                  <h4 className='w-[231px] text-font18Leading130 xl:w-2/3 xl:text-font30Leading130'>
+                    {t('advantage_3_title')}
                   </h4>
                   <p className='font-ibm text-ibm13Leading130 opacity-[33%] xl:text-ibm16Leading130'>
-                    [ 03 ]
+                    {t('advantage_3_number')}
                   </p>
                 </div>
                 <p>
-                  Інші торгові платформи та брокерські компанії штучно
-                  збільшують різницю між цінами купівлі та продажу, ставлячи вас
-                  у невигідне становище.{' '}
-                  <span className='text-[#FE9900]'>Ми так не робимо,</span> у
-                  нас інші цілі компанії
+                  {t('advantage_3_subtitle')}{' '}
+                  <span className='text-[#FE9900]'>
+                    {t('advantage_3_subtitle_2')}
+                  </span>{' '}
+                  {t('advantage_3_subtitle_3')}
                 </p>
                 <p>
-                  Наша мета — забезпечити{' '}
+                  {t('advantage_3_subtitle_4')}{' '}
                   <span className='text-[#FE9900]'>
-                    прозорі та чесні умови торгівлі,
+                    {t('advantage_3_subtitle_5')}
                   </span>{' '}
-                  щоб ви могли зосередитися на своїх фінансових цілях.
+                  {t('advantage_3_subtitle_6')}
                 </p>
                 <Link
                   href='https://onelink.to/js2s8h'
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='w-[217px] rounded-full border px-3 py-2 text-center text-primary font-bold leading-[100%] transition hover:bg-[#FD6B06] hover:text-white'
+                  className='w-[240px] rounded-full border px-3 py-2 text-center text-primary font-bold leading-[100%] transition hover:bg-[#FD6B06] hover:text-white'
                 >
-                  Перейти в додаток
+                  {t('advantage_link')}
                 </Link>
               </div>
             </div>
@@ -277,12 +272,10 @@ export default function PlatformStats() {
         {/* Миссия */}
         <div className='container mx-auto flex flex-col items-center xl:mt-16 xl:w-[1020px]'>
           <p className='mb-[15px] w-[250px] text-center font-ibm text-ibm13Leading130 opacity-[33%] xl:mb-[30px] xl:text-ibm16Leading130'>
-            ВТС-Х — довіра, яку підтверджують результати
+            {t('mission_title')}
           </p>
           <h4 className='text-center text-[18px] font-medium leading-[125%] tracking-tight lg:text-[40px] lg:font-bold'>
-            Місія BTC-X — зробити фінансову торгівлю доступною, прозорою та
-            вигідною для кожного, поєднуючи інновації, простоту та справедливі
-            умови
+            {t('mission_subtitle')}
           </h4>
         </div>
       </section>

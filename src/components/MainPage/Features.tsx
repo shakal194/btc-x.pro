@@ -1,15 +1,18 @@
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 export default function FeaturesSection() {
+  const t = useTranslations('mainPage.features');
+
   return (
     <section className='py-[100px]'>
       <div className='container mx-auto gap-8 px-4 lg:flex'>
         <div className=''>
           <h2 className='mb-8 text-[30px] text-font30Leading110 lg:text-font50Leading110'>
-            Торгуй, інвестуй і заробляй в одному місці
+            {t('title')}
           </h2>
           <p className='hidden w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:block lg:text-ibm16Leading130'>
-            ВТС-Х — всі ринки та інструменти в одному місці
+            {t('subtitle')}
           </p>
         </div>
         <div className='grid gap-2 md:grid-cols-2 md:gap-4 lg:grid-cols-none'>
@@ -18,16 +21,13 @@ export default function FeaturesSection() {
             <div className='h-[298px] rounded-lg bg-black lg:flex'>
               <div className='px-[20px] py-[20px] lg:w-2/3 lg:px-[25px] lg:py-6'>
                 <h3 className='mb-[20px] text-[24px] font-semibold leading-[110%] text-white lg:mb-[40px] lg:text-[40px]'>
-                  01. Crypto
+                  {t('feature_1_title')}
                 </h3>
                 <p className='text-[13px] font-medium leading-[130%] lg:text-font16Leading130'>
-                  Завойовуйте найдинамічніші ринки, які працюють 24/7. Торгуйте
-                  за точними спотовими цінами провідних бірж, без зайвих
-                  комісій.
+                  {t('feature_1_subtitle')}
                 </p>
                 <p className='mt-4 text-[13px] font-medium leading-[130%] opacity-[33%] lg:text-font16Leading130'>
-                  *Використовуйте кредитне плече для збільшення прибутків без
-                  ризику ліквідації.
+                  {t('feature_1_subtitle_2')}
                 </p>
               </div>
               <Image
@@ -50,18 +50,17 @@ export default function FeaturesSection() {
           <div className='relative h-[300px] overflow-hidden rounded-lg bg-gradient-to-r from-[#EDEDED] to-[#AFAFAF] lg:flex lg:w-[670px]'>
             <div className='px-[20px] py-[20px] lg:w-2/3 lg:px-[25px] lg:py-6'>
               <h3 className='mb-[20px] text-[24px] font-semibold leading-[110%] text-black lg:mb-[40px] lg:text-[40px]'>
-                02. Futures
+                {t('feature_2_title')}
               </h3>
               <p className='text-[13px] font-medium leading-[130%] text-black lg:text-font16Leading130'>
-                Отримуйте доступ до глобальних ринків сировини та фондових
-                індексів.
+                {t('feature_2_subtitle')}
               </p>
               <p className='mt-4 text-[13px] font-medium leading-[130%] text-black lg:text-font16Leading130'>
-                Торгуйте з чесними умовами{' '}
+                {t('feature_2_subtitle_2')}{' '}
                 <span className='text-[#FE9900]'>
-                  та відсутністю прихованих зборів
+                  {t('feature_2_subtitle_3')}
                 </span>
-                , використовуючи інструменти професійного рівня.
+                {t('feature_2_subtitle_4')}
               </p>
             </div>
             <Image
@@ -84,12 +83,10 @@ export default function FeaturesSection() {
             <div className='relative h-[298px] rounded-lg bg-black lg:flex lg:h-[216px]'>
               <div className='relative z-10 px-[20px] py-[20px] lg:w-2/3 lg:px-[25px] lg:py-6'>
                 <h3 className='mb-[20px] text-[24px] font-medium font-semibold leading-[110%] text-white lg:mb-[40px] lg:text-[40px]'>
-                  03. MEM Coins
+                  {t('feature_3_title')}
                 </h3>
                 <p className='text-[13px] font-medium leading-[130%] lg:text-font16Leading130'>
-                  Опануй найволатильніший ринок і зроби на ньому ІКСИ.
-                  Використовуйте волатильність цих активів, щоб отримувати
-                  високі прибутки.
+                  {t('feature_3_subtitle')}
                 </p>
               </div>
               <Image
@@ -111,13 +108,12 @@ export default function FeaturesSection() {
           {/* Feature 4 */}
           <div className='relative flex h-[300px] w-full lg:w-[670px]'>
             {/* Текстовый блок */}
-            <div className='z-10 h-full rounded-lg px-[20px] py-[20px] lg:w-[45%] lg:px-[25px] lg:py-6'>
+            <div className='z-10 h-full rounded-lg px-[20px] py-[20px] lg:w-[50%] lg:px-[25px] lg:py-6'>
               <h3 className='mb-[20px] text-[24px] font-medium font-semibold leading-[110%] text-black lg:mb-[40px] lg:text-[40px]'>
-                04. Stocks
+                {t('feature_4_title')}
               </h3>
               <p className='text-[13px] font-medium leading-[130%] text-black lg:text-font16Leading130'>
-                Торгуйте улюбленими компаніями або відкривайте короткі позиції,
-                щоб отримувати прибуток навіть у моменти, коли ринок падає.
+                {t('feature_4_subtitle')}
               </p>
             </div>
 
