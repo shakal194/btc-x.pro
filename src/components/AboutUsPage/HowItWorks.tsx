@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import TradePowerLocalizedImage from '@/components/ui/TradePowerLocalizedImage';
 
 export default function HowItWorksSection() {
   return (
@@ -57,25 +58,19 @@ export default function HowItWorksSection() {
                 Якщо ви використовуєте кредитне плече, наприклад, 10x, то при
                 угоді на $1000 ви{' '}
                 <span className='text-[#FE9900]'>
-                  фактично торгуєте на $10,000.
+                  фактично торгуєте на $20,000.
                 </span>{' '}
                 Це збільшує як потенційний прибуток, так і витрати на комісії.
               </h3>
               <div className='xl:hidden'>
-                <Image
-                  src='/trade_power.png'
-                  alt='Trade power'
-                  width={630}
-                  height={290}
-                  className='w-full'
-                />
+                <TradePowerLocalizedImage />
               </div>
               <p className='mt-[20px] font-ibm text-ibm13Leading130 opacity-[33%] md:text-ibm16Leading130 lg:hidden'>
                 Якщо комісія складає 0.1%, ви заплатите $10 за угоду на $10,000.
                 Якщо комісія складає 0.5% ви заплатите $50 за ту саму угоду
               </p>
               <Image
-                src='/about_us_cross.png'
+                src='/about-us_trading_power.png'
                 alt='Cross'
                 width={655}
                 height={160}
@@ -90,7 +85,7 @@ export default function HowItWorksSection() {
               <div className='hidden items-center xl:flex'>
                 <div className='mr-[5px] h-[28px] w-[28px] rounded-full bg-[#131313]'></div>
                 <p className='text-font16Leading120 text-font22Leading120'>
-                  - Сума угоди з кредитним плечем 10Х
+                  - Сума угоди з кредитним плечем 20Х
                 </p>
               </div>
             </div>

@@ -76,7 +76,7 @@ export default function FeaturesSection() {
               alt='Futures'
               width={300}
               height={280}
-              className='absolute -bottom-[10px] left-[10px] h-auto w-auto lg:hidden'
+              className='absolute -bottom-[10px] left-[10px] w-[300px] lg:hidden'
             />
           </div>
           {/* Feature 3 */}
@@ -136,7 +136,7 @@ export default function FeaturesSection() {
               alt='Stock'
               width={300}
               height={230}
-              className='absolute inset-0 h-full w-full rounded-lg object-cover lg:hidden'
+              className='absolute inset-0 h-full w-full rounded-lg object-fill lg:hidden'
             />
           </div>
         </div>

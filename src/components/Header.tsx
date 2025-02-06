@@ -1,7 +1,8 @@
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import LocaleSwitcher from '@/components/locale-switcher';
+import LocaleSwitcher from '@/components/ui/LocaleSwitcher';
+import MobileMenu from '@/components/ui/MobileMenu';
 
 export default function Header({ locale }: { locale: string }) {
   const t = useTranslations('header');
@@ -9,7 +10,7 @@ export default function Header({ locale }: { locale: string }) {
   return (
     <header className='relative z-50 text-white'>
       <div className='container mx-auto mt-4 px-4'>
-        <div className='flex items-center justify-between rounded-lg border border-gray-400 px-5 py-3 backdrop-blur-md'>
+        <div className='flex items-center justify-between rounded-lg border border-gray-400 px-5 py-[7px] backdrop-blur-md lg:py-[10px]'>
           <nav className='hidden items-center space-x-6 lg:flex'>
             <Link
               href={`/${locale}/about-us`}
@@ -57,6 +58,8 @@ export default function Header({ locale }: { locale: string }) {
               </p>
             </Link>
           </div>
+
+          <MobileMenu locale={locale} />
 
           {/* Правый блок с кнопками */}
           <div className='hidden items-center space-x-4 lg:flex'>

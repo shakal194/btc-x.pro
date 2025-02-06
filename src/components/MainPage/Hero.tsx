@@ -1,7 +1,10 @@
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import StoreButtons from '@/components/ui/StoreButtons';
 
 export default function HeroSection() {
+  const t = useTranslations('mainPage.hero');
+
   return (
     <section className='bg-black py-[25px] lg:py-[100px]'>
       <div className='container relative mx-auto px-4'>
@@ -9,17 +12,16 @@ export default function HeroSection() {
           <div className='z-20'>
             <div className='lg:w-[716px]'>
               <h1 className='text-font30Leading110 md:text-font50Leading110 lg:text-font75Leading110'>
-                ТОРГУЙТЕ БЕЗ КОМІСІЇ ПРОТЯГОМ УСЬОГО{' '}
+                {t('title')}{' '}
                 <span className='bg-gradient-to-r from-[#FFC996] via-[#FD6B06] to-[#963706] bg-clip-text text-transparent'>
-                  2025 РОКУ
+                  {t('subtitle')}
                 </span>
               </h1>
             </div>
             <div className='mt-[20px] lg:mt-[186px] lg:w-[435px] lg:rounded-lg lg:bg-gradient-to-r lg:from-[#553300] lg:to-[#FE9900] lg:p-[1px]'>
               <div className='lg:bg-black lg:px-[25px] lg:py-6 xl:rounded-lg'>
                 <p className='my-[25px] text-[13px] font-medium leading-[130%] opacity-[30%] md:text-font16Leading110 lg:mt-0 lg:max-w-3xl lg:text-primary lg:font-semibold lg:opacity-100'>
-                  Завантажте додаток BTC-X і отримайте доступ до торгівлі прямо
-                  зараз.
+                  {t('text_button')}
                 </p>
                 <div className='lg:border-t lg:opacity-[33%] xl:my-6'></div>
                 <div className='grid grid-cols-2 gap-4'>

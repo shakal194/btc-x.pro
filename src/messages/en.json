@@ -7,6 +7,17 @@
     "support": "Support",
     "app": "Go to App"
   },
+  "mainPage": {
+    "hero": {
+      "title": "TRADE COMISSION-FREE THROUGHOUT THE",
+      "subtitle": "YEAR 2025",
+      "text_button": "Download the BTC-X app and get access to commission-free trading today."
+    },
+    "ourPlatform": {
+      "title": "We are a platform for trading and investing without commissions and leverage fees (futures, margin) on spotprices",
+      "subtitle": "of such exchanges as: Binance, OKX, Coinbase"
+    }
+  },
   "footer": {
     "footer_mobile_title": "BTC-X a platform for trading without commission",
     "footer_mobile_subtitle": "Join the BTC-X community",

@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import TradePowerLocalizedImage from '@/components/ui/TradePowerLocalizedImage';
 
 export default function PlatformStats() {
   return (
@@ -187,15 +188,7 @@ export default function PlatformStats() {
                   [ 02 ]
                 </p>
               </div>
-              <div>
-                <Image
-                  src='/trade_power.png'
-                  alt='Trade power'
-                  width={630}
-                  height={290}
-                  className='w-full'
-                />
-              </div>
+              <TradePowerLocalizedImage />
               <div className='flex h-full flex-col justify-between gap-2 md:gap-4'>
                 <div className='hidden items-center justify-between xl:flex'>
                   <h4 className='w-[231px] text-font18Leading130 xl:w-[394px] xl:text-font30Leading130'>
