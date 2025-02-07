@@ -27,7 +27,14 @@ export async function generateMetadata(): Promise<Metadata> {
       card: 'summary_large_image',
       title: t('title'),
       description: t('description'),
-      images: ['/btcx_og_image.png'],
+      images: [
+        {
+          url: '/btcx_og_image.png',
+          width: 1200,
+          height: 630,
+          alt: t('ogImageAlt'),
+        },
+      ],
     },
     icons: {
       icon: '/favicon.png',
