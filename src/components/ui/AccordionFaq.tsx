@@ -34,18 +34,18 @@ export default function AccordionFaq() {
       {items.map((item) => {
         // Определяем заголовок и содержимое,
         // используя либо question/answer, либо title/content.
-        const titleText = item.question || '';
-        const contentText = item.answer || '';
+        //const titleText = item.question || '';
+        //const contentText = item.answer || '';
 
         return (
           <AccordionItem
             key={item.id}
-            title={titleText}
-            textValue={titleText} // Передаём плоский текст для accessibility
-            className='text-font18Leading130 tracking-tight lg:text-font30Leading130'
+            title={item.question}
+            textValue={item.question}
+            className='text-font16Leading130 font-bold tracking-tight text-black md:text-font18Leading130 lg:text-font30Leading130'
           >
-            <p className='mt-2 text-primary leading-[120%] text-black/50'>
-              {contentText}
+            <p className='mt-2 text-[12px] leading-[130%] text-black/50 md:text-font16Leading130'>
+              {item.answer}
             </p>
           </AccordionItem>
         );
