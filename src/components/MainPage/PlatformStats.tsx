@@ -205,7 +205,7 @@ export default function PlatformStats() {
                   href='https://onelink.to/js2s8h'
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='w-[240px] rounded-full border px-3 py-2 text-center text-primary font-bold leading-[100%] transition hover:bg-[#FD6B06] hover:text-white'
+                  className='hidden w-[240px] rounded-full border px-3 py-2 text-center text-primary font-bold leading-[100%] transition hover:bg-[#FD6B06] hover:text-white lg:block'
                 >
                   {t('advantage_link')}
                 </Link>
@@ -258,7 +258,7 @@ export default function PlatformStats() {
                   href='https://onelink.to/js2s8h'
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='w-[240px] rounded-full border px-3 py-2 text-center text-primary font-bold leading-[100%] transition hover:bg-[#FD6B06] hover:text-white'
+                  className='hidden w-[240px] rounded-full border px-3 py-2 text-center text-primary font-bold leading-[100%] transition hover:bg-[#FD6B06] hover:text-white lg:block'
                 >
                   {t('advantage_link')}
                 </Link>

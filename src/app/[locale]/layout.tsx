@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import { generateMetadata } from '@/lib/MetaData';
 import './globals.css';
 import { NextUIProviders } from './providers';
 import { NextIntlClientProvider } from 'next-intl';
@@ -14,13 +14,7 @@ const manrope = Manrope({
   variable: '--font-manrope',
 });
 
-export const metadata: Metadata = {
-  title: 'BTC-X.PRO',
-  description: 'Криптовалютный сервис',
-  icons: {
-    icon: '/favicon.png',
-  },
-};
+export { generateMetadata };
 
 export default async function RootLayout({
   children,

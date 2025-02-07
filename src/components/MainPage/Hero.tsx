@@ -9,7 +9,7 @@ export default function HeroSection() {
     <section className='bg-black py-[25px] lg:py-[100px]'>
       <div className='container relative mx-auto px-4'>
         <div className='flex gap-2'>
-          <div className='z-20'>
+          <div className='z-30'>
             <div className='lg:w-[716px]'>
               <h1 className='text-font30Leading110 md:text-font50Leading110 lg:text-font75Leading110'>
                 {t('title')}{' '}
@@ -50,13 +50,23 @@ export default function HeroSection() {
               priority={true}
             />
           </div>
-          <div className='pointer-events-none absolute -left-1/2 z-10 hidden translate-x-1/2 lg:top-[-190px] lg:block xl:left-3/4 xl:-translate-x-2/3'>
+          <div className='pointer-events-none absolute -left-1/2 z-20 hidden translate-x-1/2 lg:top-[-190px] lg:block xl:left-3/4 xl:-translate-x-2/3'>
             <Image
               src='/hero_main_page.png'
               alt='Hero image'
               width={1268}
               height={951}
               className='relative w-[1268px] max-w-none'
+              priority={true}
+            />
+          </div>
+          <div className='pointer-events-none absolute -left-2/3 z-10 hidden translate-x-1/2 lg:top-[-190px] lg:block xl:left-3/4 xl:-translate-x-1/4'>
+            <Image
+              src='/hero_ellipse.png'
+              alt='Hero image'
+              width={1172}
+              height={1094}
+              className='relative w-[1172px] max-w-none'
               priority={true}
             />
           </div>

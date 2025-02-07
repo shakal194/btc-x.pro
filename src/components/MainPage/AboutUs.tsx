@@ -1,7 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export default function AboutUs() {
+  const t = useTranslations('mainPage.aboutus');
+
   return (
     <div className='bg-black px-4 py-[65px] text-white lg:py-[100px]'>
       <div className='container mx-auto'>
@@ -9,21 +12,18 @@ export default function AboutUs() {
         <div className='grid grid-cols-1 gap-8 xl:grid-cols-2'>
           <div className='flex items-center justify-between lg:block'>
             <h2 className='text-font30Leading110 lg:mb-6 lg:text-font50Leading110'>
-              Про нас
+              {t('title')}
             </h2>
             <p className='w-[106px] font-ibm text-ibm13Leading130 opacity-[33%] lg:w-[250px] lg:text-ibm16Leading130'>
-              BTC-X — ваш надійний провідник у світі трейдингу
+              {t('subtitle')}
             </p>
           </div>
           <div className='my-[20px] border-t opacity-[33%] xl:hidden'></div>
           <div className='grid md:grid-cols-2 xl:grid-cols-none'>
             <p className='font16Leading120 mb-[30px] lg:text-font30Leading130'>
-              Ми відкриті{' '}
-              <span className='text-[#FE9900]'>
-                для кожного, хто прагне рости,
-              </span>{' '}
-              розвиватися та залишатися в курсі трендів у світі фінансів і
-              крипти.{' '}
+              {t('content')}{' '}
+              <span className='text-[#FE9900]'>{t('content_2')}</span>{' '}
+              {t('content_3')}
             </p>
             <div>
               <Image
@@ -34,7 +34,7 @@ export default function AboutUs() {
                 className='h-auto w-auto rounded-lg'
               />
               <p className='mt-[10px] text-center font-ibm text-ibm13Leading130 opacity-[33%] lg:w-[250px] lg:text-left lg:text-ibm16Leading130'>
-                Команда BTC-X
+                {t('image_description')}
               </p>
             </div>
           </div>
@@ -42,11 +42,9 @@ export default function AboutUs() {
         {/* Наша цель */}
         <div className='mb-[60px] mt-[70px] lg:mt-[148px]'>
           <h2 className='text-[25px] leading-[110%] lg:text-font50Leading110'>
-            Наша ціль —{' '}
-            <span className='opacity-[33%]'>
-              зробити фінансові ринки доступними, зручними та прозорими надаючи,
-            </span>{' '}
-            чесні умови торгівлі.{' '}
+            {t('mission_title')}{' '}
+            <span className='opacity-[33%]'>{t('mission_subtitle')}</span>{' '}
+            {t('mission_subtitle_2')}{' '}
           </h2>
         </div>
         <div className='grid grid-cols-2 gap-8'>
@@ -72,9 +70,7 @@ export default function AboutUs() {
             <div>
               <div className='mb-[40px] hidden border-t border-white opacity-[33%] lg:block'></div>
               <p className='text-[13px] leading-[130%] opacity-[33%] lg:text-primary lg:leading-[120%] lg:opacity-100'>
-                Почніть свою подорож у світ вигідної торгівлі, завантаживши наш
-                додаток із App Store або Google Play. Встановіть його та
-                підготуйтеся до нових можливостей.
+                {t('mission_subtitle_3')}
               </p>
             </div>
             <div className='flex items-center md:gap-4 xl:gap-8'>
@@ -83,14 +79,14 @@ export default function AboutUs() {
                 alt='QR Code'
                 width={169}
                 height={169}
-                className='hidden md:h-[120px] md:w-[120px] lg:block'
+                className='hidden md:h-[120px] md:w-[120px] lg:block lg:h-[169px] lg:w-[169px]'
               />
-              <div className='hidden lg:block'>
-                <h2 className='mb-[40px] text-font30Leading110 xl:text-font50Leading110'>
-                  Заробляй разом з нами{' '}
+              <div className='hidden h-full flex-col justify-between lg:flex'>
+                <h2 className='text-font30Leading110 xl:text-font50Leading110'>
+                  {t('mission_title_2')}
                 </h2>
                 <p className='w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
-                  Скануй щоб завантажити
+                  {t('mission_subtitle_4')}
                 </p>
               </div>
             </div>
@@ -102,18 +98,17 @@ export default function AboutUs() {
           rel='noopener noreferrer'
           className='mt-[30px] block w-full rounded-full border px-5 py-3 text-center text-primary font-bold leading-[110%] transition hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white lg:hidden'
         >
-          Перейти в додаток
+          {t('mission_link')}
         </Link>
         <div
           id='social'
           className='container mx-auto mb-[40px] mt-[90px] flex flex-col items-center lg:mt-16'
         >
           <p className='mb-[6px] w-[106px] text-center font-ibm text-ibm13Leading130 opacity-[33%] lg:mb-[13px] lg:w-[250px] lg:text-ibm16Leading130'>
-            Приєднуйся до ком’юніті BTC-X
+            {t('mission_title_3')}
           </p>
           <h4 className='text-center text-font16Leading120 tracking-tight lg:text-[40px] lg:font-medium lg:leading-[125%]'>
-            Долучайся до динамічної спільноти трейдерів та інвесторів, які разом
-            створюють нову еру фінансових можливостей
+            {t('mission_subtitle_5')}
           </h4>
         </div>
         <div className='grid grid-cols-2 gap-4 xl:flex'>
@@ -150,10 +145,10 @@ export default function AboutUs() {
                   </div>
                 </Link>
                 <h4 className='mb-5 mt-[50px] text-center text-[14px] leading-[120%] text-white lg:text-[22px]'>
-                  Ми в Youtube
+                  {t('social_youtube')}
                 </h4>
                 <p className='text-center text-[10px] leading-[120%] text-white opacity-[33%] lg:text-[14px]'>
-                  Ділимося найкращими порадами та стратегіями
+                  {t('social_youtube_description')}
                 </p>
               </div>
 
@@ -206,10 +201,10 @@ export default function AboutUs() {
                 </div>
               </Link>
               <h4 className='mb-5 mt-[50px] text-[14px] leading-[120%] lg:text-[22px]'>
-                Ми в Telegram
+                {t('social_telegram')}
               </h4>
               <p className='text-center text-[14px] opacity-[33%]'>
-                Спілкуйся з однодумцями та отримуй поради
+                {t('social_telegram_description')}
               </p>
             </div>
           </div>
@@ -265,10 +260,10 @@ export default function AboutUs() {
                 </div>
               </Link>
               <h4 className='mb-5 mt-[50px] text-[14px] leading-[120%] lg:text-[22px]'>
-                Ми у Twitter
+                {t('social_x')}
               </h4>
               <p className='text-center text-[14px] opacity-[33%]'>
-                Будь у курсі всіх трендів та важливих подій
+                {t('social_x_description')}
               </p>
             </div>
           </div>
@@ -307,16 +302,16 @@ export default function AboutUs() {
                 </div>
               </Link>
               <h4 className='mb-5 mt-[50px] text-[14px] leading-[120%] lg:text-[22px]'>
-                Ми в Instagram
+                {t('social_instagram')}
               </h4>
               <p className='text-center text-[14px] opacity-[33%]'>
-                Слідкуй за нашими оновленнями
+                {t('social_instagram_description')}
               </p>
             </div>
           </div>
           <div className='flex h-full w-full flex-wrap content-end rounded-md xl:hidden'>
             <p className='text-[18px] leading-[125%] opacity-[33%] lg:text-[22px]'>
-              Підпишись, у нас цікаво :)
+              {t('social_description')}
             </p>
           </div>
         </div>
