@@ -8,7 +8,7 @@ export default function HeroSection() {
         <div className='flex'>
           <div className='relative z-20 mx-auto flex flex-col-reverse gap-2 md:grid md:grid-cols-2 md:gap-4'>
             <div className='absolute top-2/3 z-10 flex w-[300px] flex-col md:relative md:top-0 xl:w-[540px]'>
-              <h1 className='text-[35px] leading-[110%] tracking-tight lg:text-font50Leading110 xl:mb-[88px] xl:bg-gradient-to-r xl:from-[#FFFFFF] xl:to-[#999999] xl:bg-clip-text xl:text-font75Leading110 xl:text-transparent'>
+              <h1 className='xl:text-font70Leading110 text-[35px] leading-[110%] tracking-tight lg:text-font50Leading110 xl:mb-[88px] xl:bg-gradient-to-r xl:from-[#FFFFFF] xl:to-[#999999] xl:bg-clip-text xl:text-transparent'>
                 BTC-X — КОМАНДА, НА ЯКУ{' '}
                 <span className='bg-gradient-to-r from-[#FFC996] via-[#FD6B06] to-[#963706] bg-clip-text text-transparent'>
                   МОЖНА ПОКЛАСТИСЯ

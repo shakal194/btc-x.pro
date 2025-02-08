@@ -5,7 +5,7 @@ export default function OurPlatformSection() {
   const t = useTranslations('mainPage.ourPlatform');
 
   return (
-    <section className='relative z-10 mt-[653px] md:mt-[1120px] lg:mt-0 lg:py-[100px]'>
+    <section className='relative z-30 mt-[653px] md:mt-[1120px] lg:mt-0 lg:py-[100px]'>
       <div className='container mx-auto px-4 text-center'>
         <p className='text-primary leading-[125%] tracking-tight lg:text-[40px]'>
           {t('title')}

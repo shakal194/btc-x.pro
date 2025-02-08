@@ -312,9 +312,9 @@ export default function Footer({ locale }: { locale: string }) {
         </div>
 
         {/* Средний блок */}
-        <div className='mb-[60px] items-center gap-8 lg:flex'>
+        <div className='relative mb-[60px] items-center gap-8'>
           {/* Заголовок */}
-          <h1 className='mb-[20px] text-font30Leading110 lg:mb-0 lg:text-font75Leading110'>
+          <h1 className='2xl:text-font70Leading110 relative z-20 mb-[20px] text-[25px] font-bold leading-[110%] tracking-tight lg:mb-0 lg:text-font50Leading110 xl:text-[60px]'>
             {t('footer_title')}{' '}
             <span className='bg-gradient-to-r from-[#FFC996] via-[#FD6B06] to-[#963706] bg-clip-text text-transparent'>
               {t('footer_subtitle')}
@@ -322,19 +322,27 @@ export default function Footer({ locale }: { locale: string }) {
           </h1>
 
           {/* Форма */}
-          <form className='flex flex-col items-center justify-center gap-4 md:flex-row md:justify-between md:rounded-full md:border md:border-gray-700 lg:w-[600px]'>
+
+          <form className='relative z-10 mx-auto flex flex-col items-center justify-center gap-4 p-[5px] md:w-[550px] md:flex-row md:justify-between md:rounded-full md:border md:border-gray-700 lg:absolute lg:bottom-0 lg:right-0 lg:w-[540px] lg:backdrop-blur-md xl:w-[650px] xl:p-[10px]'>
             <input
               type='email'
               placeholder={t('subscribe_placeholder')}
-              className='w-full rounded-full border border-gray-700 bg-black px-4 py-2 text-white focus:outline-none focus:ring sm:w-80 md:border-none'
+              className='w-full rounded-full border border-gray-700 bg-black px-4 py-2 text-white focus:outline-none focus:ring sm:w-80 md:w-52 md:border-none'
             />
             <button
               type='submit'
-              className='w-full rounded-full bg-white px-6 py-2 text-primary font-bold text-black hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white focus:outline-none focus:ring md:w-auto'
+              className='w-full rounded-full bg-white px-6 py-2 text-primary font-bold text-black hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white focus:outline-none focus:ring sm:w-80 md:w-auto'
             >
               {t('subscribe_button')}
             </button>
           </form>
+          <Image
+            src='/footer_coin.png'
+            width={150}
+            height={169}
+            alt='Footer icon'
+            className='absolute bottom-0 right-0'
+          />
         </div>
 
         <div className='my-[25px] border-t border-white opacity-[20%] lg:mb-[40px]'></div>

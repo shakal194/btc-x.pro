@@ -23,8 +23,8 @@ export default {
           '30px',
           { lineHeight: '110%', fontWeight: '700', letterSpacing: '-0.02em' },
         ],
-        font75Leading110: [
-          '75px',
+        font70Leading110: [
+          '70px',
           { lineHeight: '110%', fontWeight: '700', letterSpacing: '-0.02em' },
         ],
         font30Leading130: ['30px', { lineHeight: '130%', fontWeight: '700' }],

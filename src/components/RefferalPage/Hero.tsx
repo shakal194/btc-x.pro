@@ -8,7 +8,7 @@ export default function HeroSection() {
         <div className='flex'>
           <div className='z-20'>
             <div className='w-[300px] md:w-[500px] xl:w-[1013px]'>
-              <h1 className='text-font30Leading110 xl:text-font75Leading110'>
+              <h1 className='xl:text-font70Leading110 text-font30Leading110'>
                 ЗАРОБЛЯЙТЕ{' '}
                 <span className='bg-gradient-to-r from-[#FFC996] via-[#FD6B06] to-[#963706] bg-clip-text text-transparent'>
                   ДО 55%
