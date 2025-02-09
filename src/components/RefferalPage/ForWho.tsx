@@ -1,35 +1,38 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export default function ForWhoSection() {
+  const t = useTranslations('referralPage.forWho');
+
   return (
     <section className='py-[30px] lg:pt-[100px]'>
       <div className='container mx-auto px-4'>
         <div className='mb-12 flex flex-col-reverse justify-between md:flex-row md:items-center'>
           <h2 className='mb-6 text-font30Leading110 tracking-tight md:w-[450px] lg:w-[654px] lg:text-font50Leading110'>
-            Для кого підходить наша реферальна програма :
+            {t('title')}
           </h2>
           <p className='mb-[10px] w-[155px] font-ibm text-[10px] leading-[130%] opacity-[33%] md:w-[175px] md:w-[250px] md:text-ibm13Leading130 lg:mb-0 lg:text-ibm16Leading130'>
-            Долучайтесь до нашої реферальної програми BTC-X
+            {t('subtitle')}
           </p>
         </div>
         <div className='grid grid-cols-2 gap-2 md:gap-4 lg:grid-cols-4 lg:gap-8'>
           {[
             {
               image: '/our_program_1.png',
-              text: 'Інфлюенсери та власники крипто-каналів в Telegram, YouTube',
+              text: `${t('content')}`,
             },
             {
               image: '/our_program_2.png',
-              text: 'Власники освітніх програм по криптовалютах',
+              text: `${t('content_2')}`,
             },
             {
               image: '/our_program_3.png',
-              text: 'Арбітражники та власники медійних сайтів',
+              text: `${t('content_3')}`,
             },
             {
               image: '/our_program_4.png',
-              text: 'Блогери в Instagram та TikTok, які зацікавлені у партнерстві в крипто-ніші',
+              text: `${t('content_4')}`,
             },
           ].map((program, index) => (
             <div
@@ -60,7 +63,7 @@ export default function ForWhoSection() {
                     rel='noopener noreferrer'
                     className='hidden rounded-full border px-5 py-3 text-primary font-bold leading-[110%] transition hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white lg:inline-block'
                   >
-                    Отримати код
+                    {t('text_button')}
                   </Link>
                 </div>
               </div>

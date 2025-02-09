@@ -1,7 +1,7 @@
 import HeroSection from '@/components/RefferalPage/Hero';
 import HowItWorksSection from '@/components/RefferalPage/HowItWorks';
 import ForWhoSection from '@/components/RefferalPage/ForWho';
-import HowWorksRefProgramm from '@/components/RefferalPage/HowWorksRefProgramm';
+import HowWorksRefProgram from '@/components/RefferalPage/HowWorksRefProgram';
 import OurBenefitsSection from '@/components/RefferalPage/OurBenefits';
 
 export default function Home() {
@@ -11,7 +11,7 @@ export default function Home() {
       <HeroSection />
       <HowItWorksSection />
       <ForWhoSection />
-      <HowWorksRefProgramm />
+      <HowWorksRefProgram />
       <OurBenefitsSection />
     </main>
   );

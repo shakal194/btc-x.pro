@@ -21,7 +21,7 @@ export default function TradePowerLocalizedImage() {
 
   // Выбираем данные для изображения
   const imageData = imageMap[currentLocale] || {
-    src: '/trade_power.png',
+    src: '/trade_power_en.png',
     alt: 'Trade power',
   };
 

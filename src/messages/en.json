@@ -144,42 +144,117 @@
       "subtitle": "Download the BTC-X app and get access to commission-free trading today"
     }
   },
-  "footer": {
-    "footer_mobile_title": "BTC-X a platform for trading without commission",
-    "footer_mobile_subtitle": "Join the BTC-X community",
-    "aboutus": "About us",
-    "airdrop": "Airdrop",
-    "referral": "Referral program",
-    "support": "Support",
-    "btc-x": "BTC X, LLC",
-    "btc-x_data": "BTC-X, LLC (old name ITM-UA, Private Enterprise), a company incorporated in Ukraine, that provides BTC-X.PRO mobile trading platform has the following legal data.",
-    "btc-x_data_1": "USROU code of the legal entity: 45260571",
-    "btc-x_data_2": "IBAN: UA293052990000026001010407651",
-    "btc-x_data_3": "Legal address and location of activity: Ukraine, 50103, Dnipropetrovsk region, city of Kryviy Rih, Tilhy Stepana str., building 71",
-    "terms": "Terms and Conditions",
-    "privacy": "Privacy Policy",
-    "aml": "AML/CTF & KYC",
-    "footer_email": "admin@btc-x.pro",
-    "footer_title": "TRADE COMISSION-FREE THROUGH OUT THE",
-    "footer_subtitle": "YEAR 2025",
-    "subscribe_placeholder": "Enter your email address",
-    "subscribe_button": "Subscribe for updates",
-    "footer_down": "BTC-X.PRO allows users to benefit economically from the price movements of financial instruments without the need to physically own them. Definitions such as \"trade\", \"deal\", \"buy\" and \"sell\" used by BTC-X.PRO should be understood as risks associated with positions in various financial instruments that are subject to price fluctuations, without ownership of the underlying financial instrument. A BTC-X.PRO user who has an open long position in a stock or ETF at the time the market opens on the ex-dividend date will receive the declared dividend amount for each share of his position. A user who has an open short position in a stock or ETF at the time the market opens on the ex-dividend date will pay the declared dividend amount for each share of his position. As with any trading in stocks, commodities and cryptocurrencies, \"trading\" with BTC-X.PRO carries a level of risk that may not be suitable for all persons interested in trading. You may lose some or all of your investment capital, so you should not speculate with capital that you cannot afford to lose. You should consult an independent financial advisor before taking any risks or \"trading\" with BTC-X.PRO. The information contained on this site does not apply to residents of the United States or Canada and may not be used in any country or jurisdiction where such use or access is prohibited under applicable law."
+  "referralPage": {
+    "hero": {
+      "title": "EARN UP",
+      "subtitle": "TO 55%",
+      "subtitle_2": "FROM EACH INVITED USER",
+      "text": "We offer you a unique opportunity to receive up",
+      "text_2": "to 55% of the profit",
+      "text_3": "we receive from the transactions of the users you invite"
+    },
+    "howItWorks": {
+      "title": "How does it work?",
+      "subtitle": "A simple guide to increasing your profits",
+      "step_1_number": "01",
+      "step_1_title": "Registration and verification",
+      "step_1_subtitle": "Register on the BTC-X platform and go through verification to get full access to all the platform's features.",
+      "step_2_number": "02",
+      "step_2_title": "Get a referral code",
+      "step_2_subtitle": "Go to the Referral Program section to get your unique code and link to invite your friends.",
+      "step_3_number": "03",
+      "step_3_title": "Share the opportunities",
+      "step_3_subtitle": "Share your unique link and code with friends, subscribers and partners and start earning",
+      "subtitle_2": "BTC-X shares up to 55% of its revenue with you",
+      "title_2": "The higher the trading volume of your referrals, the more you earn"
+    },
+    "forWho": {
+      "title": "Who is our referral program for?",
+      "subtitle": "Join our BTC-X referral programme",
+      "content": "Influencers and owners of crypto channels on Telegram and YouTube",
+      "content_2": "Owners of educational program on crypto",
+      "content_3": "Arbitrageurs and media site owners",
+      "content_4": "Bloggers on Instagram and TikTok who are interested in partnering in the crypto",
+      "text_button": "Get the code"
+    },
+    "howWorksRefProgramm": {
+      "title": "How does our crypto referral program works?",
+      "subtitle": "Your remuneration is based on the volume of transactions of the users you invite.",
+      "subtitle_2": "* It allows you to earn at every level and significantly increase your income the more active traders you have in your network.",
+      "title_2": "There are two levels of referrals in our system:",
+      "subtitle2_1": "35%",
+      "subtitle2_2": "of the transactions of your direct referrals",
+      "subtitle3_1": "20%",
+      "subtitle3_2": "of your referrals' transactions from your referrals",
+      "subtitle_3": "BTC-X - your reliable guide to the world of trading",
+      "title_3": "More about the BTC-X referral program",
+      "title_4": "How and when will I receive payments under the referral program?",
+      "subtitle_4": "Your rewards are",
+      "subtitle_4_1": "credited instantly,",
+      "subtitle_4_2": "as soon as the position of the user you invited closes. All payouts go directly to",
+      "subtitle_4_3": "your BTC-X balance.",
+      "title_5": "How can I track my referral payments?",
+      "subtitle_5": "In the Referral Program section of the platform, you can easily track all",
+      "subtitle_5_1": "your payments and bonuses.",
+      "subtitle_5_2": "It will display information about the number of invited users, the volume of their transactions, and",
+      "subtitle_5_3": "your rewards."
+    },
+    "ourBenefits": {
+      "title": "The benefits of our referral program:",
+      "subtitle": "Join our BTC-X referral programme",
+      "benefits1_title": "Transparency and instant payments",
+      "benefits1_text": "You can always track your income in real time through your personal account.",
+      "benefits2_title": "Two levels of referrals",
+      "benefits2_text": "Earn rewards not only for the activity of the users you invite, but also for their referrals.",
+      "benefits3_title": "Accessibility for everyone",
+      "benefits3_text": "You can invite friends, acquaintances or followers, regardless of their experience in crypto trading.",
+      "title2": "Earn with BTC-X",
+      "title3": "Earn money with BTC-X",
+      "title4": "Install the app and start earn with our referral program"
+    }
   },
-  "footer_button": {
-    "title": "BTC-X",
-    "description": "Join us"
-  },
-  "about": {
-    "title": "About Us",
-    "content": "We are a company focused on delivering quality."
-  },
-  "contact": {
-    "title": "Contact Us",
-    "form": {
-      "name": "Your Name",
-      "email": "Your Email",
-      "message": "Your Message"
+  "aboutUs": {
+    "hero": {
+      "title": "BTC-X IS A TEAM YOU CAN",
+      "subtitle": "RELY ON",
+      "text": "Download the BTC-X app - trust the best in the world of finance"
+    },
+    "aboutUs": {
+      "title": "About us",
+      "subtitle": "BTC-X — your reliable guide in the world of trading",
+      "text": "We are a team of digital enthusiasts with deep experience in financial markets, successfully collaborating with leading companies in the cryptocurrency and technology industries.",
+      "image_alt": "Founder BTC-X",
+      "title_2": "This experience inspired us to create BTC-X — a project that offers a unique advantage: commission-free margin",
+      "subtitle_2": "trading throughout 2025.",
+      "text_2": "By combining expertise and an innovative approach, we are working on creating convenient and transparent solutions to make financial technologies accessible to every user.",
+      "qr_alt": "Earn money with us ",
+      "qr_text": "Scan to download",
+      "subtitle_3": "Our mission is not just a goal, but a global task that shapes the future",
+      "title_3_mobile": "We want everyone to be able to easily and securely work with financial assets",
+      "title_3_desktop": "We want everyone to be able to easily and securely work with financial assets. That’s why our app is available for download on the App Store and Google Play in nearly all countries",
+      "text_3": "That’s why our app is available for download on the App Store and Google Play in nearly all countries"
+    },
+    "opportunities": {
+      "title": "We provide the opportunity to:",
+      "subtitle": "BTC-X is about great opportunities and access to modern financial tools",
+      "opportunities_1_title": "Trade financial assets",
+      "opportunities_1_text": "Buy and sell various financial assets at spot prices using real-time data from leading global and cryptocurrency exchanges.",
+      "opportunities_2_title": "Trade with zero fees",
+      "opportunities_2_text": "Trade with zero fees on both the spot market and futures, including stocks and memecoins",
+      "opportunities_3_title": "Increase profits with leverage",
+      "opportunities_3_text": "Trade with leverage without extra fees, significantly increasing potential profits"
+    },
+    "howItWorks": {
+      "title": "How it works in numbers",
+      "title_2": "Suppose you want to trade with $1,000. Most major exchanges charge a trading fee ranging from 0.1% to 0.5%. This means that for a $1,000 trade, you could pay between $1 and $5 just in fees.",
+      "text": "Forget about fees — trade profitably and without limits with BTC-X",
+      "title_3": "Leverage trading and fees",
+      "text_2": "If the fee is 0.1%, you will pay $10 for a $10,000 trade. If the fee is 0.5%, you will pay $50 for the same trade.",
+      "title_4": "If you use leverage, for example, 20x, with a $1,000 trade, you’re",
+      "subtitle_4": "actually trading with $20,000.",
+      "subtitle_4_2": "This increases potential profits",
+      "text_3": "- The amount of your investment",
+      "text_4": "- The trade amount with 20x leverage"
     }
   },
   "promo": {
@@ -217,5 +292,31 @@
     "terms_conent6": "BTC-X.pro reserves, the right to disqualify participants engaging in dishonest activities during the event, including mass account registrations to claim additional bonuses or any other fraudulent actions.",
     "terms_conent7": "BTC-X.pro reserves the right to make the final interpretation of the event’s terms.",
     "terms_conent8": "If you have any questions, please contact our Support Team."
+  },
+  "footer": {
+    "footer_mobile_title": "BTC-X a platform for trading without commission",
+    "footer_mobile_subtitle": "Join the BTC-X community",
+    "aboutus": "About us",
+    "airdrop": "Airdrop",
+    "referral": "Referral program",
+    "support": "Support",
+    "btc-x": "BTC X, LLC",
+    "btc-x_data": "BTC-X, LLC (old name ITM-UA, Private Enterprise), a company incorporated in Ukraine, that provides BTC-X.PRO mobile trading platform has the following legal data.",
+    "btc-x_data_1": "USROU code of the legal entity: 45260571",
+    "btc-x_data_2": "IBAN: UA293052990000026001010407651",
+    "btc-x_data_3": "Legal address and location of activity: Ukraine, 50103, Dnipropetrovsk region, city of Kryviy Rih, Tilhy Stepana str., building 71",
+    "terms": "Terms and Conditions",
+    "privacy": "Privacy Policy",
+    "aml": "AML/CTF & KYC",
+    "footer_email": "admin@btc-x.pro",
+    "footer_title": "TRADE COMISSION-FREE THROUGH OUT THE",
+    "footer_subtitle": "YEAR 2025",
+    "subscribe_placeholder": "Enter your email address",
+    "subscribe_button": "Subscribe for updates",
+    "footer_down": "BTC-X.PRO allows users to benefit economically from the price movements of financial instruments without the need to physically own them. Definitions such as \"trade\", \"deal\", \"buy\" and \"sell\" used by BTC-X.PRO should be understood as risks associated with positions in various financial instruments that are subject to price fluctuations, without ownership of the underlying financial instrument. A BTC-X.PRO user who has an open long position in a stock or ETF at the time the market opens on the ex-dividend date will receive the declared dividend amount for each share of his position. A user who has an open short position in a stock or ETF at the time the market opens on the ex-dividend date will pay the declared dividend amount for each share of his position. As with any trading in stocks, commodities and cryptocurrencies, \"trading\" with BTC-X.PRO carries a level of risk that may not be suitable for all persons interested in trading. You may lose some or all of your investment capital, so you should not speculate with capital that you cannot afford to lose. You should consult an independent financial advisor before taking any risks or \"trading\" with BTC-X.PRO. The information contained on this site does not apply to residents of the United States or Canada and may not be used in any country or jurisdiction where such use or access is prohibited under applicable law."
+  },
+  "footer_button": {
+    "title": "BTC-X",
+    "description": "Join us"
   }
 }
