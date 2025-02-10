@@ -1,41 +1,41 @@
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 export default function RatingSection() {
+  const t = useTranslations('airdrop.rating');
+
   return (
     <section className='relative z-20 rounded-b-xl bg-[#F4F4F4] py-[100px] text-black'>
       <div className='container mx-auto px-4'>
         <div className='flex flex-col-reverse justify-between md:flex-row md:items-end xl:mb-12'>
           <h2 className='text-font30Leading110 tracking-tight lg:text-font50Leading110 xl:w-[514px]'>
-            Рейтинг та винагороди
+            {t('title')}
           </h2>
           <p className='mb-[10px] w-[179px] font-ibm text-ibm13Leading130 opacity-[33%] md:mb-0 lg:text-ibm16Leading130 xl:w-[250px]'>
-            Досягайте вищих рангів, щоб отримати ще більше
+            {t('subtitle')}
           </p>
         </div>
         <div className='my-[20px] border-t border-black opacity-[33%] xl:my-[40px]'></div>
         <div className='grid grid-cols-1 gap-4 lg:grid-cols-2 xl:gap-16'>
           <div className='flex flex-col justify-between'>
             <h3 className='text-font16Leading120 text-font22Leading120'>
-              Чим більше ви торгуєте,{' '}
-              <span className='text-[#FE9900]'>тим вище ваш ранг,</span> а отже,
-              тим більше балів ви отримаєте. Кожен ранг{' '}
-              <span className='text-[#FE9900]'>дає вам доступ</span> до більшої
-              кількості токенів BTCXT
+              {t('title_2')}{' '}
+              <span className='text-[#FE9900]'>{t('subtitle_2')}</span>{' '}
+              {t('subtitle_2_1')}{' '}
+              <span className='text-[#FE9900]'>{t('subtitle_2_2')}</span>{' '}
+              {t('subtitle_2_3')}
             </h3>
             <p className='text-ibm hidden text-font16Leading130 text-black/50 lg:block'>
-              Не забувайте: ви отримуєте більше балів за активну торгівлю та за
-              торгівлю ваших рефералів. Ваш ранг та кількість отриманих
-              забувайте: ви отримуєте більше балів Не за активну торгівлю
-              токенів безпосередньо залежать від вашого торгового обсягу.
+              {t('text')}
             </p>
           </div>
           <div className='xl:w-[608px]'>
             <div className='mb-[20px] flex justify-between'>
               <div className='flex items-center justify-center rounded-full border px-[20px] py-[10px]'>
-                <p className='text-font16Leading110'>Ранг</p>
+                <p className='text-font16Leading110'>{t('rank')}</p>
               </div>
               <div className='flex items-center justify-center rounded-full border px-[20px] py-[10px]'>
-                <p className='text-font16Leading110'>Обсяг за весь час</p>
+                <p className='text-font16Leading110'>{t('volume')}</p>
               </div>
             </div>
             <div className='mb-[10px] flex items-center justify-between rounded-full bg-white px-[11px] py-[11px] text-black/30'>
@@ -47,10 +47,10 @@ export default function RatingSection() {
                   height={30}
                   className='mr-[4px] h-[30px] w-[30px] object-cover'
                 />
-                <p>Bronze</p>
+                <p>{t('rank_1')}</p>
               </div>
               <div>
-                <p>до 100 000 USD</p>
+                <p>{t('volume_1')}</p>
               </div>
             </div>
             <div className='flex items-center justify-between rounded-full bg-white px-[11px] py-[11px]'>
@@ -62,10 +62,10 @@ export default function RatingSection() {
                   height={30}
                   className='mr-[4px] h-[30px] w-[30px] object-cover'
                 />
-                <p>Silver</p>
+                <p>{t('rank_2')}</p>
               </div>
               <div>
-                <p>500 000 USD</p>
+                <p>{t('volume_2')}</p>
               </div>
             </div>
             <div className='mb-[10px] flex items-center justify-between rounded-full bg-white px-[11px] py-[11px] text-black/30'>
@@ -77,10 +77,10 @@ export default function RatingSection() {
                   height={30}
                   className='mr-[4px] h-[30px] w-[30px] object-cover'
                 />
-                <p>Gold</p>
+                <p>{t('rank_3')}</p>
               </div>
               <div>
-                <p>1 000 000 USD</p>
+                <p>{t('volume_3')}</p>
               </div>
             </div>
             <div className='mb-[10px] flex items-center justify-between rounded-full bg-white px-[11px] py-[11px] text-black/30'>
@@ -92,10 +92,10 @@ export default function RatingSection() {
                   height={30}
                   className='mr-[4px] h-[30px] w-[30px] object-cover'
                 />
-                <p>Platinum</p>
+                <p>{t('rank_4')}</p>
               </div>
               <div>
-                <p>2 500 000 USD</p>
+                <p>{t('volume_4')}</p>
               </div>
             </div>
             <div className='mb-[10px] flex items-center justify-between rounded-full bg-white px-[11px] py-[11px] text-black/30'>
@@ -107,10 +107,10 @@ export default function RatingSection() {
                   height={30}
                   className='mr-[4px] h-[30px] w-[30px] object-cover'
                 />
-                <p>Diamond</p>
+                <p>{t('rank_5')}</p>
               </div>
               <div>
-                <p>5 000 000 USD</p>
+                <p>{t('volume_5')}</p>
               </div>
             </div>
             <div className='mb-[10px] flex items-center justify-between rounded-full bg-white px-[11px] py-[11px] text-black/30'>
@@ -122,10 +122,10 @@ export default function RatingSection() {
                   height={30}
                   className='mr-[4px] h-[30px] w-[30px] object-cover'
                 />
-                <p>Epic</p>
+                <p>{t('rank_6')}</p>
               </div>
               <div>
-                <p>10 000 000 USD</p>
+                <p>{t('volume_6')}</p>
               </div>
             </div>
             <div className='mb-[10px] flex items-center justify-between rounded-full bg-white px-[11px] py-[11px] text-black/30'>
@@ -146,10 +146,10 @@ export default function RatingSection() {
                     className='mr-[4px] h-[30px] w-[30px] object-cover'
                   />
                 </div>
-                <p>Legendary</p>
+                <p>{t('rank_7')}</p>
               </div>
               <div>
-                <p>25 000 000 USD</p>
+                <p>{t('volume_7')}</p>
               </div>
             </div>
             <div className='mb-[10px] flex items-center justify-between rounded-full bg-white px-[11px] py-[11px] text-black/30'>
@@ -177,10 +177,10 @@ export default function RatingSection() {
                     className='mr-[4px] h-[30px] w-[30px] object-cover'
                   />
                 </div>
-                <p>Master</p>
+                <p>{t('rank_8')}</p>
               </div>
               <div>
-                <p>50 000 000 USD</p>
+                <p>{t('volume_8')}</p>
               </div>
             </div>
             <div className='mb-[10px] flex items-center justify-between rounded-full bg-white px-[11px] py-[11px] text-black/30'>
@@ -192,18 +192,15 @@ export default function RatingSection() {
                   height={30}
                   className='mr-[4px] h-[30px] w-[30px] object-cover'
                 />
-                <p>Grandmaster</p>
+                <p>{t('rank_9')}</p>
               </div>
               <div>
-                <p>100 000 000 USD</p>
+                <p>{t('volume_9')}</p>
               </div>
             </div>
           </div>
           <p className='text-ibm block text-[10px] text-font16Leading130 leading-[130%] text-black/50 lg:hidden'>
-            Не забувайте: ви отримуєте більше балів за активну торгівлю та за
-            торгівлю ваших рефералів. Ваш ранг та кількість отриманих забувайте:
-            ви отримуєте більше балів Не за активну торгівлю токенів
-            безпосередньо залежать від вашого торгового обсягу.
+            {t('text')}
           </p>
         </div>
       </div>

@@ -1,6 +1,9 @@
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 export default function HeroSection() {
+  const t = useTranslations('airdrop.hero');
+
   return (
     <section className='h-[581px] bg-black py-[30px] lg:h-[700px] lg:py-[100px]'>
       <div className='container relative mx-auto px-4'>
@@ -8,15 +11,13 @@ export default function HeroSection() {
           <div className='z-20 mx-auto'>
             <div className='mt-[50px] flex w-[301px] flex-col items-center text-center md:w-[600px] lg:w-[1003px] xl:mt-0'>
               <h1 className='mb-[30px] text-font30Leading110 md:text-font50Leading110 lg:bg-gradient-to-r lg:from-[#FFFFFF] lg:to-[#999999] lg:bg-clip-text lg:text-[95px] lg:font-bold lg:tracking-tight lg:text-transparent xl:leading-[110%]'>
-                BTC-X ЗАПУСКАЄ AIRDROP ДЛЯ СВОГО ТОКЕНУ{' '}
+                {t('title')}{' '}
                 <span className='bg-gradient-to-r from-[#FFC996] via-[#FD6B06] to-[#963706] bg-clip-text text-transparent'>
-                  BTCXT
+                  {t('subtitle')}
                 </span>
               </h1>
               <p className='text-ibm w-[245px] text-[13px] leading-[130%] opacity-[44%] lg:w-[512px] lg:text-font16Leading130'>
-                <span className='hidden xl:contents'>[</span> Це додатковий
-                стимул для залучення нових користувачів та винагороди за
-                активність на платформі{' '}
+                <span className='hidden xl:contents'>[</span> {t('text')}{' '}
                 <span className='hidden xl:contents'>]</span>
               </p>
             </div>
