@@ -178,26 +178,26 @@
       "text_button": "Get the code"
     },
     "howWorksRefProgramm": {
-      "title": "How does our crypto referral program works?",
+      "title": "How does our crypto referral program work?",
       "subtitle": "Your remuneration is based on the volume of transactions of the users you invite.",
-      "subtitle_2": "* It allows you to earn at every level and significantly increase your income the more active traders you have in your network.",
-      "title_2": "There are two levels of referrals in our system:",
-      "subtitle2_1": "35%",
-      "subtitle2_2": "of the transactions of your direct referrals",
-      "subtitle3_1": "20%",
-      "subtitle3_2": "of your referrals' transactions from your referrals",
-      "subtitle_3": "BTC-X - your reliable guide to the world of trading",
-      "title_3": "More about the BTC-X referral program",
-      "title_4": "How and when will I receive payments under the referral program?",
-      "subtitle_4": "Your rewards are",
-      "subtitle_4_1": "credited instantly,",
-      "subtitle_4_2": "as soon as the position of the user you invited closes. All payouts go directly to",
-      "subtitle_4_3": "your BTC-X balance.",
-      "title_5": "How can I track my referral payments?",
-      "subtitle_5": "In the Referral Program section of the platform, you can easily track all",
-      "subtitle_5_1": "your payments and bonuses.",
-      "subtitle_5_2": "It will display information about the number of invited users, the volume of their transactions, and",
-      "subtitle_5_3": "your rewards."
+      "subtitle_details": "* It allows you to earn at every level and significantly increase your income the more active traders you have in your network.",
+      "levels_title": "There are two levels of referrals in our system:",
+      "first_level_percentage": "35%",
+      "first_level_description": "of the transactions of your direct referrals",
+      "second_level_percentage": "20%",
+      "second_level_description": "of your referrals' transactions from your referrals",
+      "company_statement": "BTC-X - your reliable guide to the world of trading",
+      "more_info_title": "More about the BTC-X referral program",
+      "payment_info_title": "How and when will I receive payments under the referral program?",
+      "payment_info": {
+        "immediate_rewards": "Your rewards are credited instantly,",
+        "payment_details": "as soon as the position of the user you invited closes. All payouts go directly to your BTC-X balance."
+      },
+      "tracking_title": "How can I track my referral payments?",
+      "tracking_info": {
+        "overview": "In the Referral Program section of the platform, you can easily track all your payments and bonuses.",
+        "detailed_tracking": "It will display information about the number of invited users, the volume of their transactions, and your rewards."
+      }
     },
     "ourBenefits": {
       "title": "The benefits of our referral program:",
@@ -246,15 +246,15 @@
     },
     "howItWorks": {
       "title": "How it works in numbers",
-      "title_2": "Suppose you want to trade with $1,000. Most major exchanges charge a trading fee ranging from 0.1% to 0.5%. This means that for a $1,000 trade, you could pay between $1 and $5 just in fees.",
-      "text": "Forget about fees — trade profitably and without limits with BTC-X",
-      "title_3": "Leverage trading and fees",
-      "text_2": "If the fee is 0.1%, you will pay $10 for a $10,000 trade. If the fee is 0.5%, you will pay $50 for the same trade.",
-      "title_4": "If you use leverage, for example, 20x, with a $1,000 trade, you’re",
-      "subtitle_4": "actually trading with $20,000.",
-      "subtitle_4_2": "This increases potential profits",
-      "text_3": "- The amount of your investment",
-      "text_4": "- The trade amount with 20x leverage"
+      "trade_example_title": "Suppose you want to trade with $1,000. Most major exchanges charge a trading fee ranging from 0.1% to 0.5%. This means that for a $1,000 trade, you could pay between $1 and $5 just in fees.",
+      "no_fees_text": "Forget about fees — trade profitably and without limits with BTC-X",
+      "leverage_trading_title": "Leverage trading and fees",
+      "leverage_trading_text": "If the fee is 0.1%, you will pay $10 for a $10,000 trade. If the fee is 0.5%, you will pay $50 for the same trade.",
+      "leverage_trading_example_title": "If you use leverage, for example, 20x, with a $1,000 trade, you’re",
+      "leverage_trading_example_text": "actually trading with $20,000.",
+      "leverage_trading_impact_text": "This increases potential profits",
+      "investment_amount_text": "- The amount of your investment",
+      "trade_amount_with_leverage_text": "- The trade amount with 20x leverage"
     }
   },
   "airdrop": {
@@ -316,27 +316,24 @@
       "volume_9": "100 000 000 USD"
     },
     "launchingToken": {
-      "subtitle": "Will BTCXT token be launched ?",
+      "subtitle": "Will BTCXT token be launched?",
       "title": "The BTCXT token will be launched as soon as the BTC-X platform reaches",
-      "subtitle_1_1": "1 000 000 000 USD",
-      "subtitle_1_2": "of trading volume per day",
-      "text": " Trading volume USD / 24 h",
-      "live": "Live",
-      "data_range": "999.999.999",
-      "subtitle_2": "ВТС-Х — all markets and instruments in one place",
-      "title_2": "Don't miss your chance to be a part of the future with BTC-X. The more actively you trade and invite your friends,",
-      "subtitle_2_1": "the more BTCXT tokens",
-      "subtitle_2_2": "you will receive",
-      "subtitle_3": "How is the price of BTCXT tokens determined?",
-      "title_3": "BTCXT token price formation before launch",
-      "text_2": "Calculating the price through the spread between the buy and sell prices helps to create a transparent and dynamic value that reflects real market activity.",
-      "title_4": "Trade on the BTC-X platform",
-      "subtitle_4": "The price of BTCXT tokens is determined based on the spread between the buy and sell price for all closed user positions on the platform",
-      "title_5": "Don't miss the opportunity to get BTC-X tokens",
-      "subtitle_5": "Participate in the airdrop, trade on BTC-X, invite your friends and earn more! The higher your trading volume, the more tokens you will receive.",
-      "text_link": "Go to the application",
-      "title_6": "Earn money with us",
-      "qr_text": "Scan to download",
+      "daily_trading_volume": "1 000 000 000 USD of trading volume per day",
+      "trading_volume_text": "Trading volume USD / 24 h",
+      "live_status": "Live",
+      "current_data": "999.999.999",
+      "all_markets_in_one_place": "BTC-X — all markets and instruments in one place",
+      "cta_title": "Don't miss your chance to be a part of the future with BTC-X",
+      "cta_subtitle_1": "The more actively you trade and invite your friends,",
+      "cta_subtitle_2": "the more BTCXT tokens you will receive",
+      "price_formation_title": "How is the price of BTCXT tokens determined?",
+      "price_formation_text": "BTCXT token price formation before launch",
+      "price_formation_details": "Calculating the price through the spread between the buy and sell prices helps to create a transparent and dynamic value that reflects real market activity.",
+      "airdrop_info_title": "Don't miss the opportunity to get BTC-X tokens",
+      "airdrop_info_text": "Participate in the airdrop, trade on BTC-X, invite your friends and earn more! The higher your trading volume, the more tokens you will receive.",
+      "cta_link_text": "Go to the application",
+      "earn_with_us_title": "Earn money with us",
+      "qr_code_text": "Scan to download",
       "slider_text": "Earn money with BTC-X /"
     }
   },
@@ -492,6 +489,87 @@
         "country_sahrawi_arab_democratic_republic": "Sahrawi Arab Democratic Republic",
         "country_northern_cyprus": "Turkish Republic of Northern Cyprus"
       }
+    }
+  },
+  "privacyPolicy": {
+    "title": "Privacy Policy",
+    "updatedVersion": "Version Updated: June 26, 2023",
+    "intro": "Protecting the privacy and safeguarding the personal and financial information of our users and website visitors is one of our highest priorities. This privacy policy (\"Policy\") explains how the BTC-X.PRO group (collectively “BTC-X.PRO“, “we” or “us” and each member of the BTC-X.PRO group for whose services you registered, “BTC-X.PRO entity“) collects, uses, and discloses personal information through its websites, mobile applications, and other products and services that link to this Policy, including any of the products and services detailed in the following paragraph (collectively, “the Services\") or when you otherwise interact with us. BTC-X.PRO provides a mobile application (”BTC-X.PRO App”), and/or BTC-X.PRO website https://btc-x.pro that allows users to obtain economic exposure to the price movement of an underlying financial instrument (including stocks, ETFs, commodity futures, index futures, cryptocurrency pairs, and fiat currency pairs) without the need for ownership and physical settlement of the underlying financial instrument. The Services include providing: (i) the BTC-X.PRO App, (ii) any additional services which facilitate money servicing payments and wallet services, and/or (iii) any other site, web platform, mobile application or other service facilitated by any BTC-X.PRO entity (any account described in (i)+(ii) being a “BTC-X.PRO Account” for the purpose of this Policy). By utilizing the Services, you expressly consent to the collection and use of personal information by BTC-X.PRO as explained in this Policy. This Policy forms part of the relevant BTC-X.PRO Entity’s terms and conditions, terms of business, agreement with you and/or terms of use as the case may be. If you accept or agree to this Policy on behalf of a company or other legal entity, you represent and warrant that you have the authority to bind that company or other legal entity to this Policy and, in such event, “you” and “your” will refer and apply to that company or other legal entity.",
+    "contents": "Contents",
+    "sections": {
+      "collectionOfPersonalInformation": "COLLECTION OF YOUR PERSONAL INFORMATION",
+      "informationAboutUseOfServices": "INFORMATION ABOUT YOUR USE OF BTC-X.PRO SERVICES",
+      "useOfYourPersonalInformation": "USE OF YOUR PERSONAL INFORMATION",
+      "sharingOfYourPersonalInformation": "SHARING OF YOUR PERSONAL INFORMATION",
+      "retentionOfYourPersonalInformation": "RETENTION OF YOUR PERSONAL INFORMATION",
+      "securityOfYourPersonalInformation": "SECURITY AND INTEGRITY OF YOUR PERSONAL INFORMATION",
+      "changesToThisPrivacyPolicy": "CHANGES TO THIS PRIVACY POLICY"
+    },
+    "collectionOfPersonalInformation": {
+      "intro": "We collect your personal information directly from you and indirectly as a result of your relationship with us. For example, we collect information when you create a BTC-X.PRO account, participate in any interactive features of the Services, fill out a form, participate in a BTC-X.PRO contest or promotion, make a purchase, communicate with BTC-X.PRO via third party social media sites, request user support, or otherwise communicate with us.",
+      "signUpTitle": "When You Sign Up or Register for a BTC-X.PRO Account or Services",
+      "signUpContent": "If you sign up for a BTC-X.PRO Account or other Services, we will collect information about you including your name, email address, nationality, telephone number, date of birth, credit card, wallet address. We may also request additional information such as your gender, place of birth, addresses, citizenship and residency status, tax identification numbers, and information about your experience trading, education, source of income, investment aims and appetite, occupation, annual income, and other details or questions as may be required in the profile creation and the opening process as may be amended by us from time to time. We will also ask you to provide a copy of an identification document, such as a passport, visa or national identity card, a utility bill and such other documents as may be required by us in order to comply with our regulatory obligations and to verify your identity. Further details about the identification process can be found in the relevant BTC-X.PRO Entity’s terms and conditions, terms of business and/or terms of use, as the case may be. You may provide this information to us directly, or by signing into your account/service with a third party, including without limitation, a third party social media platform or search engine. We will use the information that we collect about you to:",
+      "signUpList": {
+        "collectInformation_1": "create and maintain your BTC-X.PRO Account;",
+        "collectInformation_2": "allow you to log in to BTC-X.PRO;",
+        "collectInformation_3": "verify your identity and carry out checks that we are required to conduct by applicable laws and regulations, \"know your customer\" (KYC), anti-money laundering, fraud, sanctions, and politically exposed person (PEP) checks;",
+        "collectInformation_4": "contact you on matters relating to your BTC-X.PRO Account, including to request any additional information or documentation, provide you with notices related to your BTC-X.PRO Account, general updates, market updates, and other marketing materials, including about the Services offered by BTC-X.PRO;",
+        "collectInformation_5": "tailor the products and services offered to you, including without limitation, to perform any suitability or appropriateness assessments for using our Services and/or products;",
+        "collectInformation_6": "assess your risk and maintain administrative services relating to our business;",
+        "collectInformation_7": "set up security measures to secure your account and provide the Services;"
+      },
+      "contactUsTitle": "When You Contact Us",
+      "contactUsContent": "If you contact us by telephone, email, chat, social media platform messaging, post, or use any another function offered by BTC-X.PRO, such as the chat feature, we will collect any information about the communication and any additional information that you choose to give us. We will use this information to review, investigate, and respond to any comment or question that you may raise. Please note that we record and retain all telephone calls and other communication with us and may use it in our dealings with you, including any dispute resolution or legal proceedings.",
+      "invitesTitle": "When a BTC-X.PRO User Invites You to Use BTC-X.PRO",
+      "invitesContent": "Users of BTC-X.PRO can invite their contacts to sign up for an account with us. We only collect the email addresses of individuals that users choose to invite to join BTC-X.PRO and BTC-X.PRO only uses the email addresses for sending an invitation to the individual at the request of the existing BTC-X.PRO user."
+    },
+    "informationAboutUseOfServices": {
+      "intro": "When you access or use our Services, we automatically collect information about you, including:",
+      "serviceUsageInformation": {
+        "financialInformation": "Financial Information: We may collect financial information related to your use of the Services, including information you provide to us or that we collect from public sources.",
+        "logInformation": "Log Information: We collect log information about your use of the Services, including the type of browser you use, app version, access times, pages viewed, your IP address, any other network identifiers, and the page you visited before navigating to our Services.",
+        "deviceInformation": "Device Information: We collect information about the computer or mobile device you use to access our Services, including the hardware model, operating system and version, unique device identifiers, and mobile network information.",
+        "activitiesOnSite": "Activities on the Site: We collect records of activities on the BTC-X.PRO website or mobile app, including, any content you post, your BTC-X.PRO Account details, the time, value, and currency of any deposit, withdrawal, or transaction made the payment method.",
+        "locationInformation": "Location Information: In accordance with your device permissions, we may collect information about the geo-location of your device.",
+        "informationCollectedByCookies": "Information Collected by Cookies and Other Tracking Technologies: We use different technologies to collect information, including cookies and web beacons."
+      }
+    },
+    "useOfYourPersonalInformation": {
+      "intro": "We use the information we collect to provide, maintain, and improve the Services, such as to administer, verify, and maintain your account, to provide the Services you request and customize your experience with us.",
+      "details": "We also use the information we collect to:",
+      "personalInformationList": {
+        "personalInformation_1": "carry out our obligations owed to you;",
+        "personalInformation_2": "comply with our regulatory and other legal obligations;",
+        "personalInformation_3": "administer transactions and monitor trading activity on BTC-X.PRO, including by detecting inconsistencies in payments and trades and looking out for potentially illegal activities;",
+        "personalInformation_4": "determine whether a payment method is being abused;",
+        "personalInformation_5": "compile statistical analysis of the pages of our platform and websites and monitor and analyze our business;",
+        "personalInformation_6": "investigate and to manage enquiries, disputes, and legal proceedings and to comply with court orders, mandatory dispute resolution determinations and mandatory government authority or law enforcement orders or directions;",
+        "personalInformation_7": "provide information about you and your trading with us to reporting agencies;",
+        "personalInformation_8": "participate in crime prevention, legal and regulatory compliance and to assist regulatory, cybercrime, data and information protection agencies and police with their enquiries and enforcement, even if not compelled to do so;",
+        "personalInformation_9": "develop and to market other BTC-X.PRO products and services;",
+        "personalInformation_10": "novate, transfer or any of the rights or liabilities of the BTC-X.PRO Entity."
+      }
+    },
+    "sharingOfYourPersonalInformation": {
+      "intro": "We will not share the personal information we hold about you except in the following circumstances:",
+      "sharingCircumstances": {
+        "btcXProEntities": "between and among the BTC-X.PRO Entity, BTC-X.PRO, and our current and future parents, affiliates, subsidiaries, and other companies under common control and ownership",
+        "thirdPartyVendors": "with third-party vendors and service providers who perform services for us, such as identification verification, fraud prevention, advertising, and analytics services",
+        "mergerSale": "in connection with, or during negotiations of, any merger, sale of company assets, financing or acquisition of all or a portion of BTC-X.PRO by another company",
+        "disclosureLegalProcess": "disclosure in accordance with, or required by, any applicable law or legal process, including lawful requests by public authorities to meet national security or law enforcement requirements",
+        "inconsistentActions": "if we believe your actions are inconsistent with our user agreements or policies, or to protect the rights, property, and safety of BTC-X.PRO or others",
+        "userConsent": "where we have your consent"
+      },
+      "detail": "We may allow others to provide analytics services and serve advertisements about our products and services on our behalf across the web and in mobile applications. This may involve cookies and other technologies to collect information about your use of the Services. This information may be used by BTC-X.PRO to, among other things, analyze and track data, determine the popularity of certain content, deliver advertising and content targeted to your interests on our Services, and better understand your online activity in connection with the Services."
+    },
+    "retentionOfYourPersonalInformation": {
+      "intro": "We may store the information we collect on you for as long as is necessary for the purpose(s) for which we originally collected it, or for other legitimate business purposes, including to meet our legal, regulatory, or other compliance obligations. The period for which we will retain personal information will vary depending on the purposes that it was collected for, as well as the requirements of any applicable law or regulation. If you have a BTC-X.PRO Account, we will store your personal information for as long as you maintain that account, and after you cease holding an account, for as long as we are required to by laws and regulations that are applicable to us. Should you close your account, we may periodically contact you to offer you the opportunity to reactivate your account or participate in any other offers."
+    },
+    "securityOfYourPersonalInformation": {
+      "intro": "We protect your personal information by using data security technology and using tools such as firewalls and data encryption. We also require that you use a personal username and password every time you access your account with us. We recommend that you do not re-use a password previously used by you for other platforms/services. Remember that you are ultimately responsible for maintaining the secrecy of your account username and password. We strongly recommend that you do not disclose this information to anyone. We restrict access to personal information at our offices so that only officers and/or employees with a legitimate business purpose can access it."
+    },
+    "changesToThisPrivacyPolicy": {
+      "intro": "This Policy will be reviewed and updated from time to time to take account of changes to our operations or practices and, further, to make sure it remains appropriate in light of any changes in law, technology, and the business environment. In the event BTC-X.PRO materially changes this Policy, the revised Policy will promptly be posted to our websites. By opening an account with us, you expressly accept the posting of the revised Policy electronically on our website as actual notice to you. Any personal information held will be governed by our most current Policy."
     }
   },
   "footer": {

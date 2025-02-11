@@ -20,7 +20,7 @@ export default function HowWorksRefProgramm() {
         <div className='rounded-3xl bg-white text-black'>
           <div className='flex flex-col-reverse justify-between gap-2 px-[10px] py-[20px] md:gap-4 lg:flex-row lg:gap-8 lg:px-[40px] lg:py-[40px]'>
             <p className='mt-[20px] text-[13px] leading-[130%] opacity-[33%] lg:hidden'>
-              {t('subtitle_2')}
+              {t('subtitle_details')}
             </p>
             <div className='mx-auto'>
               <Image
@@ -34,24 +34,28 @@ export default function HowWorksRefProgramm() {
               <div className='flex h-full flex-col justify-between'>
                 <div>
                   <h2 className='text-[18px] font-semibold leading-[120%] lg:text-[40px]'>
-                    {t('title_2')}
+                    {t('levels_title')}
                   </h2>
                   <div className='my-[20px] border-t border-black opacity-[33%] xl:my-[40px]'></div>
                   <ul>
                     <li className='relative pl-5 text-[13px] leading-[130%] md:text-font16Leading120 lg:text-font22Leading120'>
                       <span className='absolute left-0 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-[#FE9900]'></span>
-                      <span className='text-[#FE9900]'>{t('subtitle2_1')}</span>{' '}
-                      {t('subtitle2_2')}
+                      <span className='text-[#FE9900]'>
+                        {t('first_level_percentage')}
+                      </span>{' '}
+                      {t('first_level_description')}
                     </li>
                     <li className='relative pl-5 text-[13px] leading-[130%] md:text-font16Leading120 lg:text-font22Leading120'>
                       <span className='absolute left-0 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-[#FE9900]'></span>
-                      <span className='text-[#FE9900]'>{t('subtitle3_1')}</span>
-                      {t('subtitle3_2')}
+                      <span className='text-[#FE9900]'>
+                        {t('second_level_percentage')}
+                      </span>{' '}
+                      {t('second_level_description')}
                     </li>
                   </ul>
                 </div>
                 <p className='hidden text-font16Leading120 opacity-[33%] lg:block lg:w-[338px]'>
-                  {t('subtitle_2')}
+                  {t('subtitle_details')}
                 </p>
               </div>
             </div>
@@ -62,37 +66,35 @@ export default function HowWorksRefProgramm() {
             <div className='lg:rounded-3xl lg:bg-[#111111] lg:px-[46px] lg:py-[54px]'>
               <div className='flex flex-col-reverse md:flex-row md:justify-between lg:flex-col'>
                 <p className='mb-[24px] w-[172px] font-ibm text-ibm13Leading130 opacity-[33%] lg:w-[250px] lg:text-ibm16Leading130'>
-                  {t('subtitle_3')}
+                  {t('company_statement')}
                 </p>
                 <div className='my-[20px] border-t opacity-[33%] lg:hidden'></div>
                 <h2 className='text-right text-font30Leading110 tracking-tight md:w-[450px] lg:mb-4 lg:w-auto lg:text-left lg:text-font50Leading110'>
-                  {t('title_3')}
+                  {t('more_info_title')}
                 </h2>
               </div>
               <div className='my-[40px] hidden border-t opacity-[33%] md:block'></div>
               <div className='grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4 lg:grid-cols-1 lg:gap-8'>
                 <div className='rounded-lg border border-[#999999] px-[15px] py-[25px] lg:px-[30px] lg:py-[30px]'>
                   <h3 className='mb-[29px] text-primary leading-[120%] lg:text-[22px]'>
-                    {t('title_4')}
+                    {t('payment_info_title')}
                   </h3>
                   <p className='text-white/30'>
-                    {t('subtitle_4')}{' '}
-                    <span className='text-[#FE9900]'>{t('subtitle_4_1')}</span>{' '}
-                    {t('subtitle_4_2')}{' '}
-                    <span className='text-[#FE9900]'>{t('subtitle_4_3')}</span>
+                    {t('payment_info.immediate_rewards')}{' '}
+                    <span className='text-[#FE9900]'>
+                      {t('payment_info.payment_details')}
+                    </span>
                   </p>
                 </div>
                 <div className='rounded-lg border border-[#999999] px-[15px] py-[25px] lg:px-[30px] lg:py-[30px]'>
                   <h3 className='mb-[29px] text-primary leading-[120%] lg:text-[22px]'>
-                    {t('title_5')}
+                    {t('tracking_title')}
                   </h3>
                   <p className='text-white/30'>
-                    {t('subtitle_5')}{' '}
-                    <span className='text-[#FE9900]'>{t('subtitle_5_1')}</span>
-                  </p>
-                  <p className='mt-4 text-white/30'>
-                    {t('subtitle_5_2')}{' '}
-                    <span className='text-[#FE9900]'>{t('subtitle_5_3')}</span>
+                    {t('tracking_info.overview')}{' '}
+                    <span className='text-[#FE9900]'>
+                      {t('tracking_info.detailed_tracking')}
+                    </span>
                   </p>
                 </div>
               </div>

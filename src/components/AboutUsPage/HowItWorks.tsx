@@ -8,8 +8,6 @@ export default function HowItWorksSection() {
   return (
     <section className='rounded-b-xl bg-[#F4F4F4] py-[30px] text-black xl:py-[100px]'>
       <div className='container mx-auto px-4'>
-        {/* Статистика */}
-
         <div className='mb-[90px] grid grid-cols-1 gap-8 lg:grid-cols-2'>
           <h4 className='text-[40px] font-semibold leading-[120%] tracking-tight lg:hidden'>
             {t('title')}
@@ -30,10 +28,10 @@ export default function HowItWorksSection() {
             <div className='my-6 hidden border-t border-black opacity-[33%] xl:block'></div>
             <div className='flex h-full flex-col justify-between'>
               <h3 className='text-primary font-semibold leading-[120%]'>
-                {t('title_2')}
+                {t('trade_example_title')}
               </h3>
               <p className='hidden w-[302px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130 xl:block'>
-                {t('text')}
+                {t('no_fees_text')}
               </p>
             </div>
           </div>
@@ -45,24 +43,26 @@ export default function HowItWorksSection() {
             <div className='flex h-full flex-col justify-between'>
               <div className='flex items-center justify-between'>
                 <h4 className='text-font30Leading110 lg:text-font50Leading110'>
-                  {t('title_3')}
+                  {t('leverage_trading_title')}
                 </h4>
               </div>
               <p className='hidden w-[427px] font-ibm text-ibm13Leading130 opacity-[33%] lg:block lg:text-ibm16Leading130'>
-                {t('text_2')}
+                {t('leverage_trading_text')}
               </p>
             </div>
             <div className='xl:w-[655px]'>
               <h3 className='mb-[40px] hidden text-font16Leading120 text-font22Leading120 xl:block'>
-                {t('title_4')}{' '}
-                <span className='text-[#FE9900]'>{t('subtitle_4')} </span>{' '}
-                {t('subtitle_4_2')}
+                {t('leverage_trading_example_title')}{' '}
+                <span className='text-[#FE9900]'>
+                  {t('leverage_trading_example_text')}
+                </span>{' '}
+                {t('leverage_trading_impact_text')}
               </h3>
               <div className='xl:hidden'>
                 <TradePowerLocalizedImage />
               </div>
               <p className='mt-[20px] font-ibm text-ibm13Leading130 opacity-[33%] md:text-ibm16Leading130 lg:hidden'>
-                {t('text_2')}
+                {t('leverage_trading_text')}
               </p>
               <Image
                 src='/about-us_trading_power.png'
@@ -74,13 +74,13 @@ export default function HowItWorksSection() {
               <div className='mb-[34px] hidden items-center xl:flex'>
                 <div className='mr-[5px] h-[28px] w-[28px] rounded-full bg-[#FE9900]'></div>
                 <p className='text-font16Leading120 text-font22Leading120'>
-                  {t('text_3')}
+                  {t('investment_amount_text')}
                 </p>
               </div>
               <div className='hidden items-center xl:flex'>
                 <div className='mr-[5px] h-[28px] w-[28px] rounded-full bg-[#131313]'></div>
                 <p className='text-font16Leading120 text-font22Leading120'>
-                  {t('text_4')}
+                  {t('trade_amount_with_leverage_text')}
                 </p>
               </div>
             </div>
