@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import StoreButtons from '@/components/ui/StoreButtons';
+import TradeVolumeTimer from '@/components/ui/TokenTimer';
 
 export default function LaunchingTokenSection() {
   const t = useTranslations('airdrop.launchingToken');
@@ -40,11 +41,12 @@ export default function LaunchingTokenSection() {
             </p>
           </div>
         </div>
-        <div className='mb-[100px] text-center'>
+        <TradeVolumeTimer />
+        {/*<div className='mb-[100px] text-center'>
           <h2 className='text-[60px] font-bold leading-[110%] tracking-tight lg:text-[145px] xl:text-[220px]'>
             {t('current_data')}
           </h2>
-        </div>
+        </div>*/}
         <div className='mx-auto mb-[120px] flex flex-col items-center text-center font-medium lg:w-[950px] xl:mb-[320px] xl:w-[1126px]'>
           <p className='mb-[33px] hidden w-[257px] font-ibm text-ibm13Leading130 opacity-[33%] lg:block lg:text-ibm16Leading130'>
             {t('all_markets_in_one_place')}
