@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import TradePowerLocalizedImage from '@/components/ui/TradePowerLocalizedImage';
+import { TradePowerLocalizedImage } from '@/components/ui/MainPagePlatformStatsLocalizedImage';
 
 export default function HowItWorksSection() {
   const t = useTranslations('aboutUs.howItWorks');
@@ -51,7 +51,7 @@ export default function HowItWorksSection() {
               </p>
             </div>
             <div className='xl:w-[655px]'>
-              <h3 className='mb-[40px] hidden text-font16Leading120 text-font22Leading120 xl:block'>
+              <h3 className='mb-[40px] hidden text-font16Leading120 lg:text-font22Leading120 xl:block'>
                 {t('leverage_trading_example_title')}{' '}
                 <span className='text-[#FE9900]'>
                   {t('leverage_trading_example_text')}
@@ -73,13 +73,13 @@ export default function HowItWorksSection() {
               />
               <div className='mb-[34px] hidden items-center xl:flex'>
                 <div className='mr-[5px] h-[28px] w-[28px] rounded-full bg-[#FE9900]'></div>
-                <p className='text-font16Leading120 text-font22Leading120'>
+                <p className='text-font16Leading120 lg:text-font22Leading120'>
                   {t('investment_amount_text')}
                 </p>
               </div>
               <div className='hidden items-center xl:flex'>
                 <div className='mr-[5px] h-[28px] w-[28px] rounded-full bg-[#131313]'></div>
-                <p className='text-font16Leading120 text-font22Leading120'>
+                <p className='text-font16Leading120 lg:text-font22Leading120'>
                   {t('trade_amount_with_leverage_text')}
                 </p>
               </div>

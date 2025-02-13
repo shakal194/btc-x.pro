@@ -22,9 +22,9 @@ export default function HeroSection() {
               </p>
             </div>
           </div>
-          <div className='pointer-events-none absolute -top-1/2 left-1/2 right-[0px] z-10 w-full -translate-x-1/2 xl:top-1/4 xl:-translate-y-1/4'>
+          <div className='pointer-events-none absolute -top-[43%] left-1/2 right-[0px] z-10 w-full -translate-x-1/2 xl:top-[30%] xl:-translate-y-1/4'>
             <Image
-              src='/hero_airdrop_mobile_1.png'
+              src='/hero_airdrop_mobile.png'
               alt='Phone'
               width={713}
               height={731}

@@ -1,6 +1,8 @@
 import { useTranslations } from 'next-intl';
-import HowWorksRefPageLocalizedImage from '@/components/ui/HowWorksRefPageLocalizedImage';
-import DiagramRefPageLocalizedImage from '@/components/ui/DiagramRefPageLocalizedImage';
+import {
+  HowWorksRefPageLocalizedImage,
+  DiagramRefPageLocalizedImage,
+} from '@/components/ui/RefPageLocalizedImage';
 
 export default function HowWorksRefProgramm() {
   const t = useTranslations('referralPage.howWorksRefProgramm');

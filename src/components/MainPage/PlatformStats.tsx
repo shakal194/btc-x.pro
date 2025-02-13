@@ -1,7 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import TradePowerLocalizedImage from '@/components/ui/TradePowerLocalizedImage';
+import {
+  TradePowerLocalizedImage,
+  FreeComissionLocalizedImage,
+} from '@/components/ui/MainPagePlatformStatsLocalizedImage';
 import TradeVolumeTimer from '@/components/ui/TokenTimer';
 import OnlineStatus from '@/components/ui/LiveComponent';
 
@@ -128,15 +131,7 @@ export default function PlatformStats() {
                   {t('advantage_1_number')}
                 </p>
               </div>
-              <div>
-                <Image
-                  src='/comission.png'
-                  alt='0 comission'
-                  width={630}
-                  height={290}
-                  className='w-full'
-                ></Image>
-              </div>
+              <FreeComissionLocalizedImage />
               <div className='flex h-full flex-col justify-between gap-2 md:gap-4'>
                 <div className='hidden items-center justify-between xl:flex'>
                   <h4 className='w-[231px] text-font18Leading130 xl:w-2/3 xl:text-font30Leading130'>
