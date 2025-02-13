@@ -1,13 +1,10 @@
 'use client';
 
-import { Calligraffitti } from 'next/font/google';
 import { useState, useEffect } from 'react';
 
 export default function TradeVolumeTimer() {
-  const startDate = new Date('2024-11-01'); // Начальная дата
   const initialVolume = 7293654; // Начальный объем
   const maxVolume = 1000000000; // Максимальный объем (1 миллиард)
-  const targetTime = new Date(); // Текущая дата
   const intervalTime = 50; // Интервал обновления (50 миллисекунд)
 
   const [volume, setVolume] = useState(initialVolume); // Начальный объем
@@ -34,6 +31,8 @@ export default function TradeVolumeTimer() {
   // Запускаем таймер с нужным шагом
   useEffect(() => {
     if (isStarted) {
+      const startDate = new Date('2024-11-01'); // Начальная дата
+
       const updateVolume = () => {
         const now = new Date();
         const timeDifference = Math.floor(
@@ -75,7 +74,7 @@ export default function TradeVolumeTimer() {
 
       return () => clearInterval(interval); // Очистка интервала при размонтировании компонента
     }
-  }, [startDate, isStarted, volume, targetVolume, step]);
+  }, [isStarted, volume, targetVolume, step]);
 
   // Используем useEffect для отслеживания скроллинга
   useEffect(() => {
@@ -83,11 +82,5 @@ export default function TradeVolumeTimer() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  return (
-    <div id='volume-timer' className='mb-[100px] text-center'>
-      <h2 className='text-[60px] font-bold leading-[110%] tracking-tight lg:text-[145px] xl:text-[220px]'>
-        {volume.toLocaleString()}
-      </h2>
-    </div>
-  );
+  return <h2>{volume.toLocaleString()}</h2>;
 }

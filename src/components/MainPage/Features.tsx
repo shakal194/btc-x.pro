@@ -59,7 +59,7 @@ export default function FeaturesSection() {
                 {t('feature_2_subtitle_2')}{' '}
                 <span className='text-[#FE9900]'>
                   {t('feature_2_subtitle_3')}
-                </span>
+                </span>{' '}
                 {t('feature_2_subtitle_4')}
               </p>
             </div>
@@ -82,7 +82,7 @@ export default function FeaturesSection() {
           <div className='z-20 h-[300px] overflow-hidden rounded-lg bg-gradient-to-r from-[#553300] to-[#FE9900] p-[1px] lg:h-[218px] lg:w-[670px]'>
             <div className='relative h-[298px] rounded-lg bg-black lg:flex lg:h-[216px]'>
               <div className='relative z-10 px-[20px] py-[20px] lg:w-2/3 lg:px-[25px] lg:py-6'>
-                <h3 className='mb-[20px] text-[24px] font-medium font-semibold leading-[110%] text-white lg:mb-[40px] lg:text-[40px]'>
+                <h3 className='mb-[20px] text-[24px] font-semibold leading-[110%] text-white lg:mb-[40px] lg:text-[40px]'>
                   {t('feature_3_title')}
                 </h3>
                 <p className='text-[13px] font-medium leading-[130%] lg:text-font16Leading130'>
@@ -109,7 +109,7 @@ export default function FeaturesSection() {
           <div className='relative flex h-[300px] w-full lg:w-[670px]'>
             {/* Текстовый блок */}
             <div className='z-10 h-full rounded-lg px-[20px] py-[20px] lg:w-[50%] lg:px-[25px] lg:py-6'>
-              <h3 className='mb-[20px] text-[24px] font-medium font-semibold leading-[110%] text-black lg:mb-[40px] lg:text-[40px]'>
+              <h3 className='mb-[20px] text-[24px] font-semibold leading-[110%] text-black lg:mb-[40px] lg:text-[40px]'>
                 {t('feature_4_title')}
               </h3>
               <p className='text-[13px] font-medium leading-[130%] text-black lg:text-font16Leading130'>

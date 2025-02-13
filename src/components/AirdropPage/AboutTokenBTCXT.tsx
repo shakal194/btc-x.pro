@@ -53,14 +53,14 @@ export default function AboutTokenSection() {
                     {t('step_1_number')}
                   </p>
                 </div>
-                <div className='mx-auto h-full border border-2 border-l border-dashed xl:block xl:h-auto xl:w-[30%] xl:border-b'></div>
+                <div className='mx-auto h-full border border-l border-dashed xl:block xl:h-auto xl:w-[30%] xl:border-b'></div>
                 {/* Крок 2 */}
                 <div className='flex items-center justify-center rounded-full px-[10px] py-[6px] shadow-lg lg:px-[20px] lg:py-[10px]'>
                   <p className='text-[10px] leading-[120%] lg:text-font16Leading110'>
                     {t('step_2_number')}
                   </p>
                 </div>
-                <div className='mx-auto h-full border border-2 border-l border-dashed xl:block xl:h-auto xl:w-[30%] xl:border-b'></div>
+                <div className='mx-auto h-full border border-l border-dashed xl:block xl:h-auto xl:w-[30%] xl:border-b'></div>
                 {/* Крок 3 */}
                 <div className='flex items-center justify-center rounded-full px-[10px] py-[6px] shadow-lg lg:px-[20px] lg:py-[10px]'>
                   <p className='text-[10px] leading-[120%] lg:text-font16Leading110'>
@@ -107,8 +107,8 @@ export default function AboutTokenSection() {
                   {t('title_3')}
                 </h4>
                 <p className='text-white/50'>
-                  {t('subtitle_3')}
-                  <span className='text-[#FE9900]'> {t('subtitle_3_1')}</span>
+                  {t('subtitle_3')}{' '}
+                  <span className='text-[#FE9900]'>{t('subtitle_3_1')}</span>{' '}
                   {t('subtitle_3_2')}
                 </p>
                 <Link

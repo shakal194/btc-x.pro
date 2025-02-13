@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import StoreButtons from '@/components/ui/StoreButtons';
-import ScrollButton from '@/components/ui/ScrollButton';
+import ScrollButtonCommunity from '@/components/ui/ScrollButtonCommunity';
 
 export default function FiveSteps() {
   const t = useTranslations('mainPage.sixsteps');
@@ -20,10 +20,10 @@ export default function FiveSteps() {
             <div className='my-[20px] border-t border-black opacity-[33%] xl:my-[40px]'></div>
             <div className='grid gap-2 md:grid-cols-2 md:gap-4 xl:grid-cols-none xl:gap-8 xl:space-y-6'>
               <div className='p-[15px] xl:mb-5 xl:p-[30px]'>
-                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] leading-[130%] xl:px-[20px] xl:py-[4px]'>
+                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] xl:px-[20px] xl:py-[4px]'>
                   {t('step_1_number')}
                 </span>
-                <h3 className='mb-[15px] mt-[28px] text-font16Leading120 text-font22Leading120'>
+                <h3 className='mb-[15px] mt-[28px] text-font16Leading120 lg:text-font22Leading120'>
                   {t('step_1_title')}
                 </h3>
                 <p className='mb-[20px] leading-[130%] text-black/50'>
@@ -34,10 +34,10 @@ export default function FiveSteps() {
                 </div>
               </div>
               <div className='p-[15px] xl:mb-5 xl:p-[30px]'>
-                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] leading-[130%] xl:px-[20px] xl:py-[4px]'>
+                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] xl:px-[20px] xl:py-[4px]'>
                   {t('step_2_number')}
                 </span>
-                <h3 className='mb-[15px] mt-[28px] text-font16Leading120 text-font22Leading120'>
+                <h3 className='mb-[15px] mt-[28px] text-font16Leading120 lg:text-font22Leading120'>
                   {t('step_2_title')}
                 </h3>
                 <p className='leading-[130%] text-black/50'>
@@ -45,10 +45,10 @@ export default function FiveSteps() {
                 </p>
               </div>
               <div className='p-[15px] xl:mb-5 xl:p-[30px]'>
-                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] leading-[130%] xl:px-[20px] xl:py-[4px]'>
+                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] xl:px-[20px] xl:py-[4px]'>
                   {t('step_3_number')}
                 </span>
-                <h3 className='mb-[15px] mt-[28px] text-font16Leading120 text-font22Leading120'>
+                <h3 className='mb-[15px] mt-[28px] text-font16Leading120 lg:text-font22Leading120'>
                   {t('step_3_title')}
                 </h3>
                 <p className='leading-[130%] text-black/50'>
@@ -56,10 +56,10 @@ export default function FiveSteps() {
                 </p>
               </div>
               <div className='p-[15px] xl:mb-5 xl:p-[30px]'>
-                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] leading-[130%] xl:px-[20px] xl:py-[4px]'>
+                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] xl:px-[20px] xl:py-[4px]'>
                   {t('step_4_number')}
                 </span>
-                <h3 className='mb-[15px] mt-[28px] text-font16Leading120 text-font22Leading120'>
+                <h3 className='mb-[15px] mt-[28px] text-font16Leading120 lg:text-font22Leading120'>
                   {t('step_4_title')}
                 </h3>
                 <p className='leading-[130%] text-black/50'>
@@ -67,10 +67,10 @@ export default function FiveSteps() {
                 </p>
               </div>
               <div className='p-[15px] xl:mb-5 xl:p-[30px]'>
-                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] leading-[130%] xl:px-[20px] xl:py-[4px]'>
+                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] xl:px-[20px] xl:py-[4px]'>
                   {t('step_5_number')}
                 </span>
-                <h3 className='mb-[15px] mt-[28px] text-font16Leading120 text-font22Leading120'>
+                <h3 className='mb-[15px] mt-[28px] text-font16Leading120 lg:text-font22Leading120'>
                   {t('step_5_title')}
                 </h3>
                 <p className='leading-[130%] text-black/50'>
@@ -78,16 +78,16 @@ export default function FiveSteps() {
                 </p>
               </div>
               <div className='p-[15px] xl:mb-5 xl:p-[30px]'>
-                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] leading-[130%] xl:px-[20px] xl:py-[4px]'>
+                <span className='font16Leading130 rounded-full border px-[10px] py-[3px] text-[10px] leading-[120%] xl:px-[20px] xl:py-[4px]'>
                   {t('step_6_number')}
                 </span>
-                <h3 className='mb-[15px] mt-[28px] text-font16Leading120 text-font22Leading120'>
+                <h3 className='mb-[15px] mt-[28px] text-font16Leading120 lg:text-font22Leading120'>
                   {t('step_6_title')}
                 </h3>
                 <p className='leading-[130%] text-black/50'>
                   {t('step_6_subtitle')}
                 </p>
-                <ScrollButton />
+                <ScrollButtonCommunity />
               </div>
             </div>
           </div>

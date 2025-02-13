@@ -1,6 +1,6 @@
-import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import HowWorksRefPageLocalizedImage from '@/components/ui/HowWorksRefPageLocalizedImage';
+import DiagramRefPageLocalizedImage from '@/components/ui/DiagramRefPageLocalizedImage';
 
 export default function HowWorksRefProgramm() {
   const t = useTranslations('referralPage.howWorksRefProgramm');
@@ -23,12 +23,7 @@ export default function HowWorksRefProgramm() {
               {t('subtitle_details')}
             </p>
             <div className='mx-auto'>
-              <Image
-                src='/diagram_ref_program.png'
-                alt='Referral program'
-                width={630}
-                height={495}
-              />
+              <DiagramRefPageLocalizedImage />
             </div>
             <div>
               <div className='flex h-full flex-col justify-between'>
@@ -82,7 +77,11 @@ export default function HowWorksRefProgramm() {
                   <p className='text-white/30'>
                     {t('payment_info.immediate_rewards')}{' '}
                     <span className='text-[#FE9900]'>
-                      {t('payment_info.payment_details')}
+                      {t('payment_info.immediate_rewards_2')}
+                    </span>{' '}
+                    {t('payment_info.payment_details')}{' '}
+                    <span className='text-[#FE9900]'>
+                      {t('payment_info.payment_details_2')}
                     </span>
                   </p>
                 </div>
@@ -93,7 +92,13 @@ export default function HowWorksRefProgramm() {
                   <p className='text-white/30'>
                     {t('tracking_info.overview')}{' '}
                     <span className='text-[#FE9900]'>
-                      {t('tracking_info.detailed_tracking')}
+                      {t('tracking_info.overview_2')}
+                    </span>{' '}
+                  </p>
+                  <p className='text-white/30'>
+                    {t('tracking_info.detailed_tracking')}{' '}
+                    <span className='text-[#FE9900]'>
+                      {t('tracking_info.detailed_tracking_2')}
                     </span>
                   </p>
                 </div>

@@ -17,22 +17,22 @@ export default {
         primary: '18px',
         font50Leading110: [
           '50px',
-          { lineHeight: '110%', fontWeight: '700', letterSpacing: '-0.02em' },
+          { lineHeight: '110%', fontWeight: '600', letterSpacing: '-0.02em' },
         ],
         font30Leading110: [
           '30px',
-          { lineHeight: '110%', fontWeight: '700', letterSpacing: '-0.02em' },
+          { lineHeight: '110%', fontWeight: '600', letterSpacing: '-0.02em' },
         ],
         font70Leading110: [
           '70px',
-          { lineHeight: '110%', fontWeight: '700', letterSpacing: '-0.02em' },
+          { lineHeight: '110%', fontWeight: '600', letterSpacing: '-0.02em' },
         ],
         font30Leading130: ['30px', { lineHeight: '130%', fontWeight: '700' }],
         font18Leading130: ['18px', { lineHeight: '130%', fontWeight: '700' }],
-        font22Leading120: ['22px', { lineHeight: '120%', fontWeight: '500' }],
-        font16Leading120: ['16px', { lineHeight: '120%', fontWeight: '500' }],
-        font16Leading130: ['16px', { lineHeight: '130%', fontWeight: '500' }],
-        font16Leading110: ['16px', { lineHeight: '110%', fontWeight: '500' }],
+        font22Leading120: ['22px', { lineHeight: '120%', fontWeight: '600' }],
+        font16Leading120: ['16px', { lineHeight: '120%', fontWeight: '600' }],
+        font16Leading130: ['16px', { lineHeight: '130%', fontWeight: '600' }],
+        font16Leading110: ['16px', { lineHeight: '110%', fontWeight: '600' }],
         ibm16Leading130: [
           '16px',
           { lineHeight: '130%', letterSpacing: '-0.02em' },
@@ -43,7 +43,7 @@ export default {
         ],
       },
       fontFamily: {
-        ibm: ['IBM_Plex_Sans'], // Используем CSS-переменную
+        ibm: ['IBM_Plex_Mono', 'monospace'], // Используем CSS-переменную
       },
     },
   },

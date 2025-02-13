@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import StoreButtons from '@/components/ui/StoreButtons';
 import TradeVolumeTimer from '@/components/ui/TokenTimer';
+import OnlineStatus from '@/components/ui/LiveComponent';
 
 export default function LaunchingTokenSection() {
   const t = useTranslations('airdrop.launchingToken');
@@ -28,7 +29,8 @@ export default function LaunchingTokenSection() {
               {t('trading_volume_text')}
             </p>
           </div>
-          <div className='flex items-center'>
+          <OnlineStatus />
+          {/*<div className='flex items-center'>
             <Image
               src='/live_icon.svg'
               alt='Live Icon'
@@ -39,9 +41,14 @@ export default function LaunchingTokenSection() {
             <p className='ml-[3px] font-ibm text-ibm13Leading130 leading-[130%] tracking-tight text-[#69DF40] lg:text-ibm16Leading130'>
               {t('live_status')}
             </p>
-          </div>
+          </div>*/}
         </div>
-        <TradeVolumeTimer />
+        <div
+          id='volume-timer'
+          className='mb-[100px] text-center text-[60px] font-bold leading-[110%] tracking-tight lg:text-[145px] xl:text-[220px]'
+        >
+          <TradeVolumeTimer />
+        </div>
         {/*<div className='mb-[100px] text-center'>
           <h2 className='text-[60px] font-bold leading-[110%] tracking-tight lg:text-[145px] xl:text-[220px]'>
             {t('current_data')}
@@ -52,16 +59,16 @@ export default function LaunchingTokenSection() {
             {t('all_markets_in_one_place')}
           </p>
           <h3 className='text-[18px] leading-[125%] tracking-tight lg:text-[40px]'>
-            {t('cta_title')}{' '}
+            {t('cta_title')} {t('cta_subtitle_1')}{' '}
             <span className='bg-gradient-to-r from-[#FFC996] via-[#FD6B06] to-[#963706] bg-clip-text text-transparent'>
-              {t('cta_subtitle_1')}
+              {t('cta_subtitle_2')}
             </span>{' '}
-            {t('cta_subtitle_2')}
+            {t('cta_subtitle_3')}
           </h3>
         </div>
         <div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
           <div className='rounded-xl shadow-lg xl:px-[45px] xl:py-[60px]'>
-            <p className='mb-[10px] w-[114px] font-ibm text-ibm13Leading130 opacity-[33%] lg:w-[200px] lg:w-[250px] lg:text-ibm16Leading130 xl:mb-[24px]'>
+            <p className='mb-[10px] w-[114px] font-ibm text-ibm13Leading130 opacity-[33%] lg:w-[250px] lg:text-ibm16Leading130 xl:mb-[24px]'>
               {t('price_formation_title')}
             </p>
             <h2 className='mb-4 text-font30Leading110 lg:text-font50Leading110'>
@@ -81,7 +88,7 @@ export default function LaunchingTokenSection() {
           </div>
           {/* Image Section */}
           <div className='relative mb-[90px] h-[500px] lg:h-[700px] xl:mb-[200px]'>
-            <div className='absolute left-1/2 top-1 w-[407px] w-full -translate-x-1/2 transform text-center xl:top-10'>
+            <div className='absolute left-1/2 top-1 w-full -translate-x-1/2 transform text-center md:w-[407px] xl:top-10'>
               <h3 className='mb-[4px] text-primary font-semibold leading-[125%] tracking-tight md:text-[20px]'>
                 {t('airdrop_info_title')}
               </h3>
@@ -118,7 +125,7 @@ export default function LaunchingTokenSection() {
               </h3>
               <div className='my-[20px] border-t border-white opacity-[33%] xl:my-[40px]'></div>
               <p className='text-[13px] leading-[130%] text-white/30 xl:text-primary xl:leading-[120%]'>
-                {t('qr_code_text')}
+                {t('earn_with_us_text')}
               </p>
               <Image
                 src='/airdrop_btcxt_token_mobile.png'
@@ -146,7 +153,7 @@ export default function LaunchingTokenSection() {
               />
               <div className='hidden lg:block'>
                 <h2 className='mb-[40px] text-font30Leading110 xl:text-font50Leading110'>
-                  {t('earn_with_us_title')}
+                  {t('qr_code_title')}
                 </h2>
                 <p className='w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
                   {t('qr_code_text')}

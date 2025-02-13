@@ -2,6 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import TradePowerLocalizedImage from '@/components/ui/TradePowerLocalizedImage';
+import TradeVolumeTimer from '@/components/ui/TokenTimer';
+import OnlineStatus from '@/components/ui/LiveComponent';
 
 export default function PlatformStats() {
   const t = useTranslations('mainPage.platformStats');
@@ -27,8 +29,12 @@ export default function PlatformStats() {
                 <p className='text-font16Leading120 xl:text-font22Leading120'>
                   {t('stats_1_title')}
                 </p>
+                <p className='text-font16Leading120 lg:text-font22Leading120'>
+                  {t('stats_1_subtitle')}
+                </p>
                 <div>
-                  <div className='flex items-center'>
+                  <OnlineStatus />
+                  {/*<div className='flex items-center'>
                     <Image
                       src='/live_icon.svg'
                       alt='Live Icon'
@@ -39,15 +45,18 @@ export default function PlatformStats() {
                     <p className='ml-[3px] font-ibm text-ibm13Leading130 leading-[130%] tracking-tight text-[#69DF40] xl:text-ibm16Leading130'>
                       {t('stats_1_live')}
                     </p>
+                  </div>*/}
+                  <div
+                    id='volume-timer'
+                    className='text-[45px] font-semibold leading-[120%] xl:text-[50px] xl:font-bold'
+                  >
+                    <TradeVolumeTimer />
                   </div>
-                  <h3 className='text-[45px] font-semibold leading-[120%] xl:text-[50px] xl:font-bold'>
-                    {t('stats_1_data')}
-                  </h3>
                 </div>
               </div>
               {/* Карточка 2 */}
               <div className='flex h-[200px] w-full flex-col justify-between rounded-lg bg-gray-100 p-5 shadow'>
-                <p className='text-font16Leading120 text-font22Leading120'>
+                <p className='text-font16Leading120 lg:text-font22Leading120'>
                   {t('stats_2_title')}{' '}
                   <span className='opacity-[33%]'>{t('stats_2_subtitle')}</span>
                 </p>
@@ -57,11 +66,12 @@ export default function PlatformStats() {
               </div>
               {/* Карточка 3 */}
               <div className='flex h-[200px] w-full flex-col justify-between rounded-lg bg-gray-100 p-5 shadow'>
-                <p className='text-font16Leading120 text-font22Leading120'>
+                <p className='text-font16Leading120 lg:text-font22Leading120'>
                   {t('stats_3_title')}
                 </p>
                 <div>
-                  <div className='flex items-center'>
+                  <OnlineStatus />
+                  {/* <div className='flex items-center'>
                     <Image
                       src='/live_icon.svg'
                       alt='Live Icon'
@@ -72,7 +82,7 @@ export default function PlatformStats() {
                     <p className='ml-[3px] font-ibm text-ibm13Leading130 leading-[130%] tracking-tight text-[#69DF40] xl:text-ibm16Leading130'>
                       {t('stats_3_live')}
                     </p>
-                  </div>
+                  </div>*/}
                   <h3 className='text-[45px] font-semibold leading-[120%] xl:text-[50px] xl:font-bold'>
                     {t('stats_3_data')}
                   </h3>
@@ -80,9 +90,11 @@ export default function PlatformStats() {
               </div>
               {/* Карточка 4 */}
               <div className='flex h-[200px] w-full flex-col justify-between rounded-lg bg-gray-100 p-5 shadow'>
-                <p className='text-font16Leading120 text-font22Leading120'>
+                <p className='text-font16Leading120 lg:text-font22Leading120'>
                   {t('stats_4_title')}{' '}
-                  <span className='opacity-[33%]'>{t('stats_4_subtitle')}</span>
+                </p>{' '}
+                <p className='text-font16Leading120 opacity-[33%] lg:text-font22Leading120'>
+                  {t('stats_4_subtitle')}
                 </p>
                 <h3 className='text-[45px] font-semibold leading-[120%] xl:text-[50px] xl:font-bold'>
                   {t('stats_4_data')}
@@ -135,7 +147,7 @@ export default function PlatformStats() {
                   </p>
                 </div>
                 <div className='flex flex-col justify-between gap-2 md:flex-row md:gap-4 lg:gap-8'>
-                  <div className='flex flex-col items-start gap-2 text-[13px] leading-[100%] leading-[120%] xl:text-primary'>
+                  <div className='flex flex-col items-start gap-2 text-[13px] leading-[100%] lg:leading-[120%] xl:text-primary'>
                     <div className='flex items-center'>
                       <Image
                         src='/arrows.png'
@@ -161,7 +173,7 @@ export default function PlatformStats() {
                       />
                     </div>
                   </div>
-                  <div className='grid grid-rows-2 items-start gap-2 text-[13px] leading-[100%] leading-[120%] xl:text-primary'>
+                  <div className='grid grid-rows-2 items-start gap-2 text-[13px] leading-[100%] lg:leading-[120%] xl:text-primary'>
                     <div className='rounded-full border px-3 py-2 text-center'>
                       <p>{t('advantage_1_subtitle_3')}</p>
                     </div>
@@ -170,7 +182,9 @@ export default function PlatformStats() {
                     </div>
                   </div>
                 </div>
-                <p>{t('advantage_1_subtitle_5')}</p>
+                <p className='text-primary font-medium leading-[120%]'>
+                  {t('advantage_1_subtitle_5')}
+                </p>
               </div>
             </div>
             {/* Блок 2 */}
@@ -185,7 +199,7 @@ export default function PlatformStats() {
                 </p>
               </div>
               <TradePowerLocalizedImage />
-              <div className='flex h-full flex-col justify-between gap-2 md:gap-4'>
+              <div className='flex h-full flex-col gap-2 md:gap-4'>
                 <div className='hidden items-center justify-between xl:flex'>
                   <h4 className='w-[231px] text-font18Leading130 xl:w-2/3 xl:text-font30Leading130'>
                     {t('advantage_2_title')}
@@ -194,21 +208,27 @@ export default function PlatformStats() {
                     {t('advantage_2_number')}
                   </p>
                 </div>
-                <p>{t('advantage_2_subtitle')}</p>
-                <p>
-                  {t('advantage_2_subtitle_2')}{' '}
-                  <span className='text-[#FE9900]'>
-                    {t('advantage_2_subtitle_3')}
-                  </span>
-                </p>
-                <Link
-                  href='https://onelink.to/js2s8h'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='hidden w-[240px] rounded-full border px-3 py-2 text-center text-primary font-bold leading-[100%] transition hover:bg-[#FD6B06] hover:text-white lg:block'
-                >
-                  {t('advantage_link')}
-                </Link>
+                <div className='flex h-full flex-col justify-between'>
+                  <div className='space-y-4'>
+                    <p className='text-primary font-medium leading-[120%]'>
+                      {t('advantage_2_subtitle')}
+                    </p>
+                    <p className='text-primary font-medium leading-[120%]'>
+                      {t('advantage_2_subtitle_2')}{' '}
+                      <span className='text-[#FE9900]'>
+                        {t('advantage_2_subtitle_3')}
+                      </span>
+                    </p>
+                  </div>
+                  <Link
+                    href='https://onelink.to/js2s8h'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='hidden w-[240px] rounded-full border px-3 py-2 text-center text-primary font-bold leading-[100%] transition hover:bg-[#FD6B06] hover:text-white lg:block'
+                  >
+                    {t('advantage_link')}
+                  </Link>
+                </div>
               </div>
             </div>
             {/* Блок 3 */}
@@ -240,14 +260,14 @@ export default function PlatformStats() {
                     {t('advantage_3_number')}
                   </p>
                 </div>
-                <p>
+                <p className='text-primary font-medium leading-[120%]'>
                   {t('advantage_3_subtitle')}{' '}
                   <span className='text-[#FE9900]'>
                     {t('advantage_3_subtitle_2')}
                   </span>{' '}
                   {t('advantage_3_subtitle_3')}
                 </p>
-                <p>
+                <p className='text-primary font-medium leading-[120%]'>
                   {t('advantage_3_subtitle_4')}{' '}
                   <span className='text-[#FE9900]'>
                     {t('advantage_3_subtitle_5')}

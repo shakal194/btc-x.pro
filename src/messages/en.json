@@ -24,7 +24,7 @@
     },
     "features": {
       "title": "Trade, invest and earn in one place",
-      "subtitle": "BTS-X - all markets and instruments in one place",
+      "subtitle": "BTC-X - all markets and instruments in one place",
       "feature_1_title": "01. Crypto",
       "feature_1_subtitle": "Conquer the most dynamic markets that are open 24/7. Trade at the exact spot prices of the leading exchanges, without unnecessary commissions.",
       "feature_1_subtitle_2": "*Use leverage to increase profits without the risk of liquidation.",
@@ -41,7 +41,8 @@
     "platformStats": {
       "title": "Our platform is in numbers:",
       "subtitle": "ВТС-Х — trust that is backed by results",
-      "stats_1_title": "Trading volume (USD), 24 h",
+      "stats_1_title": "Trading volume",
+      "stats_1_subtitle": "(USD), 24 год.",
       "stats_1_live": "Live",
       "stats_1_data": "11 956 78",
       "stats_2_title": "Trading pairs,",
@@ -190,13 +191,17 @@
       "more_info_title": "More about the BTC-X referral program",
       "payment_info_title": "How and when will I receive payments under the referral program?",
       "payment_info": {
-        "immediate_rewards": "Your rewards are credited instantly,",
-        "payment_details": "as soon as the position of the user you invited closes. All payouts go directly to your BTC-X balance."
+        "immediate_rewards": "Your rewards are",
+        "immediate_rewards_2": "credited instantly,",
+        "payment_details": "as soon as the position of the user you invited closes. All payouts go directly to",
+        "payment_details_2": "your BTC-X balance."
       },
       "tracking_title": "How can I track my referral payments?",
       "tracking_info": {
-        "overview": "In the Referral Program section of the platform, you can easily track all your payments and bonuses.",
-        "detailed_tracking": "It will display information about the number of invited users, the volume of their transactions, and your rewards."
+        "overview": "In the Referral Program section of the platform, you can easily track all ",
+        "overview_2": "your payments and bonuses.",
+        "detailed_tracking": "It will display information about the number of invited users, the volume of their transactions, and",
+        "detailed_tracking_2": "your rewards."
       }
     },
     "ourBenefits": {
@@ -323,16 +328,19 @@
       "live_status": "Live",
       "current_data": "999.999.999",
       "all_markets_in_one_place": "BTC-X — all markets and instruments in one place",
-      "cta_title": "Don't miss your chance to be a part of the future with BTC-X",
+      "cta_title": "Don't miss your chance to be a part of the future with BTC-X.",
       "cta_subtitle_1": "The more actively you trade and invite your friends,",
-      "cta_subtitle_2": "the more BTCXT tokens you will receive",
+      "cta_subtitle_2": "the more BTCXT tokens",
+      "cta_subtitle_3": "you will receive",
       "price_formation_title": "How is the price of BTCXT tokens determined?",
       "price_formation_text": "BTCXT token price formation before launch",
       "price_formation_details": "Calculating the price through the spread between the buy and sell prices helps to create a transparent and dynamic value that reflects real market activity.",
-      "airdrop_info_title": "Don't miss the opportunity to get BTC-X tokens",
-      "airdrop_info_text": "Participate in the airdrop, trade on BTC-X, invite your friends and earn more! The higher your trading volume, the more tokens you will receive.",
+      "airdrop_info_title": "Trade on the BTC-X platform ",
+      "airdrop_info_text": "The price of BTCXT tokens is determined based on the spread between the buy and sell price for all closed user positions on the platform",
       "cta_link_text": "Go to the application",
-      "earn_with_us_title": "Earn money with us",
+      "earn_with_us_title": "Don't miss the opportunity to get BTC-X tokens",
+      "earn_with_us_text": "Participate in the airdrop, trade on BTC-X, invite your friends and earn more! The higher your trading volume, the more tokens you will receive.",
+      "qr_code_title": "Earn money with us",
       "qr_code_text": "Scan to download",
       "slider_text": "Earn money with BTC-X /"
     }
