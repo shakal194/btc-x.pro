@@ -7,6 +7,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('metadata');
 
   return {
+    metadataBase: new URL('https://btc-x.pro'),
     title: t('title'), // например, ключ "title" должен быть определён в ваших переводах
     description: t('description'),
     openGraph: {

@@ -1,7 +1,6 @@
-import StoreButtons from '@/components/ui/StoreButtons';
-import Link from 'next/link';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import SubscriptionFormPromo from '@/components/ui/SubscriptionFormPromo';
 
 export default function Promo() {
   const t = useTranslations('promo');
@@ -10,7 +9,7 @@ export default function Promo() {
     <main>
       <section className='bg-black py-[25px] lg:py-[100px]'>
         <div className='container relative mx-auto px-4 text-white'>
-          <h2 className='mb-4 mb-[20px] text-center text-xl font-bold'>
+          <h2 className='mb-[20px] text-center text-xl font-bold'>
             {t('title')} № 1
           </h2>
 
@@ -29,13 +28,21 @@ export default function Promo() {
               </p>
             </div>
             <div>
-              <Image src='/promo1.png' alt='Promo 1' width={630} height={284} />
+              <Image
+                src='/promo1.png'
+                alt='Promo 1'
+                width={630}
+                height={284}
+                priority={true}
+              />
             </div>
           </div>
 
-          <form className='rounded-2xl border border-orange-500 p-4 lg:p-10'>
+          <SubscriptionFormPromo />
+
+          {/*<form className='rounded-2xl border border-orange-500 p-4 lg:p-10'>
             <div className='grid grid-cols-1 gap-2 md:gap-4 lg:gap-8'>
-              {/* Левая колонка - нумерация и текст */}
+             
               <div className='grid gap-8'>
                 <div className='grid grid-cols-1 items-center gap-2 md:gap-4 xl:grid-cols-2'>
                   <div className='grid grid-cols-7 items-center gap-2 md:flex md:gap-4 lg:gap-8 xl:grid xl:grid-cols-8'>
@@ -50,7 +57,7 @@ export default function Promo() {
                       </label>
                     </div>
                   </div>
-                  <div className='grid grid-cols-2 items-center gap-2 gap-4 md:gap-4 lg:gap-8'>
+                  <div className='grid grid-cols-2 items-center gap-2 md:gap-4 lg:gap-8'>
                     <StoreButtons theme='dark' />
                   </div>
                 </div>
@@ -219,7 +226,7 @@ export default function Promo() {
                 </div>
               </div>
             </div>
-          </form>
+          </form>*/}
 
           {/** Conditions */}
           <div className='mt-6 rounded-2xl border border-orange-500 p-6'>
