@@ -75,7 +75,7 @@ export default function SubscriptionFormFooter() {
         className='w-full rounded-full bg-white px-6 py-2 text-primary font-bold text-black hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white focus:outline-none focus:ring sm:w-80 md:w-auto'
         disabled={isSubmitting}
       >
-        {isSubmitting ? 'Submitting...' : t('subscribe_button')}
+        {isSubmitting ? t('subscribe_button_submitted') : t('subscribe_button')}
       </button>
     </form>
   );

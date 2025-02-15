@@ -20,7 +20,7 @@ export const sendEmail = async (data) => {
 
 import nodemailer from 'nodemailer';
 
-export async function sendEmail(data) {
+export async function sendPromoEmail(data) {
   try {
     // Создаем транспортер для отправки email через Gmail SMTP сервер
     const transporter = nodemailer.createTransport({
@@ -38,6 +38,8 @@ export async function sendEmail(data) {
       subject: 'BTCXtoUSDT', // Тема письма
       text: `YouTube: ${data.youtube}\nTelegram: ${data.telegram}\nInstagram: ${data.instagram}\nRating: ${data.rating}\nEmail: ${data.email}`, // Текст письма
     };
+
+    console.log('Sending email with data:', data);
 
     // Отправляем email
       const info = await transporter.sendMail(mailOptions);
@@ -62,14 +64,14 @@ export async function sendSubscriptionEmail(email) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'shakal194@gmail.com',  // Ваш Gmail адрес
-        pass: 'gkno jfhe kyvv sokl',    // Ваш Gmail пароль (или использование App Password для безопасности)
+        user: process.env.GMAIL_USER,  // Ваш Gmail адрес
+        pass: process.env.GMAIL_PASS,    // Ваш Gmail пароль (или использование App Password для безопасности)
       },
     });
 
     // Настройки письма
     const mailOptions = {
-      from: 'shakal194@gmail.com',   // Отправитель
+      from: process.env.GMAIL_USER,   // Отправитель
       to: 'ispitmua@gmail.com',                      // Получатель
       subject: 'BTC-XNewSubscribe!', // Тема письма (изменена)
       text: `New subscriber - ${email}`,
