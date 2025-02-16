@@ -45,7 +45,7 @@ export default function HeroMainPage() {
 
   return (
     <div className='gap-2 lg:flex'>
-      <div className='relative z-50'>
+      <div className='relative z-30'>
         <div className='lg:w-[650px]'>
           <h1 className='text-font30Leading110 md:text-font50Leading110 lg:text-font70Leading110'>
             {t('title')}{' '}
@@ -67,7 +67,7 @@ export default function HeroMainPage() {
         </div>
       </div>
 
-      <div className='pointer-events-none absolute -top-20 right-0 z-20 w-[265px] sm:-top-28 sm:w-[365px] lg:hidden'>
+      <div className='pointer-events-none absolute -top-20 right-0 z-10 w-[265px] sm:-top-28 sm:w-[365px] lg:hidden'>
         <Image
           src='/hero_main_page_ellipse.png'
           alt='Hero image'
@@ -78,7 +78,7 @@ export default function HeroMainPage() {
         />
       </div>
       <div
-        className={`pointer-events absolute left-0 top-[50%] z-30 w-screen overflow-hidden sm:-left-[5%] sm:top-12 md:-left-[25%] md:top-[55%] md:w-[1070px] lg:w-full ${topPosition} 2xl:w-full`}
+        className={`pointer-events absolute left-0 top-[50%] z-20 w-screen overflow-hidden sm:-left-[5%] sm:top-12 md:-left-[25%] md:top-[55%] md:w-[1070px] lg:w-full ${topPosition} 2xl:w-full`}
       >
         <Image
           src={imageData.src}
@@ -99,7 +99,7 @@ export default function HeroMainPage() {
           priority={true}
         />
       </div>
-      <div className='pointer-events-none absolute -left-[16%] top-[60%] z-20 w-screen md:-left-[15%] md:top-[25%] lg:-top-[50%] lg:left-[75%] lg:w-[900px]'>
+      <div className='pointer-events-none absolute -left-[16%] top-[60%] z-10 w-screen md:-left-[15%] md:top-[25%] lg:-top-[50%] lg:left-[75%] lg:w-[900px]'>
         <Image
           src='/hero_main_page_ellipse.png'
           alt='Hero image'
