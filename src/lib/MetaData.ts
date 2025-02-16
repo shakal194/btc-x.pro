@@ -7,17 +7,20 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('metadata');
 
   return {
-    metadataBase: new URL('https://btc-x.pro'),
+    metadataBase: new URL('https://btc-x-pro.vercel.app/'),
+    //metadataBase: new URL('https://btc-x.pro'),
     title: t('title'), // например, ключ "title" должен быть определён в ваших переводах
     description: t('description'),
     openGraph: {
       title: t('title'),
       description: t('description'),
-      url: 'https://btc-x.pro',
+      url: 'https://btc-x-pro.vercel.app/',
+      //url: 'https://btc-x.pro',
       type: 'website',
       images: [
         {
-          url: '/btcx_og_image.png',
+          url: 'https://btc-x-pro.vercel.app/btcx_og_image.png',
+          //url: '/btcx_og_image.png',
           width: 1200,
           height: 630,
         },
@@ -29,7 +32,8 @@ export async function generateMetadata(): Promise<Metadata> {
       description: t('description'),
       images: [
         {
-          url: '/btcx_og_image.png',
+          url: 'https://btc-x-pro.vercel.app/btcx_og_image.png',
+          //url: '/btcx_og_image.png',
           width: 1200,
           height: 630,
         },

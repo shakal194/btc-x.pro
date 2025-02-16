@@ -46,7 +46,7 @@ export default function HeroSection() {
               />
             </div>
           </div>
-          <div className='pointer-events-none absolute -top-1/4 z-10 hidden w-full lg:block'>
+          <div className='pointer-events-none absolute -right-[16%] -top-[28%] z-10 hidden w-full lg:block'>
             <Image
               src='/hero_about_us_background.png'
               alt='About Us background'

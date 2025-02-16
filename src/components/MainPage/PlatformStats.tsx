@@ -283,9 +283,9 @@ export default function PlatformStats() {
           </div>
         </div>
       </section>
-      <section className='bg-[#F4F4F4] py-[120px] text-black xl:py-[100px]'>
+      <section className='bg-[#F4F4F4] pb-[90px] text-black'>
         {/* Миссия */}
-        <div className='container mx-auto flex flex-col items-center px-4 xl:mt-16 xl:w-[1020px]'>
+        <div className='container mx-auto flex flex-col items-center px-4 xl:w-[1020px]'>
           <p className='mb-[15px] w-[250px] text-center font-ibm text-ibm13Leading130 opacity-[33%] xl:mb-[30px] xl:text-ibm16Leading130'>
             {t('mission_title')}
           </p>

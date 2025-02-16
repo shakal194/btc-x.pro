@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import SubscriptionFormFooter from '@/components/ui/SubscriptionFormFooter';
+import LocaleSwitcher from '@/components/ui/LocaleSwitcher';
 
 export default function Footer({ locale }: { locale: string }) {
   const t = useTranslations('footer');
@@ -9,21 +10,24 @@ export default function Footer({ locale }: { locale: string }) {
   return (
     <footer className='bg-black py-[40px] text-white lg:py-[70px]'>
       <div className='container mx-auto items-baseline px-5 md:grid md:grid-rows-2 lg:mb-[40px] lg:flex lg:grid-rows-none lg:justify-between lg:py-3'>
-        <Link
-          href='/'
-          rel='noopener noreferrer'
-          className='mr-[30px] flex items-center md:hidden'
-        >
-          <Image
-            src='/logo_footer.png' // Замените на путь к вашему логотипу
-            alt='BTC-X.PRO, LLC'
-            width={50}
-            height={50}
-          />
-          <p className='ml-[10px] w-[140px] text-[13px] font-medium leading-[130%] text-white/30'>
-            {t('footer_mobile_title')}
-          </p>
-        </Link>
+        <div className='flex justify-between'>
+          <Link
+            href='/'
+            rel='noopener noreferrer'
+            className='mr-[30px] flex items-center md:hidden'
+          >
+            <Image
+              src='/logo_footer.png' // Замените на путь к вашему логотипу
+              alt='BTC-X.PRO, LLC'
+              width={50}
+              height={50}
+            />
+            <p className='ml-[10px] w-[140px] text-[13px] font-medium leading-[130%] text-white/30'>
+              {t('footer_mobile_title')}
+            </p>
+          </Link>
+          <LocaleSwitcher />
+        </div>
         <div className='my-[25px] border-t border-white opacity-[20%] md:hidden'></div>
         {/* Левый блок с ссылками */}
         <div className='flex flex-col space-y-3 md:flex-row md:items-center md:space-x-6 md:space-y-0 lg:justify-between'>

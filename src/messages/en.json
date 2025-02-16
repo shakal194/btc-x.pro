@@ -19,14 +19,14 @@
       "text_button": "Download the BTC-X app and get access to commission-free trading today."
     },
     "ourPlatform": {
-      "title": "We are a platform for trading and investing without commissions and leverage fees (futures, margin) on spotprices",
+      "title": "We are a platform for trading and investments without commissions and leverage fees (futures, margin) by spot prices",
       "subtitle": "of such exchanges as: Binance, OKX, Coinbase"
     },
     "features": {
       "title": "Trade, invest and earn in one place",
       "subtitle": "BTC-X - all markets and instruments in one place",
       "feature_1_title": "01. Crypto",
-      "feature_1_subtitle": "Conquer the most dynamic markets that are open 24/7. Trade at the exact spot prices of the leading exchanges, without unnecessary commissions.",
+      "feature_1_subtitle": "Conquer the most dynamic markets that are open 24/7. Trade at the by the exact spot prices of the leading exchanges, without unnecessary commissions.",
       "feature_1_subtitle_2": "*Use leverage to increase profits without the risk of liquidation.",
       "feature_2_title": "02. Futures",
       "feature_2_subtitle": "Get access to global commodity markets and stock indices.",
@@ -93,7 +93,7 @@
       "step_3_title": "Complete KYC",
       "step_3_subtitle": "Verify your identity in a few simple steps to get full access to all platform features.",
       "step_4_number": "Step 4",
-      "step_4_title": "Deposit an account and specify a trading force",
+      "step_4_title": "Deposit an account and specify a trading power",
       "step_4_subtitle": "Add funds to your account and adjust your trading power to get more opportunities to work the market. This will allow you to open larger positions without the risk of liquidating your deposit.",
       "step_5_number": "Step 5",
       "step_5_title": "Make a profit",
@@ -255,7 +255,7 @@
       "no_fees_text": "Forget about fees — trade profitably and without limits with BTC-X",
       "leverage_trading_title": "Leverage trading and fees",
       "leverage_trading_text": "If the fee is 0.1%, you will pay $10 for a $10,000 trade. If the fee is 0.5%, you will pay $50 for the same trade.",
-      "leverage_trading_example_title": "If you use leverage, for example, 20x, with a $1,000 trade, you’re",
+      "leverage_trading_example_title": "If you use leverage, for example, 20x, with a $1,000 deposit, you’re",
       "leverage_trading_example_text": "actually trading with $20,000.",
       "leverage_trading_impact_text": "This increases potential profits",
       "investment_amount_text": "- The amount of your investment",
@@ -321,7 +321,7 @@
       "volume_9": "100 000 000 USD"
     },
     "launchingToken": {
-      "subtitle": "Will BTCXT token be launched?",
+      "subtitle": "When will BTCXT token be launched?",
       "title": "The BTCXT token will be launched as soon as the BTC-X platform reaches",
       "daily_trading_volume": "1 000 000 000 USD of trading volume per day",
       "trading_volume_text": "Trading volume USD / 24 h",
