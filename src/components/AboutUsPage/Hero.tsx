@@ -10,8 +10,8 @@ export default function HeroSection() {
       <div className='container relative mx-auto px-4'>
         <div className='flex'>
           <div className='relative z-20 mx-auto flex flex-col-reverse gap-2 md:grid md:grid-cols-2 md:gap-4'>
-            <div className='absolute top-2/3 z-10 flex w-[300px] flex-col md:relative md:top-0 xl:w-[540px]'>
-              <h1 className='text-[35px] leading-[110%] tracking-tight lg:text-font50Leading110 xl:mb-[88px] xl:text-font70Leading110'>
+            <div className='absolute top-2/3 z-10 flex w-[300px] flex-col justify-between md:relative md:top-0 lg:w-[450px] xl:w-[610px]'>
+              <h1 className='text-[35px] leading-[110%] tracking-tight lg:text-font50Leading110 xl:text-font70Leading110'>
                 {t('title')}{' '}
                 <span className='bg-gradient-to-r from-[#FFC996] via-[#FD6B06] to-[#963706] bg-clip-text text-transparent'>
                   {t('subtitle')}
@@ -42,11 +42,11 @@ export default function HeroSection() {
                 alt='Our Team'
                 width={670}
                 height={600}
-                className='hidden h-full w-[670px] rounded-3xl object-cover md:block'
+                className='hidden w-[670px] rounded-3xl object-cover md:block xl:h-[600px]'
               />
             </div>
           </div>
-          <div className='pointer-events-none absolute -right-[16%] -top-[28%] z-10 hidden w-full lg:block'>
+          <div className='pointer-events-none absolute -right-[16%] -top-[31%] z-10 hidden w-full lg:block'>
             <Image
               src='/hero_about_us_background.png'
               alt='About Us background'
