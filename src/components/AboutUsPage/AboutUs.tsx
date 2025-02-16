@@ -6,7 +6,7 @@ export default function AboutUsSection() {
   const t = useTranslations('aboutUs.aboutUs');
 
   return (
-    <section className='bg-black xl:py-[100px]'>
+    <section className='bg-black pb-[90px] xl:py-[100px]'>
       <div className='container z-20 mx-auto mt-[248px] px-4 md:mt-[60px] xl:mt-[170px]'>
         {/* О нас */}
         <div className='grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4 xl:gap-8'>

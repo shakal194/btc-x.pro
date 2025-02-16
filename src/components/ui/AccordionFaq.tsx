@@ -32,15 +32,10 @@ export default function AccordionFaq() {
   return (
     <Accordion selectionMode='multiple'>
       {items.map((item) => {
-        // Определяем заголовок и содержимое,
-        // используя либо question/answer, либо title/content.
-        //const titleText = item.question || '';
-        //const contentText = item.answer || '';
-
         return (
           <AccordionItem
             key={item.id}
-            title={item.question}
+            subtitle={item.question}
             textValue={item.question}
             className='text-font16Leading130 font-bold tracking-tight text-black md:text-font18Leading130 lg:text-font30Leading130'
           >
