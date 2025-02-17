@@ -1,25 +1,18 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import SliderAboutUsAboutToken from '@/components/ui/SliderAboutUsAboutToken';
 
 export default function AboutTokenSection() {
   const t = useTranslations('airdrop.aboutToken');
 
   return (
-    <section className='relative z-10 bg-[#F4F4F4] py-[30px] text-black lg:py-[100px]'>
-      <div className='container mx-auto px-4'>
-        <div className='relative mb-[40px] flex flex-col-reverse xl:mb-[150px] xl:block'>
+    <section className='relative z-10 space-y-10 bg-[#F4F4F4] py-[30px] text-black lg:py-[100px]'>
+      <div className='container mx-auto space-y-[50px] px-4'>
+        <div className='relative'>
           {/*<h1 className='text-[400px] font-bold opacity-[2%]'>ВТСХT</h1>*/}
-          <div>
-            <Image
-              src='/btcxt.png'
-              alt='BTCX TOKEN'
-              width={1340}
-              height={328}
-              className='h-[77px] w-[320px] object-cover md:h-[100px] md:w-[500px] xl:h-[328px] xl:w-[1340px]'
-            />
-          </div>
-          <div className='container mx-auto mb-[45px] flex flex-col items-center px-4 lg:w-[900px] xl:absolute xl:left-1/2 xl:top-10 xl:mb-0 xl:w-[1210px] xl:-translate-x-1/2'>
+
+          <div className='mx-auto flex flex-col items-center xl:w-[1210px]'>
             <p className='mb-[30px] w-[82px] text-center font-ibm text-ibm13Leading130 opacity-[33%] lg:w-[250px] lg:text-ibm16Leading130'>
               {t('subtitle')}
             </p>
@@ -27,6 +20,17 @@ export default function AboutTokenSection() {
               {t('title')}
             </h4>
           </div>
+          <SliderAboutUsAboutToken />
+
+          {/*<div>
+          <Image
+              src='/btcxt.png'
+              alt='BTCX TOKEN'
+              width={1340}
+              height={328}
+              className='h-[77px] w-[320px] object-cover md:h-[100px] md:w-[500px] xl:h-[328px] xl:w-[1340px]'
+            />
+        </div>*/}
         </div>
         <div className='mb-12 items-end justify-between lg:flex'>
           <h2 className='w-[274px] text-font30Leading110 tracking-tight md:w-[400px] lg:w-[514px] lg:text-font50Leading110'>

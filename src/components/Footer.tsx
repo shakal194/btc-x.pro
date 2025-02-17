@@ -10,7 +10,7 @@ export default function Footer({ locale }: { locale: string }) {
   return (
     <footer className='bg-black py-[40px] text-white lg:py-[70px]'>
       <div className='container mx-auto items-baseline px-5 md:grid md:grid-rows-2 lg:mb-[40px] lg:flex lg:grid-rows-none lg:justify-between lg:py-3'>
-        <div className='flex justify-between'>
+        <div className='flex justify-between lg:hidden'>
           <Link
             href='/'
             rel='noopener noreferrer'

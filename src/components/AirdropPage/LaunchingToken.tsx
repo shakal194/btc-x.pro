@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import StoreButtons from '@/components/ui/StoreButtons';
 import TradeVolumeTimer from '@/components/ui/TokenTimer';
 import OnlineStatus from '@/components/ui/LiveComponent';
+import SliderAboutUsLaunchToken from '@/components/ui/SliderAboutUsLaunchToken';
 
 export default function LaunchingTokenSection() {
   const t = useTranslations('airdrop.launchingToken');
@@ -163,11 +164,13 @@ export default function LaunchingTokenSection() {
           </div>
         </div>
 
-        <div className='relative mx-auto pb-6 text-white before:absolute before:bottom-0 before:left-1/2 before:h-[1px] before:-translate-x-1/2 before:bg-gradient-to-r before:from-[#FE9900] before:via-[#FD6B06] before:to-[#FE9900] xl:before:w-[1440px]'>
+        <SliderAboutUsLaunchToken />
+
+        {/*<div className='relative mx-auto pb-6 text-white before:absolute before:bottom-0 before:left-1/2 before:h-[1px] before:-translate-x-1/2 before:bg-gradient-to-r before:from-[#FE9900] before:via-[#FD6B06] before:to-[#FE9900] xl:before:w-[1440px]'>
           <h1 className='text-center text-font18Leading130 text-white/30 lg:text-font30Leading130'>
             {t('slider_text')}
           </h1>
-        </div>
+        </div>*/}
       </div>
     </section>
   );
