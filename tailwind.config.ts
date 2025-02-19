@@ -1,3 +1,4 @@
+import { heroui } from '@heroui/react';
 import type { Config } from 'tailwindcss';
 
 export default {
@@ -12,6 +13,8 @@ export default {
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
+        danger: 'var(--danger)',
+        primary: 'var(--primary)',
       },
       fontSize: {
         primary: '18px',
@@ -47,5 +50,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [heroui()],
 } satisfies Config;

@@ -87,7 +87,7 @@ export default function Promo() {
                       <Link
                         href='https://www.youtube.com/@BTC-X'
                         target='_blank'
-                        className='block w-full cursor-pointer rounded-lg border-none bg-[#ff6600] p-[10px] text-center hover:bg-[#FD6B06] hover:text-black focus:bg-[#FD6B06] focus:text-black lg:w-[300px]'
+                        className='block w-full cursor-pointer rounded-lg border-none bg-[#ff6600] p-[10px] text-center transition delay-200 hover:bg-[#FD6B06] transition delay-200 hover:text-black focus:bg-[#FD6B06] focus:text-black lg:w-[300px]'
                       >
                         {t('form_link_2')}
                       </Link>
@@ -120,7 +120,7 @@ export default function Promo() {
                       <Link
                         href='https://t.me/+7_3pToHuJwJhZTVi'
                         target='_blank'
-                        className='block w-full cursor-pointer rounded-lg border-none bg-[#ff6600] p-[10px] text-center hover:bg-[#FD6B06] hover:text-black focus:bg-[#FD6B06] focus:text-black lg:w-[300px]'
+                        className='block w-full cursor-pointer rounded-lg border-none bg-[#ff6600] p-[10px] text-center transition delay-200 hover:bg-[#FD6B06] transition delay-200 hover:text-black focus:bg-[#FD6B06] focus:text-black lg:w-[300px]'
                       >
                         {t('form_link_3')}
                       </Link>
@@ -153,7 +153,7 @@ export default function Promo() {
                       <Link
                         href='https://www.instagram.com/btc_x.pro'
                         target='_blank'
-                        className='block w-full cursor-pointer rounded-lg border-none bg-[#ff6600] p-[10px] text-center hover:bg-[#FD6B06] hover:text-black focus:bg-[#FD6B06] focus:text-black lg:w-[300px]'
+                        className='block w-full cursor-pointer rounded-lg border-none bg-[#ff6600] p-[10px] text-center transition delay-200 hover:bg-[#FD6B06] transition delay-200 hover:text-black focus:bg-[#FD6B06] focus:text-black lg:w-[300px]'
                       >
                         {t('form_link_4')}
                       </Link>
@@ -186,7 +186,7 @@ export default function Promo() {
                       <Link
                         href='https://onelink.to/js2s8h'
                         target='_blank'
-                        className='block w-full cursor-pointer rounded-lg border-none bg-[#ff6600] p-[10px] text-center hover:bg-[#FD6B06] hover:text-black focus:bg-[#FD6B06] focus:text-black lg:w-[300px]'
+                        className='block w-full cursor-pointer rounded-lg border-none bg-[#ff6600] p-[10px] text-center transition delay-200 hover:bg-[#FD6B06] transition delay-200 hover:text-black focus:bg-[#FD6B06] focus:text-black lg:w-[300px]'
                       >
                         {t('form_link_5')}
                       </Link>
@@ -217,7 +217,7 @@ export default function Promo() {
                     <div>
                       <button
                         type='submit'
-                        className='block w-full cursor-pointer rounded-lg border-none bg-[#ff6600] p-[10px] text-center hover:bg-[#FD6B06] hover:text-black focus:bg-[#FD6B06] focus:text-black lg:w-[300px]'
+                        className='block w-full cursor-pointer rounded-lg border-none bg-[#ff6600] p-[10px] text-center transition delay-200 hover:bg-[#FD6B06] transition delay-200 hover:text-black focus:bg-[#FD6B06] focus:text-black lg:w-[300px]'
                       >
                         {t('form_button_6')}
                       </button>

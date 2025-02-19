@@ -31,10 +31,12 @@ export default async function RootLayout({
     <html lang={locale} suppressHydrationWarning>
       <body className={`overflow-x-hidden ${manrope.className}`}>
         <NextIntlClientProvider messages={messages}>
-          <Header locale={locale} />
-          <NextUIProviders>{children}</NextUIProviders>
-          <FooterSection locale={locale} />
-          <ButtonFooter />
+          <NextUIProviders>
+            <Header locale={locale} />
+            {children}
+            <FooterSection locale={locale} />
+            <ButtonFooter />
+          </NextUIProviders>
         </NextIntlClientProvider>
       </body>
     </html>

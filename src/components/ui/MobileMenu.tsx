@@ -22,14 +22,14 @@ export default function MobileMenu({ locale }: { locale: string }) {
     <>
       <div className='flex lg:hidden'>
         <LocaleSwitcher />
-        <Button onPress={onOpen} className='min-w-0 p-0'>
+        <Button onPress={onOpen} className='min-w-0 bg-inherit p-0'>
           <svg
             xmlns='http://www.w3.org/2000/svg'
             fill='none'
             viewBox='0 0 24 24'
             strokeWidth={1.5}
             stroke='currentColor'
-            className='size-6'
+            className='size-6 text-white'
           >
             <path
               strokeLinecap='round'
@@ -76,9 +76,12 @@ export default function MobileMenu({ locale }: { locale: string }) {
                         </Link>
                       </div>
 
-                      <div className='flex'>
+                      <div className='flex items-center'>
                         <LocaleSwitcher />
-                        <Button onPress={onClose} className='min-w-0 p-0'>
+                        <Button
+                          onPress={onClose}
+                          className='min-w-0 bg-inherit p-0'
+                        >
                           <svg
                             xmlns='http://www.w3.org/2000/svg'
                             fill='none'
@@ -105,7 +108,7 @@ export default function MobileMenu({ locale }: { locale: string }) {
                     href={`/${locale}/about-us`}
                     onClick={onClose}
                     //href='/about-us'
-                    className='text-[22px] font-semibold leading-[120%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
+                    className='text-[22px] font-semibold leading-[120%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
                     rel='noopener noreferrer'
                   >
                     {t('aboutus')}
@@ -114,7 +117,7 @@ export default function MobileMenu({ locale }: { locale: string }) {
                     href={`/${locale}/airdrop`}
                     onClick={onClose}
                     //href='/airdrop'
-                    className='text-[22px] font-semibold leading-[120%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
+                    className='text-[22px] font-semibold leading-[120%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
                     rel='noopener noreferrer'
                   >
                     {t('airdrop')}
@@ -123,7 +126,7 @@ export default function MobileMenu({ locale }: { locale: string }) {
                     href={`/${locale}/referral`}
                     onClick={onClose}
                     //href='/referral'
-                    className='text-[22px] font-semibold leading-[120%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
+                    className='text-[22px] font-semibold leading-[120%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
                     rel='noopener noreferrer'
                   >
                     {t('referral')}
@@ -132,7 +135,7 @@ export default function MobileMenu({ locale }: { locale: string }) {
                     href={`/${locale}/support`}
                     onClick={onClose}
                     //href='/referral'
-                    className='text-[22px] font-semibold leading-[120%] transition hover:text-[#FD6B06] focus:text-[#FD6B06]'
+                    className='text-[22px] font-semibold leading-[120%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
                     rel='noopener noreferrer'
                   >
                     {t('support')}
@@ -151,7 +154,7 @@ export default function MobileMenu({ locale }: { locale: string }) {
                           target='_blank'
                           rel='noopener noreferrer'
                         >
-                          <div className='group relative flex h-[40px] w-[40px] items-center justify-center rounded-full border border-[#FE9900] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r focus:bg-gradient-to-r lg:h-[65px] lg:w-[65px]'>
+                          <div className='group relative flex h-[40px] w-[40px] items-center justify-center rounded-full border border-[#FE9900] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] transition delay-200 hover:bg-gradient-to-r focus:bg-gradient-to-r lg:h-[65px] lg:w-[65px]'>
                             <svg
                               width='14'
                               height='14'
@@ -181,7 +184,7 @@ export default function MobileMenu({ locale }: { locale: string }) {
                           target='_blank'
                           rel='noopener noreferrer'
                         >
-                          <div className='group relative flex h-[40px] w-[40px] items-center justify-center rounded-full border border-[#FE9900] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r focus:bg-gradient-to-r lg:h-[65px] lg:w-[65px]'>
+                          <div className='group relative flex h-[40px] w-[40px] items-center justify-center rounded-full border border-[#FE9900] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] transition delay-200 hover:bg-gradient-to-r focus:bg-gradient-to-r lg:h-[65px] lg:w-[65px]'>
                             <svg
                               width='14'
                               height='12'
@@ -198,7 +201,7 @@ export default function MobileMenu({ locale }: { locale: string }) {
                           target='_blank'
                           rel='noopener noreferrer'
                         >
-                          <div className='group relative flex h-[40px] w-[40px] items-center justify-center rounded-full border border-[#FE9900] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r focus:bg-gradient-to-r lg:h-[65px] lg:w-[65px]'>
+                          <div className='group relative flex h-[40px] w-[40px] items-center justify-center rounded-full border border-[#FE9900] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] transition delay-200 hover:bg-gradient-to-r focus:bg-gradient-to-r lg:h-[65px] lg:w-[65px]'>
                             <svg
                               width='14'
                               height='10'
@@ -215,7 +218,7 @@ export default function MobileMenu({ locale }: { locale: string }) {
                           target='_blank'
                           rel='noopener noreferrer'
                         >
-                          <div className='group relative flex h-[40px] w-[40px] items-center justify-center rounded-full border border-[#FE9900] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] hover:bg-gradient-to-r focus:bg-gradient-to-r lg:h-[65px] lg:w-[65px]'>
+                          <div className='group relative flex h-[40px] w-[40px] items-center justify-center rounded-full border border-[#FE9900] from-[#FE9900] via-[#FD6B06] to-[#985C00] p-[1px] transition delay-200 hover:bg-gradient-to-r focus:bg-gradient-to-r lg:h-[65px] lg:w-[65px]'>
                             <svg
                               width='14'
                               height='14'

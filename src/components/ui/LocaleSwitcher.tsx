@@ -83,7 +83,7 @@ export default function LocaleSwitcher() {
             <li key={locale}>
               <Link
                 href={redirectedPathName(locale)}
-                className='block rounded-lg px-4 py-2 text-black hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white'
+                className='block rounded-lg px-4 py-2 text-black transition delay-200 hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white'
                 onClick={() => setIsOpen(false)}
               >
                 {locale.toUpperCase()}

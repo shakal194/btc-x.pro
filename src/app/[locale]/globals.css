@@ -3,19 +3,23 @@
 @import 'tailwindcss/utilities';
 
 :root {
+  --heroui-background: #000000;
   --background: #000000;
   --foreground: #171717;
+  --danger: #FE9900;
+  --primary: "#000000";
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
+    --primary: "#000000";
     --background: #000000;
-    --foreground: #ededed;
+    --foreground: #171717;
   }
 }
 
 body {
-  color: var(--foreground);
+  color: var(--background);
   background: var(--background);
   font-family: Manrope;
 }

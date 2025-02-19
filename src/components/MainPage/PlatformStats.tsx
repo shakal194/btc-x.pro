@@ -1,6 +1,9 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { useState, useEffect, useRef } from 'react';
 import {
   TradePowerLocalizedImage,
   FreeComissionLocalizedImage,
@@ -10,6 +13,41 @@ import OnlineStatus from '@/components/ui/LiveComponent';
 
 export default function PlatformStats() {
   const t = useTranslations('mainPage.platformStats');
+
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Ссылки на части текста
+  const textRef = useRef<HTMLDivElement | null>(null);
+
+  const wordsTitle = t('mission_subtitle').split(' ');
+
+  // Настроим IntersectionObserver для отслеживания видимости
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          } else {
+            setIsVisible(false);
+          }
+        });
+      },
+      { threshold: 0.5 }, // 15% элемента должно быть видно
+    );
+
+    const currentRef = textRef.current;
+
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, []);
 
   return (
     <>
@@ -219,7 +257,7 @@ export default function PlatformStats() {
                     href='https://onelink.to/js2s8h'
                     target='_blank'
                     rel='noopener noreferrer'
-                    className='hidden w-[240px] rounded-full border px-3 py-2 text-center text-primary font-bold leading-[100%] transition hover:bg-[#FD6B06] hover:text-white lg:block'
+                    className='hidden w-[240px] rounded-full border px-3 py-2 text-center text-primary font-bold leading-[100%] transition delay-200 hover:bg-[#FD6B06] hover:text-white lg:block'
                   >
                     {t('advantage_link')}
                   </Link>
@@ -273,7 +311,7 @@ export default function PlatformStats() {
                   href='https://onelink.to/js2s8h'
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='hidden w-[240px] rounded-full border px-3 py-2 text-center text-primary font-bold leading-[100%] transition hover:bg-[#FD6B06] hover:text-white lg:block'
+                  className='hidden w-[240px] rounded-full border px-3 py-2 text-center text-primary font-bold leading-[100%] transition delay-200 hover:bg-[#FD6B06] hover:text-white lg:block'
                 >
                   {t('advantage_link')}
                 </Link>
@@ -289,8 +327,23 @@ export default function PlatformStats() {
           <p className='mb-[15px] w-[250px] text-center font-ibm text-ibm13Leading130 opacity-[33%] xl:mb-[30px] xl:text-ibm16Leading130'>
             {t('mission_title')}
           </p>
-          <h4 className='text-center text-[18px] font-medium leading-[125%] tracking-tight lg:text-[40px] lg:font-bold'>
-            {t('mission_subtitle')}
+          <h4
+            className='text-center text-[18px] font-medium leading-[125%] tracking-tight lg:text-[40px] lg:font-bold'
+            ref={textRef}
+          >
+            {wordsTitle.map((word, index) => (
+              <span
+                key={index}
+                className={`transition-colors duration-300 ${
+                  isVisible ? 'text-black' : 'text-black/30'
+                }`}
+                style={{
+                  transitionDelay: `${index * 0.05}s`, // Задержка для каждого слова
+                }}
+              >
+                {word}{' '}
+              </span>
+            ))}
           </h4>
         </div>
       </section>

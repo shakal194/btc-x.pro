@@ -119,7 +119,7 @@ export default function AboutTokenSection() {
                   href='https://onelink.to/js2s8h'
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='mt-[25px] block w-[250px] rounded-full border px-5 py-3 text-center text-primary font-bold leading-[100%] text-white transition hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white xl:mt-[30px]'
+                  className='mt-[25px] block w-[250px] rounded-full border px-5 py-3 text-center text-primary font-bold leading-[100%] text-white transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white xl:mt-[30px]'
                 >
                   {t('text_link')}
                 </Link>

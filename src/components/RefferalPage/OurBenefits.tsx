@@ -15,7 +15,7 @@ export default function OurBenefitsSection() {
             </h2>
             <div className='flex w-full items-end justify-end md:block'>
               <Image
-                src='/about_us_btcx.png'
+                src='/ref_page_btcx.png'
                 width={140}
                 height={140}
                 alt='Bitcoin coin'

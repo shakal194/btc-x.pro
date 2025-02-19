@@ -5,6 +5,7 @@ import StoreButtons from '@/components/ui/StoreButtons';
 import TradeVolumeTimer from '@/components/ui/TokenTimer';
 import OnlineStatus from '@/components/ui/LiveComponent';
 import SliderAboutUsLaunchToken from '@/components/ui/SliderAboutUsLaunchToken';
+//import SplineCoin3D from '@/components/ui/SplineCoin3D';
 
 export default function LaunchingTokenSection() {
   const t = useTranslations('airdrop.launchingToken');
@@ -50,6 +51,7 @@ export default function LaunchingTokenSection() {
         >
           <TradeVolumeTimer />
         </div>
+        {/*<SplineCoin3D />*/}
         {/*<div className='mb-[100px] text-center'>
           <h2 className='text-[60px] font-bold leading-[110%] tracking-tight lg:text-[145px] xl:text-[220px]'>
             {t('current_data')}
@@ -139,7 +141,7 @@ export default function LaunchingTokenSection() {
                 href='https://onelink.to/js2s8h'
                 target='_blank'
                 rel='noopener noreferrer'
-                className='mt-[30px] block w-full rounded-full border px-5 py-3 text-center text-primary font-bold leading-[110%] transition hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white lg:hidden'
+                className='mt-[30px] block w-full rounded-full border px-5 py-3 text-center text-primary font-bold leading-[110%] transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white lg:hidden'
               >
                 {t('cta_link_text')}
               </Link>
@@ -163,9 +165,7 @@ export default function LaunchingTokenSection() {
             </div>
           </div>
         </div>
-
         <SliderAboutUsLaunchToken />
-
         {/*<div className='relative mx-auto pb-6 text-white before:absolute before:bottom-0 before:left-1/2 before:h-[1px] before:-translate-x-1/2 before:bg-gradient-to-r before:from-[#FE9900] before:via-[#FD6B06] before:to-[#FE9900] xl:before:w-[1440px]'>
           <h1 className='text-center text-font18Leading130 text-white/30 lg:text-font30Leading130'>
             {t('slider_text')}

@@ -19,8 +19,8 @@
       "text_button": "Download the BTC-X app and get access to commission-free trading today."
     },
     "ourPlatform": {
-      "title": "We are a platform for trading and investments without commissions and leverage fees (futures, margin) by spot prices",
-      "subtitle": "of such exchanges as: Binance, OKX, Coinbase"
+      "title": "We are a platform for trading and investments without commissions and leverage fees (futures, margin) by spot prices of such exchanges as: Binance, OKX, Coinbase",
+      "subtitle": ""
     },
     "features": {
       "title": "Trade, invest and earn in one place",
@@ -167,7 +167,12 @@
       "step_3_title": "Share the opportunities",
       "step_3_subtitle": "Share your unique link and code with friends, subscribers and partners and start earning",
       "subtitle_2": "BTC-X shares up to 55% of its revenue with you",
-      "title_2": "The higher the trading volume of your referrals, the more you earn"
+      "title_2": "The higher the trading volume of your referrals, the more you earn",
+      "slider_title_1": "Number of invited users",
+      "bonusPercentage_title": "Bonus percentage",
+      "bonusPercentage": "55%",
+      "slider_title_2": "Trading volume (USD)",
+      "income": "Income"
     },
     "forWho": {
       "title": "Who is our referral program for?",

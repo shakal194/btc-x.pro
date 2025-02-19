@@ -12,7 +12,7 @@ export default function ForWhoSection() {
           <h2 className='mb-6 text-font30Leading110 tracking-tight md:w-[450px] lg:w-[654px] lg:text-font50Leading110'>
             {t('title')}
           </h2>
-          <p className='mb-[10px] w-[155px] font-ibm text-[10px] leading-[130%] opacity-[33%] md:w-[175px] md:w-[250px] md:text-ibm13Leading130 lg:mb-0 lg:text-ibm16Leading130'>
+          <p className='mb-[10px] w-[155px] font-ibm text-[10px] leading-[130%] opacity-[33%] md:w-[175px] md:text-ibm13Leading130 lg:mb-0 lg:text-ibm16Leading130'>
             {t('subtitle')}
           </p>
         </div>
@@ -50,7 +50,7 @@ export default function ForWhoSection() {
                 />
 
                 {/* Текст */}
-                <div className='absolute bottom-0 left-0 w-full px-4 text-white transition-transform duration-300 ease-in-out group-hover:-translate-y-20 lg:bottom-[-50px] lg:text-center'>
+                <div className='group-transition absolute bottom-0 left-0 w-full px-4 text-white transition-transform delay-200 duration-300 ease-in-out hover:-translate-y-20 lg:bottom-[-50px] lg:text-center'>
                   <h4 className='mb-[20px] text-[13px] leading-[120%] md:text-[22px]'>
                     {program.text}
                   </h4>
@@ -61,7 +61,7 @@ export default function ForWhoSection() {
                     href='https://onelink.to/js2s8h'
                     target='_blank'
                     rel='noopener noreferrer'
-                    className='hidden rounded-full border px-5 py-3 text-primary font-bold leading-[110%] transition hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white lg:inline-block'
+                    className='hidden rounded-full border px-5 py-3 text-primary font-bold leading-[110%] transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white lg:inline-block'
                   >
                     {t('text_button')}
                   </Link>
