@@ -53,7 +53,7 @@ export default function HeroRefPage() {
           </h1>
         </div>
         <div className='mt-[62px] lg:w-[435px] xl:mt-[100px]'>
-          <p className='w-[238px] text-[13px] font-semibold leading-[130%] text-white/40 md:w-[338px] md:text-primary lg:w-full lg:max-w-3xl lg:text-white'>
+          <p className='md:text-font18 w-[238px] text-[13px] font-semibold leading-[130%] text-white/40 md:w-[338px] lg:w-full lg:max-w-3xl lg:text-white'>
             {t('text')} <span className='text-white'>{t('text_2')}</span>{' '}
             {t('text_3')}
           </p>

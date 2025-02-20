@@ -46,7 +46,7 @@ export default function OurPlatformSection() {
     <section className='relative z-30 mt-[555px] md:mt-[785px] lg:mt-0 lg:py-[100px]'>
       <div className='container mx-auto px-4 text-center'>
         <p
-          className='flex flex-wrap items-center justify-center whitespace-pre text-primary leading-[125%] tracking-tight transition-colors duration-300 lg:text-[40px]'
+          className='text-font18 flex flex-wrap items-center justify-center whitespace-pre leading-[125%] tracking-tight transition-colors duration-300 lg:text-[40px]'
           ref={textRef}
         >
           {wordsTitle.map((word, index) => (

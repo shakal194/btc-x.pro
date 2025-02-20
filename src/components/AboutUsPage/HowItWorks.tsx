@@ -27,7 +27,7 @@ export default function HowItWorksSection() {
             </h4>
             <div className='my-6 hidden border-t border-black opacity-[33%] xl:block'></div>
             <div className='flex h-full flex-col justify-between'>
-              <h3 className='text-primary font-semibold leading-[120%]'>
+              <h3 className='text-font18 font-semibold leading-[120%]'>
                 {t('trade_example_title')}
               </h3>
               <p className='hidden w-[302px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130 xl:block'>

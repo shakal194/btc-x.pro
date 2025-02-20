@@ -19,7 +19,7 @@ export default function HeroSection() {
               </h1>
               <div className='relative rounded-lg from-[#553300] to-[#FE9900] p-[1px] xl:w-[435px] xl:bg-gradient-to-r'>
                 <div className='rounded-lg py-6 xl:bg-black xl:px-[25px]'>
-                  <p className='text-[13px] font-medium leading-[130%] lg:text-primary lg:font-semibold lg:opacity-100 xl:max-w-3xl'>
+                  <p className='lg:text-font18 text-[13px] font-medium leading-[130%] lg:font-semibold lg:opacity-100 xl:max-w-3xl'>
                     {t('text')}
                   </p>
                   <div className='my-6 hidden border-t opacity-[33%] xl:block'></div>
@@ -36,6 +36,7 @@ export default function HeroSection() {
                 width={670}
                 height={600}
                 className='h-full rounded-3xl object-cover md:hidden'
+                priority={true}
               />
               <Image
                 src='/hero_about_us.png'
@@ -43,6 +44,7 @@ export default function HeroSection() {
                 width={670}
                 height={600}
                 className='hidden w-[670px] rounded-3xl object-cover md:block xl:h-[600px]'
+                priority={true}
               />
             </div>
           </div>
@@ -53,6 +55,7 @@ export default function HeroSection() {
               width={1268}
               height={951}
               className='relative h-full w-[1268px]'
+              priority={true}
             />
           </div>
         </div>

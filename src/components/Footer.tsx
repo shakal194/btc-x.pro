@@ -26,39 +26,46 @@ export default function Footer({ locale }: { locale: string }) {
               {t('footer_mobile_title')}
             </p>
           </Link>
-          <LocaleSwitcher />
+          <div className='md:hidden'>
+            <LocaleSwitcher />
+          </div>
         </div>
         <div className='my-[25px] border-t border-white opacity-[20%] md:hidden'></div>
         {/* Левый блок с ссылками */}
-        <div className='flex flex-col space-y-3 md:flex-row md:items-center md:space-x-6 md:space-y-0 lg:justify-between'>
-          <Link
-            href={`/${locale}/about-us`}
-            className='text-primary leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
-            rel='noopener noreferrer'
-          >
-            {t('aboutus')}
-          </Link>
-          <Link
-            href={`/${locale}/referral`}
-            className='text-primary leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
-            rel='noopener noreferrer'
-          >
-            {t('referral')}
-          </Link>
-          <Link
-            href={`/${locale}/airdrop`}
-            className='text-primary leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
-            rel='noopener noreferrer'
-          >
-            {t('airdrop')}
-          </Link>{' '}
-          <Link
-            href='#'
-            className='text-primary leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
-            rel='noopener noreferrer'
-          >
-            {t('support')}
-          </Link>
+        <div className='flex flex-col space-y-3 md:flex-row md:items-center md:justify-between md:space-x-6 md:space-y-0'>
+          <div className='md:space-x-6 md:space-y-0'>
+            <Link
+              href={`/${locale}/about-us`}
+              className='text-font18 leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
+              rel='noopener noreferrer'
+            >
+              {t('aboutus')}
+            </Link>
+            <Link
+              href={`/${locale}/referral`}
+              className='text-font18 leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
+              rel='noopener noreferrer'
+            >
+              {t('referral')}
+            </Link>
+            <Link
+              href={`/${locale}/airdrop`}
+              className='text-font18 leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
+              rel='noopener noreferrer'
+            >
+              {t('airdrop')}
+            </Link>{' '}
+            <Link
+              href='#'
+              className='text-font18 leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
+              rel='noopener noreferrer'
+            >
+              {t('support')}
+            </Link>
+          </div>
+          <div className='hidden md:block lg:hidden'>
+            <LocaleSwitcher />
+          </div>
         </div>
         <div className='my-[25px] border-t border-white opacity-[20%] lg:hidden'></div>
         {/* Правый блок с кнопками */}
@@ -337,7 +344,7 @@ export default function Footer({ locale }: { locale: string }) {
             />
             <button
               type='submit'
-              className='w-full rounded-full bg-white px-6 py-2 text-primary font-bold text-black transition delay-200 hover:bg-[#FD6B06] transition delay-200 hover:text-white focus:bg-[#FD6B06] focus:text-white focus:outline-none focus:ring sm:w-80 md:w-auto'
+              className='w-full rounded-full bg-white px-6 py-2 text-font18 font-bold text-black transition delay-200 hover:bg-[#FD6B06] transition delay-200 hover:text-white focus:bg-[#FD6B06] focus:text-white focus:outline-none focus:ring sm:w-80 md:w-auto'
             >
               {t('subscribe_button')}
             </button>

@@ -35,13 +35,17 @@ export default function AccordionFaq() {
         return (
           <AccordionItem
             key={item.id}
-            subtitle={item.question}
+            aria-label={item.question}
+            title={item.question}
             textValue={item.question}
-            className='text-font16Leading130 font-bold tracking-tight text-black md:text-font18Leading130 lg:text-font30Leading130'
+            classNames={{
+              title:
+                'text-font16Leading130 font-bold tracking-tight  md:text-font18Leading130 lg:text-font30Leading130',
+              content:
+                'mt-2 text-[12px] leading-[130%] text-black/50 md:text-font16Leading130',
+            }}
           >
-            <p className='mt-2 text-[12px] leading-[130%] text-black/50 md:text-font16Leading130'>
-              {item.answer}
-            </p>
+            {item.answer}
           </AccordionItem>
         );
       })}

@@ -15,6 +15,12 @@ export default function TradeVolumeTimer() {
   const [isStarted, setIsStarted] = useState(false); // Флаг, чтобы начать прокрутку по скроллу
   const [scrollPosition, setScrollPosition] = useState(0); // Позиция прокрутки страницы
 
+  const [isClient, setIsClient] = useState(false); // Добавляем флаг для проверки клиента
+
+  useEffect(() => {
+    setIsClient(true); // Устанавливаем флаг в true, когда компонент монтируется на клиенте
+  }, []);
+
   // Обработчик события прокрутки
   const handleScroll = () => {
     const element = document.getElementById('volume-timer'); // Идентификатор элемента для отслеживания прокрутки
@@ -30,7 +36,8 @@ export default function TradeVolumeTimer() {
 
   // Запускаем таймер с нужным шагом
   useEffect(() => {
-    if (isStarted) {
+    if (isClient && isStarted) {
+      // Проверка, что компонент отрендерен на клиенте
       const startDate = new Date('2024-11-01'); // Начальная дата
 
       const updateVolume = () => {
@@ -74,13 +81,17 @@ export default function TradeVolumeTimer() {
 
       return () => clearInterval(interval); // Очистка интервала при размонтировании компонента
     }
-  }, [isStarted, volume, targetVolume, step]);
+  }, [isClient, isStarted, volume, targetVolume, step]);
 
   // Используем useEffect для отслеживания скроллинга
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    if (isClient) {
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
+  }, [isClient]);
+
+  if (!isClient) return null; // Если компонент еще не отрендерен на клиенте, ничего не рендерим
 
   return <h2>{volume.toLocaleString()}</h2>;
 }

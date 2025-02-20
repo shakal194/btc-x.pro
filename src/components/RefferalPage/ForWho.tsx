@@ -61,7 +61,7 @@ export default function ForWhoSection() {
                     href='https://onelink.to/js2s8h'
                     target='_blank'
                     rel='noopener noreferrer'
-                    className='hidden rounded-full border px-5 py-3 text-primary font-bold leading-[110%] transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white lg:inline-block'
+                    className='text-font18 hidden rounded-full border px-5 py-3 font-bold leading-[110%] transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white lg:inline-block'
                   >
                     {t('text_button')}
                   </Link>

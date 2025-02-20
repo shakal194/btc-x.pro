@@ -29,6 +29,7 @@ export default function HeroSection() {
               width={713}
               height={731}
               className='relative h-full w-[713px] md:hidden md:w-[820px]'
+              priority={true}
             />
             <Image
               src='/hero_airdrop.png'
@@ -36,6 +37,7 @@ export default function HeroSection() {
               width={2550}
               height={1200}
               className='relative hidden h-[1200px] w-[2550px] md:block'
+              priority={true}
             />
           </div>
         </div>

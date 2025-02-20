@@ -67,6 +67,7 @@ export function FreeComissionLocalizedImage() {
         width={630}
         height={290}
         className='w-full'
+        priority={true}
       />
     </div>
   );

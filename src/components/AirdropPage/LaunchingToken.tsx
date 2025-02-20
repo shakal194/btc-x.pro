@@ -17,7 +17,7 @@ export default function LaunchingTokenSection() {
           <p className='mb-[10px] w-[110px] font-ibm text-[10px] text-ibm13Leading130 opacity-[33%] lg:mb-0 lg:w-[180px] lg:text-ibm16Leading130'>
             {t('subtitle')}
           </p>
-          <h2 className='mb-6 w-[294px] text-primary leading-[125%] tracking-tight lg:w-[664px] lg:text-font30Leading110 xl:text-[40px] xl:font-semibold xl:text-white/30'>
+          <h2 className='text-font18 mb-6 w-[294px] leading-[125%] tracking-tight lg:w-[664px] lg:text-font30Leading110 xl:text-[40px] xl:font-semibold xl:text-white/30'>
             {t('title')}{' '}
             <span className='bg-gradient-to-r from-[#FFC996] via-[#FD6B06] to-[#963706] bg-clip-text text-transparent'>
               {t('daily_trading_volume')}
@@ -80,7 +80,7 @@ export default function LaunchingTokenSection() {
             <div className='my-[20px] border-t opacity-[33%] xl:my-[40px]'></div>
             <div className='space-y-6'>
               <div className='mb-5 xl:p-[30px]'>
-                <p className='text-[13px] leading-[130%] text-white/30 xl:text-primary'>
+                <p className='xl:text-font18 text-[13px] leading-[130%] text-white/30'>
                   {t('price_formation_details')}
                 </p>
                 <div className='mt-5 hidden justify-evenly lg:flex'>
@@ -92,7 +92,7 @@ export default function LaunchingTokenSection() {
           {/* Image Section */}
           <div className='relative mb-[90px] h-[500px] lg:h-[700px] xl:mb-[200px]'>
             <div className='absolute left-1/2 top-1 w-full -translate-x-1/2 transform text-center md:w-[407px] xl:top-10'>
-              <h3 className='mb-[4px] text-primary font-semibold leading-[125%] tracking-tight md:text-[20px]'>
+              <h3 className='text-font18 mb-[4px] font-semibold leading-[125%] tracking-tight md:text-[20px]'>
                 {t('airdrop_info_title')}
               </h3>
               <p className='mx-auto w-[274px] text-[13px] leading-[130%] text-white/50 md:text-font16Leading130 lg:w-[407px]'>
@@ -127,7 +127,7 @@ export default function LaunchingTokenSection() {
                 {t('earn_with_us_title')}
               </h3>
               <div className='my-[20px] border-t border-white opacity-[33%] xl:my-[40px]'></div>
-              <p className='text-[13px] leading-[130%] text-white/30 xl:text-primary xl:leading-[120%]'>
+              <p className='xl:text-font18 text-[13px] leading-[130%] text-white/30 xl:leading-[120%]'>
                 {t('earn_with_us_text')}
               </p>
               <Image
@@ -141,7 +141,7 @@ export default function LaunchingTokenSection() {
                 href='https://onelink.to/js2s8h'
                 target='_blank'
                 rel='noopener noreferrer'
-                className='mt-[30px] block w-full rounded-full border px-5 py-3 text-center text-primary font-bold leading-[110%] transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white lg:hidden'
+                className='text-font18 mt-[30px] block w-full rounded-full border px-5 py-3 text-center font-bold leading-[110%] transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white lg:hidden'
               >
                 {t('cta_link_text')}
               </Link>

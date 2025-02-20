@@ -66,7 +66,7 @@ export default function OurBenefitsSection() {
                     <h3 className='mb-[20px] text-font18Leading130 lg:text-font30Leading130'>
                       {program.title}
                     </h3>
-                    <p className='text-[13px] leading-[120%] text-black/50 lg:text-primary'>
+                    <p className='lg:text-font18 text-[13px] leading-[120%] text-black/50'>
                       {program.text}
                     </p>
                   </div>

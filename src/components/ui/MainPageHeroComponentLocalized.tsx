@@ -56,7 +56,7 @@ export default function HeroMainPage() {
         </div>
         <div className='mt-[20px] lg:mt-[186px] lg:w-[435px] lg:rounded-lg lg:bg-gradient-to-r lg:from-[#553300] lg:to-[#FE9900] lg:p-[1px]'>
           <div className='lg:bg-black lg:px-[25px] lg:py-6 xl:rounded-lg'>
-            <p className='my-[25px] text-[13px] font-medium leading-[130%] opacity-[30%] md:text-font16Leading110 lg:mt-0 lg:max-w-3xl lg:text-primary lg:font-semibold lg:opacity-100'>
+            <p className='lg:text-font18 my-[25px] text-[13px] font-medium leading-[130%] opacity-[30%] md:text-font16Leading110 lg:mt-0 lg:max-w-3xl lg:font-semibold lg:opacity-100'>
               {t('text_button')}
             </p>
             <div className='lg:border-t lg:opacity-[33%] xl:my-6'></div>
@@ -78,7 +78,7 @@ export default function HeroMainPage() {
         />
       </div>
       <div
-        className={`pointer-events absolute left-0 top-[50%] z-20 w-screen overflow-hidden sm:-left-[5%] sm:top-12 md:-left-[25%] md:top-[55%] md:w-[1070px] lg:w-full ${topPosition} 2xl:w-full`}
+        className={`pointer-events tablet:-left-[5%] absolute left-0 top-[50%] z-20 w-screen overflow-hidden sm:-left-[5%] sm:top-12 md:-left-[2%] md:top-[55%] lg:w-full ${topPosition} 2xl:w-full`}
       >
         <Image
           src={imageData.src}

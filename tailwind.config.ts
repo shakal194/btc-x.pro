@@ -10,6 +10,9 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        tablet: '820px', // кастомный брейкпоинт для iPad Air
+      },
       animation: {
         'spin-slow': 'spin 5s linear infinite', // медленное вращение за 5 секунд
       },
@@ -20,7 +23,7 @@ export default {
         primary: 'var(--primary)',
       },
       fontSize: {
-        primary: '18px',
+        font18: '18px',
         font50Leading110: [
           '50px',
           { lineHeight: '110%', fontWeight: '600', letterSpacing: '-0.02em' },

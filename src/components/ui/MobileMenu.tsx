@@ -70,7 +70,7 @@ export default function MobileMenu({ locale }: { locale: string }) {
                             className='h-[26px] w-[17px] cursor-pointer object-contain lg:h-[45px] lg:w-[30px]'
                           />
 
-                          <p className='ml-[5px] text-primary font-semibold leading-[120%] lg:hidden'>
+                          <p className='text-font18 ml-[5px] font-semibold leading-[120%] lg:hidden'>
                             BTC-X
                           </p>
                         </Link>

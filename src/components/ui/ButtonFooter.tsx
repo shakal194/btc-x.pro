@@ -26,7 +26,7 @@ export default function ButtonFooter() {
           </p>
         </div>
 
-        <p className='delay-200group-transition group-transition rounded-full bg-[#FE9900] px-[12px] py-[8px] text-[16px] font-semibold leading-[100%] text-black transition delay-200 hover:bg-[#FD6B06] hover:text-white group-focus:bg-[#FD6B06] group-focus:text-white lg:px-5 lg:py-3 lg:text-primary lg:leading-[130%]'>
+        <p className='delay-200group-transition group-transition lg:text-font18 rounded-full bg-[#FE9900] px-[12px] py-[8px] text-[16px] font-semibold leading-[100%] text-black transition delay-200 hover:bg-[#FD6B06] hover:text-white group-focus:bg-[#FD6B06] group-focus:text-white lg:px-5 lg:py-3 lg:leading-[130%]'>
           {t('description')}
         </p>
       </Link>

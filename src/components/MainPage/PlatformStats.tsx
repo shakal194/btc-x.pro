@@ -180,7 +180,7 @@ export default function PlatformStats() {
                   </p>
                 </div>
                 <div className='flex flex-col justify-between gap-2 md:flex-row md:gap-4 lg:gap-8'>
-                  <div className='flex flex-col items-start gap-2 text-[13px] leading-[100%] lg:leading-[120%] xl:text-primary'>
+                  <div className='xl:text-font18 flex flex-col items-start gap-2 text-[13px] leading-[100%] lg:leading-[120%]'>
                     <div className='flex items-center'>
                       <Image
                         src='/arrows.png'
@@ -206,7 +206,7 @@ export default function PlatformStats() {
                       />
                     </div>
                   </div>
-                  <div className='grid grid-rows-2 items-start gap-2 text-[13px] leading-[100%] lg:leading-[120%] xl:text-primary'>
+                  <div className='xl:text-font18 grid grid-rows-2 items-start gap-2 text-[13px] leading-[100%] lg:leading-[120%]'>
                     <div className='rounded-full border px-3 py-2 text-center'>
                       <p>{t('advantage_1_subtitle_3')}</p>
                     </div>
@@ -215,7 +215,7 @@ export default function PlatformStats() {
                     </div>
                   </div>
                 </div>
-                <p className='text-primary font-medium leading-[120%]'>
+                <p className='text-font18 font-medium leading-[120%]'>
                   {t('advantage_1_subtitle_5')}
                 </p>
               </div>
@@ -243,10 +243,10 @@ export default function PlatformStats() {
                 </div>
                 <div className='flex h-full flex-col justify-between'>
                   <div className='space-y-4'>
-                    <p className='text-primary font-medium leading-[120%]'>
+                    <p className='text-font18 font-medium leading-[120%]'>
                       {t('advantage_2_subtitle')}
                     </p>
-                    <p className='text-primary font-medium leading-[120%]'>
+                    <p className='text-font18 font-medium leading-[120%]'>
                       {t('advantage_2_subtitle_2')}{' '}
                       <span className='text-[#FE9900]'>
                         {t('advantage_2_subtitle_3')}
@@ -257,7 +257,7 @@ export default function PlatformStats() {
                     href='https://onelink.to/js2s8h'
                     target='_blank'
                     rel='noopener noreferrer'
-                    className='hidden w-[240px] rounded-full border px-3 py-2 text-center text-primary font-bold leading-[100%] transition delay-200 hover:bg-[#FD6B06] hover:text-white lg:block'
+                    className='text-font18 hidden w-[240px] rounded-full border px-3 py-2 text-center font-bold leading-[100%] transition delay-200 hover:bg-[#FD6B06] hover:text-white lg:block'
                   >
                     {t('advantage_link')}
                   </Link>
@@ -293,14 +293,14 @@ export default function PlatformStats() {
                     {t('advantage_3_number')}
                   </p>
                 </div>
-                <p className='text-primary font-medium leading-[120%]'>
+                <p className='text-font18 font-medium leading-[120%]'>
                   {t('advantage_3_subtitle')}{' '}
                   <span className='text-[#FE9900]'>
                     {t('advantage_3_subtitle_2')}
                   </span>{' '}
                   {t('advantage_3_subtitle_3')}
                 </p>
-                <p className='text-primary font-medium leading-[120%]'>
+                <p className='text-font18 font-medium leading-[120%]'>
                   {t('advantage_3_subtitle_4')}{' '}
                   <span className='text-[#FE9900]'>
                     {t('advantage_3_subtitle_5')}
@@ -311,7 +311,7 @@ export default function PlatformStats() {
                   href='https://onelink.to/js2s8h'
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='hidden w-[240px] rounded-full border px-3 py-2 text-center text-primary font-bold leading-[100%] transition delay-200 hover:bg-[#FD6B06] hover:text-white lg:block'
+                  className='text-font18 hidden w-[240px] rounded-full border px-3 py-2 text-center font-bold leading-[100%] transition delay-200 hover:bg-[#FD6B06] hover:text-white lg:block'
                 >
                   {t('advantage_link')}
                 </Link>
