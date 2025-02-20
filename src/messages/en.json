@@ -12,11 +12,14 @@
     "support": "Support",
     "app": "Go to App"
   },
+  "mobileMenu": {
+    "title": "Trade, invest and earn in one place"
+  },
   "mainPage": {
     "hero": {
       "title": "TRADE COMISSION-FREE THROUGHOUT THE",
       "subtitle": "YEAR 2025",
-      "text_button": "Download the BTC-X app and get access to commission-free trading today."
+      "text_button": "Download the BTC-X app and get access to commission-free trading today"
     },
     "ourPlatform": {
       "title": "We are a platform for trading and investments without commissions and leverage fees (futures, margin) by spot prices of such exchanges as: Binance, OKX, Coinbase",
@@ -357,7 +360,7 @@
     "hero_subtitle": "We help beginners",
     "hero_subtitle2": "start trading with minimal risk",
     "hero_subtitle3": "and have created a special promo event. Complete all the tasks, and you’ll receive a reward of",
-    "hero_subtitle4": "100 USDT credited to your account.",
+    "hero_subtitle4": "50 USDT credited to your account.",
     "hero_subtitle5": "These funds cannot be withdrawn, but you can trade with them and withdraw any profit you make.",
     "form_label_1": "Install app and register BTC-X.pro:",
     "form_label_2": "Subscribe to YouTube:",
@@ -381,7 +384,7 @@
     "terms_conent1": "There is no time limit for completing the tasks.",
     "terms_conent2": "Tasks can only be completed once.",
     "terms_conent3": "The reward cannot be withdrawn, but you can trade with it and withdraw all the profit you earn.",
-    "terms_conent4": "Example: You earn 100 USDT after completing the tasks. You place a trade with 100 USDT and make a 20% profit. Your balance will be 120 USDT, and you can withdraw 20 USDT as profit.",
+    "terms_conent4": "Example: You earn 50 USDT after completing the tasks. You place a trade with 50 USDT and make a 20% profit. Your balance will be 60 USDT, and you can withdraw 10 USDT as profit.",
     "terms_conent5": "Winners will be notified of their rewards via email. The reward will be credited to your BTC-X.pro account within five (5) days of submission.",
     "terms_conent6": "BTC-X.pro reserves, the right to disqualify participants engaging in dishonest activities during the event, including mass account registrations to claim additional bonuses or any other fraudulent actions.",
     "terms_conent7": "BTC-X.pro reserves the right to make the final interpretation of the event’s terms.",

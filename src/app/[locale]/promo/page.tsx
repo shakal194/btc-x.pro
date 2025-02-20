@@ -17,7 +17,7 @@ export default function Promo() {
             <div className='w-full lg:w-1/2'>
               <h1 className='mb-4 text-2xl text-font18Leading130 lg:mb-[20px] lg:text-font30Leading130'>
                 {t('hero_title')}{' '}
-                <span className='text-[#FE9900]'>100 USDT</span>
+                <span className='text-[#FE9900]'>50 USDT</span>
               </h1>
               <p>
                 {t('hero_subtitle')}{' '}

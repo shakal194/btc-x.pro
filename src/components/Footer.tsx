@@ -33,7 +33,7 @@ export default function Footer({ locale }: { locale: string }) {
         <div className='my-[25px] border-t border-white opacity-[20%] md:hidden'></div>
         {/* Левый блок с ссылками */}
         <div className='flex flex-col space-y-3 md:flex-row md:items-center md:justify-between md:space-x-6 md:space-y-0'>
-          <div className='md:space-x-6 md:space-y-0'>
+          <div className='flex flex-col md:flex-row md:space-x-6 md:space-y-0'>
             <Link
               href={`/${locale}/about-us`}
               className='text-font18 leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'

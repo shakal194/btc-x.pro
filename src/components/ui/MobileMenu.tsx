@@ -17,6 +17,7 @@ export default function MobileMenu({ locale }: { locale: string }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const t = useTranslations('header');
   const t_social = useTranslations('footer');
+  const t_mobileMenu = useTranslations('mobileMenu');
 
   return (
     <>
@@ -70,7 +71,7 @@ export default function MobileMenu({ locale }: { locale: string }) {
                             className='h-[26px] w-[17px] cursor-pointer object-contain lg:h-[45px] lg:w-[30px]'
                           />
 
-                          <p className='text-font18 ml-[5px] font-semibold leading-[120%] lg:hidden'>
+                          <p className='ml-[5px] text-font18 font-semibold leading-[120%] lg:hidden'>
                             BTC-X
                           </p>
                         </Link>
@@ -139,6 +140,15 @@ export default function MobileMenu({ locale }: { locale: string }) {
                     rel='noopener noreferrer'
                   >
                     {t('support')}
+                  </Link>
+                  <Link
+                    href={`/${locale}/promo`}
+                    onClick={onClose}
+                    //href='/referral'
+                    className='text-[22px] font-semibold leading-[120%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
+                    rel='noopener noreferrer'
+                  >
+                    {t('promo')}
                   </Link>
                 </nav>
                 <div>
@@ -249,7 +259,7 @@ export default function MobileMenu({ locale }: { locale: string }) {
                     <div className='my-[20px] border-t lg:opacity-[33%]'></div>
                   </div>
                   <h3 className='text-font30Leading110'>
-                    Торгуй, інвестуй і заробляй в одному місці
+                    {t_mobileMenu('title')}
                   </h3>
                 </div>
               </ModalBody>
