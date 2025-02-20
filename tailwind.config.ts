@@ -10,6 +10,9 @@ export default {
   ],
   theme: {
     extend: {
+      animation: {
+        'spin-slow': 'spin 5s linear infinite', // медленное вращение за 5 секунд
+      },
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',

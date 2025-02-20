@@ -11,7 +11,7 @@ export default function ButtonFooter() {
         href='https://onelink.to/js2s8h'
         target='_blank'
         rel='noopener noreferrer'
-        className='group sticky bottom-0 left-1/2 z-50 flex w-[210px] -translate-x-1/2 items-center justify-between rounded-full bg-[#1F1F1F] p-[7px] md:w-[263px] lg:w-[394px] lg:p-[10px]'
+        className='group sticky bottom-4 left-1/2 z-50 flex w-[210px] -translate-x-1/2 items-center justify-between rounded-full bg-[#1F1F1F] p-[7px] md:w-[263px] lg:w-[394px] lg:p-[10px]'
       >
         <div className='ml-[13px] flex items-center lg:ml-[23px]'>
           <Image

@@ -35,14 +35,14 @@ export default function FeaturesSection() {
                 alt='Crypto'
                 width={480}
                 height={480}
-                className='hidden w-[480px] overflow-auto lg:block'
+                className='animate-spin-slow hidden w-[480px] overflow-auto lg:block'
               />
               <Image
                 src='/features_crypto_mobile.png'
                 alt='Crypto'
-                width={300}
-                height={325}
-                className='absolute bottom-0 h-full w-full min-w-full object-cover lg:hidden'
+                width={403}
+                height={406}
+                className='animate-spin-slow absolute h-full w-full min-w-full object-cover lg:hidden'
               />
             </div>
           </div>

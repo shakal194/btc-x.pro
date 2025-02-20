@@ -92,7 +92,7 @@ export default function FiveSteps() {
             </div>
           </div>
           {/* Image Section */}
-          <div className='relative xl:h-[700px]'>
+          <div className='relative xl:sticky xl:top-4 xl:h-[635px] 2xl:h-[700px]'>
             {/* Фоновое изображение */}
             <Image
               src='/client.png'
@@ -104,7 +104,7 @@ export default function FiveSteps() {
 
             {/* Отзыв */}
 
-            <blockquote className='absolute bottom-[10px] left-1/2 w-[90%] -translate-x-1/2 transform rounded-3xl pb-[15px] pl-[11px] shadow-lg backdrop-blur-lg xl:bottom-0 xl:pb-[27px] xl:pl-[40px]'>
+            <blockquote className='absolute bottom-[10px] left-1/2 w-[90%] -translate-x-1/2 transform rounded-3xl pb-[15px] pl-[11px] shadow-lg backdrop-blur-lg xl:bottom-4 xl:pb-[27px] xl:pl-[40px]'>
               <Image
                 src='/quote.svg'
                 alt='quote'

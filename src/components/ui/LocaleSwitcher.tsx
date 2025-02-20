@@ -8,16 +8,27 @@ import { i18n } from '@/i18n.config';
 
 export default function LocaleSwitcher() {
   const [isOpen, setIsOpen] = useState(false);
+  const [currentLocale, setCurrentLocale] = useState<string>(
+    i18n.defaultLocale,
+  );
   const pathName = usePathname();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const getNextLocale = () => {
-    const cookies = document.cookie.split('; ');
-    const nextLocale = cookies.find((cookie) =>
-      cookie.startsWith('NEXT_LOCALE='),
-    );
-    return nextLocale ? nextLocale.split('=')[1] : i18n.defaultLocale;
+    if (typeof window !== 'undefined') {
+      const cookies = document.cookie.split('; ');
+      const nextLocale = cookies.find((cookie) =>
+        cookie.startsWith('NEXT_LOCALE='),
+      );
+      return nextLocale ? nextLocale.split('=')[1] : i18n.defaultLocale;
+    }
+    return i18n.defaultLocale; // Если выполняется на сервере
   };
+
+  // Обновляем состояние локали при монтировании компонента
+  useEffect(() => {
+    setCurrentLocale(getNextLocale());
+  }, []);
 
   const redirectedPathName = (locale: string) => {
     if (!pathName) return '/';
@@ -60,7 +71,7 @@ export default function LocaleSwitcher() {
   return (
     <div className='relative' ref={dropdownRef}>
       <button onClick={toggleDropdown} className='flex items-center p-2'>
-        <span>{getNextLocale().toUpperCase()}</span>
+        <span>{currentLocale.toUpperCase()}</span>
         <svg
           className={`ml-2 h-4 w-4 transform ${isOpen ? 'rotate-180' : ''}`}
           xmlns='http://www.w3.org/2000/svg'
