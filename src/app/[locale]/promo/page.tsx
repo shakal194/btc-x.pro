@@ -29,7 +29,7 @@ export default function Promo() {
             </div>
             <div>
               <Image
-                src='/promo1.png'
+                src='/promo_50usdt.png'
                 alt='Promo 1'
                 width={630}
                 height={284}
