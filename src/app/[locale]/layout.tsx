@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import Header from '@/components/Header';
 import FooterSection from '@/components/Footer';
+import LiveChat from '@/components/ui/LiveChat';
 import { Manrope } from 'next/font/google';
 import ButtonFooter from '@/components/ui/ButtonFooter';
 
@@ -36,6 +37,7 @@ export default async function RootLayout({
             {children}
             <FooterSection locale={locale} />
             <ButtonFooter />
+            <LiveChat />
           </NextUIProviders>
         </NextIntlClientProvider>
       </body>

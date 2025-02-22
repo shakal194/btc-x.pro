@@ -23,7 +23,7 @@ export default function Promo() {
                 {t('hero_subtitle')}{' '}
                 <span className='text-[#FE9900]'>{t('hero_subtitle2')}</span>{' '}
                 {t('hero_subtitle3')}{' '}
-                <span className='text-[#FE9900]'>{t('hero_subtitle4')}</span>
+                <span className='text-[#FE9900]'>{t('hero_subtitle4')}</span>{' '}
                 {t('hero_subtitle5')}
               </p>
             </div>

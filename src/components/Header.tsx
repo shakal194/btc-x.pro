@@ -53,7 +53,7 @@ export default function Header({ locale }: { locale: string }) {
                 className='h-[26px] w-[17px] cursor-pointer object-contain lg:h-[45px] lg:w-[30px]'
               />
 
-              <p className='text-font18 ml-[5px] font-semibold leading-[120%] lg:hidden'>
+              <p className='ml-[5px] text-font18 font-semibold leading-[120%] lg:hidden'>
                 BTC-X
               </p>
             </Link>
@@ -70,7 +70,7 @@ export default function Header({ locale }: { locale: string }) {
               {t('promo')}
             </Link>
             <Link
-              href='#'
+              href={`/${locale}/support`}
               className='text-font18 leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
             >
               {t('support')}
@@ -80,7 +80,7 @@ export default function Header({ locale }: { locale: string }) {
               href='https://onelink.to/js2s8h'
               target='_blank'
               rel='noopener noreferrer'
-              className='text-font18 rounded-full border px-5 py-3 font-bold leading-[110%] transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white'
+              className='rounded-full border px-5 py-3 text-font18 font-bold leading-[110%] transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white'
             >
               {t('app')}
             </Link>
