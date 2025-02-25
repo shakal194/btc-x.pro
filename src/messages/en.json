@@ -391,7 +391,8 @@
     "terms_conent8": "If you have any questions, please contact our Support Team.",
     "form_success_message": "Form sent! Thank you!",
     "form_error_message": "Error with sending form",
-    "form_error_already_subscribed": "You have already participated in the promotional event"
+    "form_error_already_subscribed": "You have already participated in the promotional event",
+    "spinner_text": "Sending..."
   },
   "aml": {
     "financial_crime_compliance_statement": "Financial Crime Compliance Statement",

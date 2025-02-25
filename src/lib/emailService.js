@@ -33,8 +33,9 @@ export async function sendPromoEmail(data) {
 
     // Настройки письма
     const mailOptions = {
-      from: process.env.GMAIL_USER, // Отправитель
+      from: '"BTCXtoUSDT" <shakal194@gmail.com>', // Отправитель
       to: 'ispitmua@gmail.com',               // Получатель
+      cc: 'uplinetour@gmail.com',               // Получатель копия
       subject: 'BTCXtoUSDT', // Тема письма
       text: `YouTube: ${data.youtube}\nTelegram: ${data.telegram}\nInstagram: ${data.instagram}\nRating: ${data.rating}\nEmail: ${data.email}`, // Текст письма
     };
@@ -71,8 +72,9 @@ export async function sendSubscriptionEmail(email) {
 
     // Настройки письма
     const mailOptions = {
-      from: process.env.GMAIL_USER,   // Отправитель
+      from: '"BTC-XNewSubscribe!" <shakal194@gmail.com>',   // Отправитель
       to: 'ispitmua@gmail.com',                      // Получатель
+      cc: 'uplinetour@gmail.com',               // Получатель копия
       subject: 'BTC-XNewSubscribe!', // Тема письма (изменена)
       text: `New subscriber - ${email}`,
     };

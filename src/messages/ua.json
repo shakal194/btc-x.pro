@@ -648,7 +648,8 @@
     "terms_conent8": "Якщо у вас залишилися питання, звертайтеся до нашої Служби підтримки.",
     "form_success_message": "Форма відправлена. Дякуємо Вам!",
     "form_error_message": "Помилка під час відправки форми",
-    "form_error_already_subscribed": "Ви вже прийняли учать у промо-івенті"
+    "form_error_already_subscribed": "Ви вже прийняли учать у промо-івенті",
+    "spinner_text": "Відправляємо..."
   },
   "footer": {
     "footer_mobile_title": "BTC-X платформа для торгівлі без комісії",

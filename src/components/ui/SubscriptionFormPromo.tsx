@@ -5,6 +5,7 @@ import Notiflix from 'notiflix';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import StoreButtons from '@/components/ui/StoreButtons';
+import FullScreenSpinner from '@/components/ui/Spinner';
 
 export default function SubscriptionFormPromo() {
   const t = useTranslations('promo');
@@ -87,6 +88,7 @@ export default function SubscriptionFormPromo() {
       <div className='grid grid-cols-1 gap-2 md:gap-4 lg:gap-8'>
         {/* Левая колонка - нумерация и текст */}
         <div className='grid gap-8'>
+          {isSubmitting && <FullScreenSpinner />}
           <div className='grid grid-cols-1 items-center gap-2 md:gap-4 xl:grid-cols-2'>
             <div className='grid grid-cols-7 items-center gap-2 md:flex md:gap-4 lg:gap-8 xl:grid xl:grid-cols-8'>
               <div className='flex h-[40px] w-[40px] items-center justify-center rounded-full border border-white/30 lg:h-[65px] lg:w-[65px]'>

@@ -5,7 +5,7 @@
 :root {
   --heroui-background: #000000;
   --background: #000000;
-  --foreground: #171717;
+  --foreground: #ffffff;
   --danger: #FE9900;
   --primary: "#000000";
 }
@@ -14,7 +14,7 @@
   :root {
     --primary: "#000000";
     --background: #000000;
-    --foreground: #171717;
+    --foreground: #ffffff;
   }
 }
 
