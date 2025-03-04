@@ -74,7 +74,7 @@ export default function SignForm() {
       <div className='flex-1 text-foreground'>
         <h1 className='mb-3 text-2xl'>{t('title')}</h1>
         {step === 1 && (
-          <div className=''>
+          <div className='w-[300px]'>
             <div className='mt-4'>
               <label
                 className='mb-3 mt-5 block text-xs font-medium text-foreground'
@@ -84,7 +84,7 @@ export default function SignForm() {
               </label>
               <div className='relative'>
                 <input
-                  className='!inherit peer block w-[300px] rounded-md border border-gray-200 bg-primary py-[9px] pl-10 text-sm outline-2 placeholder:text-primary'
+                  className='peer block w-full rounded-md border border-gray-200 bg-primary py-[9px] pl-10 text-sm outline-2 placeholder:text-primary'
                   id='email'
                   type='email'
                   name='email'
@@ -121,7 +121,7 @@ export default function SignForm() {
         )}
         {step === 2 && (
           <>
-            <div>
+            <div className='w-[300px]'>
               <div className='mt-4'>
                 <label
                   className='mb-3 mt-5 block text-xs font-medium text-foreground'
@@ -131,7 +131,7 @@ export default function SignForm() {
                 </label>
                 <div className='relative mb-4'>
                   <input
-                    className='peer block w-[300px] rounded-md border border-gray-200 bg-primary py-[9px] pl-10 text-sm outline-2 placeholder:text-primary'
+                    className='peer block w-full rounded-md border border-gray-200 bg-primary py-[9px] pl-10 text-sm outline-2 placeholder:text-primary'
                     id='email'
                     type='email'
                     name='email'
@@ -153,7 +153,7 @@ export default function SignForm() {
                 </label>
                 <div className='relative'>
                   <input
-                    className='peer block w-[300px] rounded-md border border-gray-200 bg-primary py-[9px] pl-10 text-sm outline-2 placeholder:text-primary'
+                    className='peer block w-full rounded-md border border-gray-200 bg-primary py-[9px] pl-10 text-sm outline-2 placeholder:text-primary'
                     id='otpcode'
                     type='text'
                     name='otpcode'
@@ -172,7 +172,7 @@ export default function SignForm() {
                 </label>
                 <div className='relative'>
                   <input
-                    className='peer block w-[300px] rounded-md border border-gray-200 bg-primary py-[9px] pl-10 text-sm outline-2 placeholder:text-primary'
+                    className='peer block w-full rounded-md border border-gray-200 bg-primary py-[9px] pl-10 text-sm outline-2 placeholder:text-primary'
                     id='password'
                     type={passwordVisible ? 'text' : 'password'}
                     name='password'
