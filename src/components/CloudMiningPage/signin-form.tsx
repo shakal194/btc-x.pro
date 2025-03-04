@@ -110,7 +110,7 @@ export default function SignForm() {
             </div>
             <Button
               type='submit'
-              className='mt-4 w-full'
+              className='mt-4 w-[300px]'
               onClick={handleSubmitStep1}
             >
               {t('continue')}
@@ -227,7 +227,7 @@ export default function SignForm() {
               </div>
             </div>
             <Button
-              className='mt-4 w-full'
+              className='mt-4 w-[300px]'
               type='submit'
               onClick={handleSubmitStep2}
             >
