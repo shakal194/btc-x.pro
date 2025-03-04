@@ -22,6 +22,7 @@ const publicPages = [
   '/minimum-deposits-withdrawals',
   '/terms',
   '/privacy',
+  '/aml',
 ];
 
 const authPages = ['/cloud-mining/signin'];

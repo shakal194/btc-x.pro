@@ -282,7 +282,7 @@ export default function Footer({ locale }: { locale: string }) {
               <ul className='space-y-2'>
                 <li>
                   <Link
-                    href='#'
+                    href={`/${locale}/terms`}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='text-font16Leading130 opacity-[33%] transition delay-200 hover:text-[#FD6B06] hover:opacity-100 focus:text-[#FD6B06] focus:opacity-100'
@@ -292,7 +292,7 @@ export default function Footer({ locale }: { locale: string }) {
                 </li>
                 <li>
                   <Link
-                    href='#'
+                    href={`/${locale}/privacy`}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='text-font16Leading130 opacity-[33%] transition delay-200 hover:text-[#FD6B06] hover:opacity-100 focus:text-[#FD6B06] focus:opacity-100'
@@ -302,7 +302,7 @@ export default function Footer({ locale }: { locale: string }) {
                 </li>
                 <li>
                   <Link
-                    href='#'
+                    href={`/${locale}/aml`}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='text-font16Leading130 opacity-[33%] transition delay-200 hover:text-[#FD6B06] hover:opacity-100 focus:text-[#FD6B06] focus:opacity-100'
