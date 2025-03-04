@@ -70,6 +70,12 @@ export default function Header({ locale }: { locale: string }) {
               {t('promo')}
             </Link>
             <Link
+              href={`/${locale}/cloud-mining`}
+              className='text-font18 leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
+            >
+              {t('cloudMining')}
+            </Link>
+            <Link
               href={`/${locale}/support`}
               className='text-font18 leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
             >

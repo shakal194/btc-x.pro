@@ -150,6 +150,15 @@ export default function MobileMenu({ locale }: { locale: string }) {
                   >
                     {t('promo')}
                   </Link>
+                  <Link
+                    href={`/${locale}/cloud-mining`}
+                    onClick={onClose}
+                    //href='/referral'
+                    className='text-[22px] font-semibold leading-[120%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
+                    rel='noopener noreferrer'
+                  >
+                    {t('cloudMining')}
+                  </Link>
                 </nav>
                 <div>
                   <div>

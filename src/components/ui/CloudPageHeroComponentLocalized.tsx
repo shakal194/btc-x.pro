@@ -1,10 +1,10 @@
 import Image from 'next/image';
 import { useTranslations, useLocale } from 'next-intl';
+import Link from 'next/link';
 import { i18n, Locale } from '@/i18n.config_work';
-import StoreButtons from '@/components/ui/StoreButtons';
 
-export default function HeroRefPage() {
-  const t = useTranslations('referralPage.hero');
+export default function HeroCloudPage() {
+  const t = useTranslations('cloudMiningPage.hero');
   const localeFromHook = useLocale();
   const currentLocale: Locale = i18n.locales.includes(localeFromHook as Locale)
     ? (localeFromHook as Locale)
@@ -42,7 +42,7 @@ export default function HeroRefPage() {
 
   return (
     <div className='flex'>
-      <div className='z-20'>
+      <div className='relative z-20 mb-[150px]'>
         <div className={` ${containerWidth}`}>
           <h1 className='text-font30Leading110 lg:text-font50Leading110 xl:text-font70Leading110'>
             {t('title')}{' '}
@@ -52,15 +52,13 @@ export default function HeroRefPage() {
             {t('subtitle_2')}
           </h1>
         </div>
-        <div className='mt-[62px] lg:w-[435px] xl:mt-[100px]'>
-          <p className='w-[238px] text-[13px] font-semibold leading-[130%] text-white/40 md:w-[338px] md:text-font18 lg:w-full lg:max-w-3xl lg:text-white'>
-            {t('text')} <span className='text-white'>{t('text_2')}</span>{' '}
-            {t('text_3')}
-          </p>
-          <div className='my-6 hidden border-t opacity-[33%] lg:block'></div>
-          <div className='mt-[20px] grid grid-cols-2 gap-2 md:gap-4 lg:mt-0 lg:gap-8'>
-            <StoreButtons theme='dark' />
-          </div>
+        <div className='mt-[20px]'>
+          <Link
+            href='/cloud-mining/signin'
+            className='block w-full rounded-full border px-5 py-3 text-center text-font18 font-bold leading-[110%] transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white sm:w-[250px]'
+          >
+            {t('loginButton')}
+          </Link>
         </div>
       </div>
       <div

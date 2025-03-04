@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useTranslations, useLocale } from 'next-intl';
-import { i18n, Locale } from '@/i18n.config';
+import { i18n, Locale } from '@/i18n.config_work';
 import StoreButtons from '@/components/ui/StoreButtons';
 
 export default function HeroMainPage() {

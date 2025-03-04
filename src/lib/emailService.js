@@ -1,23 +1,3 @@
-/*import emailjs from 'emailjs-com';
-
-export const sendEmail = async (data) => {
-  try {
-    const result = await emailjs.send(
-      'service_9b67mnb',
-      'template_zj7igvd1',
-      data,
-      'ERgYQ6pRerUh47zDO',
-    );
-
-      console.log('Success sending email:', result);
-    return { success: true, result };
-  } catch (error) {
-    console.error('Error sending email:', error);
-    return { success: false, error };
-  }
-};
-*/
-
 import nodemailer from 'nodemailer';
 
 export async function sendPromoEmail(data) {

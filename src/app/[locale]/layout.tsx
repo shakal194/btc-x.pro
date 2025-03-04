@@ -3,6 +3,7 @@ import './globals.css';
 import { NextUIProviders } from './providers';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
+import { SessionProvider } from 'next-auth/react';
 import Header from '@/components/Header';
 import FooterSection from '@/components/Footer';
 import LiveChat from '@/components/ui/LiveChat';
@@ -33,9 +34,11 @@ export default async function RootLayout({
       <body className={`overflow-x-hidden ${manrope.className}`}>
         <NextIntlClientProvider messages={messages}>
           <NextUIProviders>
-            <Header locale={locale} />
-            {children}
-            <FooterSection locale={locale} />
+            <SessionProvider>
+              <Header locale={locale} />
+              {children}
+              <FooterSection locale={locale} />
+            </SessionProvider>
             <ButtonFooter />
             <LiveChat />
           </NextUIProviders>
