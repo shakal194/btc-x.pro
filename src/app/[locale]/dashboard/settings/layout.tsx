@@ -1,8 +1,5 @@
-import { generateMetadata } from '@/lib/MetaData';
 import SideNav from '@/components/DashboardPage/sidenav';
 import FooterSection from '@/components/Footer';
-
-export { generateMetadata };
 
 export default async function Layout({
   children,

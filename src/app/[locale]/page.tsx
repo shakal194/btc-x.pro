@@ -10,14 +10,16 @@ import SixSteps from '@/components/MainPage/SixSteps';
 import AboutUs from '@/components/MainPage/AboutUs';
 import FAQ from '@/components/MainPage/FAQ';
 
-export default async function Home({ params }: { params: { locale: string } }) {
+type Params = Promise<{ locale: string }>;
+
+export default async function Home({ params }: { params: Params }) {
   const { locale } = await params;
 
   const messages = await getMessages({ locale });
 
   return (
     <>
-      <Header locale={locale} />
+      <Header />
       <main className='bg-black text-white'>
         <HeroSection />
         <OurPlatformSection />
@@ -28,7 +30,7 @@ export default async function Home({ params }: { params: { locale: string } }) {
         <FAQ />
       </main>
       <ButtonFooter />
-      <FooterSection locale={locale} />
+      <FooterSection />
     </>
   );
 }
