@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import NavLinks from '@/components/CloudMiningPage/nav-links';
+import NavLinks from '@/components/DashboardPage/nav-links';
 import { PowerIcon } from '@heroicons/react/24/outline';
 import { signOut } from '@/auth';
 import { useTranslations } from 'next-intl';
@@ -8,7 +8,7 @@ export default function SideNav() {
   const t = useTranslations('cloudMiningPage.dashboard.nav');
 
   return (
-    <div className='flex h-full flex-col px-3 py-4 md:px-2'>
+    <div className='flex flex-col px-3 py-4 md:px-2'>
       <div className='flex grow flex-row items-center justify-between space-x-2 md:flex-col md:items-stretch md:space-x-0 md:space-y-2 md:overflow-y-auto'>
         <NavLinks />
         <div className='md:flex md:grow md:flex-col md:justify-end'>

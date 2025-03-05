@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import SubscriptionFormFooter from '@/components/ui/SubscriptionFormFooter';
 import LocaleSwitcher from '@/components/ui/LocaleSwitcher';
 
-export default function Footer({ locale }: { locale: string }) {
+export default function Footer() {
   const t = useTranslations('footer');
 
   return (
@@ -35,21 +35,21 @@ export default function Footer({ locale }: { locale: string }) {
         <div className='flex flex-col space-y-3 md:flex-row md:items-center md:justify-between md:space-x-6 md:space-y-0'>
           <div className='flex flex-col md:flex-row md:space-x-6 md:space-y-0'>
             <Link
-              href={`/${locale}/about-us`}
+              href={`/about-us`}
               className='text-font18 leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
               rel='noopener noreferrer'
             >
               {t('aboutus')}
             </Link>
             <Link
-              href={`/${locale}/referral`}
+              href={`/referral`}
               className='text-font18 leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
               rel='noopener noreferrer'
             >
               {t('referral')}
             </Link>
             <Link
-              href={`/${locale}/airdrop`}
+              href={`/airdrop`}
               className='text-font18 leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
               rel='noopener noreferrer'
             >
@@ -282,7 +282,7 @@ export default function Footer({ locale }: { locale: string }) {
               <ul className='space-y-2'>
                 <li>
                   <Link
-                    href={`/${locale}/terms`}
+                    href={`/terms`}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='text-font16Leading130 opacity-[33%] transition delay-200 hover:text-[#FD6B06] hover:opacity-100 focus:text-[#FD6B06] focus:opacity-100'
@@ -292,7 +292,7 @@ export default function Footer({ locale }: { locale: string }) {
                 </li>
                 <li>
                   <Link
-                    href={`/${locale}/privacy`}
+                    href={`/privacy`}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='text-font16Leading130 opacity-[33%] transition delay-200 hover:text-[#FD6B06] hover:opacity-100 focus:text-[#FD6B06] focus:opacity-100'
@@ -302,7 +302,7 @@ export default function Footer({ locale }: { locale: string }) {
                 </li>
                 <li>
                   <Link
-                    href={`/${locale}/aml`}
+                    href={`/aml`}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='text-font16Leading130 opacity-[33%] transition delay-200 hover:text-[#FD6B06] hover:opacity-100 focus:text-[#FD6B06] focus:opacity-100'

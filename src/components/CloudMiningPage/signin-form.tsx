@@ -70,11 +70,11 @@ export default function SignForm() {
   };
 
   return (
-    <form action={dispatch} className='space-y-3'>
-      <div className='flex-1 text-foreground'>
-        <h1 className='mb-3 text-2xl'>{t('title')}</h1>
+    <form action={dispatch} className='w-full'>
+      <div className='flex flex-col items-center text-foreground'>
+        <h1 className='md:text-md mb-3 lg:text-xl xl:text-2xl'>{t('title')}</h1>
         {step === 1 && (
-          <div className='w-[300px]'>
+          <div className='w-full md:w-[250px] lg:w-[300px]'>
             <div className='mt-4'>
               <label
                 className='mb-3 mt-5 block text-xs font-medium text-foreground'
@@ -84,7 +84,7 @@ export default function SignForm() {
               </label>
               <div className='relative'>
                 <input
-                  className='peer block w-full rounded-md border border-gray-200 bg-primary py-[9px] pl-10 text-sm outline-2 placeholder:text-primary'
+                  className='w-full rounded-md border border-gray-200 bg-primary py-[9px] pl-10 text-sm outline-2 placeholder:text-primary'
                   id='email'
                   type='email'
                   name='email'
@@ -107,21 +107,21 @@ export default function SignForm() {
                   </p>
                 )}
               </div>
+              <Button
+                type='submit'
+                className='mt-4 w-full'
+                onClick={handleSubmitStep1}
+              >
+                {t('continue')}
+                <ArrowRightIcon className='ml-auto h-5 w-5 text-gray-50' />
+              </Button>
             </div>
-            <Button
-              type='submit'
-              className='mt-4 w-[300px]'
-              onClick={handleSubmitStep1}
-            >
-              {t('continue')}
-              <ArrowRightIcon className='ml-auto h-5 w-5 text-gray-50' />
-            </Button>
             {showSpinnerStep1 && <FullScreenSpinner />}
           </div>
         )}
         {step === 2 && (
           <>
-            <div className='w-[300px]'>
+            <div className='w-full'>
               <div className='mt-4'>
                 <label
                   className='mb-3 mt-5 block text-xs font-medium text-foreground'
@@ -131,7 +131,7 @@ export default function SignForm() {
                 </label>
                 <div className='relative mb-4'>
                   <input
-                    className='peer block w-full rounded-md border border-gray-200 bg-primary py-[9px] pl-10 text-sm outline-2 placeholder:text-primary'
+                    className='w-full rounded-md border border-gray-200 bg-primary py-[9px] pl-10 text-sm outline-2 placeholder:text-primary'
                     id='email'
                     type='email'
                     name='email'
@@ -225,15 +225,15 @@ export default function SignForm() {
                   )}
                 </div>
               </div>
+              <Button
+                className='mt-4 w-full'
+                type='submit'
+                onClick={handleSubmitStep2}
+              >
+                {t('signin')}
+                <ArrowRightIcon className='ml-auto h-5 w-5 text-gray-50' />
+              </Button>
             </div>
-            <Button
-              className='mt-4 w-[300px]'
-              type='submit'
-              onClick={handleSubmitStep2}
-            >
-              {t('signin')}
-              <ArrowRightIcon className='ml-auto h-5 w-5 text-gray-50' />
-            </Button>
             {!errorMessage && showSpinnerStep2 && <FullScreenSpinner />}
           </>
         )}

@@ -25,7 +25,7 @@ const publicPages = [
   '/aml',
 ];
 
-const authPages = ['/cloud-mining/signin'];
+const authPages = ['/signin'];
 const protectedPaths = ['/dashboard'];
 
 function getProtectedRoutes(protectedPaths: string[], locales: Locale[]) {
@@ -69,16 +69,14 @@ const authMiddleware = auth((req) => {
 
   // Redirect to sign-in page if not authenticated
   if (!session && !isAuthPage) {
-    const signInUrl = new URL('/cloud-mining/signin', req.nextUrl);
+    const signInUrl = new URL('/signin', req.nextUrl);
     signInUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(signInUrl);
   }
 
   // Redirect to home page if authenticated and trying to access auth pages
   if (session && isAuthPage) {
-    return NextResponse.redirect(
-      new URL('/cloud-mining/dashboard', req.nextUrl),
-    );
+    return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
   }
 
   return intlMiddleware(req);

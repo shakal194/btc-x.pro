@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import LocaleSwitcher from '@/components/ui/LocaleSwitcher';
 
-export default function MobileMenu({ locale }: { locale: string }) {
+export default function MobileMenu() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const t = useTranslations('header');
   const t_social = useTranslations('footer');
@@ -106,7 +106,7 @@ export default function MobileMenu({ locale }: { locale: string }) {
               <ModalBody className='flex flex-col justify-between'>
                 <nav className='mt-[90px] flex flex-col gap-2'>
                   <Link
-                    href={`/${locale}/about-us`}
+                    href={`/about-us`}
                     onClick={onClose}
                     //href='/about-us'
                     className='text-[22px] font-semibold leading-[120%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
@@ -115,7 +115,7 @@ export default function MobileMenu({ locale }: { locale: string }) {
                     {t('aboutus')}
                   </Link>
                   <Link
-                    href={`/${locale}/airdrop`}
+                    href={`/airdrop`}
                     onClick={onClose}
                     //href='/airdrop'
                     className='text-[22px] font-semibold leading-[120%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
@@ -124,7 +124,7 @@ export default function MobileMenu({ locale }: { locale: string }) {
                     {t('airdrop')}
                   </Link>
                   <Link
-                    href={`/${locale}/referral`}
+                    href={`/referral`}
                     onClick={onClose}
                     //href='/referral'
                     className='text-[22px] font-semibold leading-[120%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
@@ -133,7 +133,7 @@ export default function MobileMenu({ locale }: { locale: string }) {
                     {t('referral')}
                   </Link>
                   <Link
-                    href={`/${locale}/support`}
+                    href={`/support`}
                     onClick={onClose}
                     //href='/referral'
                     className='text-[22px] font-semibold leading-[120%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
@@ -142,7 +142,7 @@ export default function MobileMenu({ locale }: { locale: string }) {
                     {t('support')}
                   </Link>
                   <Link
-                    href={`/${locale}/promo`}
+                    href={`/promo`}
                     onClick={onClose}
                     //href='/referral'
                     className='text-[22px] font-semibold leading-[120%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
@@ -151,7 +151,7 @@ export default function MobileMenu({ locale }: { locale: string }) {
                     {t('promo')}
                   </Link>
                   <Link
-                    href={`/${locale}/cloud-mining`}
+                    href={`/cloud-mining`}
                     onClick={onClose}
                     //href='/referral'
                     className='text-[22px] font-semibold leading-[120%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'

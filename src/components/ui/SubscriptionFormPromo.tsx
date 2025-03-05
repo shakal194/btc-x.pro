@@ -128,7 +128,7 @@ export default function SubscriptionFormPromo() {
                 value={formData.youtube}
                 onChange={handleChange}
                 placeholder={t('form_placeholder_2')}
-                className='w-full rounded border border-gray-600 bg-gray-800 p-2 md:w-[350px]'
+                className='w-full rounded border border-gray-600 bg-gray-800 p-2'
                 required
               />
               <div>
@@ -166,7 +166,7 @@ export default function SubscriptionFormPromo() {
                 value={formData.telegram}
                 onChange={handleChange}
                 placeholder={t('form_placeholder_3')}
-                className='w-full rounded border border-gray-600 bg-gray-800 p-2 md:w-[350px]'
+                className='w-full rounded border border-gray-600 bg-gray-800 p-2'
                 required
               />
               <div>
@@ -203,7 +203,7 @@ export default function SubscriptionFormPromo() {
                 value={formData.instagram}
                 onChange={handleChange}
                 placeholder={t('form_placeholder_4')}
-                className='w-full rounded border border-gray-600 bg-gray-800 p-2 md:w-[350px]'
+                className='w-full rounded border border-gray-600 bg-gray-800 p-2'
                 required
               />
               <div>
@@ -240,7 +240,7 @@ export default function SubscriptionFormPromo() {
                 value={formData.rating}
                 onChange={handleChange}
                 placeholder={t('form_placeholder_5')}
-                className='w-full rounded border border-gray-600 bg-gray-800 p-2 md:w-[350px]'
+                className='w-full rounded border border-gray-600 bg-gray-800 p-2'
                 required
               />
               <div>
@@ -276,7 +276,7 @@ export default function SubscriptionFormPromo() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder={t('form_placeholder_6')}
-                className='w-full rounded border border-gray-600 bg-gray-800 p-2 md:w-[350px]'
+                className='w-full rounded border border-gray-600 bg-gray-800 p-2'
                 required
               />
               <div>

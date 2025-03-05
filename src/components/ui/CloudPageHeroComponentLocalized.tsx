@@ -54,7 +54,7 @@ export default function HeroCloudPage() {
         </div>
         <div className='mt-[20px]'>
           <Link
-            href='/cloud-mining/signin'
+            href='/signin'
             className='block w-full rounded-full border px-5 py-3 text-center text-font18 font-bold leading-[110%] transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white sm:w-[250px]'
           >
             {t('loginButton')}

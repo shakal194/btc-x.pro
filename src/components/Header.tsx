@@ -4,7 +4,7 @@ import Link from 'next/link';
 import LocaleSwitcher from '@/components/ui/LocaleSwitcher';
 import MobileMenu from '@/components/ui/MobileMenu';
 
-export default function Header({ locale }: { locale: string }) {
+export default function Header() {
   const t = useTranslations('header');
 
   return (
@@ -13,7 +13,7 @@ export default function Header({ locale }: { locale: string }) {
         <div className='flex items-center justify-between rounded-lg border border-gray-400 px-5 py-[7px] backdrop-blur-md lg:py-[10px]'>
           <nav className='hidden items-center space-x-6 lg:flex'>
             <Link
-              href={`/${locale}/about-us`}
+              href={`/about-us`}
               //href='/about-us'
               className='text-font18 leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
               rel='noopener noreferrer'
@@ -21,7 +21,7 @@ export default function Header({ locale }: { locale: string }) {
               {t('aboutus')}
             </Link>
             <Link
-              href={`/${locale}/airdrop`}
+              href={`/airdrop`}
               //href='/airdrop'
               className='text-font18 leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
               rel='noopener noreferrer'
@@ -29,7 +29,7 @@ export default function Header({ locale }: { locale: string }) {
               {t('airdrop')}
             </Link>
             <Link
-              href={`/${locale}/referral`}
+              href={`/referral`}
               //href='/referral'
               className='text-font18 leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
               rel='noopener noreferrer'
@@ -59,24 +59,24 @@ export default function Header({ locale }: { locale: string }) {
             </Link>
           </div>
 
-          <MobileMenu locale={locale} />
+          <MobileMenu />
 
           {/* Правый блок с кнопками */}
           <div className='hidden items-center space-x-4 lg:flex'>
             <Link
-              href={`/${locale}/promo`}
+              href={`/promo`}
               className='text-font18 leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
             >
               {t('promo')}
             </Link>
             <Link
-              href={`/${locale}/cloud-mining`}
+              href={`/cloud-mining`}
               className='text-font18 leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
             >
               {t('cloudMining')}
             </Link>
             <Link
-              href={`/${locale}/support`}
+              href={`/support`}
               className='text-font18 leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
             >
               {t('support')}

@@ -1,5 +1,5 @@
 import { generateMetadata } from '@/lib/MetaData';
-import './globals.css';
+import '@/app/globals.css';
 import { NextUIProviders } from './providers';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
@@ -35,9 +35,9 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <NextUIProviders>
             <SessionProvider>
-              <Header locale={locale} />
+              <Header />
               {children}
-              <FooterSection locale={locale} />
+              <FooterSection />
             </SessionProvider>
             <ButtonFooter />
             <LiveChat />

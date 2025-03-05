@@ -21,18 +21,18 @@ export default function NavLinks() {
   const links = [
     { name: `${t('home')}`, href: '/dashboard', icon: HomeIcon },
     {
-      name: `${t('invoices')}`,
-      href: '/dashboard/invoices',
+      name: `${t('yourMiners')}`,
+      href: '/dashboard/miners',
       icon: DocumentDuplicateIcon,
     },
-    {
+    /*{
       name: `${t('customers')}`,
       href: '/dashboard/customers',
       icon: UserGroupIcon,
-    },
+    },*/
     {
       name: `${t('settings')}`,
-      href: '/dashboard/settings/security',
+      href: '/dashboard/settings',
       icon: AdjustmentsHorizontalIcon,
     },
   ];

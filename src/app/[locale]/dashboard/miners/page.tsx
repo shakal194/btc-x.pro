@@ -6,7 +6,7 @@ export default async function Page() {
   return (
     <main>
       <h1 className='mb-4 text-xl text-foreground md:text-2xl'>
-        Welcome {session?.user?.name ?? ''} to your Dashboard
+        Here be your miners
       </h1>
       <div>
         <div className='grid gap-2 md:grid-cols-2'></div>

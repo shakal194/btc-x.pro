@@ -483,7 +483,6 @@
       "password_text_2": "Має містити мін. 8 символів",
       "submit": "Логін",
       "forgot": "Забули свій пароль?",
-      "notmember": "Ще не з нами?",
       "signin": "Авторизуватися",
       "signup": "Зареєструватися",
       "spinnerLabel": "Почекайте..."
@@ -491,7 +490,7 @@
     "dashboard": {
       "nav": {
         "home": "Головна",
-        "invoices": "Іновйси",
+        "yourMiners": "Ваші Майнери",
         "customers": "Клієнти",
         "settings": "Налаштування",
         "merchants": "Мерчанти",

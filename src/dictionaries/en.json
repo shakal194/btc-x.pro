@@ -483,7 +483,6 @@
       "password_text_2": "Contains 8 or more symbols",
       "submit": "Submit",
       "forgot": "Forgot your password?",
-      "notmember": "Not a member?",
       "signin": "Sign in",
       "signup": "Sign up",
       "spinnerLabel": "Loading..."
@@ -491,7 +490,7 @@
     "dashboard": {
       "nav": {
         "home": "Home",
-        "invoices": "Invoices",
+        "yourMiners": "Your Miners",
         "customers": "Customers",
         "settings": "Settings",
         "merchants": "Merchants",
