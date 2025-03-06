@@ -1,4 +1,4 @@
-import SideNav from '@/components/DashboardPage/sidenav';
+import SideNav from '@/components/PageComponents/DashboardPage/sidenav';
 import FooterSection from '@/components/Footer';
 
 export default async function Layout({

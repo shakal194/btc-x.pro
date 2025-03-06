@@ -46,7 +46,7 @@ export default function HowItWorksSection() {
                 <h4 className='mb-[7px] text-font18Leading130 lg:mb-[20px] lg:text-font30Leading130'>
                   {t('step_1_title')}
                 </h4>
-                <p className='lg:text-font18 text-[13px] leading-[120%] opacity-[50%]'>
+                <p className='text-[13px] leading-[120%] opacity-[50%] lg:text-font18'>
                   {t('step_1_subtitle')}
                 </p>
               </div>
@@ -54,7 +54,7 @@ export default function HowItWorksSection() {
                 <h4 className='mb-[7px] text-font18Leading130 lg:mb-[20px] lg:text-font30Leading130'>
                   {t('step_2_title')}
                 </h4>
-                <p className='lg:text-font18 text-[13px] leading-[120%] opacity-[50%]'>
+                <p className='text-[13px] leading-[120%] opacity-[50%] lg:text-font18'>
                   {t('step_2_subtitle')}
                 </p>
               </div>
@@ -62,7 +62,7 @@ export default function HowItWorksSection() {
                 <h4 className='mb-[7px] text-font18Leading130 lg:mb-[20px] lg:text-font30Leading130'>
                   {t('step_3_title')}
                 </h4>
-                <p className='lg:text-font18 text-[13px] leading-[120%] opacity-[50%]'>
+                <p className='text-[13px] leading-[120%] opacity-[50%] lg:text-font18'>
                   {t('step_3_subtitle')}
                 </p>
               </div>

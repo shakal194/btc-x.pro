@@ -1,4 +1,4 @@
-import SignForm from '@/components/CloudMiningPage/signin-form';
+import SignForm from '@/components/PageComponents/CloudMiningPage/signin-form';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';

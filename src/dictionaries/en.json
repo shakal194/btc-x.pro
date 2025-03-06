@@ -416,10 +416,8 @@
       "step_3_subtitle": "Share your unique link and code with friends, subscribers and partners and start earning",
       "subtitle_2": "BTC-X shares up to 55% of its revenue with you",
       "title_2": "The higher the trading volume of your referrals, the more you earn",
-      "slider_title_1": "Number of invited users",
-      "bonusPercentage_title": "Bonus percentage",
-      "bonusPercentage": "55%",
-      "slider_title_2": "Trading volume (USD)",
+      "slider_title_1": "Number of purchased Th",
+      "revenue": "1Th = 0.04$",
       "income": "Income"
     },
     "forWho": {
@@ -458,7 +456,7 @@
       }
     },
     "ourBenefits": {
-      "title": "The benefits of our referral program:",
+      "title": "Advantages of investing with us:",
       "subtitle": "Join our BTC-X referral programme",
       "benefits1_title": "Transparency and instant payments",
       "benefits1_text": "You can always track your income in real time through your personal account.",

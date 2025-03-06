@@ -1,8 +1,8 @@
-import HeroSection from '@/components/RefferalPage/Hero';
-import HowItWorksSection from '@/components/RefferalPage/HowItWorks';
-import ForWhoSection from '@/components/RefferalPage/ForWho';
-import HowWorksRefProgram from '@/components/RefferalPage/HowWorksRefProgram';
-import OurBenefitsSection from '@/components/RefferalPage/OurBenefits';
+import HeroSection from '@/components/PageComponents/RefferalPage/Hero';
+import HowItWorksSection from '@/components/PageComponents/RefferalPage/HowItWorks';
+import ForWhoSection from '@/components/PageComponents/RefferalPage/ForWho';
+import HowWorksRefProgram from '@/components/PageComponents/RefferalPage/HowWorksRefProgram';
+import OurBenefitsSection from '@/components/PageComponents/RefferalPage/OurBenefits';
 
 export default function Home() {
   return (

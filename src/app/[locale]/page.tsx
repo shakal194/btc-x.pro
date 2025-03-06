@@ -2,13 +2,13 @@ import { getMessages } from 'next-intl/server';
 import Header from '@/components/Header';
 import ButtonFooter from '@/components/ui/ButtonFooter';
 import FooterSection from '@/components/Footer';
-import HeroSection from '@/components/MainPage/Hero';
-import OurPlatformSection from '@/components/MainPage/OurPlatform';
-import FeaturesSection from '@/components/MainPage/Features';
-import PlatformStats from '@/components/MainPage/PlatformStats';
-import SixSteps from '@/components/MainPage/SixSteps';
-import AboutUs from '@/components/MainPage/AboutUs';
-import FAQ from '@/components/MainPage/FAQ';
+import HeroSection from '@/components/PageComponents/MainPage/Hero';
+import OurPlatformSection from '@/components/PageComponents/MainPage/OurPlatform';
+import FeaturesSection from '@/components/PageComponents/MainPage/Features';
+import PlatformStats from '@/components/PageComponents/MainPage/PlatformStats';
+import SixSteps from '@/components/PageComponents/MainPage/SixSteps';
+import AboutUs from '@/components/PageComponents/MainPage/AboutUs';
+import FAQ from '@/components/PageComponents/MainPage/FAQ';
 
 type Params = Promise<{ locale: string }>;
 

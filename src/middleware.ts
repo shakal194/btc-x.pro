@@ -18,6 +18,7 @@ const publicPages = [
   '/promo',
   '/airdrop',
   '/referral',
+  '/support',
   '/cryptocurrency-wallets',
   '/minimum-deposits-withdrawals',
   '/terms',

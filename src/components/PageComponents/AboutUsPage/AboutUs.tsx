@@ -99,7 +99,7 @@ export default function AboutUsSection() {
             <div className='my-[25px] w-full border-t border-white opacity-[33%] lg:hidden'></div>
             <div className='relative w-full rounded-lg bg-gradient-to-r from-[#553300] to-[#FE9900] p-[1px] lg:w-[435px] xl:w-auto xl:bg-none'>
               <div className='rounded-lg bg-black px-[25px] py-6'>
-                <p className='lg:text-font18 mb-[20px] text-[13px] font-medium leading-[130%] opacity-[33%] lg:font-semibold lg:opacity-100 xl:hidden'>
+                <p className='mb-[20px] text-[13px] font-medium leading-[130%] opacity-[33%] lg:text-font18 lg:font-semibold lg:opacity-100 xl:hidden'>
                   {t('text_3')}
                 </p>
                 <div className='grid grid-cols-2 gap-4'>

@@ -73,7 +73,7 @@ export default function HowWorksRefProgramm() {
               <div className='my-[40px] hidden border-t opacity-[33%] md:block'></div>
               <div className='grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4 lg:grid-cols-1 lg:gap-8'>
                 <div className='rounded-lg border border-[#999999] px-[15px] py-[25px] lg:px-[30px] lg:py-[30px]'>
-                  <h3 className='text-font18 mb-[29px] leading-[120%] lg:text-[22px]'>
+                  <h3 className='mb-[29px] text-font18 leading-[120%] lg:text-[22px]'>
                     {t('payment_info_title')}
                   </h3>
                   <p className='text-white/30'>
@@ -88,7 +88,7 @@ export default function HowWorksRefProgramm() {
                   </p>
                 </div>
                 <div className='rounded-lg border border-[#999999] px-[15px] py-[25px] lg:px-[30px] lg:py-[30px]'>
-                  <h3 className='text-font18 mb-[29px] leading-[120%] lg:text-[22px]'>
+                  <h3 className='mb-[29px] text-font18 leading-[120%] lg:text-[22px]'>
                     {t('tracking_title')}
                   </h3>
                   <p className='text-white/30'>

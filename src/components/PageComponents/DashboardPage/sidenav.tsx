@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import NavLinks from '@/components/DashboardPage/nav-links';
+import NavLinks from '@/components/PageComponents/DashboardPage/nav-links';
 import { PowerIcon } from '@heroicons/react/24/outline';
 import { signOut } from '@/auth';
 import { useTranslations } from 'next-intl';

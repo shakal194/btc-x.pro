@@ -1,7 +1,7 @@
-import HeroSection from '@/components/AirdropPage/Hero';
-import AboutTokenSection from '@/components/AirdropPage/AboutTokenBTCXT';
-import RatingSection from '@/components/AirdropPage/Rating';
-import LaunchingTokenSection from '@/components/AirdropPage/LaunchingToken';
+import HeroSection from '@/components/PageComponents/AirdropPage/Hero';
+import AboutTokenSection from '@/components/PageComponents/AirdropPage/AboutTokenBTCXT';
+import RatingSection from '@/components/PageComponents/AirdropPage/Rating';
+import LaunchingTokenSection from '@/components/PageComponents/AirdropPage/LaunchingToken';
 
 export default function Home() {
   return (

@@ -1,7 +1,7 @@
-import HeroSection from '@/components/AboutUsPage/Hero';
-import AboutUsSection from '@/components/AboutUsPage/AboutUs';
-import OpportunitiesSection from '@/components/AboutUsPage/Opportunities';
-import HowItWorksSection from '@/components/AboutUsPage/HowItWorks';
+import HeroSection from '@/components/PageComponents/AboutUsPage/Hero';
+import AboutUsSection from '@/components/PageComponents/AboutUsPage/AboutUs';
+import OpportunitiesSection from '@/components/PageComponents/AboutUsPage/Opportunities';
+import HowItWorksSection from '@/components/PageComponents/AboutUsPage/HowItWorks';
 
 export default function Home() {
   return (

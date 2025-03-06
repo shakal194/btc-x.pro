@@ -1,9 +1,9 @@
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import SliderRefProgram from '@/components/ui/SliderRefProgram';
+import SliderCloudMiningProgram from '@/components/ui/SliderCloudMiningProgram';
 
 export default function HowItWorksSection() {
-  const t = useTranslations('referralPage.howItWorks');
+  const t = useTranslations('cloudMiningPage.howItWorks');
 
   return (
     <section className='relative z-20 rounded-xl bg-[#F4F4F4] py-[30px] text-black lg:py-[100px]'>
@@ -46,7 +46,7 @@ export default function HowItWorksSection() {
                 <h4 className='mb-[7px] text-font18Leading130 lg:mb-[20px] lg:text-font30Leading130'>
                   {t('step_1_title')}
                 </h4>
-                <p className='lg:text-font18 text-[13px] leading-[120%] opacity-[50%]'>
+                <p className='text-[13px] leading-[120%] opacity-[50%] lg:text-font18'>
                   {t('step_1_subtitle')}
                 </p>
               </div>
@@ -54,7 +54,7 @@ export default function HowItWorksSection() {
                 <h4 className='mb-[7px] text-font18Leading130 lg:mb-[20px] lg:text-font30Leading130'>
                   {t('step_2_title')}
                 </h4>
-                <p className='lg:text-font18 text-[13px] leading-[120%] opacity-[50%]'>
+                <p className='text-[13px] leading-[120%] opacity-[50%] lg:text-font18'>
                   {t('step_2_subtitle')}
                 </p>
               </div>
@@ -62,7 +62,7 @@ export default function HowItWorksSection() {
                 <h4 className='mb-[7px] text-font18Leading130 lg:mb-[20px] lg:text-font30Leading130'>
                   {t('step_3_title')}
                 </h4>
-                <p className='lg:text-font18 text-[13px] leading-[120%] opacity-[50%]'>
+                <p className='text-[13px] leading-[120%] opacity-[50%] lg:text-font18'>
                   {t('step_3_subtitle')}
                 </p>
               </div>
@@ -88,7 +88,7 @@ export default function HowItWorksSection() {
             <h2 className='mb-6 text-[28px] font-semibold leading-[110%] tracking-tight md:w-[450px] md:text-font30Leading110 lg:w-[885px] lg:text-font50Leading110 lg:font-semibold'>
               {t('title_2')}
             </h2>
-            <SliderRefProgram />
+            <SliderCloudMiningProgram />
           </div>
         </div>
       </div>

@@ -1,8 +1,8 @@
-import HeroSection from '@/components/CloudMiningPage/Hero';
-import HowItWorksSection from '@/components/CloudMiningPage/HowItWorks';
-import ForWhoSection from '@/components/CloudMiningPage/ForWho';
-import HowWorksRefProgram from '@/components/CloudMiningPage/HowWorksRefProgram';
-import OurBenefitsSection from '@/components/CloudMiningPage/OurBenefits';
+import HeroSection from '@/components/PageComponents/CloudMiningPage/Hero';
+import HowItWorksSection from '@/components/PageComponents/CloudMiningPage/HowItWorks';
+import ForWhoSection from '@/components/PageComponents/CloudMiningPage/ForWho';
+import HowWorksRefProgram from '@/components/PageComponents/CloudMiningPage/HowWorksRefProgram';
+import OurBenefitsSection from '@/components/PageComponents/CloudMiningPage/OurBenefits';
 
 export default function Home() {
   return (

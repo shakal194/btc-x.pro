@@ -19,7 +19,7 @@ export default function HeroSection() {
               </h1>
               <div className='relative rounded-lg from-[#553300] to-[#FE9900] p-[1px] xl:w-[435px] xl:bg-gradient-to-r'>
                 <div className='rounded-lg py-6 xl:bg-black xl:px-[25px]'>
-                  <p className='lg:text-font18 text-[13px] font-medium leading-[130%] lg:font-semibold lg:opacity-100 xl:max-w-3xl'>
+                  <p className='text-[13px] font-medium leading-[130%] lg:text-font18 lg:font-semibold lg:opacity-100 xl:max-w-3xl'>
                     {t('text')}
                   </p>
                   <div className='my-6 hidden border-t opacity-[33%] xl:block'></div>

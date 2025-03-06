@@ -23,14 +23,14 @@ export default function HeroCloudPage() {
   };
 
   const imageMap: { [key in Locale]: { src: string; alt: string } } = {
-    en: { src: '/hero_referral_en.png', alt: 'Hero Image' },
-    ru: { src: '/hero_referral_ru.png', alt: 'Hero Image' },
-    ua: { src: '/hero_referral_ua.png', alt: 'Hero Image' },
+    en: { src: '/hero_cloud_page.png', alt: 'Hero Image' },
+    ru: { src: '/hero_cloud_page.png', alt: 'Hero Image' },
+    ua: { src: '/hero_cloud_page.png', alt: 'Hero Image' },
   };
 
   // Выбираем данные для изображения
   const imageData = imageMap[currentLocale] || {
-    src: '/hero_referral_en.png',
+    src: '/hero_cloud_page.png',
     alt: 'Hero Image',
   };
 

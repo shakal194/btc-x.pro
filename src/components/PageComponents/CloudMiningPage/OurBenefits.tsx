@@ -3,7 +3,7 @@ import { useTranslations } from 'next-intl';
 import StoreButtons from '@/components/ui/StoreButtons';
 
 export default function OurBenefitsSection() {
-  const t = useTranslations('referralPage.ourBenefits');
+  const t = useTranslations('cloudMiningPage.ourBenefits');
 
   return (
     <section className='rounded-t-xl bg-[#F4F4F4] py-[30px] text-black lg:py-[100px]'>
@@ -66,7 +66,7 @@ export default function OurBenefitsSection() {
                     <h3 className='mb-[20px] text-font18Leading130 lg:text-font30Leading130'>
                       {program.title}
                     </h3>
-                    <p className='lg:text-font18 text-[13px] leading-[120%] text-black/50'>
+                    <p className='text-[13px] leading-[120%] text-black/50 lg:text-font18'>
                       {program.text}
                     </p>
                   </div>
