@@ -39,9 +39,9 @@ export default function SubscriptionFormFooter() {
           Notiflix.Notify.failure(`${t('form_error_already_subscribed')}`);
         } else {
           // Для других ошибок
-          setErrorMessage(result.error || 'Error sending email');
+          setErrorMessage(result.error || `${t('form_error_default')}`);
           Notiflix.Notify.failure(
-            `${t('form_error_message')}` || 'Error sending email',
+            `${t('form_error_message')}` || `${t('form_error_default')}`,
           );
         }
       }
@@ -51,7 +51,7 @@ export default function SubscriptionFormFooter() {
       if (error instanceof Error) {
         Notiflix.Notify.failure(`${t('form_error_message')}` || error.message);
       } else {
-        Notiflix.Notify.failure('An unknown error occurred');
+        Notiflix.Notify.failure(`${t('form_error_unknown')}`);
       }
     } finally {
       setIsSubmitting(false);

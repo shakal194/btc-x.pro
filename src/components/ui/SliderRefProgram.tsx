@@ -49,13 +49,13 @@ export default function SliderRefProgram() {
             //label={t('slider_title_1')}
             showOutline={true}
             onChange={handleUserValueChange}
-            color='danger'
+            color='secondary'
             renderThumb={(props) => (
               <div
                 {...props}
-                className='border-small border-default-200 shadow-medium bg-danger group top-1/2 cursor-grab rounded-full p-1 data-[dragging=true]:cursor-grabbing'
+                className='group top-1/2 cursor-grab rounded-full border-small border-default-200 bg-secondary p-1 shadow-medium data-[dragging=true]:cursor-grabbing'
               >
-                <span className='shadow-small group-data-[dragging=true]:scale-80 block h-5 w-5 rounded-full bg-gradient-to-br from-slate-500 to-slate-800 transition-transform' />
+                <span className='block h-5 w-5 rounded-full bg-gradient-to-br from-slate-500 to-slate-800 shadow-small transition-transform group-data-[dragging=true]:scale-80' />
               </div>
             )}
             minValue={1}
@@ -76,7 +76,7 @@ export default function SliderRefProgram() {
           <h2 className='text-[13px] font-semibold leading-[120%] md:text-[20px]'>
             {t('income')}
           </h2>
-          <p className='text-danger text-[24px] font-semibold md:text-[40px] md:tracking-tight lg:text-font70Leading110'>
+          <p className='text-[24px] font-semibold text-secondary md:text-[40px] md:tracking-tight lg:text-font70Leading110'>
             {income} USDT
           </p>
         </div>
@@ -98,13 +98,13 @@ export default function SliderRefProgram() {
             //label={t('slider_title_1')}
             showOutline={true}
             onChange={handleVolumeValueChange}
-            color='danger'
+            color='secondary'
             renderThumb={(props) => (
               <div
                 {...props}
-                className='border-small border-default-200 shadow-medium bg-danger group top-1/2 cursor-grab rounded-full p-1 data-[dragging=true]:cursor-grabbing'
+                className='group top-1/2 cursor-grab rounded-full border-small border-default-200 bg-secondary p-1 shadow-medium data-[dragging=true]:cursor-grabbing'
               >
-                <span className='shadow-small group-data-[dragging=true]:scale-80 block h-5 w-5 rounded-full bg-gradient-to-br from-slate-500 to-slate-800 transition-transform' />
+                <span className='block h-5 w-5 rounded-full bg-gradient-to-br from-slate-500 to-slate-800 shadow-small transition-transform group-data-[dragging=true]:scale-80' />
               </div>
             )}
             minValue={0}
@@ -116,7 +116,7 @@ export default function SliderRefProgram() {
           <h2 className='text-[13px] font-semibold leading-[120%] md:text-[20px]'>
             {t('income')}
           </h2>
-          <p className='text-danger text-[24px] font-semibold md:text-[40px] md:tracking-tight lg:text-font70Leading110'>
+          <p className='text-[24px] font-semibold text-secondary md:text-[40px] md:tracking-tight lg:text-font70Leading110'>
             {income}
           </p>
         </div>

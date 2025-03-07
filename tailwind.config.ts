@@ -20,6 +20,7 @@ export default {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
         danger: 'var(--danger)',
+        secondary: 'var(--secondary)',
         primary: 'var(--primary)',
       },
       fontSize: {

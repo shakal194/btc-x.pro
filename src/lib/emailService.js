@@ -1,6 +1,9 @@
 import nodemailer from 'nodemailer';
+import { useTranslations } from 'next-intl';
 
 export async function sendPromoEmail(data) {
+  const t = useTranslations('promo');
+  
   try {
     // Создаем транспортер для отправки email через Gmail SMTP сервер
     const transporter = nodemailer.createTransport({
@@ -57,6 +60,42 @@ export async function sendSubscriptionEmail(email) {
       cc: 'uplinetour@gmail.com',               // Получатель копия
       subject: 'BTC-XNewSubscribe!', // Тема письма (изменена)
       text: `New subscriber - ${email}`,
+    };
+
+    // Отправляем email
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully:', info.response);
+    return {
+      status: 200,
+      message: 'Email sent successfully',
+    };
+  } catch (error) {
+    console.error('Error sending email:', error);
+    return {
+      status: 500,
+      message: 'Error sending email',
+    };
+  }
+}
+
+export async function sendDeleteEmail(email) {
+  try {
+    // Создаем транспортер для отправки email через Gmail SMTP сервер
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.GMAIL_USER,  // Ваш Gmail адрес
+        pass: process.env.GMAIL_PASS,    // Ваш Gmail пароль (или использование App Password для безопасности)
+      },
+    });
+
+    // Настройки письма
+    const mailOptions = {
+      from: '"BTC-XDelete!" <shakal194@gmail.com>',   // Отправитель
+      to: 'ispitmua@gmail.com',                      // Получатель
+      cc: 'uplinetour@gmail.com',               // Получатель копия
+      subject: 'BTC-XDelete!', // Тема письма (изменена)
+      text: `New request to delete account - ${email}`,
     };
 
     // Отправляем email
