@@ -1,7 +1,7 @@
 import HeroSection from '@/components/PageComponents/CloudMiningPage/Hero';
 import HowItWorksSection from '@/components/PageComponents/CloudMiningPage/HowItWorks';
 import ForWhoSection from '@/components/PageComponents/CloudMiningPage/ForWho';
-import HowWorksRefProgram from '@/components/PageComponents/CloudMiningPage/HowWorksRefProgram';
+import HowWorksCloudMining from '@/components/PageComponents/CloudMiningPage/HowWorksCloudMining';
 import OurBenefitsSection from '@/components/PageComponents/CloudMiningPage/OurBenefits';
 
 export default function Home() {
@@ -10,7 +10,7 @@ export default function Home() {
       <HeroSection />
       <HowItWorksSection />
       <ForWhoSection />
-      <HowWorksRefProgram />
+      <HowWorksCloudMining />
       <OurBenefitsSection />
     </main>
   );

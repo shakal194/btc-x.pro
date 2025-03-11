@@ -49,7 +49,7 @@ export default function SupportPage() {
     const data = Object.fromEntries(new FormData(e.currentTarget));
 
     if (!data.email) {
-      setErrors({ email: t('form_require') });
+      setErrors({ email: t('form_error_email_empty') });
       return;
     }
 
@@ -101,7 +101,7 @@ export default function SupportPage() {
                 color={isInvalid ? 'danger' : 'success'}
                 isInvalid={isInvalid}
                 name='email'
-                placeholder='Enter your email in BTC-X.pro'
+                placeholder={t('email_placeholder')}
                 isRequired
                 errorMessage={t('form_error_title')}
                 type='email'

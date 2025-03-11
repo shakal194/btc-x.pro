@@ -1,9 +1,30 @@
-import NextAuth from 'next-auth';
+import NextAuth, { CredentialsSignin, AuthError } from 'next-auth';
 import { authConfig } from './auth.config';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
+import { error } from 'console';
 
 const apiRegisterUrl = process.env.NEXT_PUBLIC_API_REGISTR_URL;
+
+/*class InvalidLoginError extends CredentialsSignin {
+  code = 'Login';
+}
+
+export class InvalidOtpError extends CredentialsSignin {
+  code = 'OTP';
+}
+
+export class InvalidSigninError extends CredentialsSignin {
+  code = 'Oooops';
+}
+
+export class InvalidLoginError extends AuthError {
+  code = 'invalid_credentials';
+  constructor(message: string) {
+    super(message);
+    this.code = message;
+  }
+}*/
 
 declare module 'next-auth' {
   interface User {
@@ -37,7 +58,6 @@ const config = {
               }),
           })
           .safeParse(credentials);
-
         if (parsedCredentials.success) {
           const { email, password, otpcode } = parsedCredentials.data;
 
@@ -58,20 +78,25 @@ const config = {
             const user = await res.json();
 
             // Если пользователь найден и авторизация успешна
-            if (res.ok && user) {
+            if (res.ok) {
               return user;
+            } else {
+              console.log('ERROR', user);
+              return null;
+              /*switch (user) {
+                case 13:
+                  throw new InvalidLoginError('otp'); // Возвращаем сообщение о неправильном OTP
+                case 12:
+                  throw new InvalidLoginError('login or pass');
+                default:
+                  return 'Something went wrong.';
+              }*/
             }
-
-            console.log(res);
-            // Возвращаем null, если авторизация не удалась
-            return null;
           } catch (error) {
-            console.error('Error:', error);
             return null;
           }
         }
 
-        console.log('Invalid credentials');
         return null;
       },
     }),

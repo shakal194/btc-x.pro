@@ -15,7 +15,7 @@ export default function SideNav() {
           <form
             action={async () => {
               'use server';
-              await signOut();
+              await signOut({ redirectTo: '/cloud-mining' });
             }}
           >
             <button className='flex h-[48px] w-full items-center justify-center gap-2 rounded-md bg-gray-100 p-3 text-sm font-medium hover:bg-sky-100 hover:text-[#FD6B06] md:justify-start md:p-2 md:px-3'>

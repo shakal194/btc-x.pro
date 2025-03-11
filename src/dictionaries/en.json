@@ -399,9 +399,11 @@
   },
   "cloudMiningPage": {
     "hero": {
-      "title": "CLOUD MINING",
-      "subtitle": "TO 55%",
-      "subtitle_2": "FROM EACH INVITED USER",
+      "title": "НОВАЯ ЭРА В ",
+      "subtitle": "ОБЛАЧНОМ МАЙНИНГЕ",
+      "text": "Начните зарабатывать на криптовалюте",
+      "text_2": "с минимальными вложениями",
+      "text_3": " — инвестируйте в майнинг уже сегодня!",
       "loginButton": "Login"
     },
     "howItWorks": {
@@ -431,9 +433,9 @@
       "content_4": "Bloggers on Instagram and TikTok who are interested in partnering in the crypto",
       "text_button": "Get the code"
     },
-    "howWorksRefProgramm": {
+    "HowWorksCloudMining": {
       "title": "How does our crypto referral program work?",
-      "subtitle": "Your remuneration is based on the volume of transactions of the users you invite.",
+
       "subtitle_details": "* It allows you to earn at every level and significantly increase your income the more active traders you have in your network.",
       "levels_title": "There are two levels of referrals in our system:",
       "first_level_percentage": "35%",
@@ -471,7 +473,10 @@
       "title4": "Install the app and start earn with our referral program"
     },
     "signin": {
-      "title": "Sign in to continue",
+      "title_signin": "Sign in",
+      "title_signup": "Sign up",
+      "create_account": "Need to create an account?",
+      "have_account": "Already have an account?",
       "email": "Email",
       "continue": "Continue",
       "email_placeholder": "Enter your email address",
@@ -481,11 +486,35 @@
       "password_placeholder": "Enter your password",
       "password_text": "Includes at least one special symbol",
       "password_text_2": "Contains 8 or more symbols",
+      "confirm_password": "Confirm Password",
+      "confirm_password_placeholder": "Enter your password",
       "submit": "Submit",
       "forgot": "Forgot your password?",
       "signin": "Sign in",
       "signup": "Sign up",
-      "spinnerLabel": "Loading..."
+      "spinnerLabel": "Loading...",
+      "form_success_message": "Request sent",
+      "form_error_default": "Error sending email",
+      "form_error_unknown": "An unknown error occurred",
+      "form_error_email": "Invalid email address",
+      "form_error_email_validation": "Email already exist",
+      "form_error_email_empty": "Email is required",
+      "form_error_email_notFound": "Email not found",
+      "form_error_login_empty": "Login is required",
+      "form_error_password_empty": "Password is required",
+      "form_error_otp_notSend": "OTP Code don`t send",
+      "form_error_otpcode": "OTP Code must be exactly 5 digits",
+      "form_error_password": "Password must contain at least 8 characters",
+      "form_error_password_2": "Password must include at least 1 symbol",
+      "form_password_notMatch": "Passwords do not match",
+      "form_validate_login_password": "Incorrect Login/Password or OTP",
+      "form_validate_otpcode_notValid": "OTP Code not valid",
+      "form_validate_password": "Login or password was empty",
+      "form_validate_errorValidation": "Validation Failed. Failed to Create User",
+      "form_validate_loginExists": "Login already exists",
+      "form_validate_errorTimeOut": "Something went wrong. Please try again later",
+      "form_validate_errorDatabase": "Database Error: Failed to Create User",
+      "button": "Send"
     },
     "dashboard": {
       "nav": {
@@ -788,8 +817,9 @@
     "description": "Join us"
   },
   "supportPage": {
-    "title": "We respect the privacy of our players. LLC BTC-X.PRO does not store or have access to any sensitive information, such as passwords or credit card details. You can simply delete the app from your device if you wish to leave the platform. If you want us to completely remove your account and its associated data, please fill out the form below:",
-    "form_require": "Email require",
+    "title": "We respect the privacy of our users. LLC BTC-X.PRO does not store or have access to any sensitive information, such as passwords or credit card details. You can simply delete the app from your device if you wish to leave the platform. If you want us to completely remove your account and its associated data, please fill out the form below:",
+
+    "email_placeholder": "Enter your email in BTC-X.pro",
     "form_success_message": "Request sent",
     "form_error_default": "Error sending email",
     "form_error_unknown": "An unknown error occurred",

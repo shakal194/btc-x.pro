@@ -10,7 +10,7 @@ export default function FullScreenSpinner() {
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-lg'>
       <Spinner
         size='lg'
-        color='primary'
+        color='white'
         labelColor='foreground'
         label={t('spinner_text')}
       />

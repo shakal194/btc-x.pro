@@ -5,30 +5,25 @@ import {
   KeyIcon,
   EyeIcon,
   EyeSlashIcon,
-  XMarkIcon,
   ShieldCheckIcon,
   ArrowRightIcon,
   ExclamationCircleIcon,
 } from '@heroicons/react/24/outline';
-
 import { authenticate, handleEmailSubmitSign } from '@/lib/actions';
 import { useState, useActionState } from 'react';
 import React from 'react';
-import { Tabs, Tab, Card, CardBody, Link, CardFooter } from '@heroui/react';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import { Button } from '@/components/button';
-import SignUpForm from '@/components/ui/SignUpForm';
 import { useTranslations } from 'next-intl';
 
 export default function SignForm() {
   const t = useTranslations('cloudMiningPage.signin');
 
-  const [selected, setSelected] = useState('signin');
   const [errorMessage, dispatch] = useActionState(authenticate, undefined);
 
-  const [errorMessageFormSignin, setErrorMessageSignin] = useState('');
+  const [errorMessageForm, setErrorMessage] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [stepSignin, setStepSignin] = useState(1); // 1 - Email, 2 - OTP and Password
+  const [step, setStep] = useState(1); // 1 - Email, 2 - OTP and Password
   const [email, setEmail] = useState('');
   const [showSpinnerStep1, setShowSpinnerStep1] = useState(false);
   const [showSpinnerStep2, setShowSpinnerStep2] = useState(false);
@@ -37,37 +32,37 @@ export default function SignForm() {
     setPasswordVisible(!passwordVisible);
   };
 
-  const handleSubmitSignInStep1 = async (e: React.FormEvent) => {
+  const handleSubmitStep1 = async (e: React.FormEvent) => {
     e.preventDefault();
     setShowSpinnerStep1(true);
 
     try {
-      setErrorMessageSignin('');
+      setErrorMessage('');
       const result = await handleEmailSubmitSign(email);
       if (result?.errors) {
-        setErrorMessageSignin(result.errors.email[0]);
+        setErrorMessage(result.errors.email[0]);
       } else {
-        setStepSignin(2);
+        setStep(2);
       }
     } catch (error) {
-      setErrorMessageSignin((error as Error).message);
+      setErrorMessage((error as Error).message);
     } finally {
       setShowSpinnerStep1(false); // Скрываем спиннер
     }
   };
 
-  const handleSubmitSignInStep2 = () => {
+  const handleSubmitStep2 = () => {
     const otpCodeInput = document.getElementById('otpcode') as HTMLInputElement;
     const passwordInput = document.getElementById(
       'password',
     ) as HTMLInputElement;
 
-    setErrorMessageSignin('');
+    setErrorMessage('');
 
     // Проверяем, заполнены ли оба поля (OTP и пароль)
     if (!otpCodeInput?.value || !passwordInput?.value) {
       // Если хотя бы одно поле пустое, показываем ошибку и не запускаем спиннер
-      setErrorMessageSignin('Some input are empty.');
+      setErrorMessage('Some input are empty.');
       return;
     }
 
@@ -78,7 +73,7 @@ export default function SignForm() {
     <form action={dispatch} className='w-full'>
       <div className='flex flex-col items-center text-foreground'>
         <h1 className='md:text-md mb-3 lg:text-xl xl:text-2xl'>{t('title')}</h1>
-        {stepSignin === 1 && (
+        {step === 1 && (
           <div className='w-full md:w-[250px] lg:w-[300px]'>
             <div className='mt-4'>
               <label
@@ -106,16 +101,16 @@ export default function SignForm() {
                 aria-atomic='true'
                 className='mt-2'
               >
-                {errorMessageFormSignin && (
+                {errorMessageForm && (
                   <p className='text-sm text-red-500 dark:text-red-400'>
-                    {errorMessageFormSignin}
+                    {errorMessageForm}
                   </p>
                 )}
               </div>
               <Button
                 type='submit'
                 className='mt-4 w-full'
-                onClick={handleSubmitSignInStep1}
+                onClick={handleSubmitStep1}
               >
                 {t('continue')}
                 <ArrowRightIcon className='ml-auto h-5 w-5 text-gray-50' />
@@ -124,7 +119,7 @@ export default function SignForm() {
             {showSpinnerStep1 && <FullScreenSpinner />}
           </div>
         )}
-        {stepSignin === 2 && (
+        {step === 2 && (
           <>
             <div className='w-full'>
               <div className='mt-4'>
@@ -158,7 +153,7 @@ export default function SignForm() {
                 </label>
                 <div className='relative'>
                   <input
-                    className='w-full rounded-md border border-gray-200 bg-primary py-[9px] pl-10 text-sm outline-2 placeholder:text-primary'
+                    className='peer block w-full rounded-md border border-gray-200 bg-primary py-[9px] pl-10 text-sm outline-2 placeholder:text-primary'
                     id='otpcode'
                     type='text'
                     name='otpcode'
@@ -177,7 +172,7 @@ export default function SignForm() {
                 </label>
                 <div className='relative'>
                   <input
-                    className='w-full rounded-md border border-gray-200 bg-primary py-[9px] pl-10 text-sm outline-2 placeholder:text-primary'
+                    className='peer block w-full rounded-md border border-gray-200 bg-primary py-[9px] pl-10 text-sm outline-2 placeholder:text-primary'
                     id='password'
                     type={passwordVisible ? 'text' : 'password'}
                     name='password'
@@ -209,12 +204,10 @@ export default function SignForm() {
                   aria-atomic='true'
                   className='flex'
                 >
-                  {errorMessageFormSignin && (
+                  {errorMessageForm && (
                     <div className='mt-2 flex'>
                       <ExclamationCircleIcon className='mr-2 h-5 w-5 text-red-500' />
-                      <p className='text-sm text-red-500'>
-                        {errorMessageFormSignin}
-                      </p>
+                      <p className='text-sm text-red-500'>{errorMessageForm}</p>
                     </div>
                   )}
                 </div>
@@ -235,7 +228,7 @@ export default function SignForm() {
               <Button
                 className='mt-4 w-full'
                 type='submit'
-                onClick={handleSubmitSignInStep2}
+                onClick={handleSubmitStep2}
               >
                 {t('signin')}
                 <ArrowRightIcon className='ml-auto h-5 w-5 text-gray-50' />

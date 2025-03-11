@@ -22,6 +22,7 @@ export default {
         danger: 'var(--danger)',
         secondary: 'var(--secondary)',
         primary: 'var(--primary)',
+        autofillTextColor: 'rgb(234, 236, 239)',
       },
       fontSize: {
         font18: '18px',

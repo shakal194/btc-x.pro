@@ -24,6 +24,9 @@ const publicPages = [
   '/terms',
   '/privacy',
   '/aml',
+  '/signin',
+  '/signin?error=CredentialsSignin&code=Invalid+login+or+password',
+  '/signin?error=CredentialsSignin&code=OTP+Code+not+valid',
 ];
 
 const authPages = ['/signin'];
@@ -72,6 +75,7 @@ const authMiddleware = auth((req) => {
   if (!session && !isAuthPage) {
     const signInUrl = new URL('/signin', req.nextUrl);
     signInUrl.searchParams.set('callbackUrl', pathname);
+
     return NextResponse.redirect(signInUrl);
   }
 

@@ -79,12 +79,7 @@ export default function HowItWorksSection() {
           </div>
         </div>
         <div className='mb-12 mt-[90px] flex w-full flex-col justify-between lg:mt-[150px] xl:flex-row'>
-          <p className='mb-[10px] w-[174px] font-ibm text-[10px] opacity-[33%] md:text-ibm13Leading130 lg:mb-0 lg:h-[63px] lg:text-ibm16Leading130'>
-            {t('subtitle_2')}
-          </p>
-
-          {/*<p>ТУТ БУДЕТ СЛАЙДЕР С NEXTUI</p>*/}
-          <div className='space-y-16'>
+          <div className='mx-auto space-y-16'>
             <h2 className='mb-6 text-[28px] font-semibold leading-[110%] tracking-tight md:w-[450px] md:text-font30Leading110 lg:w-[885px] lg:text-font50Leading110 lg:font-semibold'>
               {t('title_2')}
             </h2>
