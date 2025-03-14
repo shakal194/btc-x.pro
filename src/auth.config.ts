@@ -12,7 +12,6 @@ export const authConfig = {
       //const loginPage = nextUrl.pathname.startsWith('/login');
       const loginPage = nextUrl.pathname.startsWith('/signin');
       if (isOnDashboard) {
-        console.log('callback isOnDashboard', nextUrl);
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
       } else if (isLoggedIn) {

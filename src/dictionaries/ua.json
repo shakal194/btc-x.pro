@@ -503,6 +503,7 @@
     "dashboard": {
       "nav": {
         "home": "Головна",
+        "algorithms": "Алгоритми",
         "yourMiners": "Ваші Майнери",
         "customers": "Клієнти",
         "settings": "Налаштування",

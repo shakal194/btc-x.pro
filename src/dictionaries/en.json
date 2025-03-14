@@ -519,6 +519,7 @@
     "dashboard": {
       "nav": {
         "home": "Home",
+        "algorithms": "Algorithms",
         "yourMiners": "Your Miners",
         "customers": "Customers",
         "settings": "Settings",

@@ -50,9 +50,9 @@ export default function SignUpForm() {
     return valueEmail === '' || !validateEmail(valueEmail);
   }, [valueEmail]);
 
-  const isInvalidOTP = useMemo(() => {
+  /*const isInvalidOTP = useMemo(() => {
     return valueOTPCode === '' || !/^\d{5}$/.test(valueOTPCode);
-  }, [valueOTPCode]);
+  }, [valueOTPCode]);*/
 
   if (valuePassword.length < 8) {
     passwordErrors.push(t('form_error_password'));
@@ -71,7 +71,7 @@ export default function SignUpForm() {
 
   const isInvalidStep2 = useMemo(() => {
     return (
-      valueEmail === '' || valueOTPCode.length !== 5 || valuePassword === ''
+      valueEmail === '' /*|| valueOTPCode.length !== 5*/ || valuePassword === ''
     );
   }, [valueEmail, valueOTPCode, valuePassword]);
 
@@ -80,10 +80,10 @@ export default function SignUpForm() {
     setErrorMessageEmail(''); // Clear email error when value changes
   };
 
-  const handleOTPChange = (value: string) => {
+  /*const handleOTPChange = (value: string) => {
     setValueOTPCode(value);
     setErrorMessageOTP(''); // Clear OTP error when value changes
-  };
+  };*/
 
   const handlePasswordChange = (value: string) => {
     setValuePassword(value);
@@ -122,7 +122,7 @@ export default function SignUpForm() {
     setErrorMessageForm('');
 
     // Валидация
-    if (isInvalidEmail || isInvalidOTP || isInvalidPassword) {
+    if (isInvalidEmail || /*isInvalidOTP ||*/ isInvalidPassword) {
       setShowSpinnerStep2(false); // Отключаем спиннер при ошибке
       return;
     }
@@ -130,7 +130,7 @@ export default function SignUpForm() {
     // Создаем FormData
     const formData = new FormData();
     formData.append('email', valueEmail);
-    formData.append('otpcode', valueOTPCode);
+    //formData.append('otpcode', valueOTPCode);
     formData.append('password', valuePassword);
     formData.append('redirectTo', callbackUrl);
 
@@ -151,7 +151,7 @@ export default function SignUpForm() {
   return (
     <>
       <Form
-        className='w-full max-w-xs gap-3 overflow-x-hidden'
+        className='mx-auto w-full max-w-xs gap-3 overflow-x-hidden'
         action={formAction}
       >
         <div className='mx-auto flex w-[250px] flex-col items-center text-foreground lg:w-[300px]'>
@@ -212,7 +212,7 @@ export default function SignUpForm() {
                 //onValueChange={handleEmailChange}
                 //onClear={() => {}}
               />
-              <Input
+              {/*<Input
                 label={t('otpcode')}
                 labelPlacement='inside'
                 isInvalid={isInvalidOTP}
@@ -228,7 +228,7 @@ export default function SignUpForm() {
                 variant='bordered'
                 onValueChange={handleOTPChange}
                 onClear={() => {}}
-              />
+              />*/}
               <div>
                 <Input
                   label={t('password')}

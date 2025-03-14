@@ -53,9 +53,9 @@ export default function SignUpForm() {
     return valueEmail === '' || !validateEmail(valueEmail);
   }, [valueEmail]);
 
-  const isInvalidOTP = useMemo(() => {
+  /*const isInvalidOTP = useMemo(() => {
     return valueOTPCode === '' || !/^\d{5}$/.test(valueOTPCode);
-  }, [valueOTPCode]);
+  }, [valueOTPCode]);*/
 
   if (valuePassword.length < 8) {
     passwordErrors.push(t('form_error_password'));
@@ -75,14 +75,14 @@ export default function SignUpForm() {
   const isInvalidStep2 = useMemo(() => {
     return (
       valueEmail === '' ||
-      valueOTPCode.length !== 5 ||
+      /*valueOTPCode.length !== 5 ||*/
       valuePassword === '' ||
       valueConfirmPassword === '' ||
       !valuePrivacy
     );
   }, [
     valueEmail,
-    valueOTPCode,
+    //valueOTPCode,
     valuePassword,
     valueConfirmPassword,
     valuePrivacy,
@@ -93,10 +93,10 @@ export default function SignUpForm() {
     setErrorMessageEmail(''); // Clear email error when value changes
   };
 
-  const handleOTPChange = (value: string) => {
+  /*const handleOTPChange = (value: string) => {
     setValueOTPCode(value);
     setErrorMessageOTP(''); // Clear OTP error when value changes
-  };
+  };*/
 
   const handlePasswordChange = (value: string) => {
     setValuePassword(value);
@@ -145,7 +145,7 @@ export default function SignUpForm() {
 
     // Валидация
     if (
-      isInvalidOTP ||
+      /*isInvalidOTP ||*/
       isInvalidPassword ||
       valuePassword !== valueConfirmPassword ||
       !valuePrivacy
@@ -157,7 +157,7 @@ export default function SignUpForm() {
     // Создаем FormData
     const formData = new FormData();
     formData.append('email', valueEmail);
-    formData.append('otpcode', valueOTPCode);
+    //formData.append('otpcode', valueOTPCode);
     formData.append('password', valuePassword);
     formData.append('confirmPassword', valueConfirmPassword);
 
@@ -240,6 +240,7 @@ export default function SignUpForm() {
                 onValueChange={handleEmailChange}
                 onClear={() => {}}
               />
+              {/*
               <Input
                 label={t('otpcode')}
                 labelPlacement='inside'
@@ -267,6 +268,7 @@ export default function SignUpForm() {
                     </div>
                   ))}
               </div>
+              */}
               <div>
                 <Input
                   label={t('password')}
@@ -308,7 +310,7 @@ export default function SignUpForm() {
                   variant='bordered'
                   onValueChange={handlePasswordChange}
                 />
-                <div id='password-error' aria-live='polite' aria-atomic='true'>
+                {/*<div id='password-error' aria-live='polite' aria-atomic='true'>
                   {state.errors?.password &&
                     state.errors.password.map((error: string) => (
                       <div key={error} className='mt-2 flex items-center'>
@@ -318,7 +320,7 @@ export default function SignUpForm() {
                         </p>
                       </div>
                     ))}
-                </div>
+                </div>*/}
               </div>
               <div>
                 <Input

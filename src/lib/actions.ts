@@ -6,6 +6,10 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { AuthError } from 'next-auth';
 import { getTranslations } from 'next-intl/server';
+import db from '@/db/db'; // Импортируем подключение к БД
+import { usersTable } from '@/db/schema';
+import { sql } from 'drizzle-orm';
+import { hashPassword } from '@/lib/utils';
 
 const apiMainUrl = process.env.NEXT_PUBLIC_API_MAIN_URL;
 const apiMiniUrl = process.env.NEXT_PUBLIC_API_MINI_URL;
@@ -13,6 +17,7 @@ const apiRegisterUrl = process.env.NEXT_PUBLIC_API_REGISTR_URL;
 
 export async function handleEmailSubmitSign(email: string) {
   const t = await getTranslations('cloudMiningPage.signin');
+
   if (!email) {
     console.error(t('form_error_email_empty'));
     return {
@@ -38,30 +43,21 @@ export async function handleEmailSubmitSign(email: string) {
   }
 
   try {
-    const emailValidation = await fetch(
-      `${apiRegisterUrl}/Validation/email-exist`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: '*/*' },
-        body: JSON.stringify(email),
-      },
-    );
+    const existingUser = await db
+      .select()
+      .from(usersTable)
+      .where(sql`${usersTable.email} = ${email}`)
+      .limit(1);
 
-    if (emailValidation.status === 400) {
-      console.log(emailValidation.status, t('form_error_email_notFound'));
+    if (existingUser.length === 0) {
+      console.log(t('form_error_email_notFound'));
       return {
         errors: { email: [t('form_error_email_notFound')] },
       };
     }
-
-    const response = await fetch(`${apiRegisterUrl}/Registration/sendcode`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: '*/*' },
-      body: JSON.stringify(email),
-    });
   } catch (error) {
-    console.error(t('form_error_otp_notSend'), error);
-    throw new Error(t('form_error_otp_notSend'));
+    console.error(t('form_validate_errorTimeOut'), error);
+    throw new Error(t('form_validate_errorTimeOut'));
   }
 }
 
@@ -82,7 +78,7 @@ export async function authenticate(
     } else {
       return 'Oooops';
     }*/
-
+    console.log('actions', error);
     if (error instanceof AuthError) {
       switch (error.type) {
         case 'CredentialsSignin':
@@ -125,27 +121,20 @@ export async function handleEmailSubmitRegister(email: string) {
   }
 
   try {
-    const emailValidation = await fetch(
-      `${apiRegisterUrl}/Validation/email-exist`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: '*/*' },
-        body: JSON.stringify(email),
-      },
-    );
+    const existingUser = await db
+      .select()
+      .from(usersTable)
+      .where(sql`${usersTable.email} = ${email}`)
+      .limit(1);
 
-    if (emailValidation.status === 200) {
-      console.log(emailValidation.status, t('form_error_email_validation'));
+    if (existingUser.length > 0) {
+      console.log(t('form_error_email_validation'));
       return {
         errors: { email: [t('form_error_email_validation')] },
       };
     }
 
-    const response = await fetch(`${apiRegisterUrl}/Registration/sendcode`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: '*/*' },
-      body: JSON.stringify(email),
-    });
+    console.log('Email is valid and unique. Proceeding with OTP sending.');
   } catch (error) {
     console.error(t('form_error_otp_notSend'), error);
     throw new Error(t('form_error_otp_notSend'));
@@ -158,7 +147,7 @@ export type AddUserState = {
   errors?: {
     email?: string[];
     login?: string[];
-    otpcode?: string[];
+    //otpcode?: string[];
     password?: string[];
     confirmPassword?: string[];
     //privacy_and_terms?: string[];
@@ -174,9 +163,9 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
     .object({
       login: z.string({ invalid_type_error: 'Please input login.' }),
       email: z.string({ invalid_type_error: 'Please input email.' }),
-      otpcode: z
+      /*otpcode: z
         .string({ invalid_type_error: 'Please input a valid OTP Code.' })
-        .regex(/^\d{5}$/, { message: 'OTP Code must be exactly 5 digits.' }),
+        .regex(/^\d{5}$/, { message: 'OTP Code must be exactly 5 digits.' }),*/
       password: z
         .string({ invalid_type_error: 'Please input password.' })
         .min(8, {
@@ -201,7 +190,7 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
   const validatedFields = AddUser.safeParse({
     email: formData.get('email'),
     login: formData.get('email'),
-    otpcode: formData.get('otpcode'),
+    //otpcode: formData.get('otpcode'),
     password: formData.get('password'),
     confirmPassword: formData.get('confirmPassword'),
     //privacy_and_terms: formData.get('privacy_and_terms'),
@@ -226,48 +215,33 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
   }
 
   if (validatedFields.success) {
-    const { login, email, otpcode, password } = validatedFields.data;
+    const { email, /*otpcode,*/ password } = validatedFields.data;
 
     try {
-      const response = await fetch(`${apiRegisterUrl}/Registration/adduser`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: '*/*' },
-        body: JSON.stringify({ email, otpcode, password, login }),
-      });
+      // Проверяем, существует ли уже пользователь с таким email
+      const existingUser = await db
+        .select()
+        .from(usersTable)
+        .where(sql`${usersTable.email} = ${email}`)
+        .limit(1);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Error:', errorData);
-        if (errorData === 6) {
-          return {
-            errors: { otpcode: [t('form_validate_otpcode_notValid')] },
-          };
-        }
-        if (errorData === 0) {
-          return {
-            errors: { email: [t('form_validate_loginExists')] },
-          };
-        }
-        if (errorData === 3) {
-          return {
-            errors: { password: [t('form_validate_password')] },
-          };
-        }
-        if (errorData === 14) {
-          return {
-            errors: { email: [t('form_validate_errorDatabase')] },
-          };
-        }
-        //throw new Error(`Request failed with status ${response.status}`);
+      if (existingUser.length > 0) {
+        return {
+          errors: { email: [t('form_validate_loginExists')] },
+        };
       }
 
-      console.log(
-        'Response status -',
-        response.status,
-        'Response statusText -',
-        response.statusText,
-        'User add successfully.',
-      );
+      const hashedPassword = await hashPassword(password);
+
+      // Вставляем нового пользователя в таблицу
+      await db.insert(usersTable).values({
+        email,
+        password: hashedPassword,
+        referral_code: Math.floor(100000 + Math.random() * 900000), // Пример случайного реферального кода
+        status: 'user', // Статус по умолчанию
+      });
+
+      console.log('User added successfully');
     } catch (error) {
       return {
         message: t('form_errorTimeOut'),

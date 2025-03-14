@@ -525,6 +525,7 @@
     "dashboard": {
       "nav": {
         "home": "Главная",
+        "algorithms": "Алгоритмы",
         "yourMiners": "Ваши Майнеры",
         "customers": "Клиенты",
         "settings": "Настройки",

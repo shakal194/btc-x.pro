@@ -25,8 +25,6 @@ const publicPages = [
   '/privacy',
   '/aml',
   '/signin',
-  '/signin?error=CredentialsSignin&code=Invalid+login+or+password',
-  '/signin?error=CredentialsSignin&code=OTP+Code+not+valid',
 ];
 
 const authPages = ['/signin'];
