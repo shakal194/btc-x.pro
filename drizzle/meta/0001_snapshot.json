@@ -1,11 +1,11 @@
 {
-  "id": "1e9170f1-4cc9-4c9b-8417-ab7f63fe5808",
-  "prevId": "2cb874af-eeea-484c-9431-ec798c90123d",
+  "id": "9582f975-5e3c-4ab3-af36-2ba6c492afe4",
+  "prevId": "cbc68fbc-42df-4550-87ff-84f8bc97a3da",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.alogrithms": {
-      "name": "alogrithms",
+    "public.algorithms": {
+      "name": "algorithms",
       "schema": "",
       "columns": {
         "id": {
@@ -15,7 +15,7 @@
           "notNull": true,
           "identity": {
             "type": "always",
-            "name": "alogrithms_id_seq",
+            "name": "algorithms_id_seq",
             "schema": "public",
             "increment": "1",
             "startWith": "1",
@@ -37,6 +37,13 @@
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
+        },
+        "coinTickers": {
+          "name": "coinTickers",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'[]'::jsonb"
         }
       },
       "indexes": {},
@@ -100,12 +107,8 @@
           "name": "balances_user_id_users_id_fk",
           "tableFrom": "balances",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -175,12 +178,8 @@
           "name": "deposits_user_id_users_id_fk",
           "tableFrom": "deposits",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -275,20 +274,20 @@
           "primaryKey": false,
           "notNull": true
         },
-        "alogrithm_id": {
-          "name": "alogrithm_id",
+        "algorithm_id": {
+          "name": "algorithm_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "performance_unit": {
-          "name": "performance_unit",
+        "hashrate_unit": {
+          "name": "hashrate_unit",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
-        "performance": {
-          "name": "performance",
+        "hashrate": {
+          "name": "hashrate",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -319,30 +318,19 @@
         },
         "photoUrl": {
           "name": "photoUrl",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
-        },
-        "coinTickers": {
-          "name": "coinTickers",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'[]'::jsonb"
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "equipments_alogrithm_id_alogrithms_id_fk": {
-          "name": "equipments_alogrithm_id_alogrithms_id_fk",
+        "equipments_algorithm_id_algorithms_id_fk": {
+          "name": "equipments_algorithm_id_algorithms_id_fk",
           "tableFrom": "equipments",
-          "tableTo": "alogrithms",
-          "columnsFrom": [
-            "alogrithm_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "tableTo": "algorithms",
+          "columnsFrom": ["algorithm_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -419,12 +407,8 @@
           "name": "history_changes_user_id_users_id_fk",
           "tableFrom": "history_changes",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -469,12 +453,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "coinTicker": {
-          "name": "coinTicker",
-          "type": "varchar(10)",
-          "primaryKey": false,
-          "notNull": true
-        },
         "coinsPerHashrate": {
           "name": "coinsPerHashrate",
           "type": "numeric(30, 8)",
@@ -484,16 +462,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "mining_income_algorithm_id_alogrithms_id_fk": {
-          "name": "mining_income_algorithm_id_alogrithms_id_fk",
+        "mining_income_algorithm_id_algorithms_id_fk": {
+          "name": "mining_income_algorithm_id_algorithms_id_fk",
           "tableFrom": "mining_income",
-          "tableTo": "alogrithms",
-          "columnsFrom": [
-            "algorithm_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "tableTo": "algorithms",
+          "columnsFrom": ["algorithm_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -582,12 +556,8 @@
           "name": "mining_rewards_user_id_users_id_fk",
           "tableFrom": "mining_rewards",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -670,12 +640,8 @@
           "name": "transactions_user_id_users_id_fk",
           "tableFrom": "transactions",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -683,12 +649,8 @@
           "name": "transactions_equipment_id_equipments_id_fk",
           "tableFrom": "transactions",
           "tableTo": "equipments",
-          "columnsFrom": [
-            "equipment_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["equipment_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -773,9 +735,7 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -853,12 +813,8 @@
           "name": "withdrawals_user_id_users_id_fk",
           "tableFrom": "withdrawals",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

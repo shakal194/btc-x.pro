@@ -1,1 +1,0 @@
-ALTER TABLE "algorithms" ADD COLUMN "coinTickers" jsonb DEFAULT '[]'::jsonb;

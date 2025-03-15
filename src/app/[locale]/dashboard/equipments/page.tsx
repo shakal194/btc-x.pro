@@ -1,12 +1,12 @@
 import { auth } from '@/auth';
-import Algorithms from '@/components/PageComponents/DashboardPage/components/Algorithms';
+import Equipments from '@/components/PageComponents/DashboardPage/components/Equipments';
 
 export default async function Page() {
   const session = await auth();
 
   return (
     <main>
-      <Algorithms />
+      <Equipments />
       <div>
         <div className='grid gap-2 md:grid-cols-2'></div>
       </div>

@@ -1,9 +1,13 @@
 'use server';
 
 import db from '@/db/db'; // Подключаем подключение к базе данных
-import { electricityPriceTable, algorithmTable } from '@/db/schema'; // Импортируем таблицу
+import {
+  electricityPriceTable,
+  algorithmTable,
+  equipmentsTable,
+} from '@/db/schema'; // Импортируем таблицу
 import { sql, desc, asc } from 'drizzle-orm';
-import { jsonb } from 'drizzle-orm/pg-core';
+import fs from 'fs';
 
 //Получаем последнюю цену электричества с таблицы electricity_price
 export async function fetchElectricityPrice() {
@@ -54,8 +58,8 @@ export async function fetchAlgorithms() {
 
     return algorithms;
   } catch (error) {
-    console.error('Error saving price:', error);
-    throw new Error('Error saving price');
+    console.error('Error fetch algorithms:', error);
+    throw new Error('Error fetch algorithms');
   }
 }
 
@@ -88,7 +92,7 @@ export async function insertAlgorithm(
       coinTickers: sql`CAST(${coinTickersJson} AS jsonb)`, // Using CAST to insert the JSON data into the jsonb column
     });
 
-    console.log('Algorithm saved successfully');
+    console.log('Algorithm saved successfully', result);
   } catch (error) {
     console.error('Error saving algorithm:', error);
     throw new Error('Error saving algorithm');
@@ -161,6 +165,8 @@ export async function updateTickerPricePerHashrate(
       throw new Error('Invalid input data');
     }
 
+    console.log(newPriceNumber);
+
     // Fetch the current algorithm from the database
     const existingAlgorithm = await db
       .select()
@@ -201,5 +207,73 @@ export async function updateTickerPricePerHashrate(
   } catch (error) {
     console.error('Error updating ticker price per hashrate:', error);
     throw new Error('Error updating ticker price per hashrate');
+  }
+}
+
+//Добавление оборудования
+export async function insertEquipment(equipmentData: {
+  name: string;
+  algorithm_id: number;
+  hashrate_unit: string; // Указываем возможные значения для hashrate_unit
+  hashrate: number;
+  power: number;
+  purchasePrice: number;
+  salePrice: number;
+  shareCount: number;
+  photoUrl: string;
+}) {
+  try {
+    // Подготовка данных для вставки в базу
+    const {
+      name,
+      algorithm_id,
+      hashrate_unit,
+      hashrate,
+      power,
+      purchasePrice,
+      salePrice,
+      shareCount,
+      photoUrl,
+    } = equipmentData;
+
+    const buffer = Buffer.from(photoUrl.split(',')[1], 'base64');
+    const filePath = `public/equipments/${name}_${hashrate}_${power}.jpg`;
+
+    fs.writeFileSync(filePath, buffer);
+
+    // Вставка данных в таблицу
+    const result = await db.insert(equipmentsTable).values({
+      name: sql`${name}`,
+      algorithm_id: sql`${algorithm_id}`,
+      hashrate_unit: sql`${hashrate_unit}`,
+      hashrate: sql`${hashrate}`,
+      power: sql`${power}`,
+      purchasePrice: sql`${purchasePrice}`,
+      salePrice: sql`${salePrice}`,
+      shareCount: sql`${shareCount}`,
+      photoUrl: sql`${filePath}`,
+      // Тут можно добавить поле photoUrl, если оно потребуется
+    });
+
+    console.log('Оборудование успешно добавлено', result);
+  } catch (error) {
+    console.error('Ошибка при добавлении оборудования:', error);
+    throw new Error('Ошибка при добавлении оборудования');
+  }
+}
+
+//Получаем оборудование с таблицы equipments
+export async function fetchEquipments() {
+  try {
+    // Вставляем данные в таблицу
+    const equipments = await db
+      .select()
+      .from(equipmentsTable)
+      .orderBy(asc(equipmentsTable));
+
+    return equipments;
+  } catch (error) {
+    console.error('Error fetch equipments:', error);
+    throw new Error('Error fetch equipments');
   }
 }

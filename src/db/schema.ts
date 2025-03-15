@@ -35,12 +35,12 @@ export const equipmentsTable = pgTable('equipments', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   uuid: uuid().defaultRandom(),
   name: varchar({ length: 255 }).notNull(),
-  alogrithm_id: integer()
+  algorithm_id: integer()
     .notNull()
     .references(() => algorithmTable.id),
-  performance_unit: varchar({ enum: ['Th', 'Mh', 'Gh'] }).notNull(),
-  performance: integer().notNull(),
-  power: decimal().notNull(),
+  hashrate_unit: varchar({ length: 10 }).notNull(),
+  hashrate: integer().notNull(),
+  power: decimal({ precision: 10, scale: 4 }).notNull(),
   purchasePrice: integer().notNull(),
   salePrice: integer().notNull(),
   shareCount: integer().notNull(),

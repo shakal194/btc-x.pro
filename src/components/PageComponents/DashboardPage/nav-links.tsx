@@ -6,6 +6,7 @@ import {
   DocumentDuplicateIcon,
   AdjustmentsHorizontalIcon,
   CodeBracketSquareIcon,
+  ServerStackIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -25,6 +26,11 @@ export default function NavLinks() {
       name: `${t('algorithms')}`,
       href: '/dashboard/algorithms',
       icon: CodeBracketSquareIcon,
+    },
+    {
+      name: `${t('equipments')}`,
+      href: '/dashboard/equipments',
+      icon: ServerStackIcon,
     },
     {
       name: `${t('yourMiners')}`,

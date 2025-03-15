@@ -22,13 +22,14 @@ import {
 import FullScreenSpinner from '@/components/ui/Spinner';
 import Notiflix from 'notiflix';
 
-export default function PricePerKWh() {
+export default function Algorithms() {
+  const [isLoading, setIsLoading] = useState<boolean>(false); // Флаг загрузки
   const [price, setPrice] = useState(''); // Состояние для хранения введённой цены
   const [tickerPairs, setTickerPairs] = useState([
     { ticker: '', coinsPerHashrate: '' },
   ]);
   const [errorPrice, setErrorPrice] = useState<string | null>(null); // Для ошибки валидации
-  const [updCoinsPerHashrate, setupdCoinsPerHashrate] = useState(''); // Состояние для хранения введённой цены
+  const [updCoinsPerHashrate, setUpdCoinsPerHashrate] = useState(''); // Состояние для хранения введённой цены
   const [errorAlgorithm, setErrorAlgorithm] = useState<string | null>(null); // Для ошибки валидации
   const [errorTicker, setErrorTicker] = useState<string | null>(null); // Для ошибки валидации
   const [errorCoinsPerHashrate, setErrorCoinsPerHashrate] = useState<
@@ -74,13 +75,16 @@ export default function PricePerKWh() {
 
   useEffect(() => {
     const getAlgorithms = async () => {
+      setIsLoading(true);
       try {
         const data = await fetchAlgorithms(); // Получаем данные с сервера
 
         setAlgorithmsFetch(data);
         return data;
       } catch (error) {
-        console.error('Ошибка при получении данных о цене', error);
+        console.error('Ошибка при получении данных по алгоритмам', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -130,8 +134,6 @@ export default function PricePerKWh() {
   ) => {
     try {
       startTransition(async () => {
-        // Assuming 'algorithmName' is stored in the parent component's state or passed down as props
-        console.log(algorithmName); // replace this with the actual algorithm name
         await deleteTickerFromAlgorithm(algorithmName, tickerName);
 
         const updatedAlgorithms = await fetchAlgorithms(); // Fetch updated list of algorithms
@@ -157,9 +159,16 @@ export default function PricePerKWh() {
   ) => {
     const newPriceNumber = parseFloat(coinPrices[tickerName]);
 
-    if (isNaN(newPriceNumber)) {
-      // Handle error if new price is invalid
-      console.error('Invalid price');
+    if (
+      Number.isNaN(newPriceNumber) ||
+      newPriceNumber <= 0 ||
+      !/^\d+(\.\d{1,8})?$/.test(newPriceNumber.toString())
+    ) {
+      // Если значение не число или меньше или равно 0
+      setUpdCoinsPerHashrate(
+        'Введите корректную цену с максимальной точностью до 8 знаков после запятой',
+      );
+      Notiflix.Notify.warning('Введите корректное количество монет');
       return;
     }
 
@@ -178,7 +187,6 @@ export default function PricePerKWh() {
         Notiflix.Notify.success('Количество монет обновлено');
       });
     } catch (error) {
-      console.error('Error updating price:', error);
       Notiflix.Notify.warning('Количество монет не обновлено');
     }
   };
@@ -223,9 +231,17 @@ export default function PricePerKWh() {
         );
         return false;
       }
-      if (!pair.coinsPerHashrate || isNaN(parseFloat(pair.coinsPerHashrate))) {
-        setErrorCoinsPerHashrate('Количество монет должно быть числом');
-        Notiflix.Notify.warning('Количество монет должно быть числом');
+      if (
+        !pair.coinsPerHashrate ||
+        isNaN(parseFloat(pair.coinsPerHashrate)) ||
+        !/^\d+(\.\d{1,8})?$/.test(pair.coinsPerHashrate.toString())
+      ) {
+        setErrorCoinsPerHashrate(
+          'Введите корректную цену с максимальной точностью до 8 знаков после запятой',
+        );
+        Notiflix.Notify.warning(
+          'Введите корректную цену с максимальной точностью до 8 знаков после запятой',
+        );
         return false;
       }
       return true;
@@ -236,22 +252,56 @@ export default function PricePerKWh() {
     // Send data to the server
     try {
       startTransition(async () => {
-        setErrorAlgorithm(null); // Clear error message
-        setAlgorithm(''); // Clear algorithm input
+        setErrorAlgorithm(null); // Очистка ошибок
+        setAlgorithm(''); // Очистка введенного алгоритма
+        setTickerPairs([{ ticker: '', coinsPerHashrate: '' }]);
+        setErrorCoinsPerHashrate(''); // Очистка ошибки для coinsPerHashrate
 
-        const coinsTickers = tickerPairs.map((pair) => ({
-          name: pair.ticker,
-          pricePerHashrate: parseFloat(pair.coinsPerHashrate),
-        }));
+        const coinsTickers = tickerPairs
+          .map((pair) => {
+            const coinsPerHashrate = pair.coinsPerHashrate;
 
-        // Insert algorithm data
+            // Проверяем количество знаков после запятой
+            const decimalPlaces = coinsPerHashrate.split('.')[1]?.length || 0;
+
+            // Проверка на корректность числа
+            if (decimalPlaces > 8) {
+              setErrorCoinsPerHashrate(
+                'Количество монет не должно содержать более 8 знаков после запятой',
+              );
+              Notiflix.Notify.warning(
+                'Введите корректное количество монет (до 8 знаков после запятой)',
+              );
+              return null; // Возвращаем null, чтобы фильтровать в следующем шаге
+            }
+
+            // Если все в порядке, возвращаем объект с тикером и ценой
+            return {
+              name: pair.ticker,
+              pricePerHashrate: parseFloat(coinsPerHashrate),
+            };
+          })
+          .filter((coin) => coin !== null); // Фильтруем все null значения (ошибочные тикеры)
+
+        // Если после фильтрации нет валидных тикеров, прерываем выполнение
+        if (coinsTickers.length === 0) {
+          return;
+        }
+
+        // Вставляем данные в базу
         await insertAlgorithm(algorithm, coinsTickers);
 
-        // Fetch updated list of algorithms
+        // Получаем обновленный список алгоритмов
         const updatedAlgorithms = await fetchAlgorithms();
         setAlgorithmsFetch(updatedAlgorithms);
 
-        onClose(); // Close modal
+        // Сброс состояния
+        setAlgorithm('');
+        setTickerPairs([{ ticker: '', coinsPerHashrate: '' }]);
+        setTicker('');
+        setErrorCoinsPerHashrate('');
+
+        onClose(); // Закрыть модальное окно
         Notiflix.Notify.success('Алгоритм успешно добавлен');
       });
     } catch (error) {
@@ -265,6 +315,8 @@ export default function PricePerKWh() {
     setAlgorithm('');
     setTickerPairs([{ ticker: '', coinsPerHashrate: '' }]);
     setTicker('');
+    setErrorCoinsPerHashrate('');
+    setErrorTicker('');
     onClose();
   };
 
@@ -310,7 +362,9 @@ export default function PricePerKWh() {
       </div>
       <div className='text-lg text-white'>
         <ul className='space-y-4'>
-          {algorithmsFetch.length > 0 ? (
+          {isLoading ? (
+            <p>Загрузка алгоритмов...</p>
+          ) : algorithmsFetch.length > 0 ? (
             algorithmsFetch.map((algorithm, index) => (
               <li key={index} className='border-b-1 border-secondary'>
                 <div className='text-center'>
@@ -318,79 +372,77 @@ export default function PricePerKWh() {
                 </div>
                 <div>
                   <b>
-                    {algorithm.coinTickers.map((ticker: any, index: number) => {
-                      return (
-                        <div
-                          key={index}
-                          className='mb-4 flex items-center justify-between space-y-2 py-2'
-                        >
+                    {algorithm.coinTickers.map((ticker: any, index: number) => (
+                      <div
+                        key={index}
+                        className='mb-4 flex items-center justify-between space-y-2 py-2'
+                      >
+                        <div>
                           <p>Монета - {ticker.name}</p>
-                          <div>
-                            <p className='mb-2'>
-                              Количество монет в сутки на ед. хешрейта -{' '}
-                              {ticker.pricePerHashrate}
-                            </p>
-                            <div className='flex w-[400px] items-center justify-between'>
-                              <Input
-                                size='lg'
-                                label='Количество монет'
-                                labelPlacement='inside'
-                                placeholder='0.00'
-                                className='w-[200px]'
-                                value={coinPrices[ticker.name] || ''}
-                                onChange={(e) =>
-                                  handleInputChangePrice(
-                                    ticker.name,
-                                    e.target.value.replace(',', '.'),
-                                  )
-                                }
-                                startContent={
-                                  <div className='pointer-events-none flex items-center'>
-                                    <span className='text-small text-default-400'>
-                                      $
-                                    </span>
-                                  </div>
-                                }
-                              />
-                              <Button
-                                size='lg'
-                                className='bg-white'
-                                onPress={() =>
-                                  handleUpdatePrice(algorithm.name, ticker.name)
-                                }
-                              >
-                                <CloudArrowDownIcon className='h-5 w-5' />
-                              </Button>
-                              {isPending && <FullScreenSpinner />}
-                              <Button
-                                size='lg'
-                                className='bg-white'
-                                onPress={() =>
-                                  handleDeleteTicker(
-                                    ticker.name,
-                                    algorithm.name,
-                                  )
-                                }
-                              >
-                                <TrashIcon className='h-5 w-5' />
-                              </Button>
-                              {isPending && <FullScreenSpinner />}
-                            </div>
-                            {errorPrice && (
-                              <div className='mt-4 text-red-500'>
-                                {errorPrice}
-                              </div>
-                            )}
-                          </div>
+                          <p className='mb-2'>
+                            Кол-во монет в сутки на ед. хешрейта -{' '}
+                            {ticker.pricePerHashrate}
+                          </p>
                         </div>
-                      );
-                    })}
+                        <div>
+                          <div className='flex w-[400px] items-center justify-between'>
+                            <Input
+                              size='lg'
+                              label='Количество монет'
+                              labelPlacement='inside'
+                              placeholder='0.00'
+                              className='w-[200px]'
+                              value={coinPrices[ticker.name] || ''}
+                              onChange={(e) =>
+                                handleInputChangePrice(
+                                  ticker.name,
+                                  e.target.value.replace(',', '.'),
+                                )
+                              }
+                              startContent={
+                                <div className='pointer-events-none flex items-center'>
+                                  <span className='text-small text-default-400'>
+                                    $
+                                  </span>
+                                </div>
+                              }
+                            />
+                            <Button
+                              size='lg'
+                              className='bg-white'
+                              onPress={() =>
+                                handleUpdatePrice(algorithm.name, ticker.name)
+                              }
+                            >
+                              <CloudArrowDownIcon className='h-5 w-5' />
+                            </Button>
+
+                            {isPending && <FullScreenSpinner />}
+                            <Button
+                              size='lg'
+                              className='bg-white'
+                              onPress={() =>
+                                handleDeleteTicker(ticker.name, algorithm.name)
+                              }
+                            >
+                              <TrashIcon className='h-5 w-5' />
+                            </Button>
+                            {isPending && <FullScreenSpinner />}
+                          </div>
+                          {updCoinsPerHashrate && (
+                            <div className='mt-4 text-red-500'>
+                              {updCoinsPerHashrate}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
                   </b>
                 </div>
               </li>
             ))
           ) : (
-            <p>Загрузка алгоритмов...</p>
+            <p>Алгоритмы не найдены</p>
           )}
         </ul>
       </div>
@@ -459,7 +511,9 @@ export default function PricePerKWh() {
                 </Button>
               </div>
             ))}
-
+            {errorCoinsPerHashrate && (
+              <div className='mt-4 text-secondary'>{errorCoinsPerHashrate}</div>
+            )}
             {/* Button to add more pairs */}
             <Button size='sm' className='bg-green-500' onClick={addPair}>
               Добавить еще пару тикер / количество монет

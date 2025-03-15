@@ -1,7 +1,8 @@
-CREATE TABLE "alogrithms" (
-	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "alogrithms_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
+CREATE TABLE "algorithms" (
+	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "algorithms_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
 	"uuid" uuid DEFAULT gen_random_uuid(),
-	"name" varchar(255) NOT NULL
+	"name" varchar(255) NOT NULL,
+	"coinTickers" jsonb DEFAULT '[]'::jsonb
 );
 --> statement-breakpoint
 CREATE TABLE "balances" (
@@ -32,15 +33,14 @@ CREATE TABLE "equipments" (
 	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "equipments_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
 	"uuid" uuid DEFAULT gen_random_uuid(),
 	"name" varchar(255) NOT NULL,
-	"alogrithm_id" integer NOT NULL,
-	"performance_unit" varchar NOT NULL,
-	"performance" integer NOT NULL,
+	"algorithm_id" integer NOT NULL,
+	"hashrate_unit" varchar NOT NULL,
+	"hashrate" integer NOT NULL,
 	"power" numeric NOT NULL,
 	"purchasePrice" integer NOT NULL,
 	"salePrice" integer NOT NULL,
 	"shareCount" integer NOT NULL,
-	"photoUrl" varchar(255),
-	"coinTickers" jsonb DEFAULT '[]'::jsonb
+	"photoUrl" varchar(255)
 );
 --> statement-breakpoint
 CREATE TABLE "history_changes" (
@@ -57,7 +57,6 @@ CREATE TABLE "mining_income" (
 	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "mining_income_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
 	"uuid" uuid DEFAULT gen_random_uuid(),
 	"algorithm_id" integer NOT NULL,
-	"coinTicker" varchar(10) NOT NULL,
 	"coinsPerHashrate" numeric(30, 8) NOT NULL
 );
 --> statement-breakpoint
@@ -92,7 +91,7 @@ CREATE TABLE "users" (
 	"registration_date" timestamp DEFAULT now() NOT NULL,
 	"status" varchar DEFAULT 'user' NOT NULL,
 	"referral_code" integer NOT NULL,
-	"imvitee" integer,
+	"invitee" integer,
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
@@ -109,9 +108,9 @@ CREATE TABLE "withdrawals" (
 --> statement-breakpoint
 ALTER TABLE "balances" ADD CONSTRAINT "balances_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "deposits" ADD CONSTRAINT "deposits_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "equipments" ADD CONSTRAINT "equipments_alogrithm_id_alogrithms_id_fk" FOREIGN KEY ("alogrithm_id") REFERENCES "public"."alogrithms"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "equipments" ADD CONSTRAINT "equipments_algorithm_id_algorithms_id_fk" FOREIGN KEY ("algorithm_id") REFERENCES "public"."algorithms"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "history_changes" ADD CONSTRAINT "history_changes_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "mining_income" ADD CONSTRAINT "mining_income_algorithm_id_alogrithms_id_fk" FOREIGN KEY ("algorithm_id") REFERENCES "public"."alogrithms"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "mining_income" ADD CONSTRAINT "mining_income_algorithm_id_algorithms_id_fk" FOREIGN KEY ("algorithm_id") REFERENCES "public"."algorithms"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "mining_rewards" ADD CONSTRAINT "mining_rewards_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "transactions" ADD CONSTRAINT "transactions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "transactions" ADD CONSTRAINT "transactions_equipment_id_equipments_id_fk" FOREIGN KEY ("equipment_id") REFERENCES "public"."equipments"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint

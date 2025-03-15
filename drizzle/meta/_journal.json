@@ -5,29 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1741877560412,
-      "tag": "0000_breezy_magik",
+      "when": 1741956232778,
+      "tag": "0000_pink_ultron",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1741888139674,
-      "tag": "0001_tricky_mercury",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1741930899174,
-      "tag": "0002_bent_toro",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1741937639980,
-      "tag": "0003_regular_silver_centurion",
+      "when": 1741959058075,
+      "tag": "0001_tan_leo",
       "breakpoints": true
     }
   ]
