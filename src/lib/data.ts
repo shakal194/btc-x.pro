@@ -6,6 +6,7 @@ import {
   algorithmTable,
   equipmentsTable,
   transactionsTable,
+  usersTable,
 } from '@/db/schema'; // Импортируем таблицу
 import { sql, desc, asc } from 'drizzle-orm';
 import fs from 'fs';
@@ -395,5 +396,33 @@ export async function insertTransactionsTable(transactionData: {
   } catch (error) {
     console.error('Ошибка вставки транзакций', error);
     throw new Error('Ошибка вставки транзакций');
+  }
+}
+
+//Получаем Реферальный код
+export async function fetchReferralCodeByUserId(user_id: number) {
+  try {
+    // Проверяем, является ли user_id числом
+    if (isNaN(user_id) || user_id === null) {
+      throw new Error('Invalid User. Try again later');
+    }
+
+    const result = await db
+      .select({
+        referral_code: usersTable.referral_code,
+      })
+      .from(usersTable)
+      .where(sql`${usersTable.id} = ${user_id}`) // Фильтруем по user_id
+      .limit(1); // Ограничиваем результат одним значением
+
+    // Проверяем, есть ли записи, и если есть, возвращаем referral_code, иначе 0
+    if (result && result.length > 0) {
+      return result[0].referral_code;
+    } else {
+      return 0; // Возвращаем 0, если не найдено
+    }
+  } catch (error) {
+    console.error('Ошибка получения реферального кода', error);
+    throw new Error('Ошибка получения реферального кода');
   }
 }

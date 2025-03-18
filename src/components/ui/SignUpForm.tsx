@@ -18,6 +18,7 @@ export default function SignUpForm() {
   const [errorMessageForm, setErrorMessageForm] = useState('');
   const [errorMessageEmail, setErrorMessageEmail] = useState('');
   const [errorMessageOTP, setErrorMessageOTP] = useState('');
+  const [errorMessageReferralCode, setErrorMessageReferralCode] = useState('');
   const [errorMessagePassword, setErrorMessagePassword] = useState('');
   const [step, setStep] = useState(1); // 1 - Email, 2 - OTP and Password
   const [showSpinnerStep1, setShowSpinnerStep1] = useState(false);
@@ -35,6 +36,7 @@ export default function SignUpForm() {
   const t = useTranslations('cloudMiningPage.signin');
   const [valueEmail, setValueEmail] = useState('btc-x.pro');
   const [valueOTPCode, setValueOTPCode] = useState('');
+  let [valueReferralCode, setValueReferralCode] = useState('');
   const [valuePassword, setValuePassword] = useState('');
   const [valueConfirmPassword, setValueConfirmPassword] = useState('');
   const [valuePrivacy, setValuePrivacy] = useState(false);
@@ -98,6 +100,11 @@ export default function SignUpForm() {
     setErrorMessageOTP(''); // Clear OTP error when value changes
   };*/
 
+  const handleReferralCodeChange = (value: string) => {
+    setValueReferralCode(value);
+    setErrorMessageReferralCode(''); // Clear OTP error when value changes
+  };
+
   const handlePasswordChange = (value: string) => {
     setValuePassword(value);
     setErrorMessagePassword(''); // Clear password error when value changes
@@ -148,16 +155,22 @@ export default function SignUpForm() {
       /*isInvalidOTP ||*/
       isInvalidPassword ||
       valuePassword !== valueConfirmPassword ||
-      !valuePrivacy
+      !valuePrivacy ||
+      (valueReferralCode && !/^\d{6}$/.test(valueReferralCode))
     ) {
       setShowSpinnerStep2(false); // Отключаем спиннер при ошибке
       return;
     }
 
+    if (!valueReferralCode) {
+      valueReferralCode = '290041';
+    }
+    console.log(valueReferralCode);
     // Создаем FormData
     const formData = new FormData();
     formData.append('email', valueEmail);
     //formData.append('otpcode', valueOTPCode);
+    formData.append('referrer_id', valueReferralCode);
     formData.append('password', valuePassword);
     formData.append('confirmPassword', valueConfirmPassword);
 
@@ -171,7 +184,7 @@ export default function SignUpForm() {
         setShowSpinnerStep2(false);
       }
     } catch (error) {
-      setErrorMessageForm('Ooops error');
+      setErrorMessageForm(t('form_validate_errorValidation'));
     } finally {
       setShowSpinnerStep2(false); // Скрываем спиннер, независимо от результата
     }
@@ -269,6 +282,19 @@ export default function SignUpForm() {
                   ))}
               </div>
               */}
+              <Input
+                label={t('referralcode')}
+                labelPlacement='inside'
+                name='referrer_id'
+                className='text-white'
+                placeholder={t('referralcode_placeholder')}
+                errorMessage={t('form_error_otpcode')}
+                type='text'
+                value={valueReferralCode}
+                variant='bordered'
+                onValueChange={handleReferralCodeChange}
+                onClear={() => {}}
+              />
               <div>
                 <Input
                   label={t('password')}

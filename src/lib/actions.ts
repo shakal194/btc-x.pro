@@ -144,6 +144,7 @@ export type AddUserState = {
     email?: string[];
     login?: string[];
     //otpcode?: string[];
+    referrer_id?: string[];
     password?: string[];
     confirmPassword?: string[];
     //privacy_and_terms?: string[];
@@ -162,6 +163,18 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
       /*otpcode: z
         .string({ invalid_type_error: 'Please input a valid OTP Code.' })
         .regex(/^\d{5}$/, { message: 'OTP Code must be exactly 5 digits.' }),*/
+      referrer_id: z
+        .union([
+          z.string().length(0),
+          z
+            .string({
+              invalid_type_error: 'Please input a valid Referral Code.',
+            })
+            .regex(/^\d{6}$/, {
+              message: 'Referral Code must be exactly 6 digits.',
+            }),
+        ])
+        .optional(),
       password: z
         .string({ invalid_type_error: 'Please input password.' })
         .min(8, {
@@ -187,6 +200,7 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
     email: formData.get('email'),
     login: formData.get('email'),
     //otpcode: formData.get('otpcode'),
+    referrer_id: formData.get('referrer_id'),
     password: formData.get('password'),
     confirmPassword: formData.get('confirmPassword'),
     //privacy_and_terms: formData.get('privacy_and_terms'),
@@ -206,12 +220,12 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
 
     return {
       errors: errors,
-      message: t('form_errorValidation'),
+      message: t('form_validate_errorValidation'),
     };
   }
 
   if (validatedFields.success) {
-    const { email, /*otpcode,*/ password } = validatedFields.data;
+    const { email, /*otpcode,*/ referrer_id, password } = validatedFields.data;
 
     try {
       // Проверяем, существует ли уже пользователь с таким email
@@ -228,19 +242,20 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
       }
 
       const hashedPassword = await hashPassword(password);
-
       // Вставляем нового пользователя в таблицу
-      await db.insert(usersTable).values({
+      const result = await db.insert(usersTable).values({
         email,
         password: hashedPassword,
+        referrer_id: Number(referrer_id),
         referral_code: Math.floor(100000 + Math.random() * 900000), // Пример случайного реферального кода
         status: 'user', // Статус по умолчанию
       });
 
+      console.log(result);
       console.log('User added successfully');
     } catch (error) {
       return {
-        message: t('form_errorTimeOut'),
+        message: t('form_validate_errorTimeOut'),
       };
     }
   }

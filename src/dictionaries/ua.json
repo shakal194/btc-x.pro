@@ -466,6 +466,8 @@
       "email_placeholder": "Введіть ваш email",
       "otpcode": "ОТР код",
       "otpcode_placeholder": "Введіть ОТР код",
+      "referralcode": "Реферальний код",
+      "referralcode_placeholder": "Введіть реферальний код",
       "password": "Пароль",
       "password_placeholder": "Введіть Ваш пароль",
       "password_text": "Має включати один спец.символ",

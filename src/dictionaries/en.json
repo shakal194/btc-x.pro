@@ -483,6 +483,8 @@
       "email_placeholder": "Enter your email address",
       "otpcode": "OTP Code",
       "otpcode_placeholder": "Enter OTP code",
+      "referralcode": "Referral Code",
+      "referralcode_placeholder": "Enter Referral code",
       "password": "Password",
       "password_placeholder": "Enter your password",
       "password_text": "Includes at least one special symbol",

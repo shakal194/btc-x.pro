@@ -488,6 +488,8 @@
       "email_placeholder": "Введите Ваш email",
       "otpcode": "OTP код",
       "otpcode_placeholder": "Введите OTP код",
+      "referralcode": "Реферальный код",
+      "referralcode_placeholder": "Введите реферальный код",
       "password": "Пароль",
       "password_placeholder": "Введите Ваш пароль",
       "password_text": "Должен включать один спец.символ",
