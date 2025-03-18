@@ -4,7 +4,6 @@ import {
   HomeIcon,
   DocumentDuplicateIcon,
   AdjustmentsHorizontalIcon,
-  ServerStackIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -20,11 +19,6 @@ export default function NavLinksUser() {
 
   const links = [
     { name: `${t('home')}`, href: '/dashboard', icon: HomeIcon },
-    {
-      name: `${t('equipments')}`,
-      href: '/dashboard/equipments',
-      icon: ServerStackIcon,
-    },
     {
       name: `${t('yourMiners')}`,
       href: '/dashboard/store',

@@ -28,7 +28,7 @@ const publicPages = [
 ];
 
 const authPages = ['/signin'];
-const protectedPaths = ['/dashboard/algorithms'];
+const protectedPaths = ['/dashboard/algorithms', '/dashboard/equipments'];
 
 function getProtectedRoutes(protectedPaths: string[], locales: Locale[]) {
   let protectedPathsWithLocale = [...protectedPaths];

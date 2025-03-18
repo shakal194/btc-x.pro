@@ -46,7 +46,6 @@ export default function BuySellShareCountComponent({
 
   useEffect(() => {
     if (isOpen) {
-      console.log('useEffect triggered', user_id, equipmentId);
       const currentBalance = async () => {
         try {
           const res = await fetchLastBalanceShareCountUserByEquipmentId(

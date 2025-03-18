@@ -77,8 +77,9 @@ export const miningIncomeTable = pgTable('mining_income', {
 export const electricityPriceTable = pgTable('electricity_price', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   uuid: uuid().defaultRandom(), // ID записи
-  pricePerKWh: decimal({ precision: 30, scale: 8 }).notNull(), // Цена электричества в $ за кВт
+  pricePerKWh: decimal({ precision: 30, scale: 8 }), // Цена электричества в $ за кВт
   recordDate: timestamp().notNull().defaultNow(), // Дата и время записи
+  referral_percent_default: integer(),
 });
 
 export const miningRewardsTable = pgTable('mining_rewards', {

@@ -16,15 +16,21 @@ export async function fetchElectricityPrice() {
   try {
     // Вставляем данные в таблицу
     const lastElectricityPrice = await db
-      .select()
+      .select({
+        pricePerKWh: electricityPriceTable.pricePerKWh,
+        recordDate: electricityPriceTable.recordDate,
+      })
       .from(electricityPriceTable)
+      .where(sql`${electricityPriceTable.pricePerKWh} IS NOT NULL`)
       .orderBy(desc(electricityPriceTable.id))
       .limit(1);
 
+    console.log('lastElectricityPrice[0]', lastElectricityPrice[0]);
+
     return lastElectricityPrice[0];
   } catch (error) {
-    console.error('Error saving price:', error);
-    throw new Error('Error saving price');
+    console.error('Ошибка получения цены электричества:', error);
+    throw new Error('Ошибка получения цены электричества');
   }
 }
 
@@ -42,10 +48,57 @@ export async function insertElectricityPrice(pricePerKWh: number) {
       // UUID и ID генерируются автоматически
     });
 
-    console.log('Price saved successfully');
+    console.log('Цена электричества успешно сохранена');
   } catch (error) {
-    console.error('Error saving price:', error);
-    throw new Error('Error saving price');
+    console.error('Ошибка сохранения цены электричества:', error);
+    throw new Error('Ошибка сохранения цены электричества');
+  }
+}
+
+//Получаем последнюю цену электричества с таблицы electricity_price
+export async function fetchRefBonusDefault() {
+  try {
+    // Вставляем данные в таблицу
+    const lastRefBonusDefault = await db
+      .select({
+        referral_percent_default:
+          electricityPriceTable.referral_percent_default,
+        recordDate: electricityPriceTable.recordDate,
+      })
+      .from(electricityPriceTable)
+      .where(sql`${electricityPriceTable.referral_percent_default} IS NOT NULL`)
+      .orderBy(desc(electricityPriceTable.id))
+      .limit(1);
+
+    console.log('lastRefBonusDefault[0]', lastRefBonusDefault[0]);
+    return lastRefBonusDefault[0];
+  } catch (error) {
+    console.error('Ошибка получения цены электричества:', error);
+    throw new Error('Ошибка получения цены электричества');
+  }
+}
+
+// Функция для вставки общего реф.бонуса в таблицу electricity_price
+export async function insertRefBonusDefault(referral_percent_default: number) {
+  const currentDate = new Date().toISOString();
+  try {
+    if (
+      typeof referral_percent_default !== 'number' ||
+      isNaN(referral_percent_default)
+    ) {
+      throw new Error('Invalid price format. It should be a number.');
+    }
+    // Вставляем данные в таблицу
+    await db.insert(electricityPriceTable).values({
+      referral_percent_default: sql<number>`${referral_percent_default}`, // Цена, переданная в функцию
+      recordDate: sql`${currentDate}`,
+      // UUID и ID генерируются автоматически
+    });
+
+    console.log('Реф.бонус успешно сохранен');
+  } catch (error) {
+    console.error('Ошибка сохранения реф.бонуса:', error);
+    throw new Error('Ошибка сохранения реф.бонуса');
   }
 }
 
