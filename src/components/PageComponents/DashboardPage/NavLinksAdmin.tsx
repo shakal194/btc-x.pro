@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  UserGroupIcon,
   HomeIcon,
   DocumentDuplicateIcon,
   AdjustmentsHorizontalIcon,
@@ -16,7 +15,7 @@ import { useTranslations } from 'next-intl';
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 
-export default function NavLinks() {
+export default function NavLinksAdmin() {
   const pathname = usePathname();
   const t = useTranslations('cloudMiningPage.dashboard.nav');
 
@@ -37,11 +36,6 @@ export default function NavLinks() {
       href: '/dashboard/miners',
       icon: DocumentDuplicateIcon,
     },
-    /*{
-      name: `${t('customers')}`,
-      href: '/dashboard/customers',
-      icon: UserGroupIcon,
-    },*/
     {
       name: `${t('settings')}`,
       href: '/dashboard/settings',

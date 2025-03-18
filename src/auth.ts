@@ -1,4 +1,4 @@
-import NextAuth, { CredentialsSignin, AuthError } from 'next-auth';
+import NextAuth from 'next-auth';
 import { authConfig } from './auth.config';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
@@ -10,6 +10,7 @@ import { verifyPassword } from '@/lib/utils';
 declare module 'next-auth' {
   interface User {
     apiKey?: string | null;
+    status?: string | undefined;
   }
 }
 

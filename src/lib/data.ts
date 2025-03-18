@@ -5,6 +5,7 @@ import {
   electricityPriceTable,
   algorithmTable,
   equipmentsTable,
+  transactionsTable,
 } from '@/db/schema'; // Импортируем таблицу
 import { sql, desc, asc } from 'drizzle-orm';
 import fs from 'fs';
@@ -87,12 +88,12 @@ export async function insertAlgorithm(
     const coinTickersJson = JSON.stringify(coinTickers);
 
     // Inserting the data into the database
-    const result = await db.insert(algorithmTable).values({
+    await db.insert(algorithmTable).values({
       name: algorithm,
       coinTickers: sql`CAST(${coinTickersJson} AS jsonb)`, // Using CAST to insert the JSON data into the jsonb column
     });
 
-    console.log('Algorithm saved successfully', result);
+    console.log('Algorithm saved successfully');
   } catch (error) {
     console.error('Error saving algorithm:', error);
     throw new Error('Error saving algorithm');
@@ -164,8 +165,6 @@ export async function updateTickerPricePerHashrate(
     if (!algorithmName || !tickerName || isNaN(newPriceNumber)) {
       throw new Error('Invalid input data');
     }
-
-    console.log(newPriceNumber);
 
     // Fetch the current algorithm from the database
     const existingAlgorithm = await db
@@ -242,7 +241,7 @@ export async function insertEquipment(equipmentData: {
     fs.writeFileSync(filePath, buffer);
 
     // Вставка данных в таблицу
-    const result = await db.insert(equipmentsTable).values({
+    await db.insert(equipmentsTable).values({
       name: sql`${name}`,
       algorithm_id: sql`${algorithm_id}`,
       hashrate_unit: sql`${hashrate_unit}`,
@@ -255,7 +254,7 @@ export async function insertEquipment(equipmentData: {
       // Тут можно добавить поле photoUrl, если оно потребуется
     });
 
-    console.log('Оборудование успешно добавлено', result);
+    console.log('Оборудование успешно добавлено');
   } catch (error) {
     console.error('Ошибка при добавлении оборудования:', error);
     throw new Error('Ошибка при добавлении оборудования');
@@ -275,5 +274,126 @@ export async function fetchEquipments() {
   } catch (error) {
     console.error('Error fetch equipments:', error);
     throw new Error('Error fetch equipments');
+  }
+}
+
+//Получаем оборудование по ID с таблицы equipments
+export async function fetchEquipmentById(equipmentUuid: string) {
+  try {
+    // Вставляем данные в таблицу
+    const equipment = await db
+      .select()
+      .from(equipmentsTable)
+      .orderBy(asc(equipmentsTable))
+      .where(sql`${equipmentsTable.uuid} = ${equipmentUuid}`);
+
+    return equipment;
+  } catch (error) {
+    console.error('Error fetch equipments:', error);
+    throw new Error('Error fetch equipments');
+  }
+}
+
+//Обновляем оборудование по ID
+export async function updateEquipment(
+  equipmentId: string,
+  equipmentData: {
+    name: string;
+    purchasePrice: number;
+    salePrice: number;
+  },
+) {
+  try {
+    // Подготовка данных для обновления
+    const { name, purchasePrice, salePrice } = equipmentData;
+
+    // Выполняем обновление в базе данных
+    await db
+      .update(equipmentsTable)
+      .set({
+        name: sql`${name}`,
+        purchasePrice: sql`${purchasePrice}`,
+        salePrice: sql`${salePrice}`,
+      })
+      .where(sql`${equipmentsTable.uuid} = ${equipmentId}`); // Обновляем устройство по ID
+
+    console.log('Оборудование успешно обновлено');
+  } catch (error) {
+    console.error('Ошибка при обновлении оборудования:', error);
+    throw new Error('Ошибка при обновлении оборудования');
+  }
+}
+
+//Получаем оборудование купленное пользователем
+export async function fetchTransactionsTable(user_id: string) {
+  try {
+    // Вставляем данные в таблицу
+    const transactions = await db
+      .select()
+      .from(transactionsTable)
+      .orderBy(desc(transactionsTable))
+      .where(sql`${transactionsTable.user_id} = ${user_id}`);
+
+    return transactions;
+  } catch (error) {
+    console.error('Ошибка получения транзакций', error);
+    throw new Error('Ошибка получения транзакций');
+  }
+}
+
+export async function fetchLastBalanceShareCountUserByEquipmentId(
+  user_id: number,
+  equipment_id: number,
+) {
+  try {
+    const result = await db
+      .select({
+        balanceShareCount: transactionsTable.balanceShareCount,
+      })
+      .from(transactionsTable)
+      .where(
+        sql`${transactionsTable.user_id} = ${user_id} and ${transactionsTable.equipment_id} = ${equipment_id} `,
+      ) // Фильтруем по user_id и equipment_id
+      .orderBy(desc(transactionsTable.transactionDate)) // Сортируем по дате транзакции (по убыванию)
+      .limit(1); // Ограничиваем результат одним значением
+
+    // Проверяем, есть ли записи, и если есть, возвращаем balanceShareCount, иначе 0
+    return result.length > 0 ? result : 0;
+  } catch (error) {
+    console.error('Ошибка получения баланса долей', error);
+    throw new Error('Ошибка получения баланса долей');
+  }
+}
+
+//Получаем оборудование купленное пользователем
+export async function insertTransactionsTable(transactionData: {
+  user_id: number;
+  equipment_id: number;
+  countShareBuySell: number;
+  balanceShareCount: number;
+  pricePerShare: number;
+  isPurchase: boolean;
+}) {
+  try {
+    const {
+      user_id,
+      equipment_id,
+      countShareBuySell,
+      balanceShareCount,
+      pricePerShare,
+      isPurchase,
+    } = transactionData;
+    // Вставка данных в таблицу
+    await db.insert(transactionsTable).values({
+      user_id: sql`${user_id}`,
+      equipment_id: sql`${equipment_id}`,
+      shareCount: sql`${countShareBuySell}`,
+      balanceShareCount: sql`${balanceShareCount}`,
+      pricePerShare: sql`${pricePerShare}`,
+      isPurchase: sql`${isPurchase}`,
+    });
+  } catch (error) {
+    console.error('Ошибка вставки транзакций', error);
+    throw new Error('Ошибка вставки транзакций');
   }
 }

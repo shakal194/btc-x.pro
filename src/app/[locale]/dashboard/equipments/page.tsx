@@ -1,9 +1,6 @@
-import { auth } from '@/auth';
-import Equipments from '@/components/PageComponents/DashboardPage/components/Equipments';
+import Equipments from '@/components/PageComponents/DashboardPage/Equipments/EquipmentsList';
 
 export default async function Page() {
-  const session = await auth();
-
   return (
     <main>
       <Equipments />

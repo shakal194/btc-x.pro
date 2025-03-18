@@ -1,21 +1,5 @@
 'use client';
-/*
-import { LiveChatWidget, EventHandlerPayload } from '@livechat/widget-react';
 
-export default function LiveChat() {
-  function handleNewEvent(event: EventHandlerPayload<'onNewEvent'>) {
-    console.log('LiveChatWidget.onNewEvent', event);
-  }
-
-  return (
-    <LiveChatWidget
-      license='18749046'
-      visibility='maximized'
-      onNewEvent={handleNewEvent}
-    />
-  );
-}
-*/
 import { Form, Input, Button } from '@heroui/react';
 import { useState, useMemo } from 'react';
 import Notiflix from 'notiflix';
@@ -27,12 +11,12 @@ export default function SupportPage() {
 
   const [value, setValue] = useState('btc-x.pro');
   const [errors, setErrors] = useState({});
-  const [formData, setFormData] = useState({
+  /*const [formData, setFormData] = useState({
     email: '',
-  });
+  });*/
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  //const [successMessage, setSuccessMessage] = useState('');
+  //const [errorMessage, setErrorMessage] = useState('');
 
   const validateEmail = (value: string) =>
     value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i);
@@ -66,7 +50,7 @@ export default function SupportPage() {
         body: JSON.stringify({ email: value }),
       });
 
-      const result = await response.json();
+      await response.json();
 
       if (response.ok) {
         Notiflix.Notify.success(`${t('form_success_message')}`);

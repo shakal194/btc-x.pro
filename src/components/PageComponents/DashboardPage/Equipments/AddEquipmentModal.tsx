@@ -1,70 +1,41 @@
 'use client';
 import { useState, useTransition, useEffect } from 'react';
 import {
-  Button,
-  Input,
   Modal,
+  ModalBody,
   ModalContent,
   ModalHeader,
-  ModalBody,
+  ModalFooter,
+  Button,
+  Form,
+  Input,
   Select,
   SelectItem,
-  ModalFooter,
   useDisclosure,
-  Form,
 } from '@heroui/react';
-import { insertEquipment, fetchEquipments, fetchAlgorithms } from '@/lib/data'; // Импортируем функцию для добавления оборудования
+import { insertEquipment, fetchAlgorithms } from '@/lib/data';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import Notiflix from 'notiflix';
-import Image from 'next/image';
 
-export default function Equipments() {
-  const [isLoading, setIsLoading] = useState<boolean>(false); // Флаг загрузки
+export default function AddEquipmentModal({
+  onEquipmentAdded,
+}: {
+  onEquipmentAdded: () => void;
+}) {
+  const [isPending, startTransition] = useTransition();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [name, setName] = useState('');
-  const [algorithm_id, setAlgorithm] = useState('');
   const [hashrateUnit, setHashrateUnit] = useState('');
+  const [algorithm_id, setAlgorithm] = useState('');
+  const [name, setName] = useState('');
   const [hashrate, setHashrate] = useState('');
   const [power, setPower] = useState('');
   const [purchasePrice, setPurchasePrice] = useState('');
   const [salePrice, setSalePrice] = useState('');
   const [shareCount, setShareCount] = useState('');
   const [photo, setPhoto] = useState<File | null>(null);
-
-  const [isPending, startTransition] = useTransition();
   const [error, setError] = useState('');
+
   const [algorithms, setAlgorithms] = useState<any[]>([]); // Состояние для хранения алгоритмов
-
-  const [equipmentsFetch, setEquipmentsFetch] = useState<any[]>([]);
-
-  const hashrateUnitArray = [
-    { key: 'Th', label: 'Th' },
-    { key: 'Mh', label: 'Mh' },
-    { key: 'Gh', label: 'Gh' },
-  ];
-
-  const handlehashrateUnitSelectChange = (e: any) => {
-    setHashrateUnit(e.target.value);
-  };
-
-  //Получаем список всего оборудования
-  useEffect(() => {
-    const getEquipments = async () => {
-      setIsLoading(true);
-      try {
-        const data = await fetchEquipments(); // Получаем данные с сервера
-
-        setEquipmentsFetch(data);
-        return data;
-      } catch (error) {
-        console.error('Ошибка при получении данных по алгоритмам', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    getEquipments();
-  }, []);
 
   //Получаем список всех алгоритмов
   useEffect(() => {
@@ -80,8 +51,24 @@ export default function Equipments() {
     getAlgorithms();
   }, []);
 
+  const hashrateUnitArray = [
+    { key: 'Th', label: 'Th' },
+    { key: 'Mh', label: 'Mh' },
+    { key: 'Gh', label: 'Gh' },
+  ];
+
+  const handlehashrateUnitSelectChange = (e: any) => {
+    setHashrateUnit(e.target.value);
+  };
+
   const handleAlgorithmSelectChange = (e: any) => {
     setAlgorithm(e.target.value);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setPhoto(e.target.files[0]);
+    }
   };
 
   // Функция для очистки инпутов при закрытии модального окна
@@ -95,12 +82,6 @@ export default function Equipments() {
     setShareCount('');
     setError('');
     onClose();
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setPhoto(e.target.files[0]);
-    }
   };
 
   const handleSaveEquipment = async () => {
@@ -173,9 +154,8 @@ export default function Equipments() {
 
           // Очистить форму после успешного добавления
           handleCloseModal();
-          const updateEquipments = await fetchEquipments();
-          setEquipmentsFetch(updateEquipments);
 
+          onEquipmentAdded();
           Notiflix.Notify.success('Оборудование успешно добавлено');
         });
       };
@@ -186,68 +166,7 @@ export default function Equipments() {
   };
 
   return (
-    <section className='space-y-4'>
-      <div className='text-lg text-white'>
-        <ul className='space-y-4'>
-          {isLoading ? (
-            <p>Загрузка оборудования...</p>
-          ) : equipmentsFetch.length > 0 ? (
-            equipmentsFetch.map((equipment, index) => {
-              // Находим алгоритм по ID
-              const algorithm = algorithms.find(
-                (algo) => algo.id === equipment.algorithm_id,
-              );
-
-              return (
-                <li key={index} className='border-b-1 border-secondary'>
-                  <div className='flex items-center'>
-                    <div className='mr-4'>
-                      {equipment.photoUrl && (
-                        <Image
-                          src={equipment.photoUrl.replace(/^public/, '')}
-                          alt={equipment.name}
-                          width={300}
-                          height={300}
-                          className='h-[300px] w-[300px]'
-                        />
-                      )}
-                    </div>
-                    <div>
-                      <p>
-                        <b>Наименование:</b> {equipment.name}
-                      </p>
-                      <p>
-                        <b>Алгоритм:</b>{' '}
-                        {algorithm ? algorithm.name : 'Не найден'}
-                      </p>
-                      <p>
-                        <b>Мощность:</b> {equipment.power}
-                      </p>
-                      <p>
-                        <b>Доли:</b> {equipment.shareCount}
-                      </p>
-                      <p>
-                        <b>Цена покупки:</b> {equipment.purchasePrice}
-                      </p>
-                      <p>
-                        <b>Цена продажи:</b> {equipment.salePrice}
-                      </p>
-                      <p>
-                        <b>Устройств в работе:</b> 11/5
-                      </p>
-                      <p>
-                        <b>Доход в сутки одного устройства:</b> 0,00010500 BTC
-                      </p>
-                    </div>
-                  </div>
-                </li>
-              );
-            })
-          ) : (
-            <p>Оборудование не найдено</p>
-          )}
-        </ul>
-      </div>
+    <section>
       <Button size='lg' className='bg-white' onPress={onOpen}>
         Добавить оборудование
       </Button>

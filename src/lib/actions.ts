@@ -1,6 +1,6 @@
 'use server';
 
-import { auth, signIn } from '@/auth';
+import { signIn } from '@/auth';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
@@ -10,10 +10,6 @@ import db from '@/db/db'; // Импортируем подключение к Б
 import { usersTable } from '@/db/schema';
 import { sql } from 'drizzle-orm';
 import { hashPassword } from '@/lib/utils';
-
-const apiMainUrl = process.env.NEXT_PUBLIC_API_MAIN_URL;
-const apiMiniUrl = process.env.NEXT_PUBLIC_API_MINI_URL;
-const apiRegisterUrl = process.env.NEXT_PUBLIC_API_REGISTR_URL;
 
 export async function handleEmailSubmitSign(email: string) {
   const t = await getTranslations('cloudMiningPage.signin');

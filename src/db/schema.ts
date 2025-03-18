@@ -19,7 +19,9 @@ export const usersTable = pgTable('users', {
     .notNull()
     .default('user'),
   referral_code: integer().notNull(),
-  invitee: integer(),
+  referrer_id: integer(),
+  referral_percent: integer(),
+  referral_bonus: integer().default(0),
 });
 
 export const algorithmTable = pgTable('algorithms', {
@@ -58,6 +60,7 @@ export const transactionsTable = pgTable('transactions', {
     .notNull()
     .references(() => equipmentsTable.id), // ID оборудования
   shareCount: integer().notNull(), // Количество долей
+  balanceShareCount: integer().notNull(), // Баланс купленных долей
   pricePerShare: decimal({ precision: 10, scale: 2 }).notNull(), // Цена за долю устройства
   isPurchase: boolean().notNull(), // Покупка или продажа (true - покупка, false - продажа)
 });

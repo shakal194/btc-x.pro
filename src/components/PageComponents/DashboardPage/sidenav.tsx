@@ -1,16 +1,20 @@
-import Link from 'next/link';
-import NavLinks from '@/components/PageComponents/DashboardPage/nav-links';
+import NavLinksAdmin from '@/components/PageComponents/DashboardPage/NavLinksAdmin';
+import NavLinksUser from '@/components/PageComponents/DashboardPage/NavLinksUser';
 import { PowerIcon } from '@heroicons/react/24/outline';
 import { signOut } from '@/auth';
 import { useTranslations } from 'next-intl';
 
-export default function SideNav() {
+export default function SideNav({
+  userStatus,
+}: {
+  userStatus: string | undefined;
+}) {
   const t = useTranslations('cloudMiningPage.dashboard.nav');
 
   return (
     <div className='flex flex-col px-3 py-4 md:px-2'>
       <div className='flex grow flex-row items-center justify-between space-x-2 md:flex-col md:items-stretch md:space-x-0 md:space-y-2 md:overflow-y-auto'>
-        <NavLinks />
+        {userStatus === 'admin' ? <NavLinksAdmin /> : <NavLinksUser />}
         <div className='md:flex md:grow md:flex-col md:justify-end'>
           <form
             action={async () => {

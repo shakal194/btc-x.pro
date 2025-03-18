@@ -422,7 +422,8 @@
       "title_2": "The higher the trading volume of your referrals, the more you earn",
       "slider_title_1": "Number of purchased Th",
       "revenue": "1Th = 0.04$",
-      "income": "Income"
+      "income": "Income",
+      "income_2": "minus electricity"
     },
     "forWho": {
       "title": "Who is our referral program for?",
@@ -521,7 +522,7 @@
         "home": "Home",
         "algorithms": "Algorithms",
         "equipments": "Equipments",
-        "yourMiners": "Your Miners",
+        "yourMiners": "Store",
         "customers": "Customers",
         "settings": "Settings",
         "merchants": "Merchants",

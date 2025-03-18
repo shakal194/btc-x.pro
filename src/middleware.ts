@@ -28,7 +28,7 @@ const publicPages = [
 ];
 
 const authPages = ['/signin'];
-const protectedPaths = ['/dashboard'];
+const protectedPaths = ['/dashboard/algorithms'];
 
 function getProtectedRoutes(protectedPaths: string[], locales: Locale[]) {
   let protectedPathsWithLocale = [...protectedPaths];
@@ -65,7 +65,12 @@ const protectedPathsWithLocale = getProtectedRoutes(protectedPaths, [
 
 const authMiddleware = auth((req) => {
   const isAuthPage = testPathnameRegex(authPages, req.nextUrl.pathname);
+  const isProtectedPaths = testPathnameRegex(
+    protectedPaths,
+    req.nextUrl.pathname,
+  );
   const session = req.auth;
+  const status = req.auth?.user?.status;
 
   const pathname = req.nextUrl.pathname;
 
@@ -80,6 +85,16 @@ const authMiddleware = auth((req) => {
   // Redirect to home page if authenticated and trying to access auth pages
   if (session && isAuthPage) {
     return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
+  }
+
+  if (
+    session &&
+    status !== 'admin' &&
+    protectedPaths.some((route) => pathname.includes(route))
+  ) {
+    const dashboardUrl = new URL('/dashboard', req.nextUrl.origin); // Редирект на /dashboard
+
+    return NextResponse.redirect(dashboardUrl); // Перенаправляем на /dashboard
   }
 
   return intlMiddleware(req);

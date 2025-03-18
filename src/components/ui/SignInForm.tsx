@@ -13,7 +13,6 @@ import { useState, useMemo, useActionState, useTransition } from 'react';
 import { Form, Input } from '@heroui/react';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import { useTranslations } from 'next-intl';
-import { useFormState } from 'react-dom';
 import { useSearchParams } from 'next/navigation';
 
 export default function SignUpForm() {
@@ -28,6 +27,7 @@ export default function SignUpForm() {
   // Using useActionState hook to handle the form submission
   const [state, formAction] = useActionState(authenticate, undefined);
   const [isPending, startTransition] = useTransition();
+
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
 
@@ -132,7 +132,7 @@ export default function SignUpForm() {
     formData.append('email', valueEmail);
     //formData.append('otpcode', valueOTPCode);
     formData.append('password', valuePassword);
-    formData.append('redirectTo', callbackUrl);
+    formData.append('redirectTo', callbackUrl || '/dashboard');
 
     try {
       setShowSpinnerStep2(true);

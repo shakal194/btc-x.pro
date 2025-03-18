@@ -61,15 +61,19 @@ export default function SliderCloudMiningProgram() {
             <h2 className='text-[13px] font-semibold leading-[120%] md:text-[20px]'>
               {t('income')}
             </h2>
+            <p className='text-[10px] text-black/50'>{t('income_2')}</p>
             <p className='text-[24px] font-semibold text-secondary md:text-[40px] md:tracking-tight lg:text-font70Leading110'>
               {income}
             </p>
           </div>
         </div>
         <div className='flex w-full flex-row items-center justify-between lg:hidden'>
-          <h2 className='text-[13px] font-semibold leading-[120%] md:text-[20px]'>
-            {t('income')}
-          </h2>
+          <div>
+            <h2 className='text-[13px] font-semibold leading-[120%] md:text-[20px]'>
+              {t('income')}
+            </h2>
+            <p className='text-[10px] text-black/50'>{t('income_2')}</p>
+          </div>
           <p className='text-[24px] font-semibold text-secondary md:text-[40px] md:tracking-tight lg:text-font70Leading110'>
             {income} USDT
           </p>
