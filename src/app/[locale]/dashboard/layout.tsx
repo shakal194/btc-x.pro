@@ -1,5 +1,4 @@
 import SideNav from '@/components/PageComponents/DashboardPage/sidenav';
-import FooterSection from '@/components/Footer';
 import { auth } from '@/auth';
 
 export default async function Layout({
@@ -20,7 +19,6 @@ export default async function Layout({
           {children}
         </div>
       </div>
-      <FooterSection />
     </>
   );
 }

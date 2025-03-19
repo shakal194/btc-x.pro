@@ -17,11 +17,11 @@ export default function EquipmentsListUser() {
   const [isLoading, setIsLoading] = useState<boolean>(false); // Флаг загрузки
   const [algorithms, setAlgorithms] = useState<any[]>([]); // Состояние для хранения алгоритмов
   const [userEquipmentsFetch, setUserEquipmentsFetch] = useState<any[]>([]);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const user_id = session?.user?.id;
   const [equipmentsFetch, setEquipmentsFetch] = useState<any[]>([]);
   const [lastPrice, setLastPrice] = useState<any>(null);
-  const [refCode, setRefCode] = useState<any>(null);
+  const [refCode, setRefCode] = useState<number>();
 
   useEffect(() => {
     const getRefCode = async () => {
@@ -32,7 +32,8 @@ export default function EquipmentsListUser() {
 
         // Получаем данные с сервера
         const data = await fetchReferralCodeByUserId(Number(user_id));
-        setRefCode(data); // Устанавливаем данные в состояние
+
+        setRefCode(data.referral_code); // Устанавливаем данные в состояние
       } catch (error) {
         console.error('Ошибка при получении реферального кода', error);
       }
@@ -164,8 +165,6 @@ export default function EquipmentsListUser() {
 
     getAlgorithms();
   }, []);
-
-  console.log(refCode);
 
   return (
     <section className='space-y-4'>

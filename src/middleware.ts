@@ -82,7 +82,6 @@ const authMiddleware = auth((req) => {
     return NextResponse.redirect(signInUrl);
   }
 
-  // Redirect to home page if authenticated and trying to access auth pages
   if (session && isAuthPage) {
     return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
   }
@@ -92,9 +91,9 @@ const authMiddleware = auth((req) => {
     status !== 'admin' &&
     protectedPaths.some((route) => pathname.includes(route))
   ) {
-    const dashboardUrl = new URL('/dashboard', req.nextUrl.origin); // Редирект на /dashboard
+    const dashboardUrl = new URL('/dashboard', req.nextUrl.origin);
 
-    return NextResponse.redirect(dashboardUrl); // Перенаправляем на /dashboard
+    return NextResponse.redirect(dashboardUrl);
   }
 
   return intlMiddleware(req);

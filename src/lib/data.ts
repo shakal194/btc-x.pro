@@ -461,21 +461,59 @@ export async function fetchReferralCodeByUserId(user_id: number) {
     }
 
     const result = await db
-      .select({
-        referral_code: usersTable.referral_code,
-      })
+      .select()
       .from(usersTable)
       .where(sql`${usersTable.id} = ${user_id}`) // Фильтруем по user_id
       .limit(1); // Ограничиваем результат одним значением
 
     // Проверяем, есть ли записи, и если есть, возвращаем referral_code, иначе 0
-    if (result && result.length > 0) {
-      return result[0].referral_code;
-    } else {
-      return 0; // Возвращаем 0, если не найдено
-    }
+
+    return result[0];
   } catch (error) {
     console.error('Ошибка получения реферального кода', error);
     throw new Error('Ошибка получения реферального кода');
+  }
+}
+
+//Получаем айди реферрера по реф.коду
+export async function fetchUserIdByReferralCode(referral_code: number) {
+  try {
+    if (isNaN(referral_code) || referral_code === null) {
+      throw new Error('Invalid Ref Code. Try again later');
+    }
+
+    const result = await db
+      .select()
+      .from(usersTable)
+      .where(sql`${usersTable.referral_code} = ${referral_code}`)
+      .limit(1);
+
+    console.log(result);
+
+    // Если данных нет, выбрасываем ошибку
+    if (result.length === 0) {
+      console.error('Ref.Code not valid');
+      throw new Error('Ref.Code not valid');
+    }
+
+    // Если данные найдены, возвращаем их
+    return result[0];
+  } catch (error: unknown) {
+    // Тип ошибки теперь "unknown"
+    console.error(error);
+
+    // Проверка, если ошибка имеет тип Error
+    if (error instanceof Error) {
+      // Если ошибка из-за невалидного кода
+      if (error.message === 'Ref.Code not valid') {
+        throw new Error('Ref.Code not valid');
+      }
+      // Если ошибка с запросом или соединением с БД
+      else {
+        throw new Error('Ошибка получения user_id');
+      }
+    } else {
+      throw new Error('Неизвестная ошибка');
+    }
   }
 }

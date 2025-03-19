@@ -29,6 +29,8 @@ export default function SignUpForm() {
     errors: {},
   };
 
+  const [errorMessageFormValidate, setErrorMessageFormValidate] = useState({});
+
   // Using useActionState hook to handle the form submission
   const [state, formAction] = useActionState(addUser, initialState);
   const [isPending, startTransition] = useTransition();
@@ -59,6 +61,11 @@ export default function SignUpForm() {
     return valueOTPCode === '' || !/^\d{5}$/.test(valueOTPCode);
   }, [valueOTPCode]);*/
 
+  const isInvalidReferralCode = useMemo(() => {
+    // Проверяем, что либо строка пуста, либо она содержит ровно 6 цифр
+    return valueReferralCode !== '' && !/^\d{6}$/.test(valueReferralCode);
+  }, [valueReferralCode]);
+
   if (valuePassword.length < 8) {
     passwordErrors.push(t('form_error_password'));
   }
@@ -78,6 +85,8 @@ export default function SignUpForm() {
     return (
       valueEmail === '' ||
       /*valueOTPCode.length !== 5 ||*/
+      valueReferralCode.length !== 6 ||
+      !valueReferralCode ||
       valuePassword === '' ||
       valueConfirmPassword === '' ||
       !valuePrivacy
@@ -86,6 +95,7 @@ export default function SignUpForm() {
     valueEmail,
     //valueOTPCode,
     valuePassword,
+    valueReferralCode,
     valueConfirmPassword,
     valuePrivacy,
   ]);
@@ -163,14 +173,14 @@ export default function SignUpForm() {
     }
 
     if (!valueReferralCode) {
-      valueReferralCode = '290041';
+      valueReferralCode = '294001';
     }
-    console.log(valueReferralCode);
+
     // Создаем FormData
     const formData = new FormData();
     formData.append('email', valueEmail);
     //formData.append('otpcode', valueOTPCode);
-    formData.append('referrer_id', valueReferralCode);
+    formData.append('referral_code', valueReferralCode);
     formData.append('password', valuePassword);
     formData.append('confirmPassword', valueConfirmPassword);
 
@@ -181,20 +191,27 @@ export default function SignUpForm() {
       });
 
       if (state.errors) {
+        console.log('state.errors', state.errors);
         setShowSpinnerStep2(false);
+        setErrorMessageReferralCode(t('form_validate_refcode_notValid'));
       }
+      setErrorMessageFormValidate(state);
     } catch (error) {
+      console.log('state.errors', state.errors);
       setErrorMessageForm(t('form_validate_errorValidation'));
     } finally {
       setShowSpinnerStep2(false); // Скрываем спиннер, независимо от результата
     }
   };
 
+  console.log('errorMessageFormValidate', errorMessageFormValidate);
+
   return (
     <>
       <Form
         className='mx-auto w-full max-w-xs gap-3 overflow-x-hidden'
         action={formAction}
+        validationErrors={errorMessageFormValidate}
       >
         <div className='flex w-[250px] flex-col items-center text-foreground lg:w-[300px]'>
           <h1 className='mb-3 text-2xl'>{t('title_signup')}</h1>
@@ -285,16 +302,25 @@ export default function SignUpForm() {
               <Input
                 label={t('referralcode')}
                 labelPlacement='inside'
-                name='referrer_id'
+                name='referral_code'
+                isInvalid={isInvalidReferralCode}
+                color={isInvalidReferralCode ? 'danger' : 'success'}
                 className='text-white'
                 placeholder={t('referralcode_placeholder')}
-                errorMessage={t('form_error_otpcode')}
+                errorMessage={t('form_error_refcode')}
                 type='text'
                 value={valueReferralCode}
                 variant='bordered'
-                onValueChange={handleReferralCodeChange}
+                onValueChange={(val) => setValueReferralCode(val)}
                 onClear={() => {}}
               />
+              <div id='form-error' aria-live='polite' aria-atomic='true'>
+                {errorMessageReferralCode && (
+                  <p className='text-sm text-red-500 dark:text-red-400'>
+                    {errorMessageReferralCode}
+                  </p>
+                )}
+              </div>
               <div>
                 <Input
                   label={t('password')}
@@ -377,33 +403,29 @@ export default function SignUpForm() {
                 name='privacy_and_terms'
                 id='privacy_and_terms'
                 onChange={(e) => setValuePrivacy(e.target.checked)}
-              >
-                <label
-                  htmlFor='privacy_and_terms'
-                  className='ml-2 hover:cursor-pointer focus:hover:cursor-pointer'
+              />
+              <label htmlFor='privacy_and_terms' className='ml-2'>
+                <span>I agree with </span>
+                <Link
+                  href='/terms'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='underline hover:cursor-pointer hover:text-secondary hover:transition-all focus:hover:cursor-pointer'
                 >
-                  <span>I agree with </span>
+                  Terms of Use
+                </Link>
+                <span> and </span>
+                <span>
                   <Link
-                    href='/terms'
+                    href='/privacy'
                     target='_blank'
                     rel='noopener noreferrer'
-                    className='underline hover:text-secondary hover:transition-all'
+                    className='underline hover:cursor-pointer hover:text-secondary hover:transition-all focus:hover:cursor-pointer'
                   >
-                    Terms of Use
+                    Privacy Policy
                   </Link>
-                  <span> and </span>
-                  <span>
-                    <Link
-                      href='/privacy'
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='underline hover:text-secondary hover:transition-all'
-                    >
-                      Privacy Policy
-                    </Link>
-                  </span>
-                </label>
-              </Checkbox>
+                </span>
+              </label>
               <div id='form-error' aria-live='polite' aria-atomic='true'>
                 {errorMessageForm && (
                   <p className='text-sm text-red-500 dark:text-red-400'>

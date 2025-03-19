@@ -10,6 +10,7 @@ import db from '@/db/db'; // Импортируем подключение к Б
 import { usersTable } from '@/db/schema';
 import { sql } from 'drizzle-orm';
 import { hashPassword } from '@/lib/utils';
+import { fetchUserIdByReferralCode } from '@/lib/data';
 
 export async function handleEmailSubmitSign(email: string) {
   const t = await getTranslations('cloudMiningPage.signin');
@@ -144,7 +145,7 @@ export type AddUserState = {
     email?: string[];
     login?: string[];
     //otpcode?: string[];
-    referrer_id?: string[];
+    referral_code?: string[];
     password?: string[];
     confirmPassword?: string[];
     //privacy_and_terms?: string[];
@@ -163,7 +164,7 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
       /*otpcode: z
         .string({ invalid_type_error: 'Please input a valid OTP Code.' })
         .regex(/^\d{5}$/, { message: 'OTP Code must be exactly 5 digits.' }),*/
-      referrer_id: z
+      referral_code: z
         .union([
           z.string().length(0),
           z
@@ -200,7 +201,7 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
     email: formData.get('email'),
     login: formData.get('email'),
     //otpcode: formData.get('otpcode'),
-    referrer_id: formData.get('referrer_id'),
+    referral_code: formData.get('referral_code'),
     password: formData.get('password'),
     confirmPassword: formData.get('confirmPassword'),
     //privacy_and_terms: formData.get('privacy_and_terms'),
@@ -225,9 +226,28 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
   }
 
   if (validatedFields.success) {
-    const { email, /*otpcode,*/ referrer_id, password } = validatedFields.data;
+    const { email, /*otpcode,*/ referral_code, password } =
+      validatedFields.data;
+
+    let referrer_id: number | null = null;
 
     try {
+      if (referral_code) {
+        const result = await fetchUserIdByReferralCode(Number(referral_code));
+
+        // Проверяем, найден ли реферер
+        if (!result) {
+          // Если реферер не найден, прокидываем ошибку
+          return {
+            errors: {
+              referral_code: [t('form_validate_refcode_notValid')],
+            },
+          };
+        }
+
+        referrer_id = result.id; // Присваиваем найденный referrer_id
+      }
+
       // Проверяем, существует ли уже пользователь с таким email
       const existingUser = await db
         .select()
@@ -251,8 +271,7 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
         status: 'user', // Статус по умолчанию
       });
 
-      console.log(result);
-      console.log('User added successfully');
+      console.log('User added successfully', result);
     } catch (error) {
       return {
         message: t('form_validate_errorTimeOut'),
