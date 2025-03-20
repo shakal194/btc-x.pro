@@ -101,7 +101,7 @@ export default function Store() {
                       <p>
                         <b>
                           {equipment.name} {equipment.hashrate}
-                          {equipment.hashrateUnit}
+                          {equipment.hashrate_unit}
                         </b>
                       </p>
                       {equipment.photoUrl && (

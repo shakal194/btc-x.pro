@@ -400,19 +400,28 @@ export async function fetchLastBalanceShareCountUserByEquipmentId(
   equipment_id: number,
 ) {
   try {
+    console.log(
+      `[DB Query] Fetching balance for user ${user_id}, equipment ${equipment_id}`,
+    );
     const result = await db
       .select({
         balanceShareCount: transactionsTable.balanceShareCount,
+        equipment_id: transactionsTable.equipment_id,
       })
       .from(transactionsTable)
       .where(
-        sql`${transactionsTable.user_id} = ${user_id} and ${transactionsTable.equipment_id} = ${equipment_id} `,
-      ) // Фильтруем по user_id и equipment_id
-      .orderBy(desc(transactionsTable.transactionDate)) // Сортируем по дате транзакции (по убыванию)
-      .limit(1); // Ограничиваем результат одним значением
+        sql`${transactionsTable.user_id} = ${user_id} 
+        AND ${transactionsTable.equipment_id} = ${equipment_id}
+        AND ${transactionsTable.balanceShareCount} > 0`,
+      )
+      .orderBy(desc(transactionsTable.transactionDate))
+      .limit(1);
 
-    // Проверяем, есть ли записи, и если есть, возвращаем balanceShareCount, иначе 0
-    return result.length > 0 ? result : 0;
+    const balance = result.length > 0 ? result[0].balanceShareCount : null;
+    console.log(
+      `[DB Result] Balance for equipment ${equipment_id}: ${balance}`,
+    );
+    return balance;
   } catch (error) {
     console.error('Ошибка получения баланса долей', error);
     throw new Error('Ошибка получения баланса долей');
@@ -488,28 +497,28 @@ export async function fetchUserIdByReferralCode(referral_code: number) {
       .where(sql`${usersTable.referral_code} = ${referral_code}`)
       .limit(1);
 
-    console.log(result);
-
     // Если данных нет, выбрасываем ошибку
     if (result.length === 0) {
       console.error('Ref.Code not valid');
-      throw new Error('Ref.Code not valid');
+      //throw new Error('Ref.Code not valid');
     }
 
     // Если данные найдены, возвращаем их
     return result[0];
   } catch (error: unknown) {
     // Тип ошибки теперь "unknown"
-    console.error(error);
+    console.error('Catch Error', error);
 
     // Проверка, если ошибка имеет тип Error
     if (error instanceof Error) {
       // Если ошибка из-за невалидного кода
       if (error.message === 'Ref.Code not valid') {
+        //return 'Error: Ref.Code not valid';
         throw new Error('Ref.Code not valid');
       }
       // Если ошибка с запросом или соединением с БД
       else {
+        //return 'Ошибка получения user_id';
         throw new Error('Ошибка получения user_id');
       }
     } else {

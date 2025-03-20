@@ -19,12 +19,12 @@
   --foreground: #ffffff;
   --danger: #f31260;
   --secondary: #FE9900;
-  --primary: "#000000";
+  --primary: #000000;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --primary: "#000000";
+    --primary: #000000;
     --background: #000000;
     --foreground: #ffffff;
   }
