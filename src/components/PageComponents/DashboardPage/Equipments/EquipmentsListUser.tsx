@@ -6,6 +6,7 @@ import {
   fetchLastBalanceShareCountUserByEquipmentId,
   fetchElectricityPrice,
   fetchReferralCodeByUserId,
+  fetchAllUserBalances,
 } from '@/lib/data';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -13,18 +14,56 @@ import { useSession } from 'next-auth/react';
 import BuySellShareCountComponent from '@/components/PageComponents/DashboardPage/Store/BuySellShareCountComponent';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import { EquipmentSkeleton } from '@/components/ui/Skeletons';
+import { Snippet, Tabs, Tab } from '@heroui/react';
+
+interface Equipment {
+  id: number;
+  name: string;
+  hashrate: number;
+  hashrate_unit: string;
+  photoUrl: string | null;
+  power: string;
+  shareCount: number;
+  purchasePrice: number;
+  salePrice: number;
+  algorithm_id: number;
+  uuid: string | null;
+}
+
+interface CoinTicker {
+  name: string;
+  pricePerHashrate: number;
+}
+
+interface Algorithm {
+  id: number;
+  name: string;
+  uuid: string | null;
+  coinTickers: CoinTicker[] | null;
+}
+
+interface EquipmentData {
+  equipmentId: number;
+  balanceShareCount: number;
+}
 
 export default function EquipmentsListUser() {
   const [isLoading, setIsLoading] = useState<boolean>(false); // Флаг загрузки
   const [isLoadingUserEquipments, setIsLoadingUserEquipments] =
     useState<boolean>(true);
-  const [algorithms, setAlgorithms] = useState<any[]>([]); // Состояние для хранения алгоритмов
-  const [userEquipmentsFetch, setUserEquipmentsFetch] = useState<any[]>([]);
+  const [algorithms, setAlgorithms] = useState<Algorithm[]>([]); // Состояние для хранения алгоритмов
+  const [userEquipmentsFetch, setUserEquipmentsFetch] = useState<
+    EquipmentData[]
+  >([]);
   const { data: session } = useSession();
   const user_id = session?.user?.id;
-  const [equipmentsFetch, setEquipmentsFetch] = useState<any[]>([]);
+  const [equipmentsFetch, setEquipmentsFetch] = useState<Equipment[]>([]);
   const [lastPrice, setLastPrice] = useState<any>(null);
   const [refCode, setRefCode] = useState<number>();
+  const [balances, setBalances] = useState<any[]>([]);
+  const [selectedTab, setSelectedTab] = useState<string | number>(
+    algorithms[0]?.name || '',
+  );
 
   useEffect(() => {
     const getRefCode = async () => {
@@ -68,9 +107,12 @@ export default function EquipmentsListUser() {
       equipmentId,
     );
 
-    if (balanceShareCount === null) return; // Пропускаем оборудование без баланса
-
     setUserEquipmentsFetch((prevState) => {
+      // Если баланс null или 0, удаляем устройство из списка
+      if (balanceShareCount === null || balanceShareCount === 0) {
+        return prevState.filter((item) => item.equipmentId !== equipmentId);
+      }
+
       const existingDataIndex = prevState.findIndex(
         (item) => item.equipmentId === equipmentId,
       );
@@ -137,9 +179,10 @@ export default function EquipmentsListUser() {
 
           if (!isMounted) return;
 
-          if (balanceShareCount === null) {
+          // Изменяем условие проверки - пропускаем если баланс null ИЛИ 0
+          if (balanceShareCount === null || balanceShareCount === 0) {
             console.log(
-              `[Component ${renderCycle}] Skipping equipment ${equipment.id} - no balance`,
+              `[Component ${renderCycle}] Skipping equipment ${equipment.id} - no balance or zero balance`,
             );
             return null;
           }
@@ -151,7 +194,10 @@ export default function EquipmentsListUser() {
 
         if (!isMounted) return;
 
-        const validResults = results.filter((result) => result !== null);
+        // Фильтруем null и нулевые значения
+        const validResults = results.filter((result) =>
+          Boolean(result?.balanceShareCount),
+        );
 
         setUserEquipmentsFetch((prevState) => {
           // Создаем Map для быстрого поиска существующих записей
@@ -159,9 +205,9 @@ export default function EquipmentsListUser() {
             prevState.map((item) => [item.equipmentId, item.balanceShareCount]),
           );
 
-          // Проверяем, есть ли реальные изменения
+          // Проверяем, есть ли реальные изменения и исключаем нулевые балансы
           const hasChanges = validResults.some((result) => {
-            if (!result) return false;
+            if (!result || result.balanceShareCount === 0) return false;
             const existingBalance = existingMap.get(result.equipmentId);
             return existingBalance !== result.balanceShareCount;
           });
@@ -173,35 +219,32 @@ export default function EquipmentsListUser() {
             return prevState;
           }
 
-          // Создаем новый массив только с уникальными записями
-          const newState = validResults.reduce(
-            (acc, result) => {
-              if (!result) return acc;
+          // Создаем новый массив только с уникальными записями и ненулевыми балансами
+          const newState = validResults.reduce((acc, result) => {
+            if (!result || result.balanceShareCount === 0) return acc;
 
-              const { equipmentId, balanceShareCount } = result;
-              const existingBalance = existingMap.get(equipmentId);
+            const { equipmentId, balanceShareCount } = result;
+            const existingBalance = existingMap.get(equipmentId);
 
-              if (existingBalance !== undefined) {
-                if (existingBalance !== balanceShareCount) {
-                  console.log(
-                    `[Component ${renderCycle}] Updating equipment ${equipmentId} with new balance ${balanceShareCount}`,
-                  );
-                  acc.push({ equipmentId, balanceShareCount });
-                } else {
-                  // Если баланс не изменился, сохраняем существующую запись
-                  acc.push({ equipmentId, balanceShareCount: existingBalance });
-                }
-              } else {
+            if (existingBalance !== undefined && existingBalance > 0) {
+              if (existingBalance !== balanceShareCount) {
                 console.log(
-                  `[Component ${renderCycle}] Adding new equipment ${equipmentId} with balance ${balanceShareCount}`,
+                  `[Component ${renderCycle}] Updating equipment ${equipmentId} with new balance ${balanceShareCount}`,
                 );
                 acc.push({ equipmentId, balanceShareCount });
+              } else {
+                // Если баланс не изменился и больше 0, сохраняем существующую запись
+                acc.push({ equipmentId, balanceShareCount: existingBalance });
               }
+            } else if (balanceShareCount > 0) {
+              console.log(
+                `[Component ${renderCycle}] Adding new equipment ${equipmentId} with balance ${balanceShareCount}`,
+              );
+              acc.push({ equipmentId, balanceShareCount });
+            }
 
-              return acc;
-            },
-            [] as Array<{ equipmentId: number; balanceShareCount: number }>,
-          );
+            return acc;
+          }, [] as Array<EquipmentData>);
 
           return newState;
         });
@@ -236,6 +279,10 @@ export default function EquipmentsListUser() {
       try {
         const data = await fetchAlgorithms();
         setAlgorithms(data);
+        // Устанавливаем первый таб как активный, если есть алгоритмы
+        if (data.length > 0) {
+          setSelectedTab(data[0].name);
+        }
       } catch (error) {
         console.error('Ошибка при получении алгоритмов', error);
       }
@@ -243,6 +290,25 @@ export default function EquipmentsListUser() {
 
     getAlgorithms();
   }, []);
+
+  // Add new useEffect for fetching balances
+  useEffect(() => {
+    const getBalances = async () => {
+      try {
+        if (!user_id || isNaN(Number(user_id))) {
+          return;
+        }
+        const data = await fetchAllUserBalances(Number(user_id));
+        setBalances(data);
+      } catch (error) {
+        console.error('Ошибка при получении балансов', error);
+      }
+    };
+
+    if (user_id && !isNaN(Number(user_id))) {
+      getBalances();
+    }
+  }, [user_id]);
 
   return (
     <section className='space-y-4'>
@@ -254,126 +320,220 @@ export default function EquipmentsListUser() {
         <>
           <div className='text-white'>
             {refCode ? (
-              <div>
-                <p>Ваш реферальный код: {refCode}</p>
+              <div className='mb-4'>
+                <h3 className='mb-2 text-white'>
+                  Ваш реферальный код:{' '}
+                  <Snippet
+                    color='warning'
+                    className='bg-inherit'
+                    size='lg'
+                    symbol=''
+                  >
+                    {refCode}
+                  </Snippet>
+                </h3>
               </div>
             ) : (
-              <p>Загрузка реферального кода...</p>
+              <p className='text-white'>Загрузка реферального кода...</p>
             )}
-            {lastPrice ? (
-              <div>
-                <p>
-                  Стоимость электроэнергии:{' '}
-                  {parseFloat(lastPrice.pricePerKWh).toFixed(2)} $
-                </p>
+            <div className='flex justify-between'>
+              <div className='flex flex-col gap-2'>
+                <div className='flex items-center gap-2'>
+                  <span>Стоимость электроэнергии</span>
+                  <span className='font-bold'>
+                    $
+                    {lastPrice
+                      ? parseFloat(lastPrice.pricePerKWh).toFixed(4)
+                      : '0.0000'}
+                    /кВт
+                  </span>
+                </div>
+                <div className='flex flex-col'>
+                  <span>Всего активов</span>
+                  <div className='flex items-center gap-2'>
+                    <span className='text-2xl font-bold'>
+                      $
+                      {Number(
+                        balances.find((b) => b.coinTicker === 'USDT')
+                          ?.coinAmount || 0,
+                      ).toFixed(2)}
+                    </span>
+                  </div>
+                </div>
               </div>
-            ) : (
-              <p>Загрузка последней цены...</p>
-            )}
+
+              <div className='flex min-w-[350px] flex-col gap-4'>
+                {balances.map((balance) => (
+                  <div
+                    key={balance.id}
+                    className='flex items-center justify-between'
+                  >
+                    <div className='flex items-center gap-2'>
+                      <span>{balance.coinTicker}</span>
+                      <span className='font-bold'>
+                        {Number(balance.coinAmount).toFixed(2)}
+                      </span>
+                    </div>
+                    <div className='flex gap-2'>
+                      <button className='rounded bg-blue-500 px-3 py-1 text-sm hover:bg-blue-600'>
+                        Вывести
+                      </button>
+                      <button className='rounded bg-green-500 px-3 py-1 text-sm hover:bg-green-600'>
+                        Пополнить
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
           <div className='text-lg text-white'>
-            <ul className='space-y-4'>
-              {isLoadingUserEquipments ? (
-                // Показываем 3 скелетона во время загрузки
-                Array.from({ length: 3 }).map((_, index) => (
-                  <EquipmentSkeleton key={index} />
-                ))
-              ) : userEquipmentsFetch.length > 0 ? (
-                userEquipmentsFetch.map((equipmentData, index) => {
-                  const equipment = equipmentsFetch.find(
-                    (equip) => equip.id === equipmentData.equipmentId,
-                  );
+            <Tabs
+              selectedKey={selectedTab}
+              variant='underlined'
+              color='warning'
+              onSelectionChange={(key) => setSelectedTab(key)}
+              className='gap-2'
+            >
+              {algorithms.map((algorithm: Algorithm) => (
+                <Tab key={algorithm.name} title={algorithm.name}>
+                  <ul className='space-y-4'>
+                    {isLoadingUserEquipments
+                      ? Array.from({ length: 3 }).map((_, index) => (
+                          <EquipmentSkeleton key={index} />
+                        ))
+                      : (() => {
+                          const algorithmEquipment = userEquipmentsFetch
+                            .map((equipmentData: EquipmentData) => {
+                              const equipment = equipmentsFetch.find(
+                                (equip: Equipment) =>
+                                  equip.id === equipmentData.equipmentId,
+                              );
+                              return equipment?.algorithm_id === algorithm.id
+                                ? ({ equipment, equipmentData } as const)
+                                : null;
+                            })
+                            .filter(
+                              (
+                                item,
+                              ): item is {
+                                equipment: Equipment;
+                                equipmentData: EquipmentData;
+                              } => item !== null,
+                            );
 
-                  const userBalanceShareCount = equipmentData.balanceShareCount;
+                          if (algorithmEquipment.length === 0) {
+                            return (
+                              <p>
+                                У вас ещё нет оборудования в данной категории.{' '}
+                                <Link
+                                  href='/dashboard/store'
+                                  className='text-success'
+                                >
+                                  В магазин
+                                </Link>
+                              </p>
+                            );
+                          }
 
-                  const devicesInUse = Math.floor(
-                    userBalanceShareCount / equipment.shareCount,
-                  );
+                          return algorithmEquipment.map(
+                            ({ equipment, equipmentData }, index) => {
+                              const userBalanceShareCount =
+                                equipmentData.balanceShareCount;
+                              const devicesInUse = Math.floor(
+                                userBalanceShareCount / equipment.shareCount,
+                              );
+                              const sharesInUse =
+                                userBalanceShareCount -
+                                devicesInUse * equipment.shareCount;
 
-                  const sharesInUse =
-                    userBalanceShareCount - devicesInUse * equipment.shareCount;
-                  if (!equipment) return null;
+                              const algorithmCoinTickers =
+                                algorithm?.coinTickers || [];
+                              const coinPrice =
+                                algorithmCoinTickers[0]?.pricePerHashrate || 0;
+                              const dailyIncome =
+                                coinPrice * equipment.hashrate;
 
-                  const algorithm = algorithms.find(
-                    (algo) => algo.id === equipment.algorithm_id,
-                  );
-
-                  const algorithmCoinTickers = algorithm?.coinTickers || [];
-                  const coinPrice =
-                    algorithmCoinTickers[0]?.pricePerHashrate || 0;
-                  const dailyIncome = coinPrice * equipment.hashrate;
-
-                  return (
-                    <li key={index} className='border-b-1 border-secondary p-2'>
-                      <div className='flex items-center'>
-                        <div className='mr-4'>
-                          <p>
-                            <b>
-                              {equipment.name} {equipment.hashrate}
-                              {equipment.hashrate_unit}
-                            </b>
-                          </p>
-                          {equipment.photoUrl && (
-                            <Image
-                              src={equipment.photoUrl.replace(/^public/, '')}
-                              alt={equipment.name}
-                              width={300}
-                              height={300}
-                              className='h-[300px] w-[300px]'
-                            />
-                          )}
-                        </div>
-                        <div>
-                          <div>
-                            <p>
-                              <b>Алгоритм:</b>{' '}
-                              {algorithm ? algorithm.name : 'Не найден'}
-                            </p>
-                            <p>
-                              <b>Мощность:</b> {equipment.power} кВт
-                            </p>
-                            <p>
-                              <b>Доли:</b> {equipment.shareCount}
-                            </p>
-                            <p>
-                              <b>Цена покупки:</b> ${equipment.purchasePrice}
-                            </p>
-                            <p>
-                              <b>Цена продажи:</b> ${equipment.salePrice}
-                            </p>
-                            <p>
-                              <b>Долей в работе:</b> {sharesInUse}
-                            </p>
-                            <p>
-                              <b>Устройств в работе:</b> {devicesInUse}
-                            </p>
-
-                            <p>
-                              <b>Доход в сутки одного устройства:</b>{' '}
-                              {dailyIncome.toFixed(8)}
-                            </p>
-                          </div>
-                          <div className='mt-4 flex gap-2'>
-                            <BuySellShareCountComponent
-                              equipmentId={equipment.id}
-                              equipmentUuid={equipment.uuid}
-                              updateEquipmentData={updateEquipmentData}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                  );
-                })
-              ) : (
-                <p>
-                  У вас ещё нет оборудования в данной категории.{' '}
-                  <Link href='/dashboard/store' className='text-success'>
-                    В магазин
-                  </Link>
-                </p>
-              )}
-            </ul>
+                              return (
+                                <li
+                                  key={index}
+                                  className='border-b-1 border-secondary p-2'
+                                >
+                                  <div className='flex items-center'>
+                                    <div className='mr-4'>
+                                      <p>
+                                        <b>
+                                          {equipment.name} {equipment.hashrate}
+                                          {equipment.hashrate_unit}
+                                        </b>
+                                      </p>
+                                      {equipment.photoUrl &&
+                                        equipment.photoUrl !== null && (
+                                          <Image
+                                            src={equipment.photoUrl.replace(
+                                              /^public/,
+                                              '',
+                                            )}
+                                            alt={equipment.name}
+                                            width={300}
+                                            height={300}
+                                            className='h-[300px] w-[300px]'
+                                          />
+                                        )}
+                                    </div>
+                                    <div>
+                                      <div>
+                                        <p>
+                                          <b>Алгоритм:</b> {algorithm.name}
+                                        </p>
+                                        <p>
+                                          <b>Мощность:</b> {equipment.power} кВт
+                                        </p>
+                                        <p>
+                                          <b>Доли:</b> {equipment.shareCount}
+                                        </p>
+                                        <p>
+                                          <b>Цена покупки:</b> $
+                                          {equipment.purchasePrice}
+                                        </p>
+                                        <p>
+                                          <b>Цена продажи:</b> $
+                                          {equipment.salePrice}
+                                        </p>
+                                        <p>
+                                          <b>Долей в работе:</b> {sharesInUse}
+                                        </p>
+                                        <p>
+                                          <b>Устройств в работе:</b>{' '}
+                                          {devicesInUse}
+                                        </p>
+                                        <p>
+                                          <b>
+                                            Доход в сутки одного устройства:
+                                          </b>{' '}
+                                          {dailyIncome.toFixed(8)}
+                                        </p>
+                                      </div>
+                                      <div className='mt-4 flex gap-2'>
+                                        <BuySellShareCountComponent
+                                          equipmentId={equipment.id}
+                                          equipmentUuid={equipment.uuid}
+                                          updateEquipmentData={
+                                            updateEquipmentData
+                                          }
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </li>
+                              );
+                            },
+                          );
+                        })()}
+                  </ul>
+                </Tab>
+              ))}
+            </Tabs>
           </div>
         </>
       )}

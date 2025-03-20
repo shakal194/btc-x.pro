@@ -7,6 +7,7 @@ import {
   equipmentsTable,
   transactionsTable,
   usersTable,
+  balancesTable,
 } from '@/db/schema'; // Импортируем таблицу
 import { sql, desc, asc } from 'drizzle-orm';
 import fs from 'fs';
@@ -411,10 +412,9 @@ export async function fetchLastBalanceShareCountUserByEquipmentId(
       .from(transactionsTable)
       .where(
         sql`${transactionsTable.user_id} = ${user_id} 
-        AND ${transactionsTable.equipment_id} = ${equipment_id}
-        AND ${transactionsTable.balanceShareCount} > 0`,
+        AND ${transactionsTable.equipment_id} = ${equipment_id}`,
       )
-      .orderBy(desc(transactionsTable.transactionDate))
+      .orderBy(desc(transactionsTable.id))
       .limit(1);
 
     const balance = result.length > 0 ? result[0].balanceShareCount : null;
@@ -524,5 +524,114 @@ export async function fetchUserIdByReferralCode(referral_code: number) {
     } else {
       throw new Error('Неизвестная ошибка');
     }
+  }
+}
+
+export async function fetchUSDTBalance(userId: number) {
+  try {
+    console.log(`[USDT Balance] Fetching balance for user ${userId}`);
+
+    // Получаем все записи баланса USDT для пользователя
+    const result = await db
+      .select({
+        coinAmount: balancesTable.coinAmount,
+        uuid: balancesTable.uuid,
+        id: balancesTable.id,
+      })
+      .from(balancesTable)
+      .where(
+        sql`${balancesTable.user_id} = ${userId} 
+        AND ${balancesTable.coinTicker} = 'USDT'`,
+      )
+      .orderBy(desc(balancesTable.id));
+
+    // Берем последнюю запись как текущий баланс
+    const currentBalance = result[0]?.coinAmount ?? 0;
+    console.log(
+      `[USDT Balance] Current balance for user ${userId}: ${currentBalance}`,
+    );
+    console.log(`[USDT Balance] All balance records:`, result);
+
+    return currentBalance;
+  } catch (error) {
+    console.error('[USDT Balance] Error fetching balance:', error);
+    throw new Error('Ошибка при получении баланса USDT');
+  }
+}
+
+export async function updateUSDTBalance(
+  userId: number,
+  amount: number,
+  isPurchase: boolean,
+) {
+  try {
+    console.log(
+      `[USDT Transaction] Starting ${isPurchase ? 'purchase' : 'sale'} for user ${userId}`,
+    );
+    console.log(`[USDT Transaction] Amount: ${amount}`);
+
+    // Получаем текущий баланс USDT
+    const currentBalance = await fetchUSDTBalance(userId);
+    console.log(`[USDT Transaction] Current balance: ${currentBalance}`);
+
+    const newBalance = isPurchase
+      ? Number(currentBalance) - Number(amount) // Уменьшаем баланс при покупке
+      : Number(currentBalance) + Number(amount); // Увеличиваем баланс при продаже
+
+    console.log(`[USDT Transaction] New balance will be: ${newBalance}`);
+
+    if (isPurchase && newBalance < 0) {
+      console.error(
+        `[USDT Transaction] Insufficient funds. Required: ${amount}, Available: ${currentBalance}`,
+      );
+      throw new Error('Недостаточно USDT для покупки');
+    }
+
+    // Создаем новую запись в таблице balances
+    await db.insert(balancesTable).values({
+      user_id: sql`${userId}`,
+      coinTicker: 'USDT',
+      coinAmount: sql`${newBalance}`,
+    });
+
+    console.log(
+      `[USDT Transaction] Balance updated successfully. New balance: ${newBalance}`,
+    );
+    return newBalance;
+  } catch (error) {
+    console.error('[USDT Transaction] Error updating balance:', error);
+    throw new Error('Ошибка при обновлении баланса USDT');
+  }
+}
+
+export async function fetchAllUserBalances(userId: number) {
+  try {
+    console.log(`[Balances] Fetching all balances for user ${userId}`);
+    const result = await db
+      .select({
+        coinAmount: balancesTable.coinAmount,
+        coinTicker: balancesTable.coinTicker,
+        id: balancesTable.id,
+      })
+      .from(balancesTable)
+      .where(sql`${balancesTable.user_id} = ${userId}`)
+      .orderBy(desc(balancesTable.id));
+
+    // Группируем балансы по тикеру, берем последний баланс для каждого тикера
+    const latestBalances = result.reduce(
+      (acc, curr) => {
+        if (!acc[curr.coinTicker] || acc[curr.coinTicker].id < curr.id) {
+          acc[curr.coinTicker] = curr;
+        }
+        return acc;
+      },
+      {} as Record<string, (typeof result)[0]>,
+    );
+
+    console.log(`[Balances] Latest balances:`, latestBalances);
+    return Object.values(latestBalances);
+  } catch (error) {
+    console.error('[Balances] Error fetching balances:', error);
+    throw new Error('Ошибка при получении балансов');
   }
 }

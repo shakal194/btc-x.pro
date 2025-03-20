@@ -26,6 +26,8 @@
   :root {
     --primary: #000000;
     --background: #000000;
+    --danger: #f31260;
+    --secondary: #FE9900;
     --foreground: #ffffff;
   }
 }

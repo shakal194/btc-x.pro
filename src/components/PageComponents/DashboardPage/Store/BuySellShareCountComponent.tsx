@@ -16,33 +16,40 @@ import {
   fetchEquipmentById,
   insertTransactionsTable,
   fetchLastBalanceShareCountUserByEquipmentId,
+  fetchUSDTBalance,
+  updateUSDTBalance,
 } from '@/lib/data';
 import Notiflix from 'notiflix';
 import FullScreenSpinner from '@/components/ui/Spinner';
+
+interface BuySellShareCountComponentProps {
+  equipmentId: number;
+  equipmentUuid: string | null;
+  updateEquipmentData: (user_id: string, equipmentId: number) => Promise<void>;
+}
 
 export default function BuySellShareCountComponent({
   equipmentId,
   equipmentUuid,
   updateEquipmentData,
-}: {
-  equipmentId: number;
-  equipmentUuid: string;
-  updateEquipmentData: (user_id: string, equipmentId: number) => void;
-}) {
+}: BuySellShareCountComponentProps) {
   const { data: session } = useSession();
   const user_id = session?.user?.id;
+  const [isLoading, setIsLoading] = useState(false);
 
   const [isPending, startTransition] = useTransition();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [name, setName] = useState('');
-  const [countShareBuySell, setCountShareBuySell] = useState<number>(0); // Количество долей
-  const [balanceShareCount, setBalanceShareCount] = useState<number>(0); // Баланс долей
-  const [pricePurchaseShare, setPricePurchaseShare] = useState<number>(0); // Цена за долю
-  const [priceSalesShare, setPriceSalesShare] = useState<number>(0); // Цена за долю
-  const [shareCount, setShareCount] = useState<number>(0); // Цена за долю
-
-  const [isPurchase, setIsPurchase] = useState(true); // Логика для покупки/продажи
-  const [error, setError] = useState('');
+  const [equipmentName, setEquipmentName] = useState('');
+  const [shareCountInput, setShareCountInput] = useState<string>('');
+  const [userShareBalance, setUserShareBalance] = useState<number>(0);
+  const [sharePurchasePrice, setSharePurchasePrice] = useState<number>(0);
+  const [shareSalePrice, setShareSalePrice] = useState<number>(0);
+  const [totalShareCount, setTotalShareCount] = useState<number>(0);
+  const [usdtBalance, setUsdtBalance] = useState<number>(0);
+  const [totalAmount, setTotalAmount] = useState<number>(0);
+  const [isPurchase, setIsPurchase] = useState(true);
+  const [transactionError, setTransactionError] = useState('');
+  const [shareCountError, setShareCountError] = useState('');
 
   useEffect(() => {
     if (isOpen) {
@@ -53,10 +60,10 @@ export default function BuySellShareCountComponent({
               Number(user_id),
               equipmentId,
             );
-          setBalanceShareCount(balanceShareCount ?? 0);
+          setUserShareBalance(balanceShareCount ?? 0);
         } catch (error) {
           console.error('Ошибка при получении баланса долей', error);
-          setBalanceShareCount(0);
+          setUserShareBalance(0);
         }
       };
       currentBalance();
@@ -67,13 +74,14 @@ export default function BuySellShareCountComponent({
   useEffect(() => {
     const getEquipmentById = async () => {
       try {
-        const res = await fetchEquipmentById(equipmentUuid); // Получаем данные устройства по id
+        if (!equipmentUuid) return;
+        const res = await fetchEquipmentById(equipmentUuid);
         const data = res[0];
         if (data) {
-          setName(data.name);
-          setPricePurchaseShare(data.purchasePrice); // Установите цену за долю (например, цену покупки)
-          setPriceSalesShare(data.salePrice); // Установите цену за долю (например, цену покупки)
-          setShareCount(data.shareCount); // Установите цену за долю (например, цену покупки)
+          setEquipmentName(data.name);
+          setSharePurchasePrice(data.purchasePrice);
+          setShareSalePrice(data.salePrice);
+          setTotalShareCount(data.shareCount);
         }
       } catch (error) {
         console.error('Ошибка при получении данных оборудования', error);
@@ -81,76 +89,147 @@ export default function BuySellShareCountComponent({
     };
 
     if (equipmentUuid) {
-      getEquipmentById(); // Запрашиваем данные устройства, если id существует
+      getEquipmentById();
     }
   }, [equipmentUuid]);
 
+  // Получаем баланс USDT при открытии модального окна
+  useEffect(() => {
+    if (isOpen && user_id) {
+      const fetchBalance = async () => {
+        try {
+          const balance = await fetchUSDTBalance(Number(user_id));
+          setUsdtBalance(Number(balance) || 0);
+        } catch (error) {
+          console.error('Ошибка при получении баланса USDT:', error);
+          setUsdtBalance(0);
+        }
+      };
+      fetchBalance();
+    }
+  }, [isOpen, user_id]);
+
+  // Рассчитываем общую сумму при изменении количества долей
+  useEffect(() => {
+    const shareCount = Number(shareCountInput) || 0;
+    if (isPurchase) {
+      const total = shareCount * (sharePurchasePrice / totalShareCount);
+      setTotalAmount(total);
+    } else {
+      const total = shareCount * (shareSalePrice / totalShareCount);
+      setTotalAmount(total);
+    }
+  }, [
+    shareCountInput,
+    sharePurchasePrice,
+    shareSalePrice,
+    totalShareCount,
+    isPurchase,
+  ]);
+
   // Функция для очистки инпутов при закрытии модального окна
   const handleCloseModal = () => {
-    setError('');
-    setCountShareBuySell(0);
+    setTransactionError('');
+    setShareCountInput('');
+    setShareCountError('');
     onClose();
   };
 
+  // Обработчик изменения количества долей
+  const handleShareCountChange = (value: string) => {
+    setShareCountInput(value);
+    setTransactionError('');
+    setShareCountError('');
+
+    const numValue = Number(value);
+
+    if (isNaN(numValue) || numValue <= 0) {
+      setShareCountError('Количество долей должно быть положительным числом');
+      return;
+    }
+
+    if (!isPurchase && numValue > userShareBalance) {
+      setShareCountError(`У вас только ${userShareBalance} долей для продажи`);
+      return;
+    }
+
+    if (isPurchase) {
+      const total = numValue * (sharePurchasePrice / totalShareCount);
+      if (total > usdtBalance) {
+        setShareCountError(
+          `Необходимо пополнить баланс на ${(total - usdtBalance).toFixed(2)} USDT`,
+        );
+        return;
+      }
+    }
+  };
+
   const handleBuySellShares = async () => {
-    if (!countShareBuySell || pricePurchaseShare <= 0) {
-      setError('Пожалуйста, заполните все поля корректно');
-      Notiflix.Notify.warning('Пожалуйста, заполните все поля корректно');
-      return;
-    }
+    if (!user_id || !equipmentUuid) return;
 
-    const updatedBalanceShareCount = isPurchase
-      ? balanceShareCount + countShareBuySell
-      : balanceShareCount - countShareBuySell;
-
-    if (!isPurchase && updatedBalanceShareCount < 0) {
-      setError('Недостаточно долей для продажи');
-      Notiflix.Notify.warning('Недостаточно долей для продажи');
-      return;
-    }
-
-    const updPricePerShare = isPurchase
-      ? pricePurchaseShare / shareCount
-      : priceSalesShare / shareCount;
-
+    setIsLoading(true);
     try {
-      startTransition(async () => {
-        setError('');
-        try {
-          // Вставка данных в таблицу транзакций
-          await insertTransactionsTable({
-            user_id: Number(user_id),
-            equipment_id: equipmentId,
-            countShareBuySell,
-            balanceShareCount: updatedBalanceShareCount,
-            pricePerShare: updPricePerShare,
-            isPurchase,
-          });
-
-          if (user_id) {
-            await updateEquipmentData(user_id.toString(), equipmentId);
-          }
-
-          handleCloseModal();
-          Notiflix.Notify.success(isPurchase ? 'Доли куплены' : 'Доли проданы');
-        } catch (error) {
-          const errorMessage =
-            error instanceof Error
-              ? error.message
-              : 'Ошибка при покупке/продаже долей';
-          console.error('Ошибка при покупке/продаже долей:', error);
-          setError(errorMessage);
-          Notiflix.Notify.failure(errorMessage);
-        }
+      const response = await fetch('/api/buy-share-count', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: Number(user_id),
+          equipment_uuid: equipmentUuid,
+        }),
       });
+
+      const shareCount = Number(shareCountInput) || 0;
+      if (!shareCount || sharePurchasePrice <= 0) {
+        setTransactionError('Пожалуйста, заполните все поля корректно');
+        Notiflix.Notify.warning('Пожалуйста, заполните все поля корректно');
+        return;
+      }
+
+      const updatedShareBalance = isPurchase
+        ? userShareBalance + shareCount
+        : userShareBalance - shareCount;
+
+      if (!isPurchase && updatedShareBalance < 0) {
+        setTransactionError('Недостаточно долей для продажи');
+        Notiflix.Notify.warning('Недостаточно долей для продажи');
+        return;
+      }
+
+      const pricePerShare = isPurchase
+        ? sharePurchasePrice / totalShareCount
+        : shareSalePrice / totalShareCount;
+
+      const totalAmount = shareCount * pricePerShare;
+
+      await updateUSDTBalance(Number(user_id), totalAmount, isPurchase);
+
+      await insertTransactionsTable({
+        user_id: Number(user_id),
+        equipment_id: equipmentId,
+        countShareBuySell: shareCount,
+        balanceShareCount: updatedShareBalance,
+        pricePerShare: pricePerShare,
+        isPurchase,
+      });
+
+      if (user_id) {
+        await updateEquipmentData(user_id.toString(), equipmentId);
+      }
+
+      handleCloseModal();
+      Notiflix.Notify.success(isPurchase ? 'Доли куплены' : 'Доли проданы');
     } catch (error) {
       const errorMessage =
         error instanceof Error
           ? error.message
           : 'Ошибка при покупке/продаже долей';
       console.error('Ошибка при покупке/продаже долей:', error);
-      setError(errorMessage);
+      setTransactionError(errorMessage);
       Notiflix.Notify.failure(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -161,6 +240,8 @@ export default function BuySellShareCountComponent({
         color='success'
         onPress={() => {
           setIsPurchase(true);
+          setTransactionError('');
+          setShareCountError('');
           onOpen();
         }}
       >
@@ -171,6 +252,8 @@ export default function BuySellShareCountComponent({
         color='danger'
         onPress={() => {
           setIsPurchase(false);
+          setTransactionError('');
+          setShareCountError('');
           onOpen();
         }}
       >
@@ -185,7 +268,9 @@ export default function BuySellShareCountComponent({
       >
         <ModalContent>
           <ModalHeader className='flex flex-col gap-1 text-white'>
-            {isPurchase ? `Купить доли ${name}` : `Продать доли ${name}`}
+            {isPurchase
+              ? `Купить доли ${equipmentName}`
+              : `Продать доли ${equipmentName}`}
           </ModalHeader>
 
           <ModalBody className='mx-auto'>
@@ -196,8 +281,8 @@ export default function BuySellShareCountComponent({
                 labelPlacement='inside'
                 placeholder='Название'
                 isRequired
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={equipmentName}
+                onChange={(e) => setEquipmentName(e.target.value)}
                 className='w-[400px]'
                 disabled
               />
@@ -207,10 +292,13 @@ export default function BuySellShareCountComponent({
                 labelPlacement='inside'
                 placeholder='Количество долей'
                 type='number'
+                min={0}
                 isRequired
-                value={countShareBuySell.toString()}
-                onChange={(e) => setCountShareBuySell(parseInt(e.target.value))}
+                value={shareCountInput}
+                onChange={(e) => handleShareCountChange(e.target.value)}
                 className='w-[400px]'
+                isInvalid={!!shareCountError}
+                errorMessage={shareCountError}
               />
               <Input
                 size='lg'
@@ -219,8 +307,7 @@ export default function BuySellShareCountComponent({
                 placeholder='Баланс долей'
                 type='number'
                 isDisabled
-                value={balanceShareCount.toString()}
-                onChange={(e) => setBalanceShareCount(parseInt(e.target.value))}
+                value={userShareBalance > 0 ? userShareBalance.toString() : ''}
                 className='w-[400px]'
               />
               <Input
@@ -233,12 +320,40 @@ export default function BuySellShareCountComponent({
                 isDisabled
                 value={
                   isPurchase
-                    ? (pricePurchaseShare / shareCount).toString()
-                    : (priceSalesShare / shareCount).toString()
+                    ? (sharePurchasePrice / totalShareCount || 0).toString()
+                    : (shareSalePrice / totalShareCount || 0).toString()
                 }
                 className='w-[400px]'
               />
-              {error && <div className='mt-4 text-red-500'>{error}</div>}
+              {isPurchase && (
+                <>
+                  <Input
+                    size='lg'
+                    label='Баланс USDT'
+                    labelPlacement='inside'
+                    type='number'
+                    isDisabled
+                    value={usdtBalance.toFixed(2)}
+                    className='w-[400px]'
+                  />
+                  <Input
+                    size='lg'
+                    label='Итого к оплате'
+                    labelPlacement='inside'
+                    type='number'
+                    isDisabled
+                    value={totalAmount.toFixed(2)}
+                    className={`w-[400px] ${
+                      totalAmount > usdtBalance
+                        ? 'text-red-500'
+                        : 'text-green-500'
+                    }`}
+                  />
+                </>
+              )}
+              {transactionError && (
+                <div className='mt-4 text-red-500'>{transactionError}</div>
+              )}
             </Form>
           </ModalBody>
 
@@ -249,11 +364,15 @@ export default function BuySellShareCountComponent({
             <Button
               color='success'
               onPress={handleBuySellShares}
-              isDisabled={isPending}
+              isDisabled={
+                isPending ||
+                !!shareCountError ||
+                (isPurchase && totalAmount > usdtBalance)
+              }
             >
               {isPurchase ? 'Купить' : 'Продать'}
             </Button>
-            {isPending && <FullScreenSpinner />}
+            {isLoading && <FullScreenSpinner />}
           </ModalFooter>
         </ModalContent>
       </Modal>
