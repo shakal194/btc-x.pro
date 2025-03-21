@@ -336,7 +336,9 @@ export default function EquipmentsListUser() {
             ) : (
               <p className='text-white'>Загрузка реферального кода...</p>
             )}
-            <div className='flex justify-between'>
+
+            {/* Price and Assets Section */}
+            <div className='flex flex-col justify-between gap-4 lg:flex-row'>
               <div className='flex flex-col gap-2'>
                 <div className='flex items-center gap-2'>
                   <span>Стоимость электроэнергии</span>
@@ -344,7 +346,7 @@ export default function EquipmentsListUser() {
                     $
                     {lastPrice
                       ? parseFloat(lastPrice.pricePerKWh).toFixed(4)
-                      : '0.0000'}
+                      : '0.0000'}{' '}
                     /кВт
                   </span>
                 </div>
@@ -362,7 +364,7 @@ export default function EquipmentsListUser() {
                 </div>
               </div>
 
-              <div className='flex min-w-[350px] flex-col gap-4'>
+              <div className='flex flex-col gap-4 md:min-w-[350px]'>
                 {balances.map((balance) => (
                   <div
                     key={balance.id}
@@ -387,6 +389,8 @@ export default function EquipmentsListUser() {
               </div>
             </div>
           </div>
+
+          {/* Tabs and Equipment Section */}
           <div className='text-lg text-white'>
             <Tabs
               selectedKey={selectedTab}
@@ -459,11 +463,11 @@ export default function EquipmentsListUser() {
                                   key={index}
                                   className='border-b-1 border-secondary p-2'
                                 >
-                                  <div className='flex items-center'>
+                                  <div className='flex flex-col items-center gap-4 md:flex-row'>
                                     <div className='mr-4'>
                                       <p>
                                         <b>
-                                          {equipment.name} {equipment.hashrate}
+                                          {equipment.name} {equipment.hashrate}{' '}
                                           {equipment.hashrate_unit}
                                         </b>
                                       </p>
@@ -475,14 +479,14 @@ export default function EquipmentsListUser() {
                                               '',
                                             )}
                                             alt={equipment.name}
-                                            width={300}
-                                            height={300}
-                                            className='h-[300px] w-[300px]'
+                                            width={350}
+                                            height={350}
+                                            className='h-[350px] w-[350px]'
                                           />
                                         )}
                                     </div>
                                     <div>
-                                      <div>
+                                      <div className='flex flex-col gap-2'>
                                         <p>
                                           <b>Алгоритм:</b> {algorithm.name}
                                         </p>
@@ -514,7 +518,7 @@ export default function EquipmentsListUser() {
                                           {dailyIncome.toFixed(8)}
                                         </p>
                                       </div>
-                                      <div className='mt-4 flex gap-2'>
+                                      <div className='mt-4 flex justify-between gap-2'>
                                         <BuySellShareCountComponent
                                           equipmentId={equipment.id}
                                           equipmentUuid={equipment.uuid}

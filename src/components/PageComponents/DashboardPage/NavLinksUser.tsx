@@ -40,14 +40,14 @@ export default function NavLinksUser() {
             key={link.name}
             href={link.href}
             className={clsx(
-              'flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-100 p-3 text-sm font-medium hover:bg-sky-100 hover:text-[#FD6B06] md:flex-none md:justify-start md:p-2 md:px-3',
+              'flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-100 p-3 text-sm font-medium hover:bg-sky-100 hover:text-[#FD6B06] lg:flex-none lg:justify-start lg:p-2 lg:px-3',
               {
                 'bg-sky-100 text-[#FD6B06]': pathname === link.href,
               },
             )}
           >
             <LinkIcon className='w-6' />
-            <p className='hidden md:block'>{link.name}</p>
+            <p className='hidden lg:block'>{link.name}</p>
           </Link>
         );
       })}

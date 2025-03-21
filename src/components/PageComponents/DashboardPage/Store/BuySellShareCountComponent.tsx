@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useTransition } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Button,
   Input,
@@ -37,7 +37,6 @@ export default function BuySellShareCountComponent({
   const user_id = session?.user?.id;
   const [isLoading, setIsLoading] = useState(false);
 
-  const [isPending, startTransition] = useTransition();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [equipmentName, setEquipmentName] = useState('');
   const [shareCountInput, setShareCountInput] = useState<string>('');
@@ -169,7 +168,7 @@ export default function BuySellShareCountComponent({
 
     setIsLoading(true);
     try {
-      const response = await fetch('/api/buy-share-count', {
+      await fetch('/api/buy-share-count', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -262,7 +261,9 @@ export default function BuySellShareCountComponent({
 
       <Modal
         isOpen={isOpen}
-        size='3xl'
+        size='xl'
+        placement='center'
+        scrollBehavior='outside'
         onClose={handleCloseModal}
         className='bg-slate-700'
       >
@@ -276,18 +277,18 @@ export default function BuySellShareCountComponent({
           <ModalBody className='mx-auto'>
             <Form>
               <Input
-                size='lg'
+                size='sm'
                 label='Название оборудования'
                 labelPlacement='inside'
                 placeholder='Название'
                 isRequired
                 value={equipmentName}
                 onChange={(e) => setEquipmentName(e.target.value)}
-                className='w-[400px]'
+                className='w-full sm:w-[350px] md:w-[400px]'
                 disabled
               />
               <Input
-                size='lg'
+                size='sm'
                 label='Количество долей'
                 labelPlacement='inside'
                 placeholder='Количество долей'
@@ -296,22 +297,22 @@ export default function BuySellShareCountComponent({
                 isRequired
                 value={shareCountInput}
                 onChange={(e) => handleShareCountChange(e.target.value)}
-                className='w-[400px]'
+                className='w-full sm:w-[350px] md:w-[400px]'
                 isInvalid={!!shareCountError}
                 errorMessage={shareCountError}
               />
               <Input
-                size='lg'
+                size='sm'
                 label='Баланс долей'
                 labelPlacement='inside'
                 placeholder='Баланс долей'
                 type='number'
                 isDisabled
                 value={userShareBalance > 0 ? userShareBalance.toString() : ''}
-                className='w-[400px]'
+                className='w-full sm:w-[350px] md:w-[400px]'
               />
               <Input
-                size='lg'
+                size='sm'
                 label='Цена за долю'
                 labelPlacement='inside'
                 placeholder='Цена за долю'
@@ -323,27 +324,27 @@ export default function BuySellShareCountComponent({
                     ? (sharePurchasePrice / totalShareCount || 0).toString()
                     : (shareSalePrice / totalShareCount || 0).toString()
                 }
-                className='w-[400px]'
+                className='w-full sm:w-[350px] md:w-[400px]'
               />
               {isPurchase && (
                 <>
                   <Input
-                    size='lg'
+                    size='sm'
                     label='Баланс USDT'
                     labelPlacement='inside'
                     type='number'
                     isDisabled
                     value={usdtBalance.toFixed(2)}
-                    className='w-[400px]'
+                    className='w-full sm:w-[350px] md:w-[400px]'
                   />
                   <Input
-                    size='lg'
+                    size='sm'
                     label='Итого к оплате'
                     labelPlacement='inside'
                     type='number'
                     isDisabled
                     value={totalAmount.toFixed(2)}
-                    className={`w-[400px] ${
+                    className={`w-full sm:w-[350px] md:w-[400px] ${
                       totalAmount > usdtBalance
                         ? 'text-red-500'
                         : 'text-green-500'
@@ -357,7 +358,7 @@ export default function BuySellShareCountComponent({
             </Form>
           </ModalBody>
 
-          <ModalFooter>
+          <ModalFooter className='flex flex-col gap-2 sm:flex-row'>
             <Button color='danger' onPress={handleCloseModal}>
               Отменить
             </Button>
@@ -365,9 +366,7 @@ export default function BuySellShareCountComponent({
               color='success'
               onPress={handleBuySellShares}
               isDisabled={
-                isPending ||
-                !!shareCountError ||
-                (isPurchase && totalAmount > usdtBalance)
+                !!shareCountError || (isPurchase && totalAmount > usdtBalance)
               }
             >
               {isPurchase ? 'Купить' : 'Продать'}

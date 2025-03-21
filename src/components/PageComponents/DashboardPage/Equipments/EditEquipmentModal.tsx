@@ -102,13 +102,14 @@ export default function EditEquipmentModal({
   );*/
 
   return (
-    <section>
+    <>
       <Button size='lg' className='bg-white' onPress={onOpen}>
         Изменить оборудование
       </Button>
       <Modal
         isOpen={isOpen}
-        size='3xl'
+        size='xl'
+        placement='center'
         onClose={handleCloseModal}
         className='bg-slate-700'
       >
@@ -119,17 +120,17 @@ export default function EditEquipmentModal({
           <ModalBody className='mx-auto'>
             <Form>
               <Input
-                size='lg'
+                size='sm'
                 label='Название оборудования'
                 labelPlacement='inside'
                 placeholder='Название'
                 isRequired
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className='w-[400px]'
+                className='w-full sm:w-[350px] md:w-[400px]'
               />
               <Input
-                size='lg'
+                size='sm'
                 label='Цена покупки'
                 labelPlacement='inside'
                 placeholder='Цена покупки'
@@ -142,10 +143,10 @@ export default function EditEquipmentModal({
                 }
                 value={purchasePrice?.toString()}
                 onChange={(e) => setPurchasePrice(parseInt(e.target.value))}
-                className='w-[400px]'
+                className='w-full sm:w-[350px] md:w-[400px]'
               />
               <Input
-                size='lg'
+                size='sm'
                 label='Цена продажи'
                 labelPlacement='inside'
                 placeholder='Цена продажи'
@@ -158,7 +159,7 @@ export default function EditEquipmentModal({
                 isRequired
                 value={salePrice?.toString()}
                 onChange={(e) => setSalePrice(parseInt(e.target.value))}
-                className='w-[400px]'
+                className='w-full sm:w-[350px] md:w-[400px]'
               />
 
               {error && <div className='mt-4 text-red-500'>{error}</div>}
@@ -175,6 +176,6 @@ export default function EditEquipmentModal({
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </section>
+    </>
   );
 }

@@ -96,7 +96,7 @@ export default function Store() {
 
               return (
                 <li key={index} className='border-b-1 border-secondary p-2'>
-                  <div className='flex items-center'>
+                  <div className='flex flex-col items-center gap-4 md:flex-row'>
                     <div className='mr-4'>
                       <p>
                         <b>
@@ -108,14 +108,14 @@ export default function Store() {
                         <Image
                           src={equipment.photoUrl.replace(/^public/, '')}
                           alt={equipment.name}
-                          width={300}
+                          width={350}
                           height={300}
-                          className='h-[300px] w-[300px]'
+                          className='h-[350px] w-[350px]'
                         />
                       )}
                     </div>
                     <div>
-                      <div>
+                      <div className='flex flex-col gap-2'>
                         <p>
                           <b>Алгоритм:</b>{' '}
                           {algorithm ? algorithm.name : 'Не найден'}
@@ -137,7 +137,7 @@ export default function Store() {
                           {dailyIncome.toFixed(8)}
                         </p>
                       </div>
-                      <div className='mt-4 flex gap-2'>
+                      <div className='mt-4 flex justify-between gap-2'>
                         <BuySellShareCountComponent
                           equipmentId={equipment.id}
                           equipmentUuid={equipment.uuid}

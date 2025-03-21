@@ -166,13 +166,15 @@ export default function AddEquipmentModal({
   };
 
   return (
-    <section>
+    <>
       <Button size='lg' className='bg-white' onPress={onOpen}>
         Добавить оборудование
       </Button>
       <Modal
         isOpen={isOpen}
-        size='3xl'
+        size='xl'
+        placement='center'
+        scrollBehavior='outside'
         onClose={handleCloseModal}
         className='bg-slate-700'
       >
@@ -183,17 +185,18 @@ export default function AddEquipmentModal({
           <ModalBody className='mx-auto'>
             <Form>
               <Input
-                size='lg'
+                size='sm'
                 label='Название оборудования'
                 labelPlacement='inside'
                 placeholder='Название'
                 isRequired
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className='w-[400px]'
+                className='w-full sm:w-[350px] md:w-[400px]'
               />
               <Select
                 label='Алгоритм'
+                size='sm'
                 value={algorithm_id}
                 onChange={handleAlgorithmSelectChange}
               >
@@ -202,7 +205,7 @@ export default function AddEquipmentModal({
                 ))}
               </Select>
               <Input
-                size='lg'
+                size='sm'
                 label='Мощность'
                 labelPlacement='inside'
                 placeholder='Мощность'
@@ -215,10 +218,10 @@ export default function AddEquipmentModal({
                 isRequired
                 value={power}
                 onChange={(e) => setPower(e.target.value)}
-                className='w-[400px]'
+                className='w-full sm:w-[350px] md:w-[400px]'
               />
               <Input
-                size='lg'
+                size='sm'
                 label='Хешрейт'
                 labelPlacement='inside'
                 placeholder='Хешрейт'
@@ -226,11 +229,12 @@ export default function AddEquipmentModal({
                 isRequired
                 value={hashrate}
                 onChange={(e) => setHashrate(e.target.value)}
-                className='w-[400px]'
+                className='w-full sm:w-[350px] md:w-[400px]'
               />
               <Select
                 label='Единица измерения'
                 value={hashrateUnit}
+                size='sm'
                 onChange={handlehashrateUnitSelectChange}
               >
                 {hashrateUnitArray.map((unit) => (
@@ -238,7 +242,7 @@ export default function AddEquipmentModal({
                 ))}
               </Select>
               <Input
-                size='lg'
+                size='sm'
                 label='Цена покупки'
                 labelPlacement='inside'
                 placeholder='Цена покупки'
@@ -251,10 +255,10 @@ export default function AddEquipmentModal({
                 }
                 value={purchasePrice}
                 onChange={(e) => setPurchasePrice(e.target.value)}
-                className='w-[400px]'
+                className='w-full sm:w-[350px] md:w-[400px]'
               />
               <Input
-                size='lg'
+                size='sm'
                 label='Цена продажи'
                 labelPlacement='inside'
                 placeholder='Цена продажи'
@@ -267,10 +271,10 @@ export default function AddEquipmentModal({
                 isRequired
                 value={salePrice}
                 onChange={(e) => setSalePrice(e.target.value)}
-                className='w-[400px]'
+                className='w-full sm:w-[350px] md:w-[400px]'
               />
               <Input
-                size='lg'
+                size='sm'
                 label='Количество долей'
                 labelPlacement='inside'
                 placeholder='Количество долей'
@@ -278,7 +282,7 @@ export default function AddEquipmentModal({
                 isRequired
                 value={shareCount}
                 onChange={(e) => setShareCount(e.target.value)}
-                className='w-[400px]'
+                className='w-full sm:w-[350px] md:w-[400px]'
               />
               <Input type='file' onChange={handleFileChange} accept='image/*' />
               {error && <div className='mt-4 text-red-500'>{error}</div>}
@@ -295,6 +299,6 @@ export default function AddEquipmentModal({
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </section>
+    </>
   );
 }
