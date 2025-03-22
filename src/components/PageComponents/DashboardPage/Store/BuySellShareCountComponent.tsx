@@ -18,6 +18,8 @@ import {
   fetchLastBalanceShareCountUserByEquipmentId,
   fetchUSDTBalance,
   updateUSDTBalance,
+  fetchReferralBonus,
+  updateReferralBonus,
 } from '@/lib/data';
 import Notiflix from 'notiflix';
 import FullScreenSpinner from '@/components/ui/Spinner';
@@ -168,7 +170,7 @@ export default function BuySellShareCountComponent({
 
     setIsLoading(true);
     try {
-      await fetch('/api/buy-share-count', {
+      /*await fetch('/api/buy-share-count', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -177,7 +179,7 @@ export default function BuySellShareCountComponent({
           user_id: Number(user_id),
           equipment_uuid: equipmentUuid,
         }),
-      });
+      });*/
 
       const shareCount = Number(shareCountInput) || 0;
       if (!shareCount || sharePurchasePrice <= 0) {
@@ -212,6 +214,26 @@ export default function BuySellShareCountComponent({
         pricePerShare: pricePerShare,
         isPurchase,
       });
+
+      // Обработка начисления реферального бонуса
+      if (isPurchase) {
+        // Получаем реферальный бонус и referrerId с помощью функции
+        const { referralBonus, referrerId } = await fetchReferralBonus(
+          Number(user_id),
+        );
+
+        // Вычисляем сумму реферального бонуса
+        const referralBonusAmount = (totalAmount * referralBonus) / 100;
+
+        if (referralBonusAmount > 0 && referrerId) {
+          // Обновляем баланс реферера, передавая его referrerId
+          await updateReferralBonus(referrerId, referralBonusAmount);
+
+          Notiflix.Notify.success(
+            `Реферальный бонус в размере $${referralBonusAmount.toFixed(2)} начислен рефереру`,
+          );
+        }
+      }
 
       if (user_id) {
         await updateEquipmentData(user_id.toString(), equipmentId);

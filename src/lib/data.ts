@@ -635,3 +635,125 @@ export async function fetchAllUserBalances(userId: number) {
     throw new Error('Ошибка при получении балансов');
   }
 }
+
+//Получаем реф.бонус реферрера
+export async function fetchReferralBonus(userId: number) {
+  try {
+    // Получаем реферера пользователя, если он есть
+    const userResult = await db
+      .select({ referrer_id: usersTable.referrer_id })
+      .from(usersTable)
+      .where(sql`${usersTable.id} = ${userId}`)
+      .limit(1);
+
+    if (!userResult || userResult.length === 0 || !userResult[0].referrer_id) {
+      console.log(`[Referral Bonus] No referrer found for user ${userId}`);
+      return { referralBonus: 0, referrerId: null }; // Возвращаем объект с дефолтными значениями
+    }
+
+    console.log(
+      `[Referral Bonus] Fetching referral bonus for user ${userResult[0].referrer_id}`,
+    );
+
+    // Получаем реферальный бонус для реферера
+    const referrer = await db
+      .select({ referral_percent: usersTable.referral_percent })
+      .from(usersTable)
+      .where(sql`${usersTable.id} = ${userResult[0].referrer_id}`)
+      .limit(1);
+
+    console.log('[referrer] - ', referrer);
+
+    // Проверяем, что реферер найден
+    if (!referrer || referrer.length === 0) {
+      console.log(`[Referral Bonus] No referral bonus found for referrer`);
+      return { referralBonus: 0, referrerId: userResult[0].referrer_id }; // Если бонус не найден, возвращаем 0
+    }
+
+    // Получаем общий реферальный процент из таблицы electricity_price
+    const electricityPrice = await db
+      .select({
+        referral_percent_default:
+          electricityPriceTable.referral_percent_default,
+      })
+      .from(electricityPriceTable)
+      .orderBy(desc(electricityPriceTable.id)) // Получаем последнюю запись
+      .where(sql`${electricityPriceTable.referral_percent_default} IS NOT NULL`) // Получаем последнюю запись
+      .limit(1);
+
+    console.log('[electricityPrice] - ', electricityPrice);
+
+    // Если у реферера есть индивидуальный бонус, используем его, иначе используем общий
+    const referralBonusPercent = referrer[0]?.referral_percent
+      ? referrer[0].referral_percent
+      : electricityPrice[0]?.referral_percent_default || 0;
+
+    console.log('[referralBonusPercent] - ', referralBonusPercent);
+
+    console.log(
+      `[Referral Bonus] Referral bonus for user ${userResult[0].referrer_id}: ${referralBonusPercent}%`,
+    );
+
+    // Возвращаем как бонус, так и реферер айди
+    return {
+      referralBonus: referralBonusPercent,
+      referrerId: userResult[0].referrer_id,
+    };
+  } catch (error) {
+    console.error('[Referral Bonus] Error fetching referral bonus:', error);
+    throw new Error('Ошибка при получении реферального бонуса');
+  }
+}
+
+// Обновляем реф. баланс пользователя
+export async function updateReferralBonus(
+  referrerId: number,
+  referralBonusAmount: number,
+) {
+  try {
+    console.log(`[Referral Bonus] Updating bonus for referrer ${referrerId}`);
+
+    // Обновляем реферальный бонус для реферера
+    await db
+      .update(usersTable)
+      .set({
+        referral_bonus: sql`${usersTable.referral_bonus} + ${referralBonusAmount}`,
+      })
+      .where(sql`${usersTable.id} = ${referrerId}`);
+
+    console.log(
+      `[Referral Bonus] Referral bonus of $${referralBonusAmount.toFixed(2)} successfully updated for referrer ${referrerId}`,
+    );
+  } catch (error) {
+    console.error('[Referral Bonus] Error updating referral bonus:', error);
+    throw new Error('Ошибка при обновлении реферального бонуса');
+  }
+}
+
+//Получаем реф. баланс пользователя
+export async function fetchRefBalance(userId: number) {
+  try {
+    console.log(`[USDT Ref Balance] Fetching ref.balance for user ${userId}`);
+
+    // Получаем все записи баланса USDT для пользователя
+    const result = await db
+      .select({
+        referral_bonus: usersTable.referral_bonus,
+      })
+      .from(usersTable)
+      .where(sql`${usersTable.id} = ${userId}`)
+      .orderBy(desc(usersTable.id));
+
+    // Берем последнюю запись как текущий баланс
+    const currentBalance = result[0]?.referral_bonus ?? 0;
+    console.log(
+      `[USDT Ref Balance] Current ref.balance for user ${userId}: ${currentBalance}`,
+    );
+    console.log(`[USDT Ref Balance] All ref.balance records:`, result);
+
+    return currentBalance;
+  } catch (error) {
+    console.error('[USDT Ref Balance] Error fetching ref.balance:', error);
+    throw new Error('Ошибка при получении реф.баланса USDT');
+  }
+}

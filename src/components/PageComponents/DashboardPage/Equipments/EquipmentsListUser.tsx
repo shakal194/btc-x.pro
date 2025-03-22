@@ -7,6 +7,7 @@ import {
   fetchElectricityPrice,
   fetchReferralCodeByUserId,
   fetchAllUserBalances,
+  fetchRefBalance,
 } from '@/lib/data';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -60,6 +61,7 @@ export default function EquipmentsListUser() {
   const [equipmentsFetch, setEquipmentsFetch] = useState<Equipment[]>([]);
   const [lastPrice, setLastPrice] = useState<any>(null);
   const [refCode, setRefCode] = useState<number>();
+  const [refBalance, setRefBalance] = useState<number>();
   const [balances, setBalances] = useState<any[]>([]);
   const [selectedTab, setSelectedTab] = useState<string | number>(
     algorithms[0]?.name || '',
@@ -99,6 +101,28 @@ export default function EquipmentsListUser() {
 
     getLastPrice();
   }, []);
+
+  useEffect(() => {
+    const getRefBalance = async () => {
+      try {
+        if (!user_id || isNaN(Number(user_id))) {
+          return;
+        }
+
+        // Получаем данные с сервера
+        const data = await fetchRefBalance(Number(user_id));
+
+        setRefBalance(data); // Устанавливаем данные в состояние
+      } catch (error) {
+        console.error('Ошибка при получении реферального баланса', error);
+      }
+    };
+
+    // Запускаем getRefBalance только если user_id существует
+    if (user_id && !isNaN(Number(user_id))) {
+      getRefBalance();
+    }
+  }, [user_id]); // Следим за user_id
 
   // Функция для обновления данных оборудования
   const updateEquipmentData = async (user_id: string, equipmentId: number) => {
@@ -331,6 +355,12 @@ export default function EquipmentsListUser() {
                   >
                     {refCode}
                   </Snippet>
+                </h3>
+                <h3>
+                  Ваш реферальный баланс - $
+                  <b>
+                    <u>{refBalance}</u>
+                  </b>
                 </h3>
               </div>
             ) : (
