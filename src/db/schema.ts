@@ -143,3 +143,13 @@ export const depositsTable = pgTable('deposits', {
   amount: decimal({ precision: 30, scale: 8 }).notNull(), // Сумма депозита
   status: varchar('enrolled').notNull(), // Статус депозита (зачислен)
 });
+
+export const transactionsRefBonusTable = pgTable('transactions_refBonus', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  recordDate: timestamp().notNull().defaultNow(), // Дата и время записи
+  uuid: uuid().defaultRandom(), // ID
+  user_id: integer().notNull(), // ID пользователя, которому зачисляется реф.бонус
+  referral_id: integer().notNull(), // ID реферала, который покупает доли
+  referral_percent: integer().notNull(), //Реф.бонус в %
+  referral_bonus: integer().notNull(), // Сумма бонуса
+});

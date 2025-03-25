@@ -20,6 +20,7 @@ import {
   updateUSDTBalance,
   fetchReferralBonus,
   updateReferralBonus,
+  insertReferralBonusTransaction,
 } from '@/lib/data';
 import Notiflix from 'notiflix';
 import FullScreenSpinner from '@/components/ui/Spinner';
@@ -228,6 +229,14 @@ export default function BuySellShareCountComponent({
         if (referralBonusAmount > 0 && referrerId) {
           // Обновляем баланс реферера, передавая его referrerId
           await updateReferralBonus(referrerId, referralBonusAmount);
+
+          // Вставляем запись в таблицу transactionsRefBonusTable
+          await insertReferralBonusTransaction({
+            userId: referrerId, // ID реферера, который получает бонус
+            referralId: Number(user_id), // ID покупателя (реферала)
+            referralPercent: referralBonus, // Процент бонуса
+            referralBonus: referralBonusAmount, // Сумма бонуса
+          });
 
           Notiflix.Notify.success(
             `Реферальный бонус в размере $${referralBonusAmount.toFixed(2)} начислен рефереру`,

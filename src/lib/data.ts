@@ -8,6 +8,7 @@ import {
   transactionsTable,
   usersTable,
   balancesTable,
+  transactionsRefBonusTable,
 } from '@/db/schema'; // Импортируем таблицу
 import { sql, desc, asc } from 'drizzle-orm';
 import fs from 'fs';
@@ -396,6 +397,32 @@ export async function fetchTransactionsTable(user_id: string) {
   }
 }
 
+export async function fetchLastTransactionByEquipmentId(
+  userId: number,
+  equipmentId: number,
+) {
+  try {
+    // Получаем последнюю транзакцию по конкретному устройству, где balanceShareCount > 0
+    const result = await db
+      .select()
+      .from(transactionsTable)
+      .where(
+        sql`${transactionsTable.user_id} = ${userId} AND ${transactionsTable.equipment_id} = ${equipmentId} AND ${transactionsTable.balanceShareCount} > 0`,
+      )
+      .orderBy(desc(transactionsTable.transactionDate)) // Сортируем по дате транзакции (последнюю)
+      .limit(1);
+
+    if (result.length === 0) {
+      return null; // Если транзакция не найдена
+    }
+
+    return result[0]; // Возвращаем последнюю транзакцию
+  } catch (error) {
+    console.error('Error fetching last transaction:', error);
+    throw new Error('Ошибка при получении последней транзакции');
+  }
+}
+
 export async function fetchLastBalanceShareCountUserByEquipmentId(
   user_id: number,
   equipment_id: number,
@@ -755,5 +782,73 @@ export async function fetchRefBalance(userId: number) {
   } catch (error) {
     console.error('[USDT Ref Balance] Error fetching ref.balance:', error);
     throw new Error('Ошибка при получении реф.баланса USDT');
+  }
+}
+
+//Делаем вставку в таблицу transactionsRefBonusTable при покупке долей рефералом
+export async function insertReferralBonusTransaction({
+  userId,
+  referralId,
+  referralPercent,
+  referralBonus,
+}: {
+  userId: number;
+  referralId: number;
+  referralPercent: number;
+  referralBonus: number;
+}) {
+  try {
+    console.log(
+      `[Referral Bonus] Inserting referral bonus transaction for user ${userId}`,
+    );
+
+    await db.insert(transactionsRefBonusTable).values({
+      user_id: userId,
+      referral_id: referralId,
+      referral_percent: referralPercent,
+      referral_bonus: referralBonus,
+    });
+
+    console.log(
+      `[Referral Bonus] Referral bonus transaction successfully inserted for user ${userId}, ref.percent - ${referralPercent}, ref.bonus - ${referralBonus}`,
+    );
+  } catch (error) {
+    console.error(
+      '[Referral Bonus] Error inserting referral bonus transaction:',
+      error,
+    );
+    throw new Error('Ошибка при записи транзакции реферального бонуса');
+  }
+}
+
+export async function fetchUserData() {
+  try {
+    // Получаем информацию о всех пользователях
+    const userResult = await db.select().from(usersTable);
+
+    if (!userResult || userResult.length === 0) {
+      throw new Error(`Users not found`);
+    }
+
+    return userResult; // возвращаем массив объектов пользователей
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    throw new Error('Ошибка при получении данных о пользователе');
+  }
+}
+
+export async function fetchReferralCount(user_id: number) {
+  try {
+    // Получаем количество пользователей, у которых в поле referrer_id значится переданный user_id
+    const userRefCount = await db
+      .select()
+      .from(usersTable)
+      .where(sql`${usersTable.referrer_id} = ${user_id}`);
+
+    // Возвращаем количество пользователей
+    return userRefCount.length;
+  } catch (error) {
+    console.error('Error fetching referral count:', error);
+    throw new Error('Ошибка при получении количества рефералов');
   }
 }

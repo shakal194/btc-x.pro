@@ -6,6 +6,7 @@ import {
   AdjustmentsHorizontalIcon,
   CodeBracketSquareIcon,
   ServerStackIcon,
+  UsersIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -35,6 +36,11 @@ export default function NavLinksAdmin() {
       name: `${t('yourMiners')}`,
       href: '/dashboard/miners',
       icon: DocumentDuplicateIcon,
+    },
+    {
+      name: `${t('customers')}`,
+      href: '/dashboard/users',
+      icon: UsersIcon,
     },
     {
       name: `${t('settings')}`,
