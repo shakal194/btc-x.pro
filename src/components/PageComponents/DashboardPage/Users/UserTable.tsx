@@ -38,6 +38,7 @@ import {
   EllipsisVerticalIcon,
 } from '@heroicons/react/24/solid';
 import { parseDate } from '@internationalized/date';
+import UserLinkButton from './UserLinkButton';
 
 interface Equipment {
   id: number;
@@ -62,6 +63,7 @@ interface Algorithm {
 
 interface UserData {
   id: number;
+  uuid: string;
   email: string;
   name: string;
   role: string;
@@ -175,6 +177,7 @@ export default function UsersTable() {
 
             return {
               id: user.id,
+              uuid: user.uuid,
               email: user.email,
               name: user.name,
               role: user.role,
@@ -183,7 +186,7 @@ export default function UsersTable() {
               registrationDate: new Date(user.registration_date),
               deletionDate:
                 user.status === 'delete'
-                  ? new Date(user.registration_date)
+                  ? new Date(user.deleting_date)
                   : undefined,
               devices: userDevices.filter(
                 (device): device is NonNullable<typeof device> =>
@@ -217,11 +220,11 @@ export default function UsersTable() {
       { name: 'User ID', uid: 'id', sortable: true },
       { name: 'Email', uid: 'email', sortable: true },
       {
-        name: 'Дата и время регистрации (удаления)',
+        name: 'Дата регистрации (удаления)',
         uid: 'date',
         sortable: true,
       },
-      { name: 'Тип и кол-во устройств', uid: 'devices', sortable: true },
+      { name: 'Устройства', uid: 'devices', sortable: true },
       { name: 'Балансы', uid: 'balances', sortable: true },
       { name: 'Реферальный бонус, USDT', uid: 'referralBonus', sortable: true },
       { name: 'Кол-во рефералов', uid: 'referralCount', sortable: true },
@@ -419,21 +422,18 @@ export default function UsersTable() {
       case 'email':
         return (
           <div className='flex items-center gap-3'>
-            {/*<div className='h-10 w-10 overflow-hidden rounded-full bg-gray-700'>
-              <div className='h-full w-full bg-gradient-to-br from-gray-600 to-gray-800'></div>
-            </div>*/}
             <div className='flex flex-col'>
-              <span className='text-xs text-inherit'>{user.email}</span>
+              <UserLinkButton user={user} />
             </div>
           </div>
         );
       case 'date':
         return (
-          <span className='text-inherit'>
+          <p className='text-inherit'>
             {user.deletionDate
-              ? `${user.registrationDate.toLocaleString()} (Удален: ${user.deletionDate.toLocaleString()})`
+              ? `${user.registrationDate.toLocaleString()}\n(Удален: ${user.deletionDate.toLocaleString()})`
               : user.registrationDate.toLocaleString()}
-          </span>
+          </p>
         );
       case 'devices':
         return (
@@ -513,14 +513,14 @@ export default function UsersTable() {
   }
 
   return (
-    <div className='min-h-screen w-full space-y-4 bg-black/90 p-6'>
+    <div className='min-h-screen w-full space-y-4 bg-black/90'>
       <div className='flex flex-col gap-4'>
-        <div className='flex items-center justify-between'>
+        <div className='space-y-4 md:flex md:items-center md:justify-between md:space-y-0'>
           <div className='flex items-center gap-3'>
             <Input
               variant='bordered'
               classNames={{
-                base: 'w-72',
+                base: 'w-full md:w-72',
                 inputWrapper:
                   'border-1 border-gray-700 bg-gray-800 hover:border-gray-600 focus-within:!border-gray-500',
                 input: 'text-gray-300 placeholder:text-gray-300',
@@ -535,9 +535,11 @@ export default function UsersTable() {
               isClearable
               onClear={() => setFilterValue('')}
             />
+          </div>
+          <div className='flex justify-between gap-3'>
             <Button
               variant='flat'
-              className='border-0 bg-gray-800 text-white'
+              className='w-full border-0 bg-gray-800 text-white md:w-auto'
               onPress={() => setShowFilters(!showFilters)}
               startContent={<FunnelIcon className='h-4 w-4' />}
               endContent={
@@ -550,12 +552,10 @@ export default function UsersTable() {
             >
               Фильтры
             </Button>
-          </div>
-          <div className='flex gap-3'>
             <Dropdown
               isOpen={isColumnsOpen}
               onOpenChange={setIsColumnsOpen}
-              className='bg-gray-800'
+              className='bg-gray-700'
             >
               <DropdownTrigger>
                 <Button
@@ -579,10 +579,10 @@ export default function UsersTable() {
                 selectedKeys={visibleColumns}
                 selectionMode='multiple'
                 onSelectionChange={setVisibleColumns}
-                className='border-0 bg-gray-800'
+                className='border-0 bg-gray-700'
                 classNames={{
-                  base: 'bg-gray-800 border-0 focus:outline-none rounded-lg',
-                  list: 'bg-gray-800 text-white',
+                  base: 'bg-gray-700 border-0 focus:outline-none rounded-lg',
+                  list: 'bg-gray-700 text-white',
                 }}
               >
                 {columns.map((column) => (
@@ -624,7 +624,7 @@ export default function UsersTable() {
                 />
               </div>
 
-              <div className='flex w-full justify-between'>
+              <div className='w-full justify-between space-y-4 md:flex md:space-y-0'>
                 <div className='flex w-full max-w-[200px] flex-col gap-2'>
                   <Dropdown
                     isOpen={isAlgorithmOpen}
@@ -711,10 +711,10 @@ export default function UsersTable() {
                       selectedKeys={selectedDevice}
                       selectionMode='multiple'
                       onSelectionChange={setSelectedDevice}
-                      className='w-full min-w-[300px] bg-gray-800'
+                      className='w-full min-w-[300px] bg-gray-700'
                       classNames={{
-                        base: 'bg-gray-800 border-0 focus:outline-none rounded-lg',
-                        list: 'bg-gray-800 text-white',
+                        base: 'bg-gray-700 border-0 focus:outline-none rounded-lg',
+                        list: 'bg-gray-700 text-white',
                       }}
                     >
                       {filterOptions.devices.map((device) => (
@@ -763,10 +763,10 @@ export default function UsersTable() {
                       selectedKeys={selectedCoin}
                       selectionMode='multiple'
                       onSelectionChange={setSelectedCoin}
-                      className='w-full min-w-[300px] bg-gray-800'
+                      className='w-full min-w-[300px] bg-gray-700'
                       classNames={{
-                        base: 'bg-gray-800 border-0 focus:outline-none rounded-lg',
-                        list: 'bg-gray-800 text-white',
+                        base: 'bg-gray-700 border-0 focus:outline-none rounded-lg',
+                        list: 'bg-gray-700 text-white',
                       }}
                     >
                       {filterOptions.coins.map((coin) => (
@@ -862,65 +862,69 @@ export default function UsersTable() {
         </Table>
       </div>
 
-      <div className='flex items-center justify-between text-gray-400'>
-        <span>Всего: {filteredUsers.length} пользователей</span>
-        <div className='flex items-center gap-2'>
-          <span>Строк на странице:</span>
-          <Dropdown
-            isOpen={isRowsOpen}
-            onOpenChange={setIsRowsOpen}
-            className='bg-gray-800'
-          >
-            <DropdownTrigger>
-              <Button
-                variant='flat'
-                className='min-w-[70px] border-0 bg-gray-800 text-white'
-                endContent={
-                  isRowsOpen ? (
-                    <ChevronUpIcon className='h-4 w-4 text-gray-400' />
-                  ) : (
-                    <ChevronDownIcon className='h-4 w-4 text-gray-400' />
-                  )
-                }
-              >
-                {rowsPerPage}
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              disallowEmptySelection
-              selectedKeys={new Set([rowsPerPage.toString()])}
-              selectionMode='single'
-              onSelectionChange={(keys) => {
-                const value = Array.from(keys)[0];
-                setRowsPerPage(Number(value));
-                setPage(1);
-              }}
-              className='border-0 bg-gray-800'
-              classNames={{
-                base: 'bg-gray-800 border-0 focus:outline-none rounded-lg',
-                list: 'bg-gray-800 text-white',
-              }}
+      <div className='flex flex-col justify-between space-y-2 text-gray-400 md:flex-row md:items-center'>
+        <span className='text-sm'>
+          Всего пользователей: {filteredUsers.length}
+        </span>
+        <div>
+          <div className='flex items-center gap-2'>
+            <p className='text-sm text-white'>Строк на странице:</p>
+            <Dropdown
+              isOpen={isRowsOpen}
+              onOpenChange={setIsRowsOpen}
+              className='bg-gray-700'
             >
-              {ROWS_PER_PAGE_OPTIONS.map((count) => (
-                <DropdownItem
-                  key={count}
-                  className='text-white hover:bg-gray-700 data-[selected=true]:bg-gray-700'
+              <DropdownTrigger>
+                <Button
+                  variant='flat'
+                  className='min-w-[70px] border-0 bg-gray-700 text-white'
+                  endContent={
+                    isRowsOpen ? (
+                      <ChevronUpIcon className='h-4 w-4 text-gray-400' />
+                    ) : (
+                      <ChevronDownIcon className='h-4 w-4 text-gray-400' />
+                    )
+                  }
                 >
-                  {count}
-                </DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
-          <Pagination
-            total={pages}
-            page={page}
-            onChange={setPage}
-            classNames={{
-              wrapper: 'gap-2',
-              item: 'bg-gray-900 text-white border-0 hover:bg-gray-800',
-              cursor: 'bg-gray-800 text-white',
-            }}
-          />
+                  {rowsPerPage}
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                disallowEmptySelection
+                selectedKeys={new Set([rowsPerPage.toString()])}
+                selectionMode='single'
+                onSelectionChange={(keys) => {
+                  const value = Array.from(keys)[0];
+                  setRowsPerPage(Number(value));
+                  setPage(1);
+                }}
+                className='max-h-[30vh] border-0 bg-gray-700 text-sm'
+                classNames={{
+                  base: 'bg-gray-700 border-0 focus:outline-none rounded-lg',
+                  list: 'bg-gray-700 text-white',
+                }}
+              >
+                {ROWS_PER_PAGE_OPTIONS.map((count) => (
+                  <DropdownItem
+                    key={count}
+                    className='text-sm text-white hover:bg-gray-700 data-[selected=true]:bg-gray-700'
+                  >
+                    {count}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+            <Pagination
+              total={pages}
+              page={page}
+              onChange={setPage}
+              classNames={{
+                wrapper: 'gap-2',
+                item: 'bg-gray-700 text-white border-0 hover:bg-gray-600',
+                cursor: 'bg-gray-700 text-white',
+              }}
+            />
+          </div>
         </div>
       </div>
 

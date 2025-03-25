@@ -852,3 +852,53 @@ export async function fetchReferralCount(user_id: number) {
     throw new Error('Ошибка при получении количества рефералов');
   }
 }
+
+export async function fetchUserDataByUuid(uuid: string) {
+  try {
+    const userDataByUuid = await db
+      .select()
+      .from(usersTable)
+      .where(sql`${usersTable.uuid} = ${uuid}`);
+
+    console.log(userDataByUuid);
+
+    if (userDataByUuid.length === 0) {
+      throw new Error('User not found');
+    }
+    console.log('[userData]', userDataByUuid[0]);
+    return userDataByUuid[0];
+  } catch (error) {
+    console.error('Error fetching user data by UUID:', error);
+    throw new Error('Error fetching user data by UUID');
+  }
+}
+
+export async function updateUserDataByUuid(
+  uuid: string,
+  data: {
+    status: 'admin' | 'user' | 'delete';
+    referralBonus: number;
+    referralPercent: number;
+  },
+) {
+  try {
+    await db
+      .update(usersTable)
+      .set({
+        status: data.status,
+        referral_bonus: data.referralBonus,
+        referral_percent: data.referralPercent,
+        ...(data.status === 'delete' && {
+          deleting_date: new Date(),
+        }),
+        ...(data.status !== 'delete' && {
+          deleting_date: null,
+        }),
+      })
+      .where(sql`${usersTable.uuid} = ${uuid}`);
+  } catch (error) {
+    console.error('Error updating user data:', error);
+    throw new Error('Error updating user data');
+  }
+}
+new Date().toISOString();

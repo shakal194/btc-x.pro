@@ -15,6 +15,7 @@ export const usersTable = pgTable('users', {
   email: varchar({ length: 255 }).notNull().unique(),
   password: varchar({ length: 255 }).notNull(),
   registration_date: timestamp().notNull().defaultNow(),
+  deleting_date: timestamp(),
   status: varchar({ enum: ['admin', 'user', 'delete'] })
     .notNull()
     .default('user'),

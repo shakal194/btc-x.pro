@@ -12,7 +12,7 @@ export default function SideNav({
   const t = useTranslations('cloudMiningPage.dashboard.nav');
 
   return (
-    <div className='flex flex-col px-3 py-4 lg:px-2'>
+    <div className='flex flex-col lg:px-2'>
       <div className='flex grow flex-row items-center justify-between space-x-2 lg:flex-col lg:items-stretch lg:space-x-0 lg:space-y-2 lg:overflow-y-auto'>
         {userStatus === 'admin' ? <NavLinksAdmin /> : <NavLinksUser />}
         <div className='lg:flex lg:grow lg:flex-col lg:justify-end'>

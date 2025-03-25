@@ -2,7 +2,7 @@
 
 import {
   HomeIcon,
-  DocumentDuplicateIcon,
+  //DocumentDuplicateIcon,
   AdjustmentsHorizontalIcon,
   CodeBracketSquareIcon,
   ServerStackIcon,
@@ -32,11 +32,11 @@ export default function NavLinksAdmin() {
       href: '/dashboard/equipments',
       icon: ServerStackIcon,
     },
-    {
-      name: `${t('yourMiners')}`,
-      href: '/dashboard/miners',
-      icon: DocumentDuplicateIcon,
-    },
+    //{
+    //  name: `${t('yourMiners')}`,
+    //   href: '/dashboard/miners',
+    //    icon: DocumentDuplicateIcon,
+    //  },
     {
       name: `${t('customers')}`,
       href: '/dashboard/users',
