@@ -13,7 +13,6 @@ import { useState, useMemo, useActionState, useTransition } from 'react';
 import { Form, Input } from '@heroui/react';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import { useTranslations } from 'next-intl';
-import { useSearchParams } from 'next/navigation';
 
 export default function SignUpForm() {
   const [errorMessageForm, setErrorMessageForm] = useState('');
@@ -28,8 +27,7 @@ export default function SignUpForm() {
   const [state, formAction] = useActionState(authenticate, undefined);
   const [isPending, startTransition] = useTransition();
 
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+  const callbackUrl = '/dashboard';
 
   const t = useTranslations('cloudMiningPage.signin');
   const [valueEmail, setValueEmail] = useState('btc-x.pro');
@@ -285,7 +283,7 @@ export default function SignUpForm() {
                   </div>
                 )}
               </div>
-              <input type='hidden' name='redirectTo' value={callbackUrl} />
+              {<input type='hidden' name='redirectTo' value={callbackUrl} />}
               <Button
                 type='submit'
                 className={`${isInvalidStep2 ? 'bg-danger' : 'bg-success'} mt-4 w-full`}

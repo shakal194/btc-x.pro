@@ -28,7 +28,11 @@ const publicPages = [
 ];
 
 const authPages = ['/signin'];
-const protectedPaths = ['/dashboard/algorithms', '/dashboard/equipments'];
+const protectedPaths = [
+  '/dashboard/algorithms',
+  '/dashboard/equipments',
+  '/dashboard/users',
+];
 
 function getProtectedRoutes(protectedPaths: string[], locales: Locale[]) {
   let protectedPathsWithLocale = [...protectedPaths];
@@ -77,7 +81,7 @@ const authMiddleware = auth((req) => {
   // Redirect to sign-in page if not authenticated
   if (!session && !isAuthPage) {
     const signInUrl = new URL('/signin', req.nextUrl);
-    signInUrl.searchParams.set('callbackUrl', pathname);
+    //signInUrl.searchParams.set('callbackUrl', pathname);
 
     return NextResponse.redirect(signInUrl);
   }

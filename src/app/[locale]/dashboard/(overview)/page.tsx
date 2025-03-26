@@ -4,12 +4,17 @@ import EquipmentsListUser from '@/components/PageComponents/DashboardPage/Equipm
 export default async function Page() {
   const session = await auth();
   const userStatus = session?.user?.status;
+  const userId = session?.user?.id;
 
   if (userStatus !== 'admin') {
     return (
       <main>
         <div>
-          <EquipmentsListUser />;
+          {userId ? (
+            <EquipmentsListUser userId={userId} />
+          ) : (
+            <p>User ID not available</p>
+          )}
         </div>
         <div className='mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8'></div>
       </main>
