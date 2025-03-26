@@ -869,7 +869,7 @@ export async function fetchUserDataByUuid(uuid: string) {
     return userDataByUuid[0];
   } catch (error) {
     console.error('Error fetching user data by UUID:', error);
-    throw new Error('Error fetching user data by UUID');
+    //throw new Error('Error fetching user data by UUID');
   }
 }
 
