@@ -285,7 +285,7 @@ export default function AddEquipmentModal({
                 className='w-full sm:w-[350px] md:w-[400px]'
               />
               <Input type='file' onChange={handleFileChange} accept='image/*' />
-              {error && <div className='mt-4 text-red-500'>{error}</div>}
+              {error && <div className='mt-4 text-danger'>{error}</div>}
             </Form>
           </ModalBody>
           <ModalFooter>

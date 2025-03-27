@@ -107,7 +107,7 @@ export default function SignForm() {
                 className='mt-2'
               >
                 {errorMessageFormSignin && (
-                  <p className='text-sm text-red-500 dark:text-red-400'>
+                  <p className='text-sm text-danger dark:text-red-400'>
                     {errorMessageFormSignin}
                   </p>
                 )}
@@ -211,8 +211,8 @@ export default function SignForm() {
                 >
                   {errorMessageFormSignin && (
                     <div className='mt-2 flex'>
-                      <ExclamationCircleIcon className='mr-2 h-5 w-5 text-red-500' />
-                      <p className='text-sm text-red-500'>
+                      <ExclamationCircleIcon className='mr-2 h-5 w-5 text-danger' />
+                      <p className='text-sm text-danger'>
                         {errorMessageFormSignin}
                       </p>
                     </div>
@@ -226,8 +226,8 @@ export default function SignForm() {
                 >
                   {errorMessage && (
                     <div className='mt-2 flex'>
-                      <ExclamationCircleIcon className='mr-2 h-5 w-5 text-red-500' />
-                      <p className='text-sm text-red-500'>{errorMessage}</p>
+                      <ExclamationCircleIcon className='mr-2 h-5 w-5 text-danger' />
+                      <p className='text-sm text-danger'>{errorMessage}</p>
                     </div>
                   )}
                 </div>

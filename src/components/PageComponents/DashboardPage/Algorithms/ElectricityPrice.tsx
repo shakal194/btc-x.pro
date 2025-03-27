@@ -193,7 +193,7 @@ export default function ElectricityPrice() {
                 {isPending && <FullScreenSpinner />}
               </div>
               {errorPrice && (
-                <div className='mt-4 text-red-500'>{errorPrice}</div>
+                <div className='mt-4 text-danger'>{errorPrice}</div>
               )}
             </div>
           </div>
@@ -240,7 +240,7 @@ export default function ElectricityPrice() {
                 {isPending && <FullScreenSpinner />}
               </div>
               {errorRefBonus && (
-                <div className='mt-4 text-red-500'>{errorRefBonus}</div>
+                <div className='mt-4 text-danger'>{errorRefBonus}</div>
               )}
             </div>
           </div>

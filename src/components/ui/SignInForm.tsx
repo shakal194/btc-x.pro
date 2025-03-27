@@ -174,7 +174,7 @@ export default function SignUpForm() {
               />
               <div id='email-error' aria-live='polite' aria-atomic='true'>
                 {errorMessageEmail && (
-                  <p className='text-sm text-red-500 dark:text-red-400'>
+                  <p className='text-sm text-danger dark:text-red-400'>
                     {errorMessageEmail}
                   </p>
                 )}
@@ -278,8 +278,8 @@ export default function SignUpForm() {
               >
                 {state && (
                   <div className='mt-2 flex'>
-                    <ExclamationCircleIcon className='mr-2 h-5 w-5 text-red-500' />
-                    <p className='text-sm text-red-500'>{state}</p>
+                    <ExclamationCircleIcon className='mr-2 h-5 w-5 text-danger' />
+                    <p className='text-sm text-danger'>{state}</p>
                   </div>
                 )}
               </div>

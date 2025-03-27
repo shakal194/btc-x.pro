@@ -377,14 +377,14 @@ export default function BuySellShareCountComponent({
                     value={totalAmount.toFixed(2)}
                     className={`w-full sm:w-[350px] md:w-[400px] ${
                       totalAmount > usdtBalance
-                        ? 'text-red-500'
+                        ? 'text-danger'
                         : 'text-green-500'
                     }`}
                   />
                 </>
               )}
               {transactionError && (
-                <div className='mt-4 text-red-500'>{transactionError}</div>
+                <div className='mt-4 text-danger'>{transactionError}</div>
               )}
             </Form>
           </ModalBody>

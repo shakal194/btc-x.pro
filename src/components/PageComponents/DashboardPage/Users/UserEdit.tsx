@@ -91,7 +91,7 @@ export default function UserEdit({ uuid }: { uuid: string }) {
       <h1 className='text-xl font-bold text-white'>
         Изменить пользователя: {email}
       </h1>
-      {error && <div className='mt-4 text-red-500'>{error}</div>}
+      {error && <div className='mt-4 text-danger'>{error}</div>}
       <div className='space-y-12'>
         <div className='mt-4'>
           <Select

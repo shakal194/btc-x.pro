@@ -25,6 +25,7 @@ const publicPages = [
   '/privacy',
   '/aml',
   '/signin',
+  '/recovery',
 ];
 
 const authPages = ['/signin'];

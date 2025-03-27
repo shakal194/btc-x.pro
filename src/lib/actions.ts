@@ -324,4 +324,37 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
   revalidatePath('/');
   redirect('/signin');
 }
+
+export async function handlePasswordReset(email: string, password: string) {
+  const t = await getTranslations('cloudMiningPage.recovery');
+
+  try {
+    // Проверяем существование пользователя
+    const existingUser = await db
+      .select()
+      .from(usersTable)
+      .where(sql`${usersTable.email} = ${email}`)
+      .limit(1);
+
+    if (existingUser.length === 0) {
+      return {
+        errors: { email: [t('form_error_email_notFound')] },
+      };
+    }
+
+    // Хешируем новый пароль
+    const hashedPassword = await hashPassword(password);
+
+    // Обновляем пароль пользователя
+    await db
+      .update(usersTable)
+      .set({ password: hashedPassword })
+      .where(sql`${usersTable.email} = ${email}`);
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error resetting password:', error);
+    throw new Error(t('form_validate_errorTimeOut'));
+  }
+}
 //END REGISTR API

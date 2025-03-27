@@ -337,6 +337,15 @@ export default function EquipmentsListUser({ userId }: { userId: string }) {
     }
   }, [user_id]);
 
+  const getReferralLink = () => {
+    return `http://localhost:3000/signin?tab=signup&ref=${refCode}`;
+  };
+
+  const handleCopyFullLink = () => {
+    const fullLink = getReferralLink();
+    navigator.clipboard.writeText(fullLink);
+  };
+
   return (
     <section className='space-y-4'>
       {isLoading ? (
@@ -354,10 +363,27 @@ export default function EquipmentsListUser({ userId }: { userId: string }) {
                     color='warning'
                     className='bg-inherit'
                     size='lg'
-                    symbol=''
+                    hideSymbol={true}
                   >
                     {refCode}
                   </Snippet>
+                </h3>
+                <h3 className='mb-2 text-white'>
+                  Ваша реферальная ссылка:{' '}
+                  <div
+                    className='inline-block cursor-pointer'
+                    onClick={handleCopyFullLink}
+                  >
+                    <Snippet
+                      color='warning'
+                      className='bg-inherit'
+                      size='lg'
+                      hideSymbol={true}
+                      onClick={handleCopyFullLink}
+                    >
+                      {getReferralLink()}
+                    </Snippet>
+                  </div>
                 </h3>
                 <h3>
                   Ваш реферальный баланс - $

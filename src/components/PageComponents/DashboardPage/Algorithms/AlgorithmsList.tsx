@@ -146,7 +146,7 @@ export default function AlgorithmsList({
                           </Button>
                         </div>
                         {priceErrors[ticker.name] && (
-                          <div className='text-red-500'>
+                          <div className='text-danger'>
                             {priceErrors[ticker.name]}
                           </div>
                         )}

@@ -3,7 +3,7 @@
 //import Link from 'next/link';
 import Image from 'next/image';
 import { Tabs, Tab, Card, CardBody, Link, CardFooter } from '@heroui/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import SignInForm from '@/components/ui/SignInForm';
 import SignUpForm from '@/components/ui/SignUpForm';
@@ -12,6 +12,21 @@ export default function LoginPage() {
   const t = useTranslations('cloudMiningPage.signin');
 
   const [selected, setSelected] = useState<string | number>('signin');
+
+  const handleUrlChange = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tab = urlParams.get('tab');
+    const ref = urlParams.get('ref');
+    if (tab === 'signup' || ref) {
+      setSelected('signup');
+    }
+  };
+
+  useEffect(() => {
+    handleUrlChange();
+    window.addEventListener('popstate', handleUrlChange);
+    return () => window.removeEventListener('popstate', handleUrlChange);
+  }, []);
 
   return (
     <>

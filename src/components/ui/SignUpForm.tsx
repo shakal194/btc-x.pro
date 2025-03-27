@@ -8,7 +8,13 @@ import {
 } from '@heroicons/react/24/solid';
 import { Button } from '@/components/button';
 import { addUser, handleEmailSubmitRegister } from '@/lib/actions';
-import { useState, useMemo, useTransition, useActionState } from 'react';
+import {
+  useState,
+  useEffect,
+  useMemo,
+  useTransition,
+  useActionState,
+} from 'react';
 import { Checkbox, Form, Input, Link } from '@heroui/react';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import { useTranslations } from 'next-intl';
@@ -33,6 +39,17 @@ export default function SignUpForm() {
   const [valuePrivacy, setValuePrivacy] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
+  // Handle referral code from URL
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const refCode = urlParams.get('ref');
+      if (refCode && /^\d{6}$/.test(refCode)) {
+        setValueReferralCode(refCode);
+      }
+    }
+  }, []);
+
   // Form state and transitions
   const initialState = {
     message: '',
@@ -49,12 +66,25 @@ export default function SignUpForm() {
   const [isPending, startTransition] = useTransition();
 
   // Memoized values
-  if (valuePassword.length < 8) {
-    errorMessagePassword.push(t('form_error_password'));
-  }
-  if ((valuePassword.match(/[!@#$%^&*(),.?":{}|<>]/) || []).length < 1) {
-    errorMessagePassword.push(t('form_error_password_2'));
-  }
+  useEffect(() => {
+    const errors = [];
+    if (valuePassword.length < 8) {
+      errors.push(t('form_error_password'));
+    }
+    if ((valuePassword.match(/[!@#$%^&*(),.?":{}|<>]/) || []).length < 1) {
+      errors.push(t('form_error_password_2'));
+    }
+    setErrorMessagePassword(errors);
+  }, [valuePassword, t]);
+
+  // Render the error messages
+  const renderPasswordErrors = () => (
+    <ul>
+      {errorMessagePassword.map((error, i) => (
+        <li key={i}>{error}</li>
+      ))}
+    </ul>
+  );
 
   const validateEmail = (value: string) =>
     value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i);
@@ -287,8 +317,8 @@ export default function SignUpForm() {
                 {state.errors?.otpcode &&
                   state.errors.otpcode.map((error: string) => (
                     <div key={error} className='mt-2 flex items-center'>
-                      <ExclamationCircleIcon className='mr-2 h-5 w-5 text-red-500' />
-                      <p className='mt-2 text-sm text-red-500' key={error}>
+                      <ExclamationCircleIcon className='mr-2 h-5 w-5 text-danger' />
+                      <p className='mt-2 text-sm text-danger' key={error}>
                         {error}
                       </p>
                     </div>
@@ -340,13 +370,7 @@ export default function SignUpForm() {
                       )}
                     </div>
                   }
-                  errorMessage={() => (
-                    <ul>
-                      {errorMessagePassword.map((error, i) => (
-                        <li key={i}>{error}</li>
-                      ))}
-                    </ul>
-                  )}
+                  errorMessage={renderPasswordErrors}
                   isInvalid={errorMessagePassword.length > 0}
                   color={isInvalidPassword ? 'danger' : 'success'}
                   name='password'
@@ -394,7 +418,7 @@ export default function SignUpForm() {
                   href='/terms'
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='underline hover:cursor-pointer hover:text-secondary hover:transition-all focus:hover:cursor-pointer'
+                  className='text-white underline hover:cursor-pointer hover:text-secondary hover:transition-all focus:hover:cursor-pointer'
                 >
                   Terms of Use
                 </Link>
@@ -404,7 +428,7 @@ export default function SignUpForm() {
                     href='/privacy'
                     target='_blank'
                     rel='noopener noreferrer'
-                    className='underline hover:cursor-pointer hover:text-secondary hover:transition-all focus:hover:cursor-pointer'
+                    className='text-white underline hover:cursor-pointer hover:text-secondary hover:transition-all focus:hover:cursor-pointer'
                   >
                     Privacy Policy
                   </Link>
@@ -412,7 +436,7 @@ export default function SignUpForm() {
               </label>
               <div id='form-error' aria-live='polite' aria-atomic='true'>
                 {errorMessageForm && (
-                  <p className='text-sm text-red-500 dark:text-red-400'>
+                  <p className='text-sm text-danger dark:text-red-400'>
                     {errorMessageForm}
                   </p>
                 )}
