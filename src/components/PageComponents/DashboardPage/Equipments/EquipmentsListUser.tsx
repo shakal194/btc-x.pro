@@ -338,7 +338,8 @@ export default function EquipmentsListUser({ userId }: { userId: string }) {
   }, [user_id]);
 
   const getReferralLink = () => {
-    return `http://localhost:3000/signin?tab=signup&ref=${refCode}`;
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    return `${origin}/signin?tab=signup&ref=${refCode}`;
   };
 
   const handleCopyFullLink = () => {

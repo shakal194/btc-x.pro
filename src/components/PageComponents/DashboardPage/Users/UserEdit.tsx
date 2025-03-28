@@ -9,7 +9,12 @@ import {
   Breadcrumbs,
   BreadcrumbItem,
 } from '@heroui/react';
-import { fetchUserDataByUuid, updateUserDataByUuid } from '@/lib/data';
+import {
+  fetchUserDataByUuid,
+  updateUserDataByUuid,
+  fetchUSDTBalance,
+  updateUSDTBalance,
+} from '@/lib/data';
 import Notiflix from 'notiflix';
 import FullScreenSpinner from '@/components/ui/Spinner';
 
@@ -18,8 +23,11 @@ export default function UserEdit({ uuid }: { uuid: string }) {
   const [status, setStatus] = useState<'admin' | 'user' | 'delete'>('user');
   const [referralBonus, setReferralBonus] = useState(0);
   const [referralPercent, setReferralPercent] = useState(0);
+  const [usdtBalance, setUsdtBalance] = useState(0);
+  const [usdtAmount, setUsdtAmount] = useState('');
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState('');
+  const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,6 +38,13 @@ export default function UserEdit({ uuid }: { uuid: string }) {
           setStatus(data.status);
           setReferralBonus(data.referral_bonus ?? 0);
           setReferralPercent(data.referral_percent ?? 0);
+          setUserId(data.id);
+
+          // Получаем USDT баланс
+          if (data.id) {
+            const balance = await fetchUSDTBalance(data.id);
+            setUsdtBalance(Number(balance));
+          }
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -45,12 +60,20 @@ export default function UserEdit({ uuid }: { uuid: string }) {
 
   const handleReferralBonusChange = (value: string) => {
     const newBonus = Number(value);
-    setReferralBonus(newBonus);
+    if (!isNaN(newBonus)) {
+      setReferralBonus(newBonus);
+    }
   };
 
   const handleReferralPercentChange = (value: string) => {
     const newPercent = Number(value);
-    setReferralPercent(newPercent);
+    if (!isNaN(newPercent)) {
+      setReferralPercent(newPercent);
+    }
+  };
+
+  const handleUsdtAmountChange = (value: string) => {
+    setUsdtAmount(value);
   };
 
   const handleUpdateUser = () => {
@@ -76,6 +99,26 @@ export default function UserEdit({ uuid }: { uuid: string }) {
         Notiflix.Notify.failure('Ошибка при обновлении данных пользователя');
       }
     });
+  };
+
+  const handleUpdateUsdt = async (isPurchase: boolean) => {
+    if (!userId || isNaN(Number(usdtAmount))) {
+      Notiflix.Notify.warning('Пожалуйста, введите корректную сумму USDT');
+      return;
+    }
+
+    try {
+      const amount = Number(usdtAmount);
+      const newBalance = await updateUSDTBalance(userId, amount, isPurchase);
+      setUsdtBalance(newBalance);
+      setUsdtAmount('');
+      Notiflix.Notify.success(
+        `Баланс USDT успешно ${isPurchase ? 'уменьшен' : 'увеличен'}`,
+      );
+    } catch (error) {
+      console.error('Ошибка при обновлении USDT баланса:', error);
+      Notiflix.Notify.failure('Ошибка при обновлении USDT баланса');
+    }
   };
 
   return (
@@ -128,6 +171,35 @@ export default function UserEdit({ uuid }: { uuid: string }) {
             onChange={(e) => handleReferralPercentChange(e.target.value)}
             className='ml-2 w-full md:w-[400px]'
           />
+        </div>
+        <div className='mt-4'>
+          <div className='mb-2 text-white'>
+            Текущий баланс USDT: {usdtBalance}
+          </div>
+          <Input
+            label='Сумма USDT'
+            labelPlacement='inside'
+            type='number'
+            value={usdtAmount}
+            onChange={(e) => handleUsdtAmountChange(e.target.value)}
+            className='ml-2 w-full md:w-[400px]'
+          />
+          <div className='mt-2 flex gap-2'>
+            <Button
+              color='success'
+              onPress={() => handleUpdateUsdt(false)}
+              className='w-1/2'
+            >
+              Пополнить
+            </Button>
+            <Button
+              color='danger'
+              onPress={() => handleUpdateUsdt(true)}
+              className='w-1/2'
+            >
+              Списать
+            </Button>
+          </div>
         </div>
         <div className='mt-4'>
           <Button
