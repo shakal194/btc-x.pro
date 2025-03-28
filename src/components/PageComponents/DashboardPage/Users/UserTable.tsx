@@ -824,6 +824,9 @@ export default function UsersTable() {
           onSelectionChange={setSelectedKeys}
           selectionMode='multiple'
           selectionBehavior='toggle'
+          isHeaderSticky
+          isVirtualized={true}
+          maxTableHeight={500}
           color='success'
           classNames={{
             base: 'bg-gray-700 border-0',
@@ -870,11 +873,11 @@ export default function UsersTable() {
         </Table>
       </div>
 
-      <div className='flex flex-col justify-between space-y-2 text-gray-400 md:flex-row md:items-center'>
-        <span className='text-sm'>
-          Всего пользователей: {filteredUsers.length}
-        </span>
-        <div>
+      <div className='flex flex-col justify-between space-y-4 text-gray-400 md:items-center'>
+        <div className='flex w-full items-center justify-between'>
+          <span className='text-sm'>
+            Всего пользователей: {filteredUsers.length}
+          </span>
           <div className='flex items-center gap-2'>
             <p className='text-sm text-white'>Строк на странице:</p>
             <Dropdown
@@ -915,6 +918,7 @@ export default function UsersTable() {
                 {ROWS_PER_PAGE_OPTIONS.map((count) => (
                   <DropdownItem
                     key={count}
+                    textValue={count.toString()}
                     className='text-sm text-white hover:bg-gray-700 data-[selected=true]:bg-gray-700'
                   >
                     {count}
@@ -922,17 +926,25 @@ export default function UsersTable() {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Pagination
-              total={pages}
-              page={page}
-              onChange={setPage}
-              classNames={{
-                wrapper: 'gap-2',
-                item: 'bg-gray-700 text-white border-0 hover:bg-gray-600',
-                cursor: 'bg-gray-700 text-white',
-              }}
-            />
           </div>
+        </div>
+        <div className='flex w-full justify-center'>
+          <Pagination
+            total={pages}
+            page={page}
+            onChange={(newPage) => {
+              setPage(newPage);
+              setSelectedKeys(new Set([]));
+            }}
+            showControls={true}
+            classNames={{
+              wrapper: 'gap-2 text-white',
+              item: 'bg-gray-700 text-white border-0 hover:bg-gray-600',
+              cursor: 'bg-secondary text-white',
+              next: 'bg-gray-700 text-white hover:bg-gray-600',
+              prev: 'bg-gray-700 text-white hover:bg-gray-600',
+            }}
+          />
         </div>
       </div>
 
