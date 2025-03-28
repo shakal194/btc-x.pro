@@ -105,7 +105,7 @@ export default function UsersTable() {
   const [filterValue, setFilterValue] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [dateRange, setDateRange] = useState<RangeValue<DateValue>>({
-    start: parseDate('2025-03-01'),
+    start: parseDate('2023-01-01'),
     end: parseDate(new Date().toISOString().split('T')[0]),
   });
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<Selection>(
@@ -284,9 +284,9 @@ export default function UsersTable() {
         (dateRange.start &&
           dateRange.end &&
           new Date(user.registrationDate) >=
-            new Date(dateRange.start.toString()) &&
+            new Date(dateRange.start.toString().split('T')[0] + 'T00:00:00') &&
           new Date(user.registrationDate) <=
-            new Date(dateRange.end.toString()));
+            new Date(dateRange.end.toString().split('T')[0] + 'T23:59:59'));
 
       // Filter by algorithm
       const algorithmMatch =
@@ -380,23 +380,32 @@ export default function UsersTable() {
     });
   }, [filteredUsers, sortDescriptor]);
 
-  // Вычисление общих сумм для выбранных пользователей
-  const selectedTotals = useMemo(() => {
+  // Пагинация и вычисление общих сумм
+  const { paginatedUsers, selectedTotals, pages } = useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const paginatedUsers = sortedUsers.slice(start, end);
+
     const selectedUsers =
       selectedKeys === 'all'
-        ? users
-        : users.filter((user) =>
+        ? paginatedUsers
+        : paginatedUsers.filter((user) =>
             Array.from(selectedKeys as Set<string>).includes(
               user.id.toString(),
             ),
           );
 
-    return selectedUsers.reduce(
-      (acc, user) => {
-        user.balances.forEach((balance) => {
-          acc.balances[balance.coinTicker] =
-            (acc.balances[balance.coinTicker] || 0) + balance.amount;
-        });
+    const totals = selectedUsers.reduce(
+      (
+        acc: { balances: Record<string, number>; totalRefBonus: number },
+        user,
+      ) => {
+        user.balances.forEach(
+          (balance: { coinTicker: string; amount: number }) => {
+            acc.balances[balance.coinTicker] =
+              (acc.balances[balance.coinTicker] || 0) + balance.amount;
+          },
+        );
         acc.totalRefBonus += user.referralBonus;
         return acc;
       },
@@ -405,15 +414,13 @@ export default function UsersTable() {
         totalRefBonus: 0,
       },
     );
-  }, [selectedKeys, users]);
 
-  // Пагинация
-  const pages = Math.ceil(filteredUsers.length / rowsPerPage);
-  const paginatedUsers = useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-    return sortedUsers.slice(start, end);
-  }, [page, rowsPerPage, sortedUsers]);
+    return {
+      paginatedUsers,
+      selectedTotals: totals,
+      pages: Math.ceil(filteredUsers.length / rowsPerPage),
+    };
+  }, [page, rowsPerPage, sortedUsers, selectedKeys, filteredUsers]);
 
   const renderCell = (user: UserData, columnKey: string) => {
     switch (columnKey) {
@@ -609,7 +616,7 @@ export default function UsersTable() {
                   onChange={(value) =>
                     setDateRange(
                       value || {
-                        start: parseDate('2025-03-01'),
+                        start: parseDate('2023-01-01'),
                         end: parseDate(new Date().toISOString().split('T')[0]),
                       },
                     )
@@ -788,7 +795,7 @@ export default function UsersTable() {
               className='mt-2 border-1 border-gray-700 bg-gray-900 text-white'
               onPress={() => {
                 setDateRange({
-                  start: parseDate('2025-03-01'),
+                  start: parseDate('2023-01-01'),
                   end: parseDate(new Date().toISOString().split('T')[0]),
                 });
                 setSelectedAlgorithm(new Set([]));
@@ -823,8 +830,9 @@ export default function UsersTable() {
             table: 'min-w-full',
             thead: 'bg-gray-800',
             tbody: 'bg-gray-800',
-            tr: 'border-0 transition-colors',
+            tr: 'border-0 transition-colors hover:bg-gray-700',
             th: 'bg-gray-800 text-gray-400 font-medium py-3',
+            td: 'group-data-[selected=true]:bg-gray-700',
             sortIcon: 'text-gray-400',
             emptyWrapper: 'bg-gray-800 text-white',
             wrapper: 'bg-gray-800 rounded-lg border border-gray-800',
@@ -935,7 +943,7 @@ export default function UsersTable() {
           <h3 className='text-lg font-semibold text-white'>
             Суммы выбранных пользователей (
             {selectedKeys === 'all'
-              ? users.length
+              ? paginatedUsers.length
               : Array.from(selectedKeys as Set<string>).length}
             ):
           </h3>
