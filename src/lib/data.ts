@@ -13,6 +13,217 @@ import {
 import { sql, desc, asc } from 'drizzle-orm';
 import fs from 'fs';
 
+// ============= Функции для работы с алгоритмами =============
+
+//Получаем список всех алгоритмов
+export async function fetchAlgorithms() {
+  try {
+    const algorithms = await db
+      .select()
+      .from(algorithmTable)
+      .orderBy(asc(algorithmTable));
+
+    return algorithms;
+  } catch (error) {
+    console.error('Error fetch algorithms:', error);
+    throw new Error('Error fetch algorithms');
+  }
+}
+
+// Получение алгоритма по UUID
+export async function fetchAlgorithmByUuid(uuid: string) {
+  try {
+    const algorithm = await db
+      .select()
+      .from(algorithmTable)
+      .where(sql`${algorithmTable.uuid} = ${uuid}`)
+      .limit(1);
+
+    return algorithm[0];
+  } catch (error) {
+    console.error('Error fetching algorithm:', error);
+    throw new Error('Error fetching algorithm');
+  }
+}
+
+// Добавление нового алгоритма
+export async function insertAlgorithm(
+  algorithm: string,
+  coinTickers: { name: string; pricePerHashrate: number }[],
+) {
+  try {
+    if (!coinTickers || !Array.isArray(coinTickers)) {
+      throw new Error('coinTickers must be an array of objects');
+    }
+
+    coinTickers.forEach((ticker) => {
+      if (!ticker.name || typeof ticker.pricePerHashrate !== 'number') {
+        throw new Error(
+          'Each coin ticker must have a name and pricePerHashrate',
+        );
+      }
+    });
+
+    const coinTickersJson = JSON.stringify(coinTickers);
+
+    await db.insert(algorithmTable).values({
+      name: algorithm,
+      coinTickers: sql`CAST(${coinTickersJson} AS jsonb)`,
+    });
+
+    console.log('Algorithm saved successfully');
+  } catch (error) {
+    console.error('Error saving algorithm:', error);
+    throw new Error('Error saving algorithm');
+  }
+}
+
+// Обновление названия алгоритма
+export async function updateAlgorithmName(uuid: string, newName: string) {
+  try {
+    await db
+      .update(algorithmTable)
+      .set({ name: newName })
+      .where(sql`${algorithmTable.uuid} = ${uuid}`);
+
+    console.log('Algorithm name updated successfully');
+  } catch (error) {
+    console.error('Error updating algorithm name:', error);
+    throw new Error('Error updating algorithm name');
+  }
+}
+
+// Удаление алгоритма
+export async function deleteAlgorithm(uuid: string) {
+  try {
+    await db
+      .delete(algorithmTable)
+      .where(sql`${algorithmTable.uuid} = ${uuid}`);
+
+    console.log('Algorithm deleted successfully');
+  } catch (error) {
+    console.error('Error deleting algorithm:', error);
+    throw new Error('Error deleting algorithm');
+  }
+}
+
+// ============= Функции для работы с монетами алгоритма =============
+
+// Добавление новой монеты к алгоритму
+export async function addTickerToAlgorithm(
+  uuid: string,
+  tickerName: string,
+  pricePerHashrate: number,
+) {
+  try {
+    const algorithm = await fetchAlgorithmByUuid(uuid);
+    if (!algorithm) {
+      throw new Error('Algorithm not found');
+    }
+
+    const currentTickers = algorithm.coinTickers || [];
+    const newTicker = { name: tickerName, pricePerHashrate };
+
+    await db
+      .update(algorithmTable)
+      .set({
+        coinTickers: sql`CAST(${JSON.stringify([...currentTickers, newTicker])} AS jsonb)`,
+      })
+      .where(sql`${algorithmTable.uuid} = ${uuid}`);
+
+    console.log('Ticker added successfully');
+  } catch (error) {
+    console.error('Error adding ticker:', error);
+    throw new Error('Error adding ticker');
+  }
+}
+
+//Удаление тикера у алгоритма
+export async function deleteTickerFromAlgorithm(
+  uuid: string,
+  tickerName: string,
+) {
+  try {
+    if (!uuid || !tickerName) {
+      throw new Error('Algorithm uuid and ticker name cannot be empty');
+    }
+
+    const existingAlgorithm = await fetchAlgorithmByUuid(uuid);
+    if (!existingAlgorithm) {
+      throw new Error('Algorithm not found');
+    }
+
+    const currentCoinTickers = existingAlgorithm.coinTickers;
+
+    if (currentCoinTickers && Array.isArray(currentCoinTickers)) {
+      if (currentCoinTickers.length === 1) {
+        await deleteAlgorithm(uuid);
+        console.log('Algorithm deleted successfully');
+      } else {
+        const updatedCoinTickers = currentCoinTickers.filter(
+          (ticker: any) => ticker.name !== tickerName,
+        );
+
+        await db
+          .update(algorithmTable)
+          .set({
+            coinTickers: sql`CAST(${JSON.stringify(updatedCoinTickers)} AS jsonb)`,
+          })
+          .where(sql`${algorithmTable.uuid} = ${uuid}`);
+
+        console.log('Ticker removed successfully');
+      }
+    }
+  } catch (error) {
+    console.error('Error deleting ticker:', error);
+    throw new Error('Error deleting ticker');
+  }
+}
+
+//Обновление количества монет на единицу хешрейта
+export async function updateTickerPricePerHashrate(
+  uuid: string,
+  tickerName: string,
+  newPriceNumber: number,
+) {
+  try {
+    if (!uuid || !tickerName || isNaN(newPriceNumber)) {
+      throw new Error('Invalid input data');
+    }
+
+    const existingAlgorithm = await fetchAlgorithmByUuid(uuid);
+    if (!existingAlgorithm) {
+      throw new Error('Algorithm not found');
+    }
+
+    const currentCoinTickers = existingAlgorithm.coinTickers;
+
+    if (currentCoinTickers && Array.isArray(currentCoinTickers)) {
+      const tickerIndex = currentCoinTickers.findIndex(
+        (ticker: any) => ticker.name === tickerName,
+      );
+
+      if (tickerIndex === -1) {
+        throw new Error('Ticker not found');
+      }
+
+      currentCoinTickers[tickerIndex].pricePerHashrate = newPriceNumber;
+
+      await db
+        .update(algorithmTable)
+        .set({
+          coinTickers: sql`CAST(${JSON.stringify(currentCoinTickers)} AS jsonb)`,
+        })
+        .where(sql`${algorithmTable.uuid} = ${uuid}`);
+
+      console.log('Ticker price updated successfully');
+    }
+  } catch (error) {
+    console.error('Error updating ticker price per hashrate:', error);
+    throw new Error('Error updating ticker price per hashrate');
+  }
+}
+
 //Получаем последнюю цену электричества с таблицы electricity_price
 export async function fetchElectricityPrice() {
   try {
@@ -26,8 +237,6 @@ export async function fetchElectricityPrice() {
       .where(sql`${electricityPriceTable.pricePerKWh} IS NOT NULL`)
       .orderBy(desc(electricityPriceTable.id))
       .limit(1);
-
-    console.log('lastElectricityPrice[0]', lastElectricityPrice[0]);
 
     return lastElectricityPrice[0];
   } catch (error) {
@@ -72,7 +281,6 @@ export async function fetchRefBonusDefault() {
       .orderBy(desc(electricityPriceTable.id))
       .limit(1);
 
-    console.log('lastRefBonusDefault[0]', lastRefBonusDefault[0]);
     return lastRefBonusDefault[0];
   } catch (error) {
     console.error('Ошибка получения цены электричества:', error);
@@ -101,167 +309,6 @@ export async function insertRefBonusDefault(referral_percent_default: number) {
   } catch (error) {
     console.error('Ошибка сохранения реф.бонуса:', error);
     throw new Error('Ошибка сохранения реф.бонуса');
-  }
-}
-
-//Получаем алгоритмы с таблицы algorithms
-export async function fetchAlgorithms() {
-  try {
-    // Вставляем данные в таблицу
-    const algorithms = await db
-      .select()
-      .from(algorithmTable)
-      .orderBy(asc(algorithmTable));
-
-    return algorithms;
-  } catch (error) {
-    console.error('Error fetch algorithms:', error);
-    throw new Error('Error fetch algorithms');
-  }
-}
-
-// Добавление нового алгоритма
-export async function insertAlgorithm(
-  algorithm: string,
-  coinTickers: { name: string; pricePerHashrate: number }[],
-) {
-  try {
-    // Make sure coinTickers is an array of objects with the right structure
-    if (!coinTickers || !Array.isArray(coinTickers)) {
-      throw new Error('coinTickers must be an array of objects');
-    }
-
-    // Ensure that coinTickers array contains the correct properties (name, pricePerHashrate)
-    coinTickers.forEach((ticker) => {
-      if (!ticker.name || typeof ticker.pricePerHashrate !== 'number') {
-        throw new Error(
-          'Each coin ticker must have a name and pricePerHashrate',
-        );
-      }
-    });
-
-    // Prepare the coinTickers data as a JSON object for insertion
-    const coinTickersJson = JSON.stringify(coinTickers);
-
-    // Inserting the data into the database
-    await db.insert(algorithmTable).values({
-      name: algorithm,
-      coinTickers: sql`CAST(${coinTickersJson} AS jsonb)`, // Using CAST to insert the JSON data into the jsonb column
-    });
-
-    console.log('Algorithm saved successfully');
-  } catch (error) {
-    console.error('Error saving algorithm:', error);
-    throw new Error('Error saving algorithm');
-  }
-}
-
-//Удаление тикера у алгоритма. Если тикер один, удаляется весь алгоритм
-export async function deleteTickerFromAlgorithm(
-  algorithmName: string,
-  tickerName: string,
-) {
-  try {
-    if (!algorithmName || !tickerName) {
-      throw new Error('Algorithm name and ticker name cannot be empty');
-    }
-
-    // Fetch the current algorithm from the database
-    const existingAlgorithm = await db
-      .select()
-      .from(algorithmTable)
-      .where(sql`${algorithmTable.name} = ${algorithmName}`)
-      .limit(1);
-
-    if (existingAlgorithm.length === 0) {
-      throw new Error('Algorithm not found');
-    }
-
-    const currentCoinTickers = existingAlgorithm[0].coinTickers;
-
-    // If currentCoinTickers is valid
-    if (currentCoinTickers && Array.isArray(currentCoinTickers)) {
-      // Case 1: If there's only 1 ticker, delete the entire algorithm
-      if (currentCoinTickers.length === 1) {
-        await db
-          .delete(algorithmTable)
-          .where(sql`${algorithmTable.name} = ${algorithmName}`);
-
-        console.log('Algorithm deleted successfully');
-      } else {
-        // Case 2: If there are more than 1 coinTickers, remove the specified one
-        const updatedCoinTickers = currentCoinTickers.filter(
-          (ticker: any) => ticker.name !== tickerName,
-        );
-
-        // Update the database with the modified coinTickers array
-        await db
-          .update(algorithmTable)
-          .set({
-            coinTickers: sql`CAST(${JSON.stringify(updatedCoinTickers)} AS jsonb)`,
-          })
-          .where(sql`${algorithmTable.name} = ${algorithmName}`);
-
-        console.log('Ticker removed successfully');
-      }
-    }
-  } catch (error) {
-    console.error('Error deleting ticker:', error);
-    throw new Error('Error deleting ticker');
-  }
-}
-
-//Обновление количества монет на единицу хешрейта
-export async function updateTickerPricePerHashrate(
-  algorithmName: string,
-  tickerName: string,
-  newPriceNumber: number,
-) {
-  try {
-    if (!algorithmName || !tickerName || isNaN(newPriceNumber)) {
-      throw new Error('Invalid input data');
-    }
-
-    // Fetch the current algorithm from the database
-    const existingAlgorithm = await db
-      .select()
-      .from(algorithmTable)
-      .where(sql`${algorithmTable.name} = ${algorithmName}`)
-      .limit(1);
-
-    if (existingAlgorithm.length === 0) {
-      throw new Error('Algorithm not found');
-    }
-
-    const currentCoinTickers = existingAlgorithm[0].coinTickers;
-
-    // If currentCoinTickers is valid
-    if (currentCoinTickers && Array.isArray(currentCoinTickers)) {
-      // Find the ticker we need to update
-      const tickerIndex = currentCoinTickers.findIndex(
-        (ticker: any) => ticker.name === tickerName,
-      );
-
-      if (tickerIndex === -1) {
-        throw new Error('Ticker not found');
-      }
-
-      // Update the pricePerHashrate for the found ticker
-      currentCoinTickers[tickerIndex].pricePerHashrate = newPriceNumber;
-
-      // Update the database with the modified coinTickers array
-      await db
-        .update(algorithmTable)
-        .set({
-          coinTickers: sql`CAST(${JSON.stringify(currentCoinTickers)} AS jsonb)`,
-        })
-        .where(sql`${algorithmTable.name} = ${algorithmName}`);
-
-      console.log('Ticker price updated successfully');
-    }
-  } catch (error) {
-    console.error('Error updating ticker price per hashrate:', error);
-    throw new Error('Error updating ticker price per hashrate');
   }
 }
 
@@ -901,4 +948,5 @@ export async function updateUserDataByUuid(
     throw new Error('Error updating user data');
   }
 }
+
 new Date().toISOString();

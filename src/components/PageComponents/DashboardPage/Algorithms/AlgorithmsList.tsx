@@ -1,165 +1,145 @@
 'use client';
-import { useState } from 'react';
-import { Button, Input } from '@heroui/react';
 import {
-  updateTickerPricePerHashrate,
-  deleteTickerFromAlgorithm,
-} from '@/lib/data';
-import { CloudArrowDownIcon, TrashIcon } from '@heroicons/react/24/outline';
+  Button,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from '@heroui/react';
+import { deleteAlgorithm } from '@/lib/data';
+import { TrashIcon, PencilIcon } from '@heroicons/react/24/outline';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import Notiflix from 'notiflix';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function AlgorithmsList({
   algorithms,
-  updateAlgorithms, // Функция для обновления алгоритмов
+  updateAlgorithms,
   isLoading,
 }: {
   algorithms: any[];
   updateAlgorithms: () => void;
   isLoading: boolean;
 }) {
-  const [coinPrices, setCoinPrices] = useState<{ [key: string]: string }>({});
-  const [priceErrors, setPriceErrors] = useState<{
-    [key: string]: string | null;
-  }>({});
+  const router = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedAlgorithmUuid, setSelectedAlgorithmUuid] = useState<
+    string | null
+  >(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleInputChangePrice = (tickerName: string, value: string) => {
-    // Регулярное выражение для проверки числа с максимум 8 знаками после точки
-    const regex = /^\d+(\.\d{0,8})?$/;
-
-    // Если значение не соответствует формату, отображаем ошибку
-    if (!regex.test(value)) {
-      setPriceErrors((prevErrors) => ({
-        ...prevErrors,
-        [tickerName]:
-          'Цена должна быть числом с максимальной точностью до 8 знаков после запятой',
-      }));
-    } else {
-      setPriceErrors((prevErrors) => ({
-        ...prevErrors,
-        [tickerName]: null, // Если формат правильный, убираем ошибку
-      }));
-    }
-
-    // Обновляем цену
-    setCoinPrices((prev) => ({
-      ...prev,
-      [tickerName]: value,
-    }));
+  const handleDeleteClick = (uuid: string) => {
+    setSelectedAlgorithmUuid(uuid);
+    onOpen();
   };
 
-  const handleUpdatePrice = async (
-    algorithmName: string,
-    tickerName: string,
-  ) => {
-    const newPriceNumber = parseFloat(coinPrices[tickerName]);
-    if (isNaN(newPriceNumber) || newPriceNumber <= 0) {
-      Notiflix.Notify.warning('Введите корректное количество монет');
-      return;
-    }
+  const handleDeleteConfirm = async () => {
+    if (!selectedAlgorithmUuid) return;
+
     try {
-      await updateTickerPricePerHashrate(
-        algorithmName,
-        tickerName,
-        newPriceNumber,
-      );
-      await updateAlgorithms(); // Обновляем алгоритмы после изменения цены
-      setPriceErrors({});
-      setCoinPrices({});
-      Notiflix.Notify.success('Количество монет обновлено');
+      setIsDeleting(true);
+      await deleteAlgorithm(selectedAlgorithmUuid);
+      await updateAlgorithms();
+      Notiflix.Notify.success('Алгоритм успешно удален');
     } catch (error) {
-      Notiflix.Notify.warning('Ошибка при обновлении цены');
+      console.error('Error deleting algorithm:', error);
+      Notiflix.Notify.failure('Ошибка при удалении алгоритма');
+    } finally {
+      setIsDeleting(false);
+      onClose();
+      setSelectedAlgorithmUuid(null);
     }
   };
 
-  const handleDeleteTicker = async (
-    tickerName: string,
-    algorithmName: string,
-  ) => {
-    try {
-      await deleteTickerFromAlgorithm(algorithmName, tickerName);
-      await updateAlgorithms(); // Обновляем алгоритмы после удаления тикера
-      Notiflix.Notify.success('Тикер успешно удален');
-    } catch (error) {
-      Notiflix.Notify.warning('Ошибка при удалении тикера');
-    }
+  const handleEditAlgorithm = (uuid: string) => {
+    router.push(`/dashboard/algorithms/${uuid}/edit`);
   };
 
   return (
-    <section>
+    <section className='min-h-screen w-full space-y-4 bg-black/90 p-4'>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        size='sm'
+        className='bg-slate-700'
+      >
+        <ModalContent>
+          <ModalHeader className='flex flex-col gap-1 text-white'>
+            Подтверждение удаления
+          </ModalHeader>
+          <ModalBody>
+            <p className='text-white'>
+              Вы уверены, что хотите удалить этот алгоритм?
+            </p>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              color='success'
+              onPress={handleDeleteConfirm}
+              isDisabled={isDeleting}
+            >
+              {isDeleting ? <FullScreenSpinner /> : 'Удалить'}
+            </Button>
+            <Button color='danger' onPress={onClose} isDisabled={isDeleting}>
+              Отмена
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
       {isLoading && <FullScreenSpinner />}
-      <div className='border-t-1 border-secondary text-lg text-white'>
-        <ul className='space-y-4'>
+      <div className='rounded-lg bg-gray-800 p-4'>
+        <h1 className='mb-6 text-2xl font-bold text-white'>Алгоритмы</h1>
+        <div className='space-y-4'>
           {algorithms.length > 0 ? (
             algorithms.map((algorithm, index) => (
-              <li key={index} className='border-b-1 border-secondary'>
-                <div className='text-center'>
-                  Алгоритм - <b>{algorithm.name}</b>
+              <div
+                key={index}
+                className='rounded-lg border border-gray-700 bg-gray-800 p-4'
+              >
+                <div className='flex items-center justify-between'>
+                  <h2 className='text-xl font-bold text-white'>
+                    {algorithm.name}
+                  </h2>
+                  <div className='flex gap-2'>
+                    <Button
+                      color='secondary'
+                      size='lg'
+                      onPress={() => handleEditAlgorithm(algorithm.uuid)}
+                    >
+                      <PencilIcon className='h-5 w-5' />
+                    </Button>
+                    <Button
+                      color='danger'
+                      size='lg'
+                      onPress={() => handleDeleteClick(algorithm.uuid)}
+                    >
+                      <TrashIcon className='h-5 w-5' />
+                    </Button>
+                  </div>
                 </div>
-                <div>
+                <div className='mt-4 space-y-2'>
                   {algorithm.coinTickers.map((ticker: any, index: number) => (
                     <div
                       key={index}
-                      className='mb-4 flex items-center justify-between space-y-2 py-2'
+                      className='flex items-center justify-between rounded bg-gray-700 p-2'
                     >
-                      <div>
-                        <p>Монета - {ticker.name}</p>
-                        <p className='mb-2'>
-                          Количество монет в сутки на ед. хешрейта -{' '}
-                          {ticker.pricePerHashrate.toFixed(8)}
-                        </p>
-                      </div>
-                      <div>
-                        <div className='flex w-[400px] items-center justify-between'>
-                          <Input
-                            size='lg'
-                            label='Количество монет'
-                            labelPlacement='inside'
-                            placeholder='0.00'
-                            className='w-[200px]'
-                            value={coinPrices[ticker.name] || ''}
-                            onChange={(e) =>
-                              handleInputChangePrice(
-                                ticker.name,
-                                e.target.value.replace(',', '.'),
-                              )
-                            }
-                            isInvalid={!!priceErrors[ticker.name]} // Проверка на ошибку для текущего тикера
-                          />
-                          <Button
-                            size='lg'
-                            className='bg-white'
-                            onPress={() =>
-                              handleUpdatePrice(algorithm.name, ticker.name)
-                            }
-                          >
-                            <CloudArrowDownIcon className='h-5 w-5' />
-                          </Button>
-                          <Button
-                            size='lg'
-                            className='bg-white'
-                            onPress={() =>
-                              handleDeleteTicker(ticker.name, algorithm.name)
-                            }
-                          >
-                            <TrashIcon className='h-5 w-5' />
-                          </Button>
-                        </div>
-                        {priceErrors[ticker.name] && (
-                          <div className='text-danger'>
-                            {priceErrors[ticker.name]}
-                          </div>
-                        )}
-                      </div>
+                      <span className='text-white'>{ticker.name}</span>
+                      <span className='text-gray-300'>
+                        {ticker.pricePerHashrate.toFixed(8)} монет/день
+                      </span>
                     </div>
                   ))}
                 </div>
-              </li>
+              </div>
             ))
           ) : (
-            <p>Алгоритмы не найдены</p>
+            <p className='text-center text-gray-400'>Алгоритмы не найдены</p>
           )}
-        </ul>
+        </div>
       </div>
     </section>
   );
