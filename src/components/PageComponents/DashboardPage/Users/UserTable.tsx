@@ -118,7 +118,7 @@ export default function UsersTable() {
   );
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: 'id',
-    direction: 'ascending',
+    direction: 'descending',
   });
   const [isLoading, setIsLoading] = useState(true);
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
@@ -418,7 +418,7 @@ export default function UsersTable() {
     return {
       paginatedUsers,
       selectedTotals: totals,
-      pages: Math.ceil(filteredUsers.length / rowsPerPage),
+      pages: Math.max(1, Math.ceil(filteredUsers.length / rowsPerPage)),
     };
   }, [page, rowsPerPage, sortedUsers, selectedKeys, filteredUsers]);
 
@@ -826,7 +826,7 @@ export default function UsersTable() {
           selectionBehavior='toggle'
           isHeaderSticky
           isVirtualized={true}
-          maxTableHeight={500}
+          maxTableHeight={400}
           color='success'
           classNames={{
             base: 'bg-gray-700 border-0',
@@ -871,6 +871,25 @@ export default function UsersTable() {
             )}
           </TableBody>
         </Table>
+      </div>
+
+      <div className='flex w-full justify-center'>
+        <Pagination
+          total={pages}
+          page={page}
+          onChange={(newPage) => {
+            setPage(newPage);
+            setSelectedKeys(new Set([]));
+          }}
+          showControls={true}
+          classNames={{
+            wrapper: 'gap-2 text-white',
+            item: 'bg-gray-700 text-white border-0 hover:bg-gray-600',
+            cursor: 'bg-secondary text-white',
+            next: 'bg-gray-700 text-white hover:bg-gray-600',
+            prev: 'bg-gray-700 text-white hover:bg-gray-600',
+          }}
+        />
       </div>
 
       <div className='flex flex-col justify-between space-y-4 text-gray-400 md:items-center'>
@@ -927,24 +946,6 @@ export default function UsersTable() {
               </DropdownMenu>
             </Dropdown>
           </div>
-        </div>
-        <div className='flex w-full justify-center'>
-          <Pagination
-            total={pages}
-            page={page}
-            onChange={(newPage) => {
-              setPage(newPage);
-              setSelectedKeys(new Set([]));
-            }}
-            showControls={true}
-            classNames={{
-              wrapper: 'gap-2 text-white',
-              item: 'bg-gray-700 text-white border-0 hover:bg-gray-600',
-              cursor: 'bg-secondary text-white',
-              next: 'bg-gray-700 text-white hover:bg-gray-600',
-              prev: 'bg-gray-700 text-white hover:bg-gray-600',
-            }}
-          />
         </div>
       </div>
 

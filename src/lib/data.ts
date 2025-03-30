@@ -10,7 +10,7 @@ import {
   balancesTable,
   transactionsRefBonusTable,
 } from '@/db/schema'; // Импортируем таблицу
-import { sql, desc, asc } from 'drizzle-orm';
+import { sql, desc, asc, eq } from 'drizzle-orm';
 import fs from 'fs';
 
 // ============= Функции для работы с алгоритмами =============
@@ -603,8 +603,6 @@ export async function fetchUserIdByReferralCode(referral_code: number) {
 
 export async function fetchUSDTBalance(userId: number) {
   try {
-    console.log(`[USDT Balance] Fetching balance for user ${userId}`);
-
     // Получаем все записи баланса USDT для пользователя
     const result = await db
       .select({
@@ -624,7 +622,6 @@ export async function fetchUSDTBalance(userId: number) {
     console.log(
       `[USDT Balance] Current balance for user ${userId}: ${currentBalance}`,
     );
-    console.log(`[USDT Balance] All balance records:`, result);
 
     return currentBalance;
   } catch (error) {
@@ -871,7 +868,10 @@ export async function insertReferralBonusTransaction({
 export async function fetchUserData() {
   try {
     // Получаем информацию о всех пользователях
-    const userResult = await db.select().from(usersTable);
+    const userResult = await db
+      .select()
+      .from(usersTable)
+      .orderBy(desc(usersTable.id));
 
     if (!userResult || userResult.length === 0) {
       throw new Error(`Users not found`);
@@ -912,7 +912,7 @@ export async function fetchUserDataByUuid(uuid: string) {
     if (userDataByUuid.length === 0) {
       throw new Error('User not found');
     }
-    console.log('[userData]', userDataByUuid[0]);
+
     return userDataByUuid[0];
   } catch (error) {
     console.error('Error fetching user data by UUID:', error);
@@ -946,6 +946,65 @@ export async function updateUserDataByUuid(
   } catch (error) {
     console.error('Error updating user data:', error);
     throw new Error('Error updating user data');
+  }
+}
+
+// Функции для работы с реферальными бонусами
+export async function fetchUserRefBonusTransactions(userId: number) {
+  try {
+    const result = await db
+      .select({
+        id: transactionsRefBonusTable.id,
+        recordDate: transactionsRefBonusTable.recordDate,
+        uuid: transactionsRefBonusTable.uuid,
+        referral_id: transactionsRefBonusTable.referral_id,
+        referral_percent: transactionsRefBonusTable.referral_percent,
+        referral_bonus: transactionsRefBonusTable.referral_bonus,
+        referralEmail: usersTable.email,
+      })
+      .from(transactionsRefBonusTable)
+      .innerJoin(
+        usersTable,
+        eq(transactionsRefBonusTable.referral_id, usersTable.id),
+      )
+      .where(eq(transactionsRefBonusTable.user_id, userId))
+      .orderBy(desc(transactionsRefBonusTable.recordDate));
+
+    return result;
+  } catch (error) {
+    console.error('Error fetching user referral bonus transactions:', error);
+    return [];
+  }
+}
+
+// Функция для получения истории покупок/продаж оборудования пользователя
+export async function fetchUserEquipmentTransactions(userId: number) {
+  try {
+    const result = await db
+      .select({
+        id: transactionsTable.id,
+        transactionDate: transactionsTable.transactionDate,
+        uuid: transactionsTable.uuid,
+        shareCount: transactionsTable.shareCount,
+        balanceShareCount: transactionsTable.balanceShareCount,
+        pricePerShare: transactionsTable.pricePerShare,
+        isPurchase: transactionsTable.isPurchase,
+        equipmentName: equipmentsTable.name,
+        equipmentHashrate: equipmentsTable.hashrate,
+        equipmentHashrateUnit: equipmentsTable.hashrate_unit,
+      })
+      .from(transactionsTable)
+      .innerJoin(
+        equipmentsTable,
+        eq(transactionsTable.equipment_id, equipmentsTable.id),
+      )
+      .where(eq(transactionsTable.user_id, userId))
+      .orderBy(desc(transactionsTable.transactionDate));
+
+    return result;
+  } catch (error) {
+    console.error('Error fetching user equipment transactions:', error);
+    return [];
   }
 }
 

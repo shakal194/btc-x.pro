@@ -17,6 +17,7 @@ import {
 } from '@/lib/data';
 import Notiflix from 'notiflix';
 import FullScreenSpinner from '@/components/ui/Spinner';
+import { useRouter } from 'next/navigation';
 
 export default function UserEdit({ uuid }: { uuid: string }) {
   const [email, setEmail] = useState('');
@@ -27,6 +28,7 @@ export default function UserEdit({ uuid }: { uuid: string }) {
   const [usdtAmount, setUsdtAmount] = useState<string>('0');
   const [userId, setUserId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -132,7 +134,7 @@ export default function UserEdit({ uuid }: { uuid: string }) {
                 Пользователи
               </BreadcrumbItem>
               <BreadcrumbItem isCurrent className='text-gray-200'>
-                Изменить
+                {email}
               </BreadcrumbItem>
             </Breadcrumbs>
             <h1 className='text-xl font-bold text-white'>
@@ -201,13 +203,25 @@ export default function UserEdit({ uuid }: { uuid: string }) {
                 </Button>
               </div>
               <div className='mt-4 flex flex-col space-y-4'>
-                <Button className='mr-2 w-full bg-blue-500 p-2 text-white md:w-[400px] md:text-sm'>
+                <Button
+                  className='mr-2 w-full bg-blue-500 p-2 text-white md:w-[400px] md:text-sm'
+                  onClick={() =>
+                    router.push(
+                      `/dashboard/users/${uuid}/equipment-transactions`,
+                    )
+                  }
+                >
                   История покупок и продаж оборудования
                 </Button>
                 <Button className='mr-2 w-full bg-blue-500 p-2 text-white md:w-[400px] md:text-sm'>
                   История начисления вознаграждений за майнинг
                 </Button>
-                <Button className='mr-2 w-full bg-blue-500 p-2 text-white md:w-[400px] md:text-sm'>
+                <Button
+                  className='mr-2 w-full bg-blue-500 p-2 text-white md:w-[400px] md:text-sm'
+                  onClick={() =>
+                    router.push(`/dashboard/users/${uuid}/referral-bonus`)
+                  }
+                >
                   История начисления реферальных бонусов
                 </Button>
                 <Button className='mr-2 w-full bg-blue-500 p-2 text-white md:w-[400px] md:text-sm'>
