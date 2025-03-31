@@ -15,7 +15,7 @@ import { useSession } from 'next-auth/react';
 import {
   fetchEquipmentById,
   insertTransactionsTable,
-  fetchLastBalanceShareCountUserByEquipmentId,
+  fetchAllUserBalanceShares,
   fetchUSDTBalance,
   updateUSDTBalance,
   fetchReferralBonus,
@@ -28,7 +28,10 @@ import FullScreenSpinner from '@/components/ui/Spinner';
 interface BuySellShareCountComponentProps {
   equipmentId: number;
   equipmentUuid: string | null;
-  updateEquipmentData: (user_id: string, equipmentId: number) => Promise<void>;
+  updateEquipmentData: (
+    user_id: string,
+    equipmentId: number,
+  ) => Promise<number>;
 }
 
 export default function BuySellShareCountComponent({
@@ -57,12 +60,12 @@ export default function BuySellShareCountComponent({
     if (isOpen) {
       const currentBalance = async () => {
         try {
+          const userBalanceShares = await fetchAllUserBalanceShares(
+            Number(user_id),
+          );
           const balanceShareCount =
-            await fetchLastBalanceShareCountUserByEquipmentId(
-              Number(user_id),
-              equipmentId,
-            );
-          setUserShareBalance(balanceShareCount ?? 0);
+            userBalanceShares[equipmentId]?.balanceShareCount || 0;
+          setUserShareBalance(balanceShareCount);
         } catch (error) {
           console.error('Ошибка при получении баланса долей', error);
           setUserShareBalance(0);
@@ -171,17 +174,6 @@ export default function BuySellShareCountComponent({
 
     setIsLoading(true);
     try {
-      /*await fetch('/api/buy-share-count', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: Number(user_id),
-          equipment_uuid: equipmentUuid,
-        }),
-      });*/
-
       const shareCount = Number(shareCountInput) || 0;
       if (!shareCount || sharePurchasePrice <= 0) {
         setTransactionError('Пожалуйста, заполните все поля корректно');
@@ -216,26 +208,21 @@ export default function BuySellShareCountComponent({
         isPurchase,
       });
 
-      // Обработка начисления реферального бонуса
       if (isPurchase) {
-        // Получаем реферальный бонус и referrerId с помощью функции
         const { referralBonus, referrerId } = await fetchReferralBonus(
           Number(user_id),
         );
 
-        // Вычисляем сумму реферального бонуса
         const referralBonusAmount = (totalAmount * referralBonus) / 100;
 
         if (referralBonusAmount > 0 && referrerId) {
-          // Обновляем баланс реферера, передавая его referrerId
           await updateReferralBonus(referrerId, referralBonusAmount);
 
-          // Вставляем запись в таблицу transactionsRefBonusTable
           await insertReferralBonusTransaction({
-            userId: referrerId, // ID реферера, который получает бонус
-            referralId: Number(user_id), // ID покупателя (реферала)
-            referralPercent: referralBonus, // Процент бонуса
-            referralBonus: referralBonusAmount, // Сумма бонуса
+            userId: referrerId,
+            referralId: Number(user_id),
+            referralPercent: referralBonus,
+            referralBonus: referralBonusAmount,
           });
 
           Notiflix.Notify.success(
@@ -245,19 +232,21 @@ export default function BuySellShareCountComponent({
       }
 
       if (user_id) {
-        await updateEquipmentData(user_id.toString(), equipmentId);
+        const newBalance = await updateEquipmentData(
+          user_id.toString(),
+          equipmentId,
+        );
+        setUserShareBalance(newBalance);
       }
 
       handleCloseModal();
-      Notiflix.Notify.success(isPurchase ? 'Доли куплены' : 'Доли проданы');
+      Notiflix.Notify.success(
+        `Успешно ${isPurchase ? 'куплено' : 'продано'} ${shareCount} долей`,
+      );
     } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : 'Ошибка при покупке/продаже долей';
-      console.error('Ошибка при покупке/продаже долей:', error);
-      setTransactionError(errorMessage);
-      Notiflix.Notify.failure(errorMessage);
+      console.error('Ошибка при обработке транзакции:', error);
+      setTransactionError('Ошибка при обработке транзакции');
+      Notiflix.Notify.failure('Ошибка при обработке транзакции');
     } finally {
       setIsLoading(false);
     }

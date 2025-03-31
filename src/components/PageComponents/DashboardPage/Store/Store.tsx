@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import {
   fetchEquipments,
   fetchAlgorithms,
-  fetchLastBalanceShareCountUserByEquipmentId,
+  fetchAllUserBalanceShares,
 } from '@/lib/data';
 import Image from 'next/image';
 import BuySellShareCountComponent from '@/components/PageComponents/DashboardPage/Store/BuySellShareCountComponent';
@@ -12,36 +12,12 @@ export default function Store() {
   const [isLoading, setIsLoading] = useState<boolean>(false); // Флаг загрузки
   const [algorithms, setAlgorithms] = useState<any[]>([]); // Состояние для хранения алгоритмов
   const [equipmentsFetch, setEquipmentsFetch] = useState<any[]>([]);
-  const [userEquipmentsFetch, setUserEquipmentsFetch] = useState<any[]>([]);
 
   // Функция для обновления данных оборудования
   const updateEquipmentData = async (user_id: string, equipmentId: number) => {
-    const data = await fetchLastBalanceShareCountUserByEquipmentId(
-      Number(user_id),
-      equipmentId,
-    );
-    if (data !== 0) {
-      // Обновляем состояние, проверяя наличие данных с таким же equipmentId
-      setUserEquipmentsFetch((prevState) => {
-        // Проверяем, есть ли уже данные с таким equipmentId
-        const existingDataIndex = prevState.findIndex(
-          (item) => item.equipmentId === equipmentId,
-        );
-
-        // Если данные с таким id есть, обновляем их
-        if (existingDataIndex !== -1) {
-          const updatedState = [...prevState];
-          updatedState[existingDataIndex] = {
-            equipmentId,
-            data,
-          };
-          return updatedState;
-        }
-
-        // Если данных с таким id нет, добавляем новые
-        return [...prevState, { equipmentId, data }];
-      });
-    }
+    // Эта функция теперь просто проверяет баланс, но не сохраняет его в состояние
+    const userBalanceShares = await fetchAllUserBalanceShares(Number(user_id));
+    return userBalanceShares[equipmentId]?.balanceShareCount || 0;
   };
 
   //Получаем список всего оборудования

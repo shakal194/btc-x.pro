@@ -26,7 +26,7 @@ import {
   fetchUserData,
   fetchRefBalance,
   fetchReferralCount,
-  fetchLastBalanceShareCountUserByEquipmentId,
+  fetchAllUserBalanceShares,
   fetchEquipments,
   fetchAllUserBalances,
   fetchAlgorithms,
@@ -65,10 +65,7 @@ interface UserData {
   id: number;
   uuid: string;
   email: string;
-  name: string;
-  role: string;
-  department: string;
-  status: 'active' | 'paused' | 'vacation';
+  status: 'admin' | 'user' | 'delete';
   registrationDate: Date;
   deletionDate?: Date;
   devices: Array<{
@@ -139,49 +136,58 @@ export default function UsersTable() {
   useEffect(() => {
     async function getUsersData() {
       try {
+        const startTime = performance.now();
         setIsLoading(true);
-        const usersData = await fetchUserData();
-        const equipments = await fetchEquipments();
-        const algorithmsData = await fetchAlgorithms();
 
+        // Измеряем загрузку данных
+        const fetchStart = performance.now();
+        const [usersData, equipments, algorithmsData] = await Promise.all([
+          fetchUserData(),
+          fetchEquipments(),
+          fetchAlgorithms(),
+        ]);
+        console.log(
+          `[Performance] Data fetching took: ${performance.now() - fetchStart}ms`,
+        );
+
+        // Измеряем обработку данных
+        const processingStart = performance.now();
         const formattedUsers = await Promise.all(
           usersData.map(async (user: any) => {
-            const referralBonus = await fetchRefBalance(user.id);
-            const referralCount = await fetchReferralCount(user.id);
-            const balances = await fetchAllUserBalances(user.id);
-            const userDevices = await Promise.all(
-              equipments.map(async (equipment) => {
-                const balanceShareCount =
-                  await fetchLastBalanceShareCountUserByEquipmentId(
-                    user.id,
-                    equipment.id,
-                  );
-                if (balanceShareCount && balanceShareCount > 0) {
-                  const fullDevicesCount = Math.floor(
-                    balanceShareCount / equipment.shareCount,
-                  );
-                  const sharesInUse =
-                    balanceShareCount - fullDevicesCount * equipment.shareCount;
-                  return {
-                    name: equipment.name,
-                    hashrate: equipment.hashrate,
-                    hashrate_unit: equipment.hashrate_unit,
-                    totalShares: balanceShareCount,
-                    sharesInUse,
-                    fullDevicesCount,
-                  };
-                }
-                return null;
-              }),
-            );
+            // Параллельная загрузка всех данных пользователя
+            const [referralBonus, referralCount, balances, userBalanceShares] =
+              await Promise.all([
+                fetchRefBalance(user.id),
+                fetchReferralCount(user.id),
+                fetchAllUserBalances(user.id),
+                fetchAllUserBalanceShares(user.id),
+              ]);
+
+            const userDevices = equipments.map((equipment) => {
+              const balanceShareCount =
+                userBalanceShares[equipment.id]?.balanceShareCount || 0;
+              if (balanceShareCount && balanceShareCount > 0) {
+                const fullDevicesCount = Math.floor(
+                  balanceShareCount / equipment.shareCount,
+                );
+                const sharesInUse =
+                  balanceShareCount - fullDevicesCount * equipment.shareCount;
+                return {
+                  name: equipment.name,
+                  hashrate: equipment.hashrate,
+                  hashrate_unit: equipment.hashrate_unit,
+                  totalShares: balanceShareCount,
+                  sharesInUse,
+                  fullDevicesCount,
+                };
+              }
+              return null;
+            });
 
             return {
               id: user.id,
               uuid: user.uuid,
               email: user.email,
-              name: user.name,
-              role: user.role,
-              department: user.department,
               status: user.status,
               registrationDate: new Date(user.registration_date),
               deletionDate:
@@ -201,10 +207,16 @@ export default function UsersTable() {
             };
           }),
         );
+        console.log(
+          `[Performance] Data processing took: ${performance.now() - processingStart}ms`,
+        );
 
         setUsers(formattedUsers);
         setEquipmentsFetch(equipments);
         setAlgorithms(algorithmsData);
+
+        const totalTime = performance.now() - startTime;
+        console.log(`[Performance] Total operation took: ${totalTime}ms`);
       } catch (error) {
         console.error('Error fetching users data:', error);
       } finally {
@@ -474,33 +486,24 @@ export default function UsersTable() {
         );
       case 'referralCount':
         return <span className='text-inherit'>{user.referralCount}</span>;
-      case 'role':
-        return (
-          <div className='flex flex-col'>
-            <span className='text-sm text-white'>{user.role || 'User'}</span>
-            <span className='text-xs text-gray-400'>
-              {user.department || ''}
-            </span>
-          </div>
-        );
       case 'status':
         const statusColorMap = {
-          active: 'bg-emerald-500',
-          paused: 'bg-rose-500',
-          vacation: 'bg-amber-500',
+          admin: 'bg-emerald-500',
+          user: 'bg-blue-500',
+          delete: 'bg-red-500',
         };
         const statusTextMap = {
-          active: 'Active',
-          paused: 'Paused',
-          vacation: 'Vacation',
+          admin: 'Администратор',
+          user: 'Пользователь',
+          delete: 'Удален',
         };
         return (
           <div className='flex items-center gap-2'>
             <div
-              className={`h-2 w-2 rounded-full ${statusColorMap[user.status || 'active']}`}
+              className={`h-2 w-2 rounded-full ${statusColorMap[user.status]}`}
             ></div>
             <span className='text-sm text-white'>
-              {statusTextMap[user.status || 'active']}
+              {statusTextMap[user.status]}
             </span>
           </div>
         );

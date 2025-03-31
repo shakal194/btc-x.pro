@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import {
   fetchAlgorithms,
   fetchEquipments,
-  fetchLastBalanceShareCountUserByEquipmentId,
+  fetchAllUserBalanceShares,
   fetchElectricityPrice,
   fetchReferralCodeByUserId,
   fetchAllUserBalances,
@@ -80,100 +80,30 @@ export default function EquipmentsListUser({ userId }: { userId: string }) {
     setIsLoadingUserEquipments(true);
     const controller = new AbortController();
     let isMounted = true;
-    const renderCycle = Math.random(); // Уникальный идентификатор для каждого рендера
-    /*console.log(
-      `[Effect ${renderCycle}] Starting fetch for ${equipmentsFetch.length} equipments`,
-    );*/
+    const renderCycle = Math.random();
 
     const fetchAllEquipments = async () => {
       try {
-        const fetchPromises = equipmentsFetch.map(async (equipment) => {
-          if (!isMounted) return;
-
-          /*console.log(
-            `[Component ${renderCycle}] Fetching data for equipment ${equipment.id}`,
-          );*/
-          const balanceShareCount =
-            await fetchLastBalanceShareCountUserByEquipmentId(
-              Number(user_id),
-              equipment.id,
-            );
-
-          if (!isMounted) return;
-
-          // Изменяем условие проверки - пропускаем если баланс null ИЛИ 0
-          if (balanceShareCount === null || balanceShareCount === 0) {
-            /* console.log(
-              `[Component ${renderCycle}] Skipping equipment ${equipment.id} - no balance or zero balance`,
-            );*/
-            return null;
-          }
-
-          return { equipmentId: equipment.id, balanceShareCount };
-        });
-
-        const results = await Promise.all(fetchPromises);
+        // Получаем все балансы пользователя за один запрос
+        const userBalanceShares = await fetchAllUserBalanceShares(
+          Number(user_id),
+        );
 
         if (!isMounted) return;
 
-        // Фильтруем null и нулевые значения
-        const validResults = results.filter((result) =>
-          Boolean(result?.balanceShareCount),
-        );
-
-        setUserEquipmentsFetch((prevState) => {
-          // Создаем Map для быстрого поиска существующих записей
-          const existingMap = new Map(
-            prevState.map((item) => [item.equipmentId, item.balanceShareCount]),
-          );
-
-          // Проверяем, есть ли реальные изменения и исключаем нулевые балансы
-          const hasChanges = validResults.some((result) => {
-            if (!result || result.balanceShareCount === 0) return false;
-            const existingBalance = existingMap.get(result.equipmentId);
-            return existingBalance !== result.balanceShareCount;
-          });
-
-          if (!hasChanges) {
-            /*console.log(
-              `[Component ${renderCycle}] No changes in equipment data, skipping update`,
-            );*/
-            return prevState;
-          }
-
-          // Создаем новый массив только с уникальными записями и ненулевыми балансами
-          const newState = validResults.reduce((acc, result) => {
-            if (!result || result.balanceShareCount === 0) return acc;
-
-            const { equipmentId, balanceShareCount } = result;
-            const existingBalance = existingMap.get(equipmentId);
-
-            if (existingBalance !== undefined && existingBalance > 0) {
-              if (existingBalance !== balanceShareCount) {
-                console.log(
-                  `[Component ${renderCycle}] Updating equipment ${equipmentId} with new balance ${balanceShareCount}`,
-                );
-                acc.push({ equipmentId, balanceShareCount });
-              } else {
-                // Если баланс не изменился и больше 0, сохраняем существующую запись
-                acc.push({ equipmentId, balanceShareCount: existingBalance });
-              }
-            } else if (balanceShareCount > 0) {
-              /*console.log(
-                `[Component ${renderCycle}] Adding new equipment ${equipmentId} with balance ${balanceShareCount}`,
-              );*/
-              acc.push({ equipmentId, balanceShareCount });
+        // Фильтруем оборудование с положительным балансом
+        const validEquipments = equipmentsFetch
+          .map((equipment) => {
+            const balanceShareCount =
+              userBalanceShares[equipment.id]?.balanceShareCount || 0;
+            if (balanceShareCount > 0) {
+              return { equipmentId: equipment.id, balanceShareCount };
             }
+            return null;
+          })
+          .filter((item): item is NonNullable<typeof item> => item !== null);
 
-            return acc;
-          }, [] as Array<EquipmentData>);
-
-          return newState;
-        });
-
-        /*console.log(
-          `[Effect ${renderCycle}] All equipment data fetched successfully`,
-        );*/
+        setUserEquipmentsFetch(validEquipments);
       } catch (error) {
         if (!controller.signal.aborted) {
           console.error(
@@ -189,7 +119,6 @@ export default function EquipmentsListUser({ userId }: { userId: string }) {
     fetchAllEquipments();
 
     return () => {
-      // console.log(`[Effect ${renderCycle}] Cleanup - aborting fetches`);
       isMounted = false;
       controller.abort();
     };
@@ -252,34 +181,47 @@ export default function EquipmentsListUser({ userId }: { userId: string }) {
     }
   }, [user_id]); // Следим за user_id
 
+  // Функции для обновления балансов
+  const updateBalances = async () => {
+    if (!user_id || isNaN(Number(user_id))) return;
+
+    const [newBalances, newRefBalance] = await Promise.all([
+      fetchAllUserBalances(Number(user_id)),
+      fetchRefBalance(Number(user_id)),
+    ]);
+
+    setBalances(newBalances);
+    setRefBalance(newRefBalance);
+  };
+
   // Функция для обновления данных оборудования
   const updateEquipmentData = async (user_id: string, equipmentId: number) => {
-    const balanceShareCount = await fetchLastBalanceShareCountUserByEquipmentId(
-      Number(user_id),
-      equipmentId,
-    );
+    const userBalanceShares = await fetchAllUserBalanceShares(Number(user_id));
+    const balanceShareCount =
+      userBalanceShares[equipmentId]?.balanceShareCount || 0;
 
     setUserEquipmentsFetch((prevState) => {
-      // Если баланс null или 0, удаляем устройство из списка
-      if (balanceShareCount === null || balanceShareCount === 0) {
+      if (balanceShareCount === 0) {
         return prevState.filter((item) => item.equipmentId !== equipmentId);
       }
 
-      const existingDataIndex = prevState.findIndex(
+      const existingIndex = prevState.findIndex(
         (item) => item.equipmentId === equipmentId,
       );
 
-      if (existingDataIndex !== -1) {
-        const updatedState = [...prevState];
-        updatedState[existingDataIndex] = {
-          equipmentId,
-          balanceShareCount,
-        };
-        return updatedState;
+      if (existingIndex !== -1) {
+        const newState = [...prevState];
+        newState[existingIndex] = { equipmentId, balanceShareCount };
+        return newState;
       }
 
       return [...prevState, { equipmentId, balanceShareCount }];
     });
+
+    // Обновляем балансы после обновления оборудования
+    await updateBalances();
+
+    return balanceShareCount;
   };
 
   // Получаем список всего оборудования

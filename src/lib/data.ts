@@ -470,35 +470,37 @@ export async function fetchLastTransactionByEquipmentId(
   }
 }
 
-export async function fetchLastBalanceShareCountUserByEquipmentId(
-  user_id: number,
-  equipment_id: number,
-) {
+// Функция для получения всех балансов пользователя за один запрос
+export async function fetchAllUserBalanceShares(userId: number) {
   try {
-    console.log(
-      `[DB Query] Fetching balance for user ${user_id}, equipment ${equipment_id}`,
-    );
+    console.log(`[DB Query] Fetching all balances for user ${userId}`);
+
     const result = await db
       .select({
+        id: transactionsTable.id,
         balanceShareCount: transactionsTable.balanceShareCount,
         equipment_id: transactionsTable.equipment_id,
       })
       .from(transactionsTable)
-      .where(
-        sql`${transactionsTable.user_id} = ${user_id} 
-        AND ${transactionsTable.equipment_id} = ${equipment_id}`,
-      )
-      .orderBy(desc(transactionsTable.id))
-      .limit(1);
+      .where(sql`${transactionsTable.user_id} = ${userId}`)
+      .orderBy(desc(transactionsTable.id));
 
-    const balance = result.length > 0 ? result[0].balanceShareCount : null;
-    console.log(
-      `[DB Result] Balance for equipment ${equipment_id}: ${balance}`,
+    // Группируем результаты по equipment_id, оставляя только последнюю транзакцию
+    const latestBalances = result.reduce(
+      (acc, curr) => {
+        if (!acc[curr.equipment_id] || acc[curr.equipment_id].id < curr.id) {
+          acc[curr.equipment_id] = curr;
+        }
+        return acc;
+      },
+      {} as Record<number, (typeof result)[0]>,
     );
-    return balance;
+
+    console.log(`[DB Result] Balances for user ${userId}:`, latestBalances);
+    return latestBalances;
   } catch (error) {
-    console.error('Ошибка получения баланса долей', error);
-    throw new Error('Ошибка получения баланса долей');
+    console.error('Ошибка получения балансов долей', error);
+    throw new Error('Ошибка получения балансов долей');
   }
 }
 
