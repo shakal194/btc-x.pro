@@ -5,7 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { SessionProvider } from 'next-auth/react';
 import { Manrope } from 'next/font/google';
-import { GoogleTagManager } from '@next/third-parties/google';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -30,6 +30,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
+      <GoogleAnalytics gaId='AW-16949187745' />
       <body className={`overflow-x-hidden ${manrope.className}`}>
         <NextIntlClientProvider messages={messages}>
           <NextUIProviders>
@@ -37,7 +38,6 @@ export default async function RootLayout({
           </NextUIProviders>
         </NextIntlClientProvider>
       </body>
-      <GoogleTagManager gtmId='AW-16949187745' />
     </html>
   );
 }
