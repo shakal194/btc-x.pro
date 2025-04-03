@@ -108,7 +108,6 @@ export default function MobileMenu() {
                   <Link
                     href={`/about-us`}
                     onClick={onClose}
-                    //href='/about-us'
                     className='text-[22px] font-semibold leading-[120%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
                     rel='noopener noreferrer'
                   >
@@ -117,7 +116,6 @@ export default function MobileMenu() {
                   <Link
                     href={`/airdrop`}
                     onClick={onClose}
-                    //href='/airdrop'
                     className='text-[22px] font-semibold leading-[120%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
                     rel='noopener noreferrer'
                   >
@@ -126,7 +124,6 @@ export default function MobileMenu() {
                   <Link
                     href={`/referral`}
                     onClick={onClose}
-                    //href='/referral'
                     className='text-[22px] font-semibold leading-[120%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
                     rel='noopener noreferrer'
                   >
@@ -135,7 +132,6 @@ export default function MobileMenu() {
                   <Link
                     href={`/support`}
                     onClick={onClose}
-                    //href='/referral'
                     className='text-[22px] font-semibold leading-[120%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
                     rel='noopener noreferrer'
                   >
@@ -144,7 +140,6 @@ export default function MobileMenu() {
                   <Link
                     href={`/promo`}
                     onClick={onClose}
-                    //href='/referral'
                     className='text-[22px] font-semibold leading-[120%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
                     rel='noopener noreferrer'
                   >
@@ -153,7 +148,6 @@ export default function MobileMenu() {
                   <Link
                     href={`/cloud-mining`}
                     onClick={onClose}
-                    //href='/referral'
                     className='text-[22px] font-semibold leading-[120%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
                     rel='noopener noreferrer'
                   >

@@ -4,6 +4,7 @@ import {
   HomeIcon,
   DocumentDuplicateIcon,
   AdjustmentsHorizontalIcon,
+  BanknotesIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -23,6 +24,11 @@ export default function NavLinksUser() {
       name: `${t('yourMiners')}`,
       href: '/dashboard/store',
       icon: DocumentDuplicateIcon,
+    },
+    {
+      name: 'CoinsBuy',
+      href: '/dashboard/coinsbuy',
+      icon: BanknotesIcon,
     },
     {
       name: `${t('settings')}`,

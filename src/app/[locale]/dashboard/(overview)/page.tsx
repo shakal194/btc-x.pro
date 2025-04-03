@@ -5,13 +5,17 @@ export default async function Page() {
   const session = await auth();
   const userStatus = session?.user?.status;
   const userId = session?.user?.id;
+  const userEmail = session?.user?.email;
 
   if (userStatus !== 'admin') {
     return (
       <main>
         <div>
           {userId ? (
-            <EquipmentsListUser userId={userId} />
+            <EquipmentsListUser
+              serverUserId={userId.toString()}
+              serverUserEmail={userEmail || ''}
+            />
           ) : (
             <p>User ID not available</p>
           )}

@@ -202,7 +202,7 @@ export default function UsersTable() {
                 coinTicker: balance.coinTicker,
                 amount: Number(balance.coinAmount),
               })),
-              referralBonus: referralBonus || 0,
+              referralBonus: Number(referralBonus) || 0,
               referralCount: referralCount || 0,
             };
           }),

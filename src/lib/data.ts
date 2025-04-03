@@ -10,7 +10,7 @@ import {
   balancesTable,
   transactionsRefBonusTable,
 } from '@/db/schema'; // Импортируем таблицу
-import { sql, desc, asc, eq } from 'drizzle-orm';
+import { sql, desc, asc, eq, and } from 'drizzle-orm';
 import fs from 'fs';
 
 // ============= Функции для работы с алгоритмами =============
@@ -381,13 +381,33 @@ export async function fetchEquipments() {
 }
 
 //Получаем оборудование по ID с таблицы equipments
-export async function fetchEquipmentById(equipmentUuid: string) {
+export async function fetchEquipmentByUuid(equipmentUuid: string) {
   try {
-    // Вставляем данные в таблицу
+    // Получаем данные оборудования вместе с данными алгоритма
     const equipment = await db
-      .select()
+      .select({
+        id: equipmentsTable.id,
+        uuid: equipmentsTable.uuid,
+        name: equipmentsTable.name,
+        algorithm_id: equipmentsTable.algorithm_id,
+        hashrate_unit: equipmentsTable.hashrate_unit,
+        hashrate: equipmentsTable.hashrate,
+        power: equipmentsTable.power,
+        purchasePrice: equipmentsTable.purchasePrice,
+        salePrice: equipmentsTable.salePrice,
+        shareCount: equipmentsTable.shareCount,
+        photoUrl: equipmentsTable.photoUrl,
+        algorithm: {
+          id: algorithmTable.id,
+          name: algorithmTable.name,
+          coinTickers: algorithmTable.coinTickers,
+        },
+      })
       .from(equipmentsTable)
-      .orderBy(asc(equipmentsTable))
+      .leftJoin(
+        algorithmTable,
+        eq(equipmentsTable.algorithm_id, algorithmTable.id),
+      )
       .where(sql`${equipmentsTable.uuid} = ${equipmentUuid}`);
 
     return equipment;
@@ -609,6 +629,7 @@ export async function fetchUSDTBalance(userId: number) {
     const result = await db
       .select({
         coinAmount: balancesTable.coinAmount,
+        coinTicker: balancesTable.coinTicker,
         uuid: balancesTable.uuid,
         id: balancesTable.id,
       })
@@ -786,11 +807,12 @@ export async function updateReferralBonus(
   try {
     console.log(`[Referral Bonus] Updating bonus for referrer ${referrerId}`);
 
-    // Обновляем реферальный бонус для реферера
+    // Обновляем реферальный бонус для реферера, обрабатывая null значения
     await db
       .update(usersTable)
       .set({
-        referral_bonus: sql`${usersTable.referral_bonus} + ${referralBonusAmount}`,
+        referral_bonus: sql`COALESCE(${usersTable.referral_bonus}, 0) + ${referralBonusAmount}`,
+        referral_percent: sql`COALESCE(${usersTable.referral_percent}, ${sql.raw('(SELECT referral_percent_default FROM electricity_price ORDER BY id DESC LIMIT 1)')})`,
       })
       .where(sql`${usersTable.id} = ${referrerId}`);
 
@@ -832,37 +854,33 @@ export async function fetchRefBalance(userId: number) {
 }
 
 //Делаем вставку в таблицу transactionsRefBonusTable при покупке долей рефералом
-export async function insertReferralBonusTransaction({
-  userId,
-  referralId,
-  referralPercent,
-  referralBonus,
-}: {
-  userId: number;
-  referralId: number;
-  referralPercent: number;
-  referralBonus: number;
-}) {
+export async function insertReferralBonusTransaction(
+  userId: number,
+  referralId: number,
+  referralPercent: number,
+  referralBonus: number,
+) {
   try {
-    console.log(
-      `[Referral Bonus] Inserting referral bonus transaction for user ${userId}`,
-    );
+    // Convert to string with exactly 2 decimal places
+    const bonusString = referralBonus.toFixed(2);
 
-    await db.insert(transactionsRefBonusTable).values({
-      user_id: userId,
-      referral_id: referralId,
-      referral_percent: referralPercent,
-      referral_bonus: referralBonus,
+    console.log('Inserting referral bonus transaction:', {
+      userId,
+      referralId,
+      referralPercent,
+      referralBonus: bonusString, // Log the string value
     });
 
-    console.log(
-      `[Referral Bonus] Referral bonus transaction successfully inserted for user ${userId}, ref.percent - ${referralPercent}, ref.bonus - ${referralBonus}`,
-    );
+    await db.insert(transactionsRefBonusTable).values({
+      user_id: sql`${userId}`,
+      referral_id: sql`${referralId}`,
+      referral_percent: sql`${Math.round(referralPercent)}`,
+      referral_bonus: sql`${bonusString}::decimal(10,2)`, // Use string value and explicit cast
+    });
+
+    console.log('Successfully inserted referral bonus transaction');
   } catch (error) {
-    console.error(
-      '[Referral Bonus] Error inserting referral bonus transaction:',
-      error,
-    );
+    console.error('Error inserting referral bonus transaction:', error);
     throw new Error('Ошибка при записи транзакции реферального бонуса');
   }
 }
@@ -935,8 +953,8 @@ export async function updateUserDataByUuid(
       .update(usersTable)
       .set({
         status: data.status,
-        referral_bonus: data.referralBonus,
-        referral_percent: data.referralPercent,
+        referral_bonus: sql`${data.referralBonus}`,
+        referral_percent: sql`${data.referralPercent}`,
         ...(data.status === 'delete' && {
           deleting_date: new Date(),
         }),
@@ -1011,3 +1029,61 @@ export async function fetchUserEquipmentTransactions(userId: number) {
 }
 
 new Date().toISOString();
+
+/**
+ * Проверяет существование записи баланса для указанной монеты и создает ее с нулевым балансом, если запись отсутствует
+ * @param {number} userId - ID пользователя
+ * @param {string} coinTicker - Тикер монеты или массив тикеров
+ * @returns {Promise<void>}
+ */
+export async function ensureBalanceRecordExists(
+  userId: number,
+  coinTicker: string | string[],
+): Promise<void> {
+  try {
+    const tickers = Array.isArray(coinTicker) ? coinTicker : [coinTicker];
+
+    for (const ticker of tickers) {
+      // Проверяем существование записи
+      const existingBalance = await db
+        .select()
+        .from(balancesTable)
+        .where(
+          and(
+            eq(balancesTable.user_id, userId),
+            eq(balancesTable.coinTicker, ticker),
+          ),
+        )
+        .limit(1);
+
+      // Если запись не существует, создаем новую с нулевым балансом
+      if (!existingBalance.length) {
+        await db.insert(balancesTable).values({
+          user_id: userId,
+          coinTicker: ticker,
+          coinAmount: '0',
+        });
+        console.log(`Created balance record for ${ticker}`);
+      }
+    }
+  } catch (error) {
+    console.error('Error ensuring balance record exists:', error);
+    throw new Error(
+      `Failed to ensure balance record exists for user ${userId}: ${
+        error instanceof Error ? error.message : 'Unknown error'
+      }`,
+    );
+  }
+}
+
+// Вспомогательная функция для создания балансов при регистрации
+export async function createInitialBalances(userId: number): Promise<void> {
+  try {
+    // Создаем записи для USDT и USDC
+    await ensureBalanceRecordExists(userId, ['USDT', 'USDC']);
+    console.log('Created initial balance records for new user');
+  } catch (error) {
+    console.error('Error creating initial balances:', error);
+    throw new Error('Failed to create initial balances');
+  }
+}

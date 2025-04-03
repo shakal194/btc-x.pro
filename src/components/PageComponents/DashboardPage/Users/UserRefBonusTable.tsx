@@ -29,7 +29,7 @@ interface ApiRefBonusTransaction {
   uuid: string | null;
   referral_id: number;
   referral_percent: number;
-  referral_bonus: number;
+  referral_bonus: string;
   referralEmail: string;
 }
 
@@ -80,7 +80,7 @@ export default function UserRefBonusTable({
             transactionDate: item.recordDate,
             referralEmail: item.referralEmail,
             bonusPercent: item.referral_percent,
-            bonusAmount: item.referral_bonus,
+            bonusAmount: Number(item.referral_bonus),
           }),
         );
         setTransactions(mappedData);

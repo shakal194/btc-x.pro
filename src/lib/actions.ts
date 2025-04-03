@@ -6,11 +6,15 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { AuthError } from 'next-auth';
 import { getTranslations } from 'next-intl/server';
-import db from '@/db/db'; // Импортируем подключение к БД
+import db from '@/db/db';
 import { usersTable } from '@/db/schema';
 import { sql } from 'drizzle-orm';
 import { hashPassword } from '@/lib/utils';
 import { fetchUserIdByReferralCode } from '@/lib/data';
+import { createDeposit, getToken } from '@/lib/coinsbuy';
+import { saveAddress } from '@/lib/balance';
+import { getWalletId } from '@/lib/constants';
+import { createInitialBalances } from '@/lib/data';
 
 export async function handleEmailSubmitSign(email: string) {
   const t = await getTranslations('cloudMiningPage.signin');
@@ -297,15 +301,102 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
       }
 
       const hashedPassword = await hashPassword(password);
-      await db.insert(usersTable).values({
-        email,
-        password: hashedPassword,
-        referrer_id: Number(referrer_id),
-        referral_code: Math.floor(100000 + Math.random() * 900000),
-        status: 'user',
+      const newUser = await db
+        .insert(usersTable)
+        .values({
+          email,
+          password: hashedPassword,
+          referrer_id: Number(referrer_id),
+          referral_code: Math.floor(100000 + Math.random() * 900000),
+          status: 'user',
+        })
+        .returning();
+
+      // Создаем начальные балансы для USDT и USDC
+      await createInitialBalances(newUser[0].id);
+
+      // Create deposit addresses for USDT and USDC
+      const token = await getToken();
+
+      // Create deposit address for USDT
+      const depositResponseUSDT = await createDeposit(token, {
+        label: `Create USDT address ${newUser[0].id}`,
+        tracking_id: `Create USDT address ${email}`,
+        confirmations_needed: 1,
+        payment_page_redirect_url: 'https://btc-x.pro/dashboard',
+        payment_page_button_text: 'Вернуться в кабинет',
+        relationships: {
+          wallet: {
+            data: {
+              type: 'wallet',
+              id: getWalletId('USDT'),
+            },
+          },
+        },
       });
 
-      console.log('User added successfully', email);
+      console.log('USDT Deposit response:', depositResponseUSDT);
+
+      if (
+        !depositResponseUSDT.data?.attributes?.address ||
+        !depositResponseUSDT.data?.id
+      ) {
+        console.error(
+          'Failed to create USDT deposit address:',
+          depositResponseUSDT,
+        );
+        throw new Error('Failed to create USDT deposit address');
+      }
+
+      // Create deposit address for USDC
+      const depositResponseUSDC = await createDeposit(token, {
+        label: `Create USDC address ${newUser[0].id}`,
+        tracking_id: `Create USDC address ${email}`,
+        confirmations_needed: 1,
+        payment_page_redirect_url: 'https://btc-x.pro/dashboard',
+        payment_page_button_text: 'Вернуться в кабинет',
+        relationships: {
+          wallet: {
+            data: {
+              type: 'wallet',
+              id: getWalletId('USDC'),
+            },
+          },
+        },
+      });
+
+      console.log('USDC Deposit response:', depositResponseUSDC);
+
+      if (
+        !depositResponseUSDC.data?.attributes?.address ||
+        !depositResponseUSDC.data?.id
+      ) {
+        console.error(
+          'Failed to create USDC deposit address:',
+          depositResponseUSDC,
+        );
+        throw new Error('Failed to create USDC deposit address');
+      }
+
+      // Save addresses for both USDT and USDC
+      await saveAddress(
+        newUser[0].id,
+        'USDT',
+        depositResponseUSDT.data.attributes.address,
+        depositResponseUSDT.data.id,
+      );
+
+      await saveAddress(
+        newUser[0].id,
+        'USDC',
+        depositResponseUSDC.data.attributes.address,
+        depositResponseUSDC.data.id,
+      );
+
+      console.log(
+        'User added successfully with USDT and USDC addresses:',
+        email,
+      );
     } catch (error) {
       return {
         errors: {

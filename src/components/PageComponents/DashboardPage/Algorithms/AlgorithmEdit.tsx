@@ -133,6 +133,13 @@ export default function AlgorithmEdit({
 
   const handleUpdateTickerPrice = async (oldTickerName: string) => {
     const editedTicker = editedTickers[oldTickerName];
+
+    // Проверяем существование editedTicker
+    if (!editedTicker) {
+      Notiflix.Notify.failure('Ошибка: данные тикера не найдены');
+      return;
+    }
+
     const price = parseFloat(editedTicker.price);
 
     if (isNaN(price) || price <= 0) {
@@ -143,15 +150,43 @@ export default function AlgorithmEdit({
     try {
       setIsLoading(true);
 
-      // Если имя тикера было изменено, удаляем старый и добавляем новый
+      // Если имя тикера было изменено
       if (oldTickerName !== editedTicker.name) {
-        await deleteTickerFromAlgorithm(algorithmUuid, oldTickerName);
-        await addTickerToAlgorithm(algorithmUuid, editedTicker.name, price);
+        try {
+          // Проверяем, что новое имя не пустое
+          if (!editedTicker.name.trim()) {
+            throw new Error('Название монеты не может быть пустым');
+          }
+
+          // Сначала добавляем новый тикер
+          await addTickerToAlgorithm(algorithmUuid, editedTicker.name, price);
+
+          // Затем удаляем старый тикер
+          await deleteTickerFromAlgorithm(algorithmUuid, oldTickerName);
+
+          Notiflix.Notify.success('Название и цена монеты обновлены');
+        } catch (error) {
+          // Если произошла ошибка, пытаемся откатить изменения
+          console.error('Error updating ticker name:', error);
+          try {
+            // Пытаемся удалить новый тикер, если он был добавлен
+            await deleteTickerFromAlgorithm(algorithmUuid, editedTicker.name);
+          } catch {
+            // Игнорируем ошибку отката
+          }
+          throw new Error(
+            error instanceof Error
+              ? error.message
+              : 'Не удалось обновить название монеты',
+          );
+        }
       } else {
         // Если изменилась только цена
         await updateTickerPricePerHashrate(algorithmUuid, oldTickerName, price);
+        Notiflix.Notify.success('Цена монеты обновлена');
       }
 
+      // Обновляем данные алгоритма
       const updatedData = await fetchAlgorithmByUuid(algorithmUuid);
       setAlgorithm(updatedData);
 
@@ -165,11 +200,13 @@ export default function AlgorithmEdit({
         delete newEdits[oldTickerName];
       }
       setEditedTickers(newEdits);
-
-      Notiflix.Notify.success('Данные монеты обновлены');
     } catch (error) {
       console.error('Error updating ticker:', error);
-      Notiflix.Notify.failure('Ошибка при обновлении данных монеты');
+      Notiflix.Notify.failure(
+        error instanceof Error
+          ? error.message
+          : 'Ошибка при обновлении данных монеты',
+      );
     } finally {
       setIsLoading(false);
     }

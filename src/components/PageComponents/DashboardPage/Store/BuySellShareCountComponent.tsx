@@ -13,17 +13,19 @@ import {
 } from '@heroui/react';
 import { useSession } from 'next-auth/react';
 import {
-  fetchEquipmentById,
   insertTransactionsTable,
-  fetchAllUserBalanceShares,
-  fetchUSDTBalance,
   updateUSDTBalance,
   fetchReferralBonus,
   updateReferralBonus,
   insertReferralBonusTransaction,
+  fetchEquipmentByUuid,
+  ensureBalanceRecordExists,
+  fetchAllUserBalanceShares,
+  fetchUSDTBalance,
 } from '@/lib/data';
 import Notiflix from 'notiflix';
 import FullScreenSpinner from '@/components/ui/Spinner';
+import { createDepositForCoin } from '@/lib/balance';
 
 interface BuySellShareCountComponentProps {
   equipmentId: number;
@@ -80,7 +82,7 @@ export default function BuySellShareCountComponent({
     const getEquipmentById = async () => {
       try {
         if (!equipmentUuid) return;
-        const res = await fetchEquipmentById(equipmentUuid);
+        const res = await fetchEquipmentByUuid(equipmentUuid);
         const data = res[0];
         if (data) {
           setEquipmentName(data.name);
@@ -181,6 +183,34 @@ export default function BuySellShareCountComponent({
         return;
       }
 
+      // Если это покупка, получаем информацию об оборудовании и проверяем баланс
+      if (isPurchase) {
+        const equipmentData = await fetchEquipmentByUuid(equipmentUuid);
+        const equipment = equipmentData[0];
+
+        if (!equipment?.algorithm?.coinTickers?.[0]?.name) {
+          throw new Error(
+            'Не удалось определить тикер монеты для оборудования',
+          );
+        }
+
+        const coinTicker = equipment.algorithm.coinTickers[0].name;
+
+        // Убеждаемся, что запись баланса существует
+        await ensureBalanceRecordExists(Number(user_id), coinTicker);
+
+        // Создаем депозитный адрес для монеты, если его еще нет
+        try {
+          const userEmail = session?.user?.email || '';
+          if (userEmail) {
+            await createDepositForCoin(Number(user_id), userEmail, coinTicker);
+          }
+        } catch (error) {
+          console.error('Error creating deposit address:', error);
+          // Не прерываем транзакцию, если не удалось создать адрес
+        }
+      }
+
       const updatedShareBalance = isPurchase
         ? userShareBalance + shareCount
         : userShareBalance - shareCount;
@@ -209,21 +239,23 @@ export default function BuySellShareCountComponent({
       });
 
       if (isPurchase) {
-        const { referralBonus, referrerId } = await fetchReferralBonus(
-          Number(user_id),
-        );
+        const { referralBonus: referralPercent, referrerId } =
+          await fetchReferralBonus(Number(user_id));
 
-        const referralBonusAmount = (totalAmount * referralBonus) / 100;
+        // referralBonus is integer (e.g. 10 for 10%)
+        const referralBonusAmount = Number(
+          (totalAmount * (referralPercent / 100)).toFixed(2),
+        );
 
         if (referralBonusAmount > 0 && referrerId) {
           await updateReferralBonus(referrerId, referralBonusAmount);
 
-          await insertReferralBonusTransaction({
-            userId: referrerId,
-            referralId: Number(user_id),
-            referralPercent: referralBonus,
-            referralBonus: referralBonusAmount,
-          });
+          await insertReferralBonusTransaction(
+            Number(user_id), // ID пользователя, который совершает покупку
+            referrerId, // ID реферера, который получит бонус
+            referralPercent, // Процент реферального бонуса
+            referralBonusAmount, // Сумма бонуса
+          );
 
           Notiflix.Notify.success(
             `Реферальный бонус в размере $${referralBonusAmount.toFixed(2)} начислен рефереру`,
@@ -246,7 +278,11 @@ export default function BuySellShareCountComponent({
     } catch (error) {
       console.error('Ошибка при обработке транзакции:', error);
       setTransactionError('Ошибка при обработке транзакции');
-      Notiflix.Notify.failure('Ошибка при обработке транзакции');
+      Notiflix.Notify.failure(
+        error instanceof Error
+          ? error.message
+          : 'Ошибка при обработке транзакции',
+      );
     } finally {
       setIsLoading(false);
     }

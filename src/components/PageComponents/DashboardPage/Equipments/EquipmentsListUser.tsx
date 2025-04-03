@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   fetchAlgorithms,
   fetchEquipments,
@@ -11,11 +11,24 @@ import {
 } from '@/lib/data';
 import Image from 'next/image';
 import Link from 'next/link';
-//import { useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import BuySellShareCountComponent from '@/components/PageComponents/DashboardPage/Store/BuySellShareCountComponent';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import { EquipmentSkeleton } from '@/components/ui/Skeletons';
-import { Snippet, Tabs, Tab } from '@heroui/react';
+import { Snippet, Tabs, Tab, Button } from '@heroui/react';
+import DepositModal from '../Wallet/DepositModal';
+import WithdrawModal from '../Wallet/WithdrawModal';
+
+interface EquipmentsListUserProps {
+  serverUserId: string;
+  serverUserEmail: string;
+}
+
+interface Balance {
+  id: number;
+  coinTicker: string;
+  coinAmount: string;
+}
 
 interface Equipment {
   id: number;
@@ -48,32 +61,101 @@ interface EquipmentData {
   balanceShareCount: number;
 }
 
-export default function EquipmentsListUser({ userId }: { userId: string }) {
-  //const { data: session, status } = useSession();
-  const user_id = userId;
+export default function EquipmentsListUser({
+  serverUserId,
+  serverUserEmail,
+}: EquipmentsListUserProps) {
+  const { data: session } = useSession();
+  const user_id = serverUserId || session?.user?.id;
+  const userEmail = serverUserEmail || session?.user?.email || '';
 
-  const [isLoading, setIsLoading] = useState<boolean>(false); // Флаг загрузки
+  const [selectedTicker, setSelectedTicker] = useState<string>('');
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
+  const [balances, setBalances] = useState<Balance[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingUserEquipments, setIsLoadingUserEquipments] =
     useState<boolean>(true);
-  const [algorithms, setAlgorithms] = useState<Algorithm[]>([]); // Состояние для хранения алгоритмов
+  const [equipments, setEquipments] = useState<Equipment[]>([]);
+  const [algorithms, setAlgorithms] = useState<Algorithm[]>([]);
   const [userEquipmentsFetch, setUserEquipmentsFetch] = useState<
     EquipmentData[]
   >([]);
-  const [equipmentsFetch, setEquipmentsFetch] = useState<Equipment[]>([]);
-  const [lastPrice, setLastPrice] = useState<any>(null);
-  const [refCode, setRefCode] = useState<number>();
-  const [refBalance, setRefBalance] = useState<number>();
-  const [balances, setBalances] = useState<any[]>([]);
-  const [selectedTab, setSelectedTab] = useState<string | number>(
-    algorithms[0]?.name || '',
-  );
+  const [refCode, setRefCode] = useState<number>(0);
+  const [refBalance, setRefBalance] = useState<number>(0);
+  const [lastPrice, setLastPrice] = useState<{
+    pricePerKWh: string | null;
+    recordDate: Date;
+  } | null>(null);
 
-  // Получаем транзакции по оборудованию
   useEffect(() => {
-    if (!user_id || equipmentsFetch.length === 0) {
-      console.log(
-        `[Effect] Skipping fetch - no user_id or equipments. ${user_id}`,
-      );
+    const getRefCode = async () => {
+      try {
+        const data = await fetchReferralCodeByUserId(Number(user_id));
+        setRefCode(Number(data.referral_code));
+      } catch (error) {
+        console.error('Error getting referral code:', error);
+      }
+    };
+
+    if (user_id && !isNaN(Number(user_id))) {
+      getRefCode();
+    }
+  }, [user_id]);
+
+  useEffect(() => {
+    const getLastPrice = async () => {
+      try {
+        const data = await fetchElectricityPrice();
+        setLastPrice(data);
+      } catch (error) {
+        console.error('Ошибка при получении данных о цене', error);
+      }
+    };
+
+    getLastPrice();
+  }, []);
+
+  useEffect(() => {
+    const getRefBalance = async () => {
+      try {
+        if (!user_id || isNaN(Number(user_id))) {
+          return;
+        }
+
+        const data = await fetchRefBalance(Number(user_id));
+        const numericData =
+          typeof data === 'string' ? parseFloat(data) : Number(data);
+        setRefBalance(numericData || 0);
+      } catch (error) {
+        console.error('Error getting referral balance:', error);
+        setRefBalance(0);
+      }
+    };
+
+    if (user_id && !isNaN(Number(user_id))) {
+      getRefBalance();
+    }
+  }, [user_id]);
+
+  const getBalances = useCallback(async () => {
+    try {
+      if (!user_id) return;
+      const balancesData = await fetchAllUserBalances(Number(user_id));
+      setBalances(balancesData);
+    } catch (error) {
+      console.error('Error fetching balances:', error);
+    }
+  }, [user_id]);
+
+  useEffect(() => {
+    if (user_id && !isNaN(Number(user_id))) {
+      getBalances();
+    }
+  }, [user_id, getBalances]);
+
+  useEffect(() => {
+    if (!user_id || equipments.length === 0) {
       return;
     }
 
@@ -84,15 +166,13 @@ export default function EquipmentsListUser({ userId }: { userId: string }) {
 
     const fetchAllEquipments = async () => {
       try {
-        // Получаем все балансы пользователя за один запрос
         const userBalanceShares = await fetchAllUserBalanceShares(
           Number(user_id),
         );
 
         if (!isMounted) return;
 
-        // Фильтруем оборудование с положительным балансом
-        const validEquipments = equipmentsFetch
+        const validEquipments = equipments
           .map((equipment) => {
             const balanceShareCount =
               userBalanceShares[equipment.id]?.balanceShareCount || 0;
@@ -122,79 +202,8 @@ export default function EquipmentsListUser({ userId }: { userId: string }) {
       isMounted = false;
       controller.abort();
     };
-  }, [user_id, equipmentsFetch]);
+  }, [user_id, equipments]);
 
-  useEffect(() => {
-    const getRefCode = async () => {
-      try {
-        if (!user_id || isNaN(Number(user_id))) {
-          return;
-        }
-
-        // Получаем данные с сервера
-        const data = await fetchReferralCodeByUserId(Number(user_id));
-
-        setRefCode(data.referral_code); // Устанавливаем данные в состояние
-      } catch (error) {
-        console.error('Ошибка при получении реферального кода', error);
-      }
-    };
-
-    // Запускаем getRefCode только если user_id существует
-    if (user_id && !isNaN(Number(user_id))) {
-      getRefCode();
-    }
-  }, [user_id]); // Следим за user_id
-
-  useEffect(() => {
-    const getLastPrice = async () => {
-      try {
-        const data = await fetchElectricityPrice(); // Получаем данные с сервера
-        setLastPrice(data); // Устанавливаем данные в состояние
-      } catch (error) {
-        console.error('Ошибка при получении данных о цене', error);
-      }
-    };
-
-    getLastPrice();
-  }, []);
-
-  useEffect(() => {
-    const getRefBalance = async () => {
-      try {
-        if (!user_id || isNaN(Number(user_id))) {
-          return;
-        }
-
-        // Получаем данные с сервера
-        const data = await fetchRefBalance(Number(user_id));
-
-        setRefBalance(data); // Устанавливаем данные в состояние
-      } catch (error) {
-        console.error('Ошибка при получении реферального баланса', error);
-      }
-    };
-
-    // Запускаем getRefBalance только если user_id существует
-    if (user_id && !isNaN(Number(user_id))) {
-      getRefBalance();
-    }
-  }, [user_id]); // Следим за user_id
-
-  // Функции для обновления балансов
-  const updateBalances = async () => {
-    if (!user_id || isNaN(Number(user_id))) return;
-
-    const [newBalances, newRefBalance] = await Promise.all([
-      fetchAllUserBalances(Number(user_id)),
-      fetchRefBalance(Number(user_id)),
-    ]);
-
-    setBalances(newBalances);
-    setRefBalance(newRefBalance);
-  };
-
-  // Функция для обновления данных оборудования
   const updateEquipmentData = async (user_id: string, equipmentId: number) => {
     const userBalanceShares = await fetchAllUserBalanceShares(Number(user_id));
     const balanceShareCount =
@@ -218,18 +227,16 @@ export default function EquipmentsListUser({ userId }: { userId: string }) {
       return [...prevState, { equipmentId, balanceShareCount }];
     });
 
-    // Обновляем балансы после обновления оборудования
-    await updateBalances();
+    await getBalances();
 
     return balanceShareCount;
   };
 
-  // Получаем список всего оборудования
   const getEquipments = async () => {
     setIsLoading(true);
     try {
       const data = await fetchEquipments();
-      setEquipmentsFetch(data);
+      setEquipments(data);
       return data;
     } catch (error) {
       console.error('Ошибка при получении данных по алгоритмам', error);
@@ -242,15 +249,13 @@ export default function EquipmentsListUser({ userId }: { userId: string }) {
     getEquipments();
   }, []);
 
-  // Получаем список всех алгоритмов
   useEffect(() => {
     const getAlgorithms = async () => {
       try {
         const data = await fetchAlgorithms();
         setAlgorithms(data);
-        // Устанавливаем первый таб как активный, если есть алгоритмы
         if (data.length > 0) {
-          setSelectedTab(data[0].name);
+          setSelectedTicker(data[0].name);
         }
       } catch (error) {
         console.error('Ошибка при получении алгоритмов', error);
@@ -260,25 +265,6 @@ export default function EquipmentsListUser({ userId }: { userId: string }) {
     getAlgorithms();
   }, []);
 
-  // Add new useEffect for fetching balances
-  useEffect(() => {
-    const getBalances = async () => {
-      try {
-        if (!user_id || isNaN(Number(user_id))) {
-          return;
-        }
-        const data = await fetchAllUserBalances(Number(user_id));
-        setBalances(data);
-      } catch (error) {
-        console.error('Ошибка при получении балансов', error);
-      }
-    };
-
-    if (user_id && !isNaN(Number(user_id))) {
-      getBalances();
-    }
-  }, [user_id]);
-
   const getReferralLink = () => {
     const origin = typeof window !== 'undefined' ? window.location.origin : '';
     return `${origin}/signin?tab=signup&ref=${refCode}`;
@@ -287,6 +273,16 @@ export default function EquipmentsListUser({ userId }: { userId: string }) {
   const handleCopyFullLink = () => {
     const fullLink = getReferralLink();
     navigator.clipboard.writeText(fullLink);
+  };
+
+  const handleWithdrawClick = (ticker: string) => {
+    setSelectedTicker(ticker);
+    setIsWithdrawModalOpen(true);
+  };
+
+  const handleDepositClick = (ticker: string) => {
+    setSelectedTicker(ticker);
+    setIsDepositModalOpen(true);
   };
 
   return (
@@ -313,20 +309,15 @@ export default function EquipmentsListUser({ userId }: { userId: string }) {
                 </h3>
                 <h3 className='mb-2 text-white'>
                   Ваша реферальная ссылка:{' '}
-                  <div
-                    className='inline-block cursor-pointer'
+                  <Snippet
+                    color='warning'
+                    className='bg-inherit'
+                    size='lg'
+                    hideSymbol={true}
                     onClick={handleCopyFullLink}
                   >
-                    <Snippet
-                      color='warning'
-                      className='bg-inherit'
-                      size='lg'
-                      hideSymbol={true}
-                      onClick={handleCopyFullLink}
-                    >
-                      {getReferralLink()}
-                    </Snippet>
-                  </div>
+                    {getReferralLink()}
+                  </Snippet>
                 </h3>
                 <h3>
                   Ваш реферальный баланс - $
@@ -339,7 +330,6 @@ export default function EquipmentsListUser({ userId }: { userId: string }) {
               <p className='text-white'>Загрузка реферального кода...</p>
             )}
 
-            {/* Price and Assets Section */}
             <div className='flex flex-col justify-between gap-4 lg:flex-row'>
               <div className='flex flex-col gap-2'>
                 <div className='flex items-center gap-2'>
@@ -347,7 +337,7 @@ export default function EquipmentsListUser({ userId }: { userId: string }) {
                   <span className='font-bold'>
                     $
                     {lastPrice
-                      ? parseFloat(lastPrice.pricePerKWh).toFixed(4)
+                      ? parseFloat(lastPrice.pricePerKWh || '0.0000').toFixed(4)
                       : '0.0000'}{' '}
                     /кВт
                   </span>
@@ -379,12 +369,19 @@ export default function EquipmentsListUser({ userId }: { userId: string }) {
                       </span>
                     </div>
                     <div className='flex gap-2'>
-                      <button className='rounded bg-blue-500 px-3 py-1 text-sm hover:bg-blue-600'>
+                      <Button
+                        color='default'
+                        onPress={() => handleWithdrawClick(balance.coinTicker)}
+                      >
                         Вывести
-                      </button>
-                      <button className='rounded bg-green-500 px-3 py-1 text-sm hover:bg-green-600'>
+                      </Button>
+                      <Button
+                        color='success'
+                        className='text-white'
+                        onPress={() => handleDepositClick(balance.coinTicker)}
+                      >
                         Пополнить
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 ))}
@@ -392,13 +389,12 @@ export default function EquipmentsListUser({ userId }: { userId: string }) {
             </div>
           </div>
 
-          {/* Tabs and Equipment Section */}
           <div className='text-lg text-white'>
             <Tabs
-              selectedKey={selectedTab}
+              selectedKey={selectedTicker}
               variant='underlined'
               color='warning'
-              onSelectionChange={(key) => setSelectedTab(key)}
+              onSelectionChange={(key) => setSelectedTicker(String(key))}
               className='gap-2'
             >
               {algorithms.map((algorithm: Algorithm) => (
@@ -411,7 +407,7 @@ export default function EquipmentsListUser({ userId }: { userId: string }) {
                       : (() => {
                           const algorithmEquipment = userEquipmentsFetch
                             .map((equipmentData: EquipmentData) => {
-                              const equipment = equipmentsFetch.find(
+                              const equipment = equipments.find(
                                 (equip: Equipment) =>
                                   equip.id === equipmentData.equipmentId,
                               );
@@ -542,6 +538,36 @@ export default function EquipmentsListUser({ userId }: { userId: string }) {
             </Tabs>
           </div>
         </>
+      )}
+
+      {isWithdrawModalOpen && (
+        <WithdrawModal
+          isOpen={isWithdrawModalOpen}
+          onClose={() => setIsWithdrawModalOpen(false)}
+          onSuccess={() => {
+            setIsWithdrawModalOpen(false);
+            getBalances();
+          }}
+          userId={Number(user_id)}
+          userEmail={userEmail}
+          coinTicker={selectedTicker}
+          balance={parseFloat(
+            balances.find((b) => b.coinTicker === selectedTicker)?.coinAmount ||
+              '0',
+          )}
+        />
+      )}
+
+      {isDepositModalOpen && (
+        <DepositModal
+          isOpen={isDepositModalOpen}
+          onClose={() => {
+            setIsDepositModalOpen(false);
+            getBalances();
+          }}
+          userId={Number(user_id)}
+          coinTicker={selectedTicker}
+        />
       )}
     </section>
   );

@@ -11,7 +11,7 @@ import {
   Input,
   useDisclosure,
 } from '@heroui/react';
-import { updateEquipment, fetchEquipmentById } from '@/lib/data';
+import { updateEquipment, fetchEquipmentByUuid } from '@/lib/data';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import Notiflix from 'notiflix';
 
@@ -33,7 +33,7 @@ export default function EditEquipmentModal({
   useEffect(() => {
     const getEquipmentById = async () => {
       try {
-        const res = await fetchEquipmentById(uuid); // Получаем данные устройства по id
+        const res = await fetchEquipmentByUuid(uuid); // Получаем данные устройства по id
         const data = res[0];
         if (data) {
           setName(data.name);

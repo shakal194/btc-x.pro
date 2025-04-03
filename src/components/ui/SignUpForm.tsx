@@ -217,7 +217,7 @@ export default function SignUpForm() {
     // Создаем FormData
     const formData = new FormData();
     formData.append('email', valueEmail);
-    formData.append('referral_code', valueReferralCode || '294001');
+    formData.append('referral_code', valueReferralCode || '415384');
     formData.append('password', valuePassword);
     formData.append('confirmPassword', valueConfirmPassword);
 

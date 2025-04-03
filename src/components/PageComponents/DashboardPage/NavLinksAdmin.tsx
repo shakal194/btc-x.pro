@@ -7,6 +7,7 @@ import {
   CodeBracketSquareIcon,
   ServerStackIcon,
   UsersIcon,
+  BanknotesIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -41,6 +42,11 @@ export default function NavLinksAdmin() {
       name: `${t('customers')}`,
       href: '/dashboard/users',
       icon: UsersIcon,
+    },
+    {
+      name: 'CoinsBuy',
+      href: '/dashboard/coinsbuy',
+      icon: BanknotesIcon,
     },
     {
       name: `${t('settings')}`,

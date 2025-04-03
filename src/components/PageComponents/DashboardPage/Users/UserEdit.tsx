@@ -38,8 +38,8 @@ export default function UserEdit({ uuid }: { uuid: string }) {
         if (data) {
           setEmail(data.email);
           setStatus(data.status);
-          setReferralBonus(data.referral_bonus ?? 0);
-          setReferralPercent(data.referral_percent ?? 0);
+          setReferralBonus(Number(data.referral_bonus) || 0);
+          setReferralPercent(Number(data.referral_percent) || 0);
           setUserId(data.id);
 
           // Получаем USDT баланс
@@ -205,7 +205,7 @@ export default function UserEdit({ uuid }: { uuid: string }) {
               <div className='mt-4 flex flex-col space-y-4'>
                 <Button
                   className='mr-2 w-full bg-blue-500 p-2 text-white md:w-[400px] md:text-sm'
-                  onClick={() =>
+                  onPress={() =>
                     router.push(
                       `/dashboard/users/${uuid}/equipment-transactions`,
                     )
@@ -218,7 +218,7 @@ export default function UserEdit({ uuid }: { uuid: string }) {
                 </Button>
                 <Button
                   className='mr-2 w-full bg-blue-500 p-2 text-white md:w-[400px] md:text-sm'
-                  onClick={() =>
+                  onPress={() =>
                     router.push(`/dashboard/users/${uuid}/referral-bonus`)
                   }
                 >

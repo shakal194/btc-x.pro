@@ -22,7 +22,7 @@ export const usersTable = pgTable('users', {
   referral_code: integer().notNull(),
   referrer_id: integer(),
   referral_percent: integer(),
-  referral_bonus: integer().default(0),
+  referral_bonus: decimal({ precision: 10, scale: 2 }).default('0'),
 });
 
 export const algorithmTable = pgTable('algorithms', {
@@ -111,12 +111,22 @@ export const historyChangesTable = pgTable('history_changes', {
 
 export const balancesTable = pgTable('balances', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  uuid: uuid('uuid').defaultRandom(),
+  user_id: integer('user_id').notNull(),
+  coinTicker: varchar({ length: 10 }).notNull(), // Тиккер монеты (например, BTC)
+  coinAmount: decimal({ precision: 30, scale: 8 }).notNull(), // Количество монет
+});
+
+export const usersAddressTable = pgTable('users_address', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
   uuid: uuid().defaultRandom(), // ID записи
   user_id: integer()
     .notNull()
     .references(() => usersTable.id), // ID пользователя
-  coinTicker: varchar({ length: 10 }).notNull(), // Тиккер монеты (например, BTC)
-  coinAmount: decimal({ precision: 30, scale: 8 }).notNull(), // Количество монет
+  coinTicker: varchar({ length: 10 }).notNull(), // Тиккер монеты
+  depositAddress: varchar({ length: 255 }).notNull(), // Адрес для депозита
+  depositId: varchar({ length: 255 }).notNull(), // ID депозита
+  created_at: timestamp().defaultNow().notNull(), // Дата создания
 });
 
 export const withdrawalsTable = pgTable('withdrawals', {
@@ -152,5 +162,5 @@ export const transactionsRefBonusTable = pgTable('transactions_refBonus', {
   user_id: integer().notNull(), // ID пользователя, которому зачисляется реф.бонус
   referral_id: integer().notNull(), // ID реферала, который покупает доли
   referral_percent: integer().notNull(), //Реф.бонус в %
-  referral_bonus: integer().notNull(), // Сумма бонуса
+  referral_bonus: decimal({ precision: 10, scale: 2 }).notNull(), // Сумма бонуса
 });
