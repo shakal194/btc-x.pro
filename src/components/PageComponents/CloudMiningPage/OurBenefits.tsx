@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import StoreButtons from '@/components/ui/StoreButtons';
+//import StoreButtons from '@/components/ui/StoreButtons';
+import Link from 'next/link';
 
 export default function OurBenefitsSection() {
   const t = useTranslations('cloudMiningPage.ourBenefits');
@@ -86,14 +87,19 @@ export default function OurBenefitsSection() {
           <h2 className='mb-[25px] text-[28px] text-font30Leading110 leading-[110%] tracking-tight lg:mb-[49px] lg:text-font50Leading110 xl:text-[105px]'>
             {t('title2')}
           </h2>
-          <h3 className='mx-auto w-[274px] text-[13px] leading-[130%] opacity-[33%] lg:hidden'>
+          <h3 className='mx-auto w-[274px] text-[13px] leading-[120%] opacity-[33%] lg:w-[525px] lg:text-[22px] lg:leading-[130%]'>
             {t('title3')}
           </h3>
-          <h3 className='mx-auto hidden w-[525px] text-[22px] leading-[120%] opacity-[33%] lg:block'>
-            {t('title4')}
-          </h3>
-          <div className='mt-5 flex justify-center gap-4'>
+          {/*<div className='mt-5 flex justify-center gap-4'>
             <StoreButtons theme='light' />
+          </div>*/}
+          <div className='mt-5 flex justify-center gap-4'>
+            <Link
+              href='/signin'
+              className='block w-full rounded-full border bg-black px-5 py-3 text-center text-font18 font-bold leading-[110%] text-white transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white sm:w-[250px]'
+            >
+              {t('loginButton')}
+            </Link>
           </div>
         </div>
       </div>
