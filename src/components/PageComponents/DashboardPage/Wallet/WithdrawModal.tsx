@@ -64,7 +64,7 @@ export default function WithdrawModal({
     try {
       const token = await getAccessToken();
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_COINSBUY_API_URL}/rates/?filter[left]=TRX&filter[right]=${coinTicker}`,
+        `${process.env.COINSBUY_API_URL}/rates/?filter[left]=TRX&filter[right]=${coinTicker}`,
         {
           headers: {
             Authorization: `Bearer ${token.access}`,
@@ -116,7 +116,7 @@ export default function WithdrawModal({
       };
 
       const feeResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_COINSBUY_API_URL}/payout/calculate/`,
+        `${process.env.COINSBUY_API_URL}/payout/calculate/`,
         {
           method: 'POST',
           headers: {
@@ -205,7 +205,7 @@ export default function WithdrawModal({
       };
 
       const feeResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_COINSBUY_API_URL}/payout/calculate/`,
+        `${process.env.COINSBUY_API_URL}/payout/calculate/`,
         {
           method: 'POST',
           headers: {
@@ -287,18 +287,15 @@ export default function WithdrawModal({
         },
       };
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_COINSBUY_API_URL}/payout/`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token.access}`,
-            'Content-Type': 'application/vnd.api+json',
-            'idempotency-key': crypto.randomUUID(),
-          },
-          body: JSON.stringify(payoutData),
+      const response = await fetch(`${process.env.COINSBUY_API_URL}/payout/`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token.access}`,
+          'Content-Type': 'application/vnd.api+json',
+          'idempotency-key': crypto.randomUUID(),
         },
-      );
+        body: JSON.stringify(payoutData),
+      });
 
       console.log(payoutData);
 

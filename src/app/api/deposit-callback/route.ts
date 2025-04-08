@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { updateUserBalance } from '@/lib/balance';
 
-const API_SECRET = process.env.NEXT_PUBLIC_COINSBUY_API_SECRET as string;
+const API_SECRET = process.env.COINSBUY_API_SECRET as string;
 
 // Функция для проверки подписи
 const verifySignature = (signature: string, body: string): boolean => {

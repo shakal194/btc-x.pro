@@ -69,7 +69,7 @@ export default function CoinsBuyPage() {
             <h3 className='text-gray-300'>
               API Key:{' '}
               <Snippet hideSymbol color='warning' className='bg-inherit'>
-                {process.env.NEXT_PUBLIC_COINSBUY_API_KEY || 'Not configured'}
+                {process.env.COINSBUY_API_KEY || 'Not configured'}
               </Snippet>
             </h3>
             <h3 className='text-gray-300'>

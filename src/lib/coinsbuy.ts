@@ -1,9 +1,9 @@
 'use server';
 
 // Константы для API
-const COINSBUY_API_BASE_URL = process.env.NEXT_PUBLIC_COINSBUY_API_URL!;
-const COINSBUY_API_KEY = process.env.NEXT_PUBLIC_COINSBUY_API_KEY!;
-const COINSBUY_API_SECRET = process.env.NEXT_PUBLIC_COINSBUY_API_SECRET!;
+const COINSBUY_API_BASE_URL = process.env.COINSBUY_API_URL!;
+const COINSBUY_API_KEY = process.env.COINSBUY_API_KEY!;
+const COINSBUY_API_SECRET = process.env.COINSBUY_API_SECRET!;
 
 interface Token {
   access: string;
@@ -358,17 +358,14 @@ export const getDeposits = async (token: { access: string }) => {
     const endpoint = '/deposit/?page[size]=100'; // Увеличиваем размер страницы до 100 записей
     const signature = await generateSignature('GET', endpoint, token.access);
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_COINSBUY_API_URL}${endpoint}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/vnd.api+json',
-          Authorization: `Bearer ${token.access}`,
-          'X-Signature': signature,
-        },
+    const response = await fetch(`${process.env.COINSBUY_API_URL}${endpoint}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/vnd.api+json',
+        Authorization: `Bearer ${token.access}`,
+        'X-Signature': signature,
       },
-    );
+    });
 
     if (!response.ok) {
       const errorData = await response.text();
@@ -391,17 +388,14 @@ export const getTransfers = async (token: { access: string }) => {
     const endpoint = '/transfer/?page[size]=100';
     const signature = await generateSignature('GET', endpoint, token.access);
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_COINSBUY_API_URL}${endpoint}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/vnd.api+json',
-          Authorization: `Bearer ${token.access}`,
-          'X-Signature': signature,
-        },
+    const response = await fetch(`${process.env.COINSBUY_API_URL}${endpoint}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/vnd.api+json',
+        Authorization: `Bearer ${token.access}`,
+        'X-Signature': signature,
       },
-    );
+    });
 
     if (!response.ok) {
       const errorData = await response.text();
