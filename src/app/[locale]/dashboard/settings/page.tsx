@@ -1,17 +1,26 @@
 import { auth } from '@/auth';
+import { ReferralSettings } from './ReferralSettings';
 
 export default async function Page() {
   const session = await auth();
 
+  if (!session?.user?.id) {
+    return null;
+  }
+
   return (
-    <main>
-      <h1 className='mb-4 text-xl text-foreground md:text-2xl'>
-        Here be your settings
-      </h1>
-      <div>
-        <div className='grid gap-2 md:grid-cols-2'></div>
+    <main className='container mx-auto p-4'>
+      <h1 className='mb-8 text-2xl font-bold text-white'>Настройки</h1>
+      <div className='space-y-6 rounded-lg p-6'>
+        <div>
+          <h2 className='mb-2 text-lg font-semibold text-white'>
+            Данные пользователя
+          </h2>
+          <p className='text-white'>Email: {session.user.email}</p>
+        </div>
+
+        <ReferralSettings userId={session.user.id} />
       </div>
-      <div className='mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8'></div>
     </main>
   );
 }

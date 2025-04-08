@@ -188,26 +188,34 @@ export default function BuySellShareCountComponent({
         const equipmentData = await fetchEquipmentByUuid(equipmentUuid);
         const equipment = equipmentData[0];
 
-        if (!equipment?.algorithm?.coinTickers?.[0]?.name) {
+        if (!equipment?.algorithm?.coinTickers?.length) {
           throw new Error(
-            'Не удалось определить тикер монеты для оборудования',
+            'Не удалось определить тикеры монет для оборудования',
           );
         }
 
-        const coinTicker = equipment.algorithm.coinTickers[0].name;
+        // Создаем депозиты для всех монет алгоритма
+        const userEmail = session?.user?.email || '';
+        if (userEmail) {
+          for (const coinTicker of equipment.algorithm.coinTickers) {
+            // Убеждаемся, что запись баланса существует для каждой монеты
+            await ensureBalanceRecordExists(Number(user_id), coinTicker.name);
 
-        // Убеждаемся, что запись баланса существует
-        await ensureBalanceRecordExists(Number(user_id), coinTicker);
-
-        // Создаем депозитный адрес для монеты, если его еще нет
-        try {
-          const userEmail = session?.user?.email || '';
-          if (userEmail) {
-            await createDepositForCoin(Number(user_id), userEmail, coinTicker);
+            // Создаем депозитный адрес для каждой монеты
+            try {
+              await createDepositForCoin(
+                Number(user_id),
+                userEmail,
+                coinTicker.name,
+              );
+            } catch (error) {
+              console.error(
+                `Error creating deposit address for ${coinTicker.name}:`,
+                error,
+              );
+              // Не прерываем транзакцию, если не удалось создать адрес
+            }
           }
-        } catch (error) {
-          console.error('Error creating deposit address:', error);
-          // Не прерываем транзакцию, если не удалось создать адрес
         }
       }
 

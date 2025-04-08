@@ -970,7 +970,7 @@ export async function updateUserDataByUuid(
 }
 
 // Функции для работы с реферальными бонусами
-export async function fetchUserRefBonusTransactions(userId: number) {
+export async function fetchUserRefBonusTransactions(referralId: number) {
   try {
     const result = await db
       .select({
@@ -985,9 +985,9 @@ export async function fetchUserRefBonusTransactions(userId: number) {
       .from(transactionsRefBonusTable)
       .innerJoin(
         usersTable,
-        eq(transactionsRefBonusTable.referral_id, usersTable.id),
+        eq(transactionsRefBonusTable.user_id, usersTable.id),
       )
-      .where(eq(transactionsRefBonusTable.user_id, userId))
+      .where(eq(transactionsRefBonusTable.referral_id, referralId))
       .orderBy(desc(transactionsRefBonusTable.recordDate));
 
     return result;
