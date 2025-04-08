@@ -9,9 +9,11 @@ import {
   usersTable,
   balancesTable,
   transactionsRefBonusTable,
+  usersAddressTable,
 } from '@/db/schema'; // Импортируем таблицу
 import { sql, desc, asc, eq, and } from 'drizzle-orm';
 import fs from 'fs';
+import { createDepositForCoin } from './balance';
 
 // ============= Функции для работы с алгоритмами =============
 
@@ -1085,5 +1087,50 @@ export async function createInitialBalances(userId: number): Promise<void> {
   } catch (error) {
     console.error('Error creating initial balances:', error);
     throw new Error('Failed to create initial balances');
+  }
+}
+
+/**
+ * Проверяет наличие адреса депозита для пользователя и монеты, при необходимости создает новый
+ */
+export async function getOrCreateDepositAddress(
+  userId: number,
+  userEmail: string,
+  coinTicker: string,
+) {
+  try {
+    // Проверяем существование адреса
+    const existingAddress = await db
+      .select()
+      .from(usersAddressTable)
+      .where(
+        and(
+          eq(usersAddressTable.user_id, userId),
+          eq(usersAddressTable.coinTicker, coinTicker),
+        ),
+      )
+      .limit(1);
+
+    // Если адрес уже существует, возвращаем его
+    if (existingAddress.length > 0) {
+      console.log(`Found existing deposit address for ${coinTicker}`);
+      return {
+        depositAddress: existingAddress[0].depositAddress,
+        depositId: existingAddress[0].depositId,
+      };
+    }
+
+    // Если адреса нет, создаем новый через API
+    console.log(`Creating new deposit address for ${coinTicker}`);
+    const result = await createDepositForCoin(userId, userEmail, coinTicker);
+    console.log(`Created new deposit address for ${coinTicker}`);
+    return result;
+  } catch (error) {
+    console.error('Error in getOrCreateDepositAddress:', error);
+    throw new Error(
+      `Failed to get/create deposit address for ${coinTicker}: ${
+        error instanceof Error ? error.message : 'Unknown error'
+      }`,
+    );
   }
 }

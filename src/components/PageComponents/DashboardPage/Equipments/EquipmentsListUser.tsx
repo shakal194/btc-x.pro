@@ -491,6 +491,7 @@ export default function EquipmentsListUser({
             getBalances();
           }}
           userId={Number(user_id)}
+          userEmail={userEmail}
           coinTicker={selectedModalCoin}
         />
       )}

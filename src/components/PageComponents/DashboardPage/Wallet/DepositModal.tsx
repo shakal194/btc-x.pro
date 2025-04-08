@@ -8,7 +8,7 @@ import {
   Button,
   Snippet,
 } from '@heroui/react';
-import { fetchDepositAddress } from '@/lib/balance';
+import { getOrCreateDepositAddress } from '@/lib/data';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { getCoinNetwork, getMinDeposit } from '@/lib/constants';
 
@@ -17,6 +17,7 @@ interface DepositModalProps {
   onClose: () => void;
   coinTicker: string;
   userId: number;
+  userEmail: string;
 }
 
 export default function DepositModal({
@@ -24,6 +25,7 @@ export default function DepositModal({
   onClose,
   coinTicker,
   userId,
+  userEmail,
 }: DepositModalProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [depositAddress, setDepositAddress] = useState<string>('');
@@ -33,17 +35,17 @@ export default function DepositModal({
   useEffect(() => {
     if (isOpen && userId) {
       setIsLoading(true);
-      fetchDepositAddress(userId, coinTicker)
-        .then((address: string) => {
-          setDepositAddress(address);
+      getOrCreateDepositAddress(userId, userEmail, coinTicker)
+        .then((result) => {
+          setDepositAddress(result.depositAddress);
           setIsLoading(false);
         })
         .catch((error: Error) => {
-          console.error('Error fetching deposit address:', error);
+          console.error('Error getting/creating deposit address:', error);
           setIsLoading(false);
         });
     }
-  }, [isOpen, userId, coinTicker]);
+  }, [isOpen, userId, userEmail, coinTicker]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size='xl' className='bg-gray-800'>
