@@ -1,8 +1,6 @@
 import nodemailer from 'nodemailer';
-import { useTranslations } from 'next-intl';
 
 export async function sendPromoEmail(data) {
-  const t = useTranslations('promo');
   
   try {
     // Создаем транспортер для отправки email через Gmail SMTP сервер

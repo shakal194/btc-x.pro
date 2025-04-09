@@ -15,8 +15,8 @@ import Notiflix from 'notiflix';
 export default function ElectricityPrice() {
   const [isPending, startTransition] = useTransition();
 
-  const [lastPrice, setLastPrice] = useState<any>(null);
-  const [lastPriceDate, setLastPriceDate] = useState<any>(null);
+  const [electricityPrice, setElectricityPrice] = useState<any>(null);
+  const [electricityPriceDate, setElectricityPriceDate] = useState<any>(null);
   const [price, setPrice] = useState(''); // Состояние для хранения введённой цены
   const [errorPrice, setErrorPrice] = useState<string | null>(null); // Для ошибки валидации
 
@@ -26,18 +26,18 @@ export default function ElectricityPrice() {
   const [errorRefBonus, setErrorRefBonus] = useState<string | null>(null); // Для ошибки валидации
 
   useEffect(() => {
-    const getLastPrice = async () => {
+    const getelectricityPrice = async () => {
       try {
         const data = await fetchElectricityPrice(); // Получаем данные с сервера
         console.log('fetchElectricityPrice', data);
-        setLastPrice(data.pricePerKWh); // Устанавливаем данные в состояние
-        setLastPriceDate(data.recordDate); // Устанавливаем данные в состояние
+        setElectricityPrice(data.pricePerKWh); // Устанавливаем данные в состояние
+        setElectricityPriceDate(data.recordDate); // Устанавливаем данные в состояние
       } catch (error) {
         console.error('Ошибка при получении данных о цене', error);
       }
     };
 
-    getLastPrice();
+    getelectricityPrice();
   }, []);
 
   useEffect(() => {
@@ -107,8 +107,8 @@ export default function ElectricityPrice() {
         // Вставляем данные в таблицу через серверную функцию
         await insertElectricityPrice(priceNumber);
         const updatedPrice = await fetchElectricityPrice(); // Получаем обновленную последнюю цену
-        setLastPrice(updatedPrice.pricePerKWh);
-        setLastPriceDate(updatedPrice.recordDate);
+        setElectricityPrice(updatedPrice.pricePerKWh);
+        setElectricityPriceDate(updatedPrice.recordDate);
 
         Notiflix.Notify.success('Цена успешно изменена');
       });
@@ -153,11 +153,12 @@ export default function ElectricityPrice() {
         <div className='flex justify-between'>
           <div>
             <div className='text-white'>
-              {lastPrice ? (
+              {electricityPrice ? (
                 <div>
-                  <p>Текущая цена: {lastPrice} $</p>
+                  <p>Текущая цена: {electricityPrice} $</p>
                   <p>
-                    Дата обновления: {new Date(lastPriceDate).toLocaleString()}
+                    Дата обновления:{' '}
+                    {new Date(electricityPriceDate).toLocaleString()}
                   </p>
                 </div>
               ) : (

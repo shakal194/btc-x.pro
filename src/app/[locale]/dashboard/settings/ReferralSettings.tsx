@@ -84,7 +84,7 @@ export function ReferralSettings({ userId }: ReferralSettingsProps) {
           <p className='mb-1 text-white'>Ваша реферальная ссылка:</p>
           <Snippet
             color='warning'
-            className='bg-inherit'
+            className='bg-inherit p-0'
             size='lg'
             hideSymbol={true}
             onClick={handleCopyFullLink}

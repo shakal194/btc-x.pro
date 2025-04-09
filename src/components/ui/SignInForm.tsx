@@ -30,7 +30,7 @@ export default function SignUpForm() {
   const callbackUrl = '/dashboard';
 
   const t = useTranslations('cloudMiningPage.signin');
-  const [valueEmail, setValueEmail] = useState('btc-x.pro');
+  const [valueEmail, setValueEmail] = useState('');
   const [valueOTPCode, setValueOTPCode] = useState('');
   const [valuePassword, setValuePassword] = useState('');
   const passwordErrors: string[] = [];
@@ -71,7 +71,7 @@ export default function SignUpForm() {
     return (
       valueEmail === '' /*|| valueOTPCode.length !== 5*/ || valuePassword === ''
     );
-  }, [valueEmail, valueOTPCode, valuePassword]);
+  }, [valueEmail, /*valueOTPCode,*/ valuePassword]);
 
   const handleEmailChange = (value: string) => {
     setValueEmail(value);

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getAccessToken, getTransfers } from '@/lib/coinsbuy';
 import { Spinner } from '@heroui/react';
 
@@ -129,7 +129,7 @@ export default function TransfersTable() {
     return { grouped, withdrawals: withdrawalsList };
   };
 
-  const fetchTransfers = async () => {
+  const fetchTransfers = useCallback(async () => {
     try {
       setIsLoading(true);
       const token = await getAccessToken();
@@ -145,11 +145,11 @@ export default function TransfersTable() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchTransfers();
-  }, []);
+  }, [fetchTransfers]);
 
   if (isLoading) {
     return (

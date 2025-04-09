@@ -446,3 +446,27 @@ export async function getToken() {
     throw error;
   }
 }
+
+export const handleBuyShares = async (
+  equipmentUuid: string,
+  shareCount: number,
+) => {
+  const token = await getAccessToken();
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/equipments/${equipmentUuid}/buy`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ shareCount }),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error('Failed to buy shares');
+  }
+
+  return response.json();
+};

@@ -6,15 +6,17 @@ import {
   fetchAllUserBalanceShares,
   fetchElectricityPrice,
   fetchAllUserBalances,
+  fetchCoinPrice,
 } from '@/lib/data';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import BuySellShareCountComponent from '@/components/PageComponents/DashboardPage/Store/BuySellShareCountComponent';
+import BuySellShareCountComponent from '@/components/PageComponents/DashboardPage/Equipments/BuySellShareCountComponent';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import { Tabs, Tab, Button } from '@heroui/react';
 import DepositModal from '../Wallet/DepositModal';
 import WithdrawModal from '../Wallet/WithdrawModal';
+import { EquipmentSkeleton } from '@/components/ui/Skeletons';
 
 interface EquipmentsListUserProps {
   serverUserId: string;
@@ -79,22 +81,23 @@ export default function EquipmentsListUser({
   const [userEquipmentsFetch, setUserEquipmentsFetch] = useState<
     EquipmentData[]
   >([]);
-  const [lastPrice, setLastPrice] = useState<{
+  const [electricityPrice, setElectricityPrice] = useState<{
     pricePerKWh: string | null;
     recordDate: Date;
   } | null>(null);
+  const [coinPrices, setCoinPrices] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    const getLastPrice = async () => {
+    const getelectricityPrice = async () => {
       try {
         const data = await fetchElectricityPrice();
-        setLastPrice(data);
+        setElectricityPrice(data);
       } catch (error) {
         console.error('Ошибка при получении данных о цене', error);
       }
     };
 
-    getLastPrice();
+    getelectricityPrice();
   }, []);
 
   const getBalances = useCallback(async () => {
@@ -237,6 +240,26 @@ export default function EquipmentsListUser({
     getAlgorithms();
   }, []);
 
+  // Добавляем useEffect для получения цен монет
+  useEffect(() => {
+    const fetchPrices = async () => {
+      if (!algorithms.length) return;
+
+      const prices: Record<string, number> = {};
+      for (const algorithm of algorithms) {
+        if (algorithm.coinTickers) {
+          for (const coin of algorithm.coinTickers) {
+            const price = await fetchCoinPrice(coin.name);
+            prices[coin.name] = price;
+          }
+        }
+      }
+      setCoinPrices(prices);
+    };
+
+    fetchPrices();
+  }, [algorithms]);
+
   const handleWithdrawClick = (ticker: string) => {
     setSelectedModalCoin(ticker);
     setIsWithdrawModalOpen(true);
@@ -262,8 +285,10 @@ export default function EquipmentsListUser({
                   <span>Стоимость электроэнергии</span>
                   <span className='font-bold'>
                     $
-                    {lastPrice
-                      ? parseFloat(lastPrice.pricePerKWh || '0.0000').toFixed(4)
+                    {electricityPrice
+                      ? parseFloat(
+                          electricityPrice.pricePerKWh || '0.0000',
+                        ).toFixed(4)
                       : '0.0000'}{' '}
                     /кВт
                   </span>
@@ -380,7 +405,53 @@ export default function EquipmentsListUser({
                               algorithm?.coinTickers || [];
                             const coinPrice =
                               algorithmCoinTickers[0]?.pricePerHashrate || 0;
+
+                            // Рассчитываем доход для всей мощности устройства
                             const dailyIncome = coinPrice * equipment.hashrate;
+
+                            // Рассчитываем доход на одну долю с учетом всех долей
+                            const dailyIncomePerShare =
+                              dailyIncome /
+                              (equipment.shareCount * userBalanceShareCount);
+
+                            // Рассчитываем общий доход для всех долей пользователя
+                            const totalDailyIncome =
+                              dailyIncomePerShare * userBalanceShareCount;
+
+                            // Рассчитываем затраты на электроэнергию
+                            const powerPerShare: number =
+                              Number(equipment.power) / equipment.shareCount;
+                            const dailyPowerConsumption: number =
+                              powerPerShare * userBalanceShareCount * 24;
+                            const dailyElectricityCostUSD: number =
+                              dailyPowerConsumption *
+                              Number(electricityPrice?.pricePerKWh ?? 0);
+                            const currentCoinPrice =
+                              coinPrices[algorithmCoinTickers[0]?.name || ''] ??
+                              0;
+                            const dailyElectricityCostInCoin: number =
+                              currentCoinPrice > 0
+                                ? dailyElectricityCostUSD / currentCoinPrice
+                                : 0;
+
+                            // Рассчитываем доход в монете
+                            const coinRevenue = totalDailyIncome;
+
+                            // Рассчитываем прибыль
+                            const profit =
+                              coinRevenue - dailyElectricityCostInCoin;
+
+                            // Проверяем, загружены ли все необходимые данные
+                            const isDataLoaded =
+                              equipment.power &&
+                              electricityPrice?.pricePerKWh !== null &&
+                              electricityPrice?.pricePerKWh !== undefined &&
+                              Object.keys(coinPrices).length > 0 &&
+                              userEquipmentsFetch[index] !== undefined;
+
+                            if (!isDataLoaded) {
+                              return <EquipmentSkeleton key={index} />;
+                            }
 
                             return (
                               <li
@@ -388,7 +459,7 @@ export default function EquipmentsListUser({
                                 className='border-b-1 border-secondary p-2'
                               >
                                 <div className='flex flex-col items-center gap-4 md:flex-row'>
-                                  <div className='mr-4'>
+                                  <div className='mr-4 flex flex-col items-center'>
                                     <p>
                                       <b>
                                         {equipment.name} {equipment.hashrate}{' '}
@@ -405,40 +476,106 @@ export default function EquipmentsListUser({
                                           alt={equipment.name}
                                           width={350}
                                           height={350}
-                                          className='h-[350px] w-[350px]'
+                                          className='h-[350px] w-[350px] rounded-lg'
                                         />
                                       )}
                                   </div>
                                   <div>
                                     <div className='flex flex-col gap-2'>
                                       <p>
-                                        <b>Алгоритм:</b> {algorithm.name}
-                                      </p>
-                                      <p>
                                         <b>Мощность:</b> {equipment.power} кВт
-                                      </p>
-                                      <p>
-                                        <b>Доли:</b> {equipment.shareCount}
-                                      </p>
-                                      <p>
-                                        <b>Цена покупки:</b> $
-                                        {equipment.purchasePrice}
-                                      </p>
-                                      <p>
-                                        <b>Цена продажи:</b> $
-                                        {equipment.salePrice}
-                                      </p>
-                                      <p>
-                                        <b>Долей в работе:</b> {sharesInUse}
                                       </p>
                                       <p>
                                         <b>Устройств в работе:</b>{' '}
                                         {devicesInUse}
                                       </p>
                                       <p>
-                                        <b>Доход в сутки одного устройства:</b>{' '}
-                                        {dailyIncome.toFixed(8)}
+                                        <b>Долей в работе:</b> {sharesInUse}
                                       </p>
+                                      <p>
+                                        <b>Доход в сутки всех долей:</b>
+                                      </p>
+                                      {algorithm.coinTickers &&
+                                        algorithm.coinTickers.map(
+                                          (coin: any) => {
+                                            // Рассчитываем доход для всей мощности устройства
+                                            const dailyIncome =
+                                              coin.pricePerHashrate *
+                                              equipment.hashrate;
+
+                                            // Рассчитываем доход на одну долю с учетом всех долей
+                                            const dailyIncomePerShare =
+                                              dailyIncome /
+                                              equipment.shareCount;
+
+                                            // Рассчитываем общий доход для всех долей пользователя
+                                            const totalDailyIncome =
+                                              dailyIncomePerShare *
+                                              userBalanceShareCount;
+
+                                            return (
+                                              <p key={coin.name}>
+                                                {totalDailyIncome.toFixed(8)}{' '}
+                                                {coin.name}
+                                              </p>
+                                            );
+                                          },
+                                        )}
+                                      <p>
+                                        <b>Прибыль в сутки всех долей:</b>
+                                      </p>
+                                      {algorithm.coinTickers &&
+                                        algorithm.coinTickers.map(
+                                          (coin: any) => {
+                                            // Рассчитываем доход для всей мощности устройства
+                                            const dailyIncome =
+                                              coin.pricePerHashrate *
+                                              equipment.hashrate;
+
+                                            // Рассчитываем доход на одну долю с учетом всех долей
+                                            const dailyIncomePerShare =
+                                              dailyIncome /
+                                              equipment.shareCount;
+
+                                            // Рассчитываем общий доход для всех долей пользователя
+                                            const totalDailyIncome =
+                                              dailyIncomePerShare *
+                                              userBalanceShareCount;
+
+                                            // Рассчитываем затраты на электроэнергию для этой монеты
+                                            const powerPerShare: number =
+                                              Number(equipment.power) /
+                                              equipment.shareCount;
+                                            const dailyPowerConsumption: number =
+                                              powerPerShare *
+                                              userBalanceShareCount *
+                                              24;
+                                            const dailyElectricityCostUSD: number =
+                                              dailyPowerConsumption *
+                                              Number(
+                                                electricityPrice?.pricePerKWh ??
+                                                  0,
+                                              );
+                                            const currentCoinPrice =
+                                              coinPrices[coin.name] ?? 0;
+                                            const dailyElectricityCostInCoin: number =
+                                              currentCoinPrice > 0
+                                                ? dailyElectricityCostUSD /
+                                                  currentCoinPrice
+                                                : 0;
+
+                                            // Рассчитываем прибыль
+                                            const profit =
+                                              totalDailyIncome -
+                                              dailyElectricityCostInCoin;
+
+                                            return (
+                                              <p key={coin.name}>
+                                                {profit.toFixed(8)} {coin.name}
+                                              </p>
+                                            );
+                                          },
+                                        )}
                                     </div>
                                     <div className='mt-4 flex justify-between gap-2'>
                                       <BuySellShareCountComponent

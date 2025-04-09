@@ -4,14 +4,26 @@ import {
   fetchEquipments,
   fetchAlgorithms,
   fetchAllUserBalanceShares,
+  fetchElectricityPrice,
+  fetchCoinPrice,
 } from '@/lib/data';
 import Image from 'next/image';
-import BuySellShareCountComponent from '@/components/PageComponents/DashboardPage/Store/BuySellShareCountComponent';
+import BuyShareCountComponent from '@/components/PageComponents/DashboardPage/Store/BuyShareCountComponent';
+import { Tabs, Tab, divider } from '@heroui/react';
+import { InformationCircleIcon } from '@heroicons/react/24/outline';
+import { Tooltip } from '@heroui/react';
+import { StoreSkeleton } from '@/components/ui/Skeletons';
 
 export default function Store() {
   const [isLoading, setIsLoading] = useState<boolean>(false); // Флаг загрузки
   const [algorithms, setAlgorithms] = useState<any[]>([]); // Состояние для хранения алгоритмов
   const [equipmentsFetch, setEquipmentsFetch] = useState<any[]>([]);
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>('');
+  const [miningRevenue, setMiningRevenue] = useState<{
+    [key: string]: { btc_revenue: string; btc_revenue24: string };
+  }>({});
+  const [electricityPrice, setElectricityPrice] = useState<number>(0);
+  const [coinPrices, setCoinPrices] = useState<{ [key: string]: number }>({});
 
   // Функция для обновления данных оборудования
   const updateEquipmentData = async (user_id: string, equipmentId: number) => {
@@ -45,6 +57,9 @@ export default function Store() {
       try {
         const data = await fetchAlgorithms();
         setAlgorithms(data); // Сохраняем алгоритмы в состояние
+        if (data.length > 0) {
+          setSelectedAlgorithm(data[0].name);
+        }
       } catch (error) {
         console.error('Ошибка при получении алгоритмов', error);
       }
@@ -53,82 +68,261 @@ export default function Store() {
     getAlgorithms();
   }, []);
 
+  // Получаем цену электричества
+  useEffect(() => {
+    const getElectricityPrice = async () => {
+      try {
+        const price = await fetchElectricityPrice();
+        setElectricityPrice(Number(price?.pricePerKWh) || 0);
+      } catch (error) {
+        console.error('Error fetching electricity price:', error);
+      }
+    };
+    getElectricityPrice();
+  }, []);
+
+  // Рассчитываем доход для каждого устройства
+  useEffect(() => {
+    const calculateRevenue = async () => {
+      const newMiningRevenue: {
+        [key: string]: { btc_revenue: string; btc_revenue24: string };
+      } = {};
+
+      for (const equipment of equipmentsFetch) {
+        if (equipment.algorithm) {
+          try {
+            const dailyIncome = equipment.power * electricityPrice;
+            newMiningRevenue[equipment.uuid] = {
+              btc_revenue: dailyIncome.toFixed(8),
+              btc_revenue24: dailyIncome.toFixed(8),
+            };
+          } catch (error) {
+            console.error(
+              `Error calculating revenue for ${equipment.name}:`,
+              error,
+            );
+          }
+        }
+      }
+
+      setMiningRevenue(newMiningRevenue);
+    };
+
+    if (equipmentsFetch.length > 0 && electricityPrice > 0) {
+      calculateRevenue();
+    }
+  }, [equipmentsFetch, electricityPrice]);
+
+  useEffect(() => {
+    const getCoinPrices = async () => {
+      try {
+        const newCoinPrices: { [key: string]: number } = {};
+        for (const algorithm of algorithms) {
+          if (algorithm.coinTickers) {
+            for (const coin of algorithm.coinTickers) {
+              const price = await fetchCoinPrice(coin.name);
+              newCoinPrices[coin.name] = price;
+            }
+          }
+        }
+        setCoinPrices(newCoinPrices);
+      } catch (error) {
+        console.error('Error fetching coin prices:', error);
+      }
+    };
+
+    if (algorithms.length > 0) {
+      getCoinPrices();
+    }
+  }, [algorithms]);
+
   return (
     <section className='space-y-4'>
       <div className='text-lg text-white'>
-        <ul className='space-y-4'>
-          {isLoading ? (
-            <p>Загрузка оборудования...</p>
-          ) : equipmentsFetch.length > 0 ? (
-            equipmentsFetch.map((equipment, index) => {
-              // Находим алгоритм по ID
-              const algorithm = algorithms.find(
-                (algo) => algo.id === equipment.algorithm_id,
-              );
+        <Tabs
+          selectedKey={selectedAlgorithm}
+          variant='underlined'
+          color='warning'
+          onSelectionChange={(key) => setSelectedAlgorithm(String(key))}
+          className='gap-2'
+        >
+          {algorithms.map((algorithm) => (
+            <Tab key={algorithm.name} title={algorithm.name}>
+              <ul className='space-y-4'>
+                {isLoading ? (
+                  <p>Загрузка оборудования...</p>
+                ) : (
+                  equipmentsFetch
+                    .filter(
+                      (equipment) => equipment.algorithm_id === algorithm.id,
+                    )
+                    .map((equipment, index) => {
+                      const algorithmCoinTickers = algorithm?.coinTickers || [];
+                      const coinPrice =
+                        algorithmCoinTickers[0]?.pricePerHashrate || 0;
+                      const dailyIncome = coinPrice * equipment.hashrate;
 
-              const algorithmCoinTickers = algorithm?.coinTickers || [];
-              const coinPrice = algorithmCoinTickers[0]?.pricePerHashrate || 0;
-              const dailyIncome = coinPrice * equipment.hashrate;
+                      // Проверяем, загружены ли все необходимые данные
+                      const isDataLoaded =
+                        equipment.power &&
+                        electricityPrice > 0 &&
+                        Object.keys(coinPrices).length > 0;
 
-              return (
-                <li key={index} className='border-b-1 border-secondary p-2'>
-                  <div className='flex flex-col items-center gap-4 md:flex-row'>
-                    <div className='mr-4'>
-                      <p>
-                        <b>
-                          {equipment.name} {equipment.hashrate}
-                          {equipment.hashrate_unit}
-                        </b>
-                      </p>
-                      {equipment.photoUrl && (
-                        <Image
-                          src={equipment.photoUrl.replace(/^public/, '')}
-                          alt={equipment.name}
-                          width={350}
-                          height={300}
-                          className='h-[350px] w-[350px]'
-                        />
-                      )}
-                    </div>
-                    <div>
-                      <div className='flex flex-col gap-2'>
-                        <p>
-                          <b>Алгоритм:</b>{' '}
-                          {algorithm ? algorithm.name : 'Не найден'}
-                        </p>
-                        <p>
-                          <b>Мощность:</b> {equipment.power} кВт
-                        </p>
-                        <p>
-                          <b>Доли:</b> {equipment.shareCount}
-                        </p>
-                        <p>
-                          <b>Цена покупки:</b> ${equipment.purchasePrice}
-                        </p>
-                        <p>
-                          <b>Цена продажи:</b> ${equipment.salePrice}
-                        </p>
-                        <p>
-                          <b>Доход в сутки одного устройства:</b>{' '}
-                          {dailyIncome.toFixed(8)}
-                        </p>
-                      </div>
-                      <div className='mt-4 flex justify-between gap-2'>
-                        <BuySellShareCountComponent
-                          equipmentId={equipment.id}
-                          equipmentUuid={equipment.uuid}
-                          updateEquipmentData={updateEquipmentData}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </li>
-              );
-            })
-          ) : (
-            <p>Оборудование не найдено</p>
-          )}
-        </ul>
+                      if (!isDataLoaded) {
+                        return <StoreSkeleton key={index} />;
+                      }
+
+                      return (
+                        <li
+                          key={index}
+                          className='border-b-1 border-secondary p-2'
+                        >
+                          <div className='flex flex-col items-center gap-4 md:flex-row'>
+                            <div className='mr-4'>
+                              <p>
+                                <b>
+                                  {equipment.name} {equipment.hashrate}
+                                  {equipment.hashrate_unit}
+                                </b>
+                              </p>
+                              {equipment.photoUrl && (
+                                <Image
+                                  src={equipment.photoUrl.replace(
+                                    /^public/,
+                                    '',
+                                  )}
+                                  alt={equipment.name}
+                                  width={350}
+                                  height={300}
+                                  className='h-[350px] w-[350px]'
+                                />
+                              )}
+                            </div>
+                            <div>
+                              <div className='flex flex-col gap-2'>
+                                <p>
+                                  <b>Алгоритм:</b> {algorithm.name}
+                                </p>
+                                <p>
+                                  <b>Мощность:</b> {equipment.power} кВт
+                                </p>
+                                <p>
+                                  <b>Доли:</b> {equipment.shareCount}
+                                </p>
+                                <p>
+                                  <b>Цена покупки:</b> $
+                                  {equipment.purchasePrice}
+                                </p>
+                                <p>
+                                  <b>Доход в сутки одного устройства:</b>{' '}
+                                </p>
+                                {algorithm.coinTickers &&
+                                  algorithm.coinTickers.map((coin: any) => (
+                                    <p key={coin.name}>
+                                      {(
+                                        coin.pricePerHashrate *
+                                        equipment.hashrate
+                                      ).toFixed(8)}{' '}
+                                      {coin.name}
+                                    </p>
+                                  ))}
+                                <p>
+                                  <b>Прибыль в сутки всех долей:</b>
+                                </p>
+                                {algorithm.coinTickers &&
+                                  algorithm.coinTickers.map((coin: any) => {
+                                    // Рассчитываем доход для всей мощности устройства
+                                    const dailyIncome =
+                                      coin.pricePerHashrate *
+                                      equipment.hashrate;
+
+                                    // Рассчитываем затраты на электроэнергию для всего устройства
+                                    const dailyPowerConsumption: number =
+                                      Number(equipment.power) * 24;
+                                    const dailyElectricityCostUSD: number =
+                                      dailyPowerConsumption * electricityPrice;
+                                    const currentCoinPrice =
+                                      coinPrices[coin.name] ?? 0;
+                                    const dailyElectricityCostInCoin: number =
+                                      currentCoinPrice > 0
+                                        ? dailyElectricityCostUSD /
+                                          currentCoinPrice
+                                        : 0;
+
+                                    // Рассчитываем прибыль для всего устройства
+                                    const profit =
+                                      dailyIncome - dailyElectricityCostInCoin;
+
+                                    return (
+                                      <div
+                                        key={coin.name}
+                                        className='flex flex-col gap-1'
+                                      >
+                                        <p>
+                                          {profit.toFixed(8)} {coin.name}
+                                        </p>
+                                        <div className='flex items-center gap-1'>
+                                          <span>Окупаемость: </span>
+                                          {profit > 0 ? (
+                                            <>
+                                              {Math.ceil(
+                                                Number(
+                                                  equipment.purchasePrice,
+                                                ) /
+                                                  currentCoinPrice /
+                                                  profit,
+                                              ).toLocaleString()}{' '}
+                                              дней
+                                              <Tooltip
+                                                content={
+                                                  <div className='w-[200px] p-3 text-sm'>
+                                                    <p>
+                                                      Расчёт по текущему курсу
+                                                      криптовалюты, которая
+                                                      добывается, без учёта
+                                                      остаточной стоимости
+                                                      оборудования
+                                                    </p>
+                                                  </div>
+                                                }
+                                                placement='right'
+                                              >
+                                                <InformationCircleIcon className='h-5 w-5 cursor-help text-white' />
+                                              </Tooltip>
+                                            </>
+                                          ) : (
+                                            <span className='text-danger'>
+                                              Не окупится
+                                            </span>
+                                          )}
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                              </div>
+                              <div className='mt-4 flex justify-between gap-2'>
+                                <BuyShareCountComponent
+                                  equipmentId={equipment.id}
+                                  equipmentUuid={equipment.uuid}
+                                  updateEquipmentData={updateEquipmentData}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      );
+                    })
+                )}
+                {!isLoading &&
+                  equipmentsFetch.filter(
+                    (equipment) => equipment.algorithm_id === algorithm.id,
+                  ).length === 0 && (
+                    <p>Нет доступного оборудования для этого алгоритма</p>
+                  )}
+              </ul>
+            </Tab>
+          ))}
+        </Tabs>
       </div>
     </section>
   );

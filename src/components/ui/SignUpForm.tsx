@@ -31,7 +31,7 @@ export default function SignUpForm() {
   );
   const [step, setStep] = useState(1); // 1 - Email, 2 - OTP and Password
   const [showSpinnerStep, setShowSpinnerStep] = useState(false);
-  const [valueEmail, setValueEmail] = useState('btc-x.pro');
+  const [valueEmail, setValueEmail] = useState('');
   /*const [valueOTPCode, setValueOTPCode] = useState('');*/
   const [valueReferralCode, setValueReferralCode] = useState('');
   const [valuePassword, setValuePassword] = useState('');

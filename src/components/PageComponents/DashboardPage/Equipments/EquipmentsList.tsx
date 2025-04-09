@@ -106,9 +106,17 @@ export default function EquipmentsList() {
                           {equipment.shareCount / equipment.shareCount}
                         </p>
                         <p>
-                          <b>Доход в сутки одного устройства:</b>{' '}
-                          {dailyIncome.toFixed(8)}
+                          <b>Доход в сутки одного устройства:</b>
                         </p>
+                        {algorithm?.coinTickers &&
+                          algorithm.coinTickers.map((coin: any) => (
+                            <p key={coin.name}>
+                              {(
+                                coin.pricePerHashrate * equipment.hashrate
+                              ).toFixed(8)}{' '}
+                              {coin.name}
+                            </p>
+                          ))}
                       </div>
                       <div className='mt-4 flex justify-between gap-2'>
                         <EditEquipmentModal

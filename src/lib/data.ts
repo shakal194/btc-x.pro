@@ -1134,3 +1134,16 @@ export async function getOrCreateDepositAddress(
     );
   }
 }
+
+export async function fetchCoinPrice(coinTicker: string): Promise<number> {
+  try {
+    const response = await fetch(
+      `https://api.binance.com/api/v3/ticker/price?symbol=${coinTicker}USDT`,
+    );
+    const data = await response.json();
+    return parseFloat(data.price);
+  } catch (error) {
+    console.error(`Error fetching ${coinTicker} price:`, error);
+    return 0;
+  }
+}
