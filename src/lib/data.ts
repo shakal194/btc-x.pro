@@ -495,8 +495,6 @@ export async function fetchLastTransactionByEquipmentId(
 // Функция для получения всех балансов пользователя за один запрос
 export async function fetchAllUserBalanceShares(userId: number) {
   try {
-    console.log(`[DB Query] Fetching all balances for user ${userId}`);
-
     const result = await db
       .select({
         id: transactionsTable.id,
@@ -518,7 +516,6 @@ export async function fetchAllUserBalanceShares(userId: number) {
       {} as Record<number, (typeof result)[0]>,
     );
 
-    console.log(`[DB Result] Balances for user ${userId}:`, latestBalances);
     return latestBalances;
   } catch (error) {
     console.error('Ошибка получения балансов долей', error);
@@ -1135,15 +1132,38 @@ export async function getOrCreateDepositAddress(
   }
 }
 
-export async function fetchCoinPrice(coinTicker: string): Promise<number> {
+async function checkApiAvailability(apiUrl: string): Promise<boolean> {
   try {
-    const response = await fetch(
-      `https://api.binance.com/api/v3/ticker/price?symbol=${coinTicker}USDT`,
-    );
+    const response = await fetch(apiUrl + 'BTCUSDT');
+    return response.ok;
+  } catch (error) {
+    return false;
+  }
+}
+
+export async function fetchCoinPrice(coinName: string): Promise<number> {
+  try {
+    // Проверяем доступность обоих API
+    const binanceApi = process.env.BINANCE_API_URL;
+    const binanceUsApi = process.env.BINANCE_US_API_URL;
+
+    if (!binanceApi || !binanceUsApi) {
+      throw new Error('Binance API URLs are not configured');
+    }
+
+    // Проверяем доступность основного API
+    const isMainApiAvailable = await checkApiAvailability(binanceApi);
+    const apiUrl = isMainApiAvailable ? binanceApi : binanceUsApi;
+
+    const response = await fetch(apiUrl + coinName + 'USDT');
+    if (!response.ok) {
+      throw new Error(`Failed to fetch price for ${coinName}`);
+    }
+
     const data = await response.json();
     return parseFloat(data.price);
   } catch (error) {
-    console.error(`Error fetching ${coinTicker} price:`, error);
+    console.error(`Error fetching price for ${coinName}:`, error);
     return 0;
   }
 }
