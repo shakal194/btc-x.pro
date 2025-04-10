@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
-import { i18n, Locale } from '@/i18n.config_work';
+import { i18n, Locale } from '@/i18n.config';
 
 export default function HeroCloudPage() {
   const t = useTranslations('cloudMiningPage.hero');

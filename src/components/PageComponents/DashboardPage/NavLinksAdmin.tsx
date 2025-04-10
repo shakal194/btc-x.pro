@@ -14,23 +14,27 @@ import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 
+interface NavLinksAdminProps {
+  locale: string;
+}
+
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 
-export default function NavLinksAdmin() {
+export default function NavLinksAdmin({ locale }: NavLinksAdminProps) {
   const pathname = usePathname();
   const t = useTranslations('cloudMiningPage.dashboard.nav');
 
   const links = [
-    { name: `${t('home')}`, href: '/dashboard', icon: HomeIcon },
+    { name: `${t('home')}`, href: `/${locale}/dashboard`, icon: HomeIcon },
     {
       name: `${t('algorithms')}`,
-      href: '/dashboard/algorithms',
+      href: `/${locale}/dashboard/algorithms`,
       icon: CodeBracketSquareIcon,
     },
     {
       name: `${t('equipments')}`,
-      href: '/dashboard/equipments',
+      href: `/${locale}/dashboard/equipments`,
       icon: ServerStackIcon,
     },
     //{
@@ -40,17 +44,17 @@ export default function NavLinksAdmin() {
     //  },
     {
       name: `${t('customers')}`,
-      href: '/dashboard/users',
+      href: `/${locale}/dashboard/users`,
       icon: UsersIcon,
     },
     {
       name: 'CoinsBuy',
-      href: '/dashboard/coinsbuy',
+      href: `/${locale}/dashboard/coinsbuy`,
       icon: BanknotesIcon,
     },
     {
       name: `${t('settings')}`,
-      href: '/dashboard/settings',
+      href: `/${locale}/dashboard/settings`,
       icon: AdjustmentsHorizontalIcon,
     },
   ];

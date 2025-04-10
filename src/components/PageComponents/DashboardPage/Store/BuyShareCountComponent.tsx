@@ -74,9 +74,9 @@ export default function BuyShareCountComponent({
     }
   }, [equipmentUuid]);
 
-  // Получаем баланс USDT при открытии модального окна
+  // Получаем баланс USDT при монтировании компонента
   useEffect(() => {
-    if (isOpen && user_id) {
+    if (user_id) {
       const fetchBalance = async () => {
         try {
           const balance = await fetchUSDTBalance(Number(user_id));
@@ -88,9 +88,9 @@ export default function BuyShareCountComponent({
       };
       fetchBalance();
     }
-  }, [isOpen, user_id]);
+  }, [user_id]);
 
-  // Получаем баланс долей пользователя при открытии модального окна
+  // Получаем баланс долей пользователя при монтировании компонента
   useEffect(() => {
     const getUserShareBalance = async () => {
       try {
@@ -108,10 +108,8 @@ export default function BuyShareCountComponent({
       }
     };
 
-    if (isOpen) {
-      getUserShareBalance();
-    }
-  }, [isOpen, user_id, equipmentId]);
+    getUserShareBalance();
+  }, [user_id, equipmentId]);
 
   // Рассчитываем общую сумму при изменении количества долей
   useEffect(() => {

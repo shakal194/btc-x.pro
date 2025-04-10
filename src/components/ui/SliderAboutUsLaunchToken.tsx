@@ -3,7 +3,7 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import { useLocale } from 'next-intl';
-import { i18n, Locale } from '@/i18n.config_work';
+import { i18n, Locale } from '@/i18n.config';
 import 'swiper/css'; // Импортируем стили Swiper
 import 'swiper/css/bundle'; // Импортируем стили Swiper
 import { useTranslations } from 'next-intl';

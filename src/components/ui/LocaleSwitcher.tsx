@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 
-import { i18n } from '@/i18n.config_work';
+import { i18n } from '@/i18n.config';
 
 export default function LocaleSwitcher() {
   const [isOpen, setIsOpen] = useState(false);

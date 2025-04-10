@@ -59,23 +59,24 @@ export default function BuySellShareCountComponent({
   const [shareCountError, setShareCountError] = useState('');
 
   useEffect(() => {
-    if (isOpen) {
-      const currentBalance = async () => {
-        try {
-          const userBalanceShares = await fetchAllUserBalanceShares(
-            Number(user_id),
-          );
-          const balanceShareCount =
-            userBalanceShares[equipmentId]?.balanceShareCount || 0;
-          setUserShareBalance(balanceShareCount);
-        } catch (error) {
-          console.error('Ошибка при получении баланса долей', error);
-          setUserShareBalance(0);
-        }
-      };
+    const currentBalance = async () => {
+      try {
+        const userBalanceShares = await fetchAllUserBalanceShares(
+          Number(user_id),
+        );
+        const balanceShareCount =
+          userBalanceShares[equipmentId]?.balanceShareCount || 0;
+        setUserShareBalance(balanceShareCount);
+      } catch (error) {
+        console.error('Ошибка при получении баланса долей', error);
+        setUserShareBalance(0);
+      }
+    };
+
+    if (user_id && equipmentId) {
       currentBalance();
     }
-  }, [isOpen, user_id, equipmentId]);
+  }, [user_id, equipmentId]);
 
   // Получаем данные оборудования по ID
   useEffect(() => {
@@ -100,9 +101,9 @@ export default function BuySellShareCountComponent({
     }
   }, [equipmentUuid]);
 
-  // Получаем баланс USDT при открытии модального окна
+  // Получаем баланс USDT при монтировании компонента
   useEffect(() => {
-    if (isOpen && user_id) {
+    if (user_id) {
       const fetchBalance = async () => {
         try {
           const balance = await fetchUSDTBalance(Number(user_id));
@@ -114,7 +115,7 @@ export default function BuySellShareCountComponent({
       };
       fetchBalance();
     }
-  }, [isOpen, user_id]);
+  }, [user_id]);
 
   // Рассчитываем общую сумму при изменении количества долей
   useEffect(() => {

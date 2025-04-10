@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useLocale } from 'next-intl';
-import { i18n, Locale } from '@/i18n.config_work';
+import { i18n, Locale } from '@/i18n.config';
 
 export function TradePowerLocalizedImage() {
   const localeFromHook = useLocale();

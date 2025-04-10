@@ -10,23 +10,27 @@ import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 
+interface NavLinksUserProps {
+  locale: string;
+}
+
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 
-export default function NavLinksUser() {
+export default function NavLinksUser({ locale }: NavLinksUserProps) {
   const pathname = usePathname();
   const t = useTranslations('cloudMiningPage.dashboard.nav');
 
   const links = [
-    { name: `${t('home')}`, href: '/dashboard', icon: HomeIcon },
+    { name: `${t('home')}`, href: `/${locale}/dashboard`, icon: HomeIcon },
     {
       name: `${t('yourMiners')}`,
-      href: '/dashboard/store',
+      href: `/${locale}/dashboard/store`,
       icon: DocumentDuplicateIcon,
     },
     {
       name: `${t('settings')}`,
-      href: '/dashboard/settings',
+      href: `/${locale}/dashboard/settings`,
       icon: AdjustmentsHorizontalIcon,
     },
   ];

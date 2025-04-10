@@ -78,17 +78,20 @@ const authMiddleware = auth((req) => {
   const status = req.auth?.user?.status;
 
   const pathname = req.nextUrl.pathname;
+  const currentLocale = pathname.split('/')[1] || defaultLocale;
 
   // Redirect to sign-in page if not authenticated
   if (!session && !isAuthPage) {
-    const signInUrl = new URL('/signin', req.nextUrl);
+    const signInUrl = new URL(`/${currentLocale}/signin`, req.nextUrl);
     //signInUrl.searchParams.set('callbackUrl', pathname);
 
     return NextResponse.redirect(signInUrl);
   }
 
   if (session && isAuthPage) {
-    return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
+    return NextResponse.redirect(
+      new URL(`/${currentLocale}/dashboard`, req.nextUrl),
+    );
   }
 
   if (
@@ -96,7 +99,10 @@ const authMiddleware = auth((req) => {
     status !== 'admin' &&
     protectedPaths.some((route) => pathname.includes(route))
   ) {
-    const dashboardUrl = new URL('/dashboard', req.nextUrl.origin);
+    const dashboardUrl = new URL(
+      `/${currentLocale}/dashboard`,
+      req.nextUrl.origin,
+    );
 
     return NextResponse.redirect(dashboardUrl);
   }

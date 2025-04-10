@@ -14,7 +14,11 @@ import { Form, Input } from '@heroui/react';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import { useTranslations } from 'next-intl';
 
-export default function SignUpForm() {
+interface SignInFormProps {
+  locale: string;
+}
+
+export default function SignInForm({ locale }: SignInFormProps) {
   const [errorMessageForm, setErrorMessageForm] = useState('');
   const [errorMessageEmail, setErrorMessageEmail] = useState('');
   const [errorMessageOTP, setErrorMessageOTP] = useState('');
@@ -27,7 +31,7 @@ export default function SignUpForm() {
   const [state, formAction] = useActionState(authenticate, undefined);
   const [isPending, startTransition] = useTransition();
 
-  const callbackUrl = '/dashboard';
+  const callbackUrl = `/${locale}/dashboard`;
 
   const t = useTranslations('cloudMiningPage.signin');
   const [valueEmail, setValueEmail] = useState('');
