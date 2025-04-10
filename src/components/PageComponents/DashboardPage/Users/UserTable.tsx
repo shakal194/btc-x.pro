@@ -836,11 +836,11 @@ export default function UsersTable() {
             table: 'min-w-full',
             thead: 'bg-gray-800',
             tbody: 'bg-gray-800',
-            tr: 'border-0 transition-colors hover:bg-gray-700',
+            //tr: 'border-0 transition-colors hover:bg-gray-700',
             th: 'bg-gray-800 text-gray-400 font-medium py-3',
-            td: 'group-data-[selected=true]:bg-gray-700',
+            // td: 'group-data-[selected=true]:bg-gray-700',
             sortIcon: 'text-gray-400',
-            emptyWrapper: 'bg-gray-800 text-white',
+            //emptyWrapper: 'bg-gray-800 text-white',
             wrapper: 'bg-gray-800 rounded-lg border border-gray-800',
           }}
         >
@@ -887,8 +887,8 @@ export default function UsersTable() {
           showControls={true}
           classNames={{
             wrapper: 'gap-2 text-white',
-            item: 'bg-gray-700 text-white border-0 hover:bg-gray-600',
-            cursor: 'bg-secondary text-white',
+            item: 'dark:bg-gray-700 text-white border-0 hover:bg-gray-600',
+            cursor: 'dark:bg-secondary text-white',
             next: 'bg-gray-700 text-white hover:bg-gray-600',
             prev: 'bg-gray-700 text-white hover:bg-gray-600',
           }}

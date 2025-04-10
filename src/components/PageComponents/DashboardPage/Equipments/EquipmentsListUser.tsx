@@ -7,6 +7,7 @@ import {
   fetchElectricityPrice,
   fetchAllUserBalances,
   fetchCoinPrice,
+  fetchRefBalance,
 } from '@/lib/data';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -86,6 +87,7 @@ export default function EquipmentsListUser({
     recordDate: Date;
   } | null>(null);
   const [coinPrices, setCoinPrices] = useState<Record<string, number>>({});
+  const [refBalance, setRefBalance] = useState<number>(0);
 
   useEffect(() => {
     const getelectricityPrice = async () => {
@@ -99,6 +101,28 @@ export default function EquipmentsListUser({
 
     getelectricityPrice();
   }, []);
+
+  useEffect(() => {
+    const getRefBalance = async () => {
+      try {
+        if (!user_id || isNaN(Number(user_id))) {
+          return;
+        }
+
+        const data = await fetchRefBalance(Number(user_id));
+        const numericData =
+          typeof data === 'string' ? parseFloat(data) : Number(data);
+        setRefBalance(numericData || 0);
+      } catch (error) {
+        console.error('Error getting referral balance:', error);
+        setRefBalance(0);
+      }
+    };
+
+    if (user_id && !isNaN(Number(user_id))) {
+      getRefBalance();
+    }
+  }, [user_id]);
 
   const getBalances = useCallback(async () => {
     try {
@@ -284,14 +308,18 @@ export default function EquipmentsListUser({
                 <div className='flex items-center gap-2'>
                   <span>Стоимость электроэнергии</span>
                   <span className='font-bold'>
-                    $
                     {electricityPrice
                       ? parseFloat(
                           electricityPrice.pricePerKWh || '0.0000',
                         ).toFixed(4)
                       : '0.0000'}{' '}
-                    /кВт
+                    $/кВт
                   </span>
+                </div>{' '}
+                <div>
+                  <p className='mb-1 text-white'>
+                    Ваш реферальный баланс: <b>${refBalance}</b>
+                  </p>
                 </div>
                 <div className='flex flex-col'>
                   <span>Всего активов</span>
