@@ -19,6 +19,8 @@ import DepositModal from '../Wallet/DepositModal';
 import WithdrawModal from '../Wallet/WithdrawModal';
 import { EquipmentSkeleton } from '@/components/ui/Skeletons';
 
+import { getAccessToken } from '@/lib/coinsbuy';
+
 interface EquipmentsListUserProps {
   serverUserId: string;
   serverUserEmail: string;
@@ -264,24 +266,46 @@ export default function EquipmentsListUser({
     getAlgorithms();
   }, []);
 
-  // Добавляем useEffect для получения цен монет
-  useEffect(() => {
-    const fetchPrices = async () => {
-      if (!algorithms.length) return;
+  const getRate = async (coinTicker: string) => {
+    try {
+      const token = await getAccessToken();
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_COINSBUY_API_URL}/rates/?filter[left]=${coinTicker}&filter[right]=USDT`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.access}`,
+            'Content-Type': 'application/vnd.api+json',
+          },
+        },
+      );
 
-      const prices: Record<string, number> = {};
+      if (!response.ok) {
+        throw new Error('Failed to fetch rate');
+      }
+
+      const data = await response.json();
+      return data.data[0].attributes.ask;
+    } catch (error) {
+      console.error('Error fetching rate:', error);
+      return '0';
+    }
+  };
+
+  useEffect(() => {
+    const fetchCoinPrices = async () => {
+      const prices: { [key: string]: number } = {};
       for (const algorithm of algorithms) {
         if (algorithm.coinTickers) {
           for (const coin of algorithm.coinTickers) {
-            const price = await fetchCoinPrice(coin.name);
-            prices[coin.name] = price;
+            const rate = await getRate(coin.name);
+            prices[coin.name] = Number(rate);
           }
         }
       }
       setCoinPrices(prices);
     };
 
-    fetchPrices();
+    fetchCoinPrices();
   }, [algorithms]);
 
   const handleWithdrawClick = (ticker: string) => {
@@ -541,10 +565,18 @@ export default function EquipmentsListUser({
                                               dailyIncomePerShare *
                                               userBalanceShareCount;
 
+                                            // Конвертируем доход в USDT
+                                            const coinPrice =
+                                              coinPrices[coin.name] ?? 0;
+                                            const dailyIncomeInUSDT =
+                                              totalDailyIncome * coinPrice;
+
                                             return (
                                               <p key={coin.name}>
                                                 {totalDailyIncome.toFixed(8)}{' '}
-                                                {coin.name}
+                                                {coin.name} (
+                                                {dailyIncomeInUSDT.toFixed(2)}{' '}
+                                                USDT)
                                               </p>
                                             );
                                           },
@@ -570,7 +602,7 @@ export default function EquipmentsListUser({
                                               dailyIncomePerShare *
                                               userBalanceShareCount;
 
-                                            // Рассчитываем затраты на электроэнергию для этой монеты
+                                            // Рассчитываем затраты на электроэнергию в USDT
                                             const powerPerShare: number =
                                               Number(equipment.power) /
                                               equipment.shareCount;
@@ -584,8 +616,13 @@ export default function EquipmentsListUser({
                                                 electricityPrice?.pricePerKWh ??
                                                   0,
                                               );
-                                            const currentCoinPrice =
+
+                                            // Конвертируем доход в USDT
+                                            const coinPrice =
                                               coinPrices[coin.name] ?? 0;
+                                            const dailyIncomeInUSDT =
+                                              totalDailyIncome * coinPrice;
+
                                             const dailyElectricityCostInCoin: number =
                                               currentCoinPrice > 0
                                                 ? dailyElectricityCostUSD /
@@ -597,9 +634,15 @@ export default function EquipmentsListUser({
                                               totalDailyIncome -
                                               dailyElectricityCostInCoin;
 
+                                            // Рассчитываем прибыль в USDT
+                                            const profitInUSDT =
+                                              dailyIncomeInUSDT -
+                                              dailyElectricityCostUSD;
+
                                             return (
                                               <p key={coin.name}>
-                                                {profit.toFixed(8)} {coin.name}
+                                                {profit.toFixed(8)} {coin.name}{' '}
+                                                ({profitInUSDT.toFixed(2)} USDT)
                                               </p>
                                             );
                                           },

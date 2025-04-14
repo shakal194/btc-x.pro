@@ -641,9 +641,6 @@ export async function fetchUSDTBalance(userId: number) {
 
     // Берем последнюю запись как текущий баланс
     const currentBalance = result[0]?.coinAmount ?? 0;
-    console.log(
-      `[USDT Balance] Current balance for user ${userId}: ${currentBalance}`,
-    );
 
     return currentBalance;
   } catch (error) {
@@ -721,7 +718,6 @@ export async function fetchAllUserBalances(userId: number) {
       {} as Record<string, (typeof result)[0]>,
     );
 
-    console.log(`[Balances] Latest balances:`, latestBalances);
     return Object.values(latestBalances);
   } catch (error) {
     console.error('[Balances] Error fetching balances:', error);
@@ -827,8 +823,6 @@ export async function updateReferralBonus(
 //Получаем реф. баланс пользователя
 export async function fetchRefBalance(userId: number) {
   try {
-    console.log(`[USDT Ref Balance] Fetching ref.balance for user ${userId}`);
-
     // Получаем все записи баланса USDT для пользователя
     const result = await db
       .select({
@@ -840,10 +834,6 @@ export async function fetchRefBalance(userId: number) {
 
     // Берем последнюю запись как текущий баланс
     const currentBalance = result[0]?.referral_bonus ?? 0;
-    console.log(
-      `[USDT Ref Balance] Current ref.balance for user ${userId}: ${currentBalance}`,
-    );
-    console.log(`[USDT Ref Balance] All ref.balance records:`, result);
 
     return currentBalance;
   } catch (error) {
