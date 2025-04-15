@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --project tsconfig.json --pretty --noEmit && echo"
+    "type-check": "tsc --project tsconfig.json --pretty --noEmit && echo",
+    "check-deposits": "tsx src/lib/scripts/runDepositChecker.ts"
   },
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.5.10",
@@ -33,6 +34,7 @@
     "next": "^15.1.6",
     "next-auth": "^5.0.0-beta.25",
     "next-intl": "^3.26.3",
+    "node-cron": "^3.0.3",
     "nodemailer": "^6.10.0",
     "notiflix": "^3.2.8",
     "react": "^18.3.1",
@@ -44,7 +46,8 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/crypto-js": "^4.2.2",
-    "@types/node": "^20",
+    "@types/node": "^20.17.30",
+    "@types/node-cron": "^3.0.11",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^8.29.1",
@@ -57,8 +60,10 @@
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^3.4.17",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "tsx": "^4.19.3",
-    "typescript": "^5"
+    "typescript": "^5.8.3"
   },
   "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
   "main": "postcss.config.js",

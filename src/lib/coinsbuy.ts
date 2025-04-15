@@ -385,7 +385,7 @@ export const getDeposits = async (token: { access: string }) => {
 // Получение списка трансферов
 export const getTransfers = async (token: { access: string }) => {
   try {
-    const endpoint = '/transfer/?page[size]=100';
+    const endpoint = '/transfer/?page[size]=150';
     const signature = await generateSignature('GET', endpoint, token.access);
 
     const response = await fetch(`${process.env.COINSBUY_API_URL}${endpoint}`, {
@@ -404,7 +404,6 @@ export const getTransfers = async (token: { access: string }) => {
     }
 
     const data = await response.json();
-    console.log('Transfers response:', data);
     return data;
   } catch (error) {
     console.error('Error getting transfers:', error);

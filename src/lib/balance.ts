@@ -80,11 +80,15 @@ export async function updateUserBalance({
       }
 
       // 4. Создаем запись о депозите
+      const depositId = Number(
+        `${Date.now()}${Math.floor(Math.random() * 1000)}`,
+      );
       await tx.insert(depositsTable).values({
         user_id: userId,
         coinTicker,
         amount: amount.toString(),
-        status: 'enrolled', // Статус "зачислен"
+        status: 'confirmed', // Статус "зачислен"
+        depositId,
       });
 
       return {

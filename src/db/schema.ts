@@ -152,7 +152,8 @@ export const depositsTable = pgTable('deposits', {
     .references(() => usersTable.id), // ID пользователя, который делает депозит
   coinTicker: varchar({ length: 10 }).notNull(), // Тиккер монеты (например, BTC)
   amount: decimal({ precision: 30, scale: 8 }).notNull(), // Сумма депозита
-  status: varchar('enrolled').notNull(), // Статус депозита (зачислен)
+  status: varchar({ length: 255 }).notNull(), // Статус депозита (зачислен)
+  depositId: integer().notNull(), // ID депозита в Coinsbuy
 });
 
 export const transactionsRefBonusTable = pgTable('transactions_refBonus', {
