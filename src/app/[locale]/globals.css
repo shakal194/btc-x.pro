@@ -14,6 +14,7 @@
   }
 }
 
+/*
 :root {
   --heroui-background: #000000;
   --background: #000000;
@@ -21,6 +22,7 @@
   --danger: #f31212;
   --secondary: #FE9900;
   --primary: #000000;
+  --default: #71717a;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -31,7 +33,7 @@
     --secondary: #FE9900;
     --foreground: #ffffff;
   }
-}
+}*/
 
 body {
   color: var(--background);

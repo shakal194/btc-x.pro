@@ -31,7 +31,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <GoogleAnalytics gaId='AW-16949187745' />
-      <body className={`overflow-x-hidden ${manrope.className}`}>
+      <body className={`overflow-x-hidden ${manrope.className} bg-background`}>
         <NextIntlClientProvider messages={messages}>
           <NextUIProviders>
             <SessionProvider>{children}</SessionProvider>

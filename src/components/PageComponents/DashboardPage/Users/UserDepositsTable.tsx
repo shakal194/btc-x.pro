@@ -289,12 +289,12 @@ export default function UserDepositsTable({
 
           <Table
             aria-label='Deposits table'
+            sortDescriptor={sortDescriptor}
+            onSortChange={setSortDescriptor}
             isHeaderSticky
             isVirtualized={true}
             maxTableHeight={400}
             color='success'
-            sortDescriptor={sortDescriptor}
-            onSortChange={setSortDescriptor}
             classNames={{
               base: 'bg-gray-700 border-0',
               table: 'min-w-full',

@@ -485,7 +485,7 @@ export default function UsersTable() {
           <span className='text-inherit'>${user.referralBonus.toFixed(2)}</span>
         );
       case 'referralCount':
-        return <span className='text-inherit'>{user.referralCount}</span>;
+        return <span className=''>{user.referralCount}</span>;
       case 'status':
         const statusColorMap = {
           admin: 'bg-emerald-500',
@@ -519,11 +519,11 @@ export default function UsersTable() {
   };
 
   if (!isClient) {
-    return <div className='min-h-screen w-full bg-black/90' />;
+    return <div className='min-h-screen w-full' />;
   }
 
   return (
-    <div className='min-h-screen w-full space-y-4 bg-black/90'>
+    <div className='min-h-screen w-full space-y-4'>
       <div className='flex flex-col gap-4'>
         <div className='space-y-4 md:flex md:items-center md:justify-between md:space-y-0'>
           <div className='flex items-center gap-3'>
@@ -812,7 +812,7 @@ export default function UsersTable() {
         )}
       </div>
 
-      <div className='relative overflow-x-auto rounded-lg bg-gray-900'>
+      <div className='relative overflow-x-auto rounded-lg'>
         {isLoading && (
           <div className='absolute inset-0 z-50 flex items-center justify-center bg-gray-900/50'>
             <Spinner size='lg' color='secondary' />
@@ -829,18 +829,18 @@ export default function UsersTable() {
           selectionBehavior='toggle'
           isHeaderSticky
           isVirtualized={true}
-          maxTableHeight={400}
+          maxTableHeight={600}
           color='success'
           classNames={{
-            base: 'bg-gray-700 border-0',
+            base: 'bg-gray-800 border-0',
             table: 'min-w-full',
             thead: 'bg-gray-800',
             tbody: 'bg-gray-800',
-            //tr: 'border-0 transition-colors hover:bg-gray-700',
+            //tr: 'border-0 transition-colors hover:bg-gray-700 group-data-[hover=true]:bg-default',
             th: 'bg-gray-800 text-gray-400 font-medium py-3',
-            // td: 'group-data-[selected=true]:bg-gray-700',
+            td: 'group-data-[selected=true]:bg-gray-700',
             sortIcon: 'text-gray-400',
-            //emptyWrapper: 'bg-gray-800 text-white',
+            emptyWrapper: 'bg-gray-800 text-white',
             wrapper: 'bg-gray-800 rounded-lg border border-gray-800',
           }}
         >

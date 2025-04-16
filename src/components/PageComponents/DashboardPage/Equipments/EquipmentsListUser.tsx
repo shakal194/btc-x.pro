@@ -373,7 +373,7 @@ export default function EquipmentsListUser({
                     </div>
                     <div className='flex gap-2'>
                       <Button
-                        color='default'
+                        color='primary'
                         onPress={() => handleWithdrawClick(balance.coinTicker)}
                       >
                         Вывести

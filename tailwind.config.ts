@@ -17,11 +17,11 @@ export default {
         'spin-slow': 'spin 5s linear infinite', // медленное вращение за 5 секунд
       },
       colors: {
-        background: 'var(--background)',
-        foreground: 'var(--foreground)',
-        danger: 'var(--danger)',
-        secondary: 'var(--secondary)',
-        primary: 'var(--primary)',
+        background: '#000000',
+        foreground: '#ffffff',
+        danger: '#f31212',
+        secondary: '#FE9900',
+        primary: '#71717a',
         autofillTextColor: 'rgb(234, 236, 239)',
       },
       fontSize: {
