@@ -89,6 +89,8 @@ export async function updateUserBalance({
         amount: amount.toString(),
         status: 'confirmed', // Статус "зачислен"
         depositId,
+        created_at: new Date(),
+        updated_at: new Date(),
       });
 
       return {

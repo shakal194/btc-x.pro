@@ -2,7 +2,7 @@ import db from '@/db/db';
 import { balancesTable, depositsTable, usersAddressTable } from '@/db/schema';
 import { getAccessToken, getTransfers } from '@/lib/coinsbuy';
 import { eq, and, desc } from 'drizzle-orm';
-import { getWalletId } from '@/lib/constants';
+import { getWalletId, COIN_CONFIG } from '@/lib/constants';
 
 // Функция для форматирования даты и времени
 const formatDateTime = () => {
@@ -17,21 +17,24 @@ const formatDateTime = () => {
   });
 };
 
+function formatDate(dateString: string): Date {
+  const date = new Date(dateString);
+  // Convert to UTC
+  return new Date(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate(),
+    date.getUTCHours(),
+    date.getUTCMinutes(),
+    date.getUTCSeconds(),
+  );
+}
+
 const getCurrencyName = (id: string): string => {
-  switch (id) {
-    case '1000':
-      return 'BTC';
-    case '2145':
-      return 'USDT';
-    case '2142':
-      return 'USDC';
-    case '1026':
-      return 'TRX';
-    case '1003':
-      return 'LTC';
-    default:
-      return 'Unknown';
-  }
+  const coin = Object.entries(COIN_CONFIG).find(
+    ([_, config]) => config.currencyId === id,
+  );
+  return coin ? coin[0] : 'Unknown';
 };
 
 const getStatusText = (status: number): string => {
@@ -84,6 +87,8 @@ export async function checkAndProcessDeposits() {
             op_type: number;
             status: number;
             amount_target: string;
+            created_at: string;
+            updated_at: string;
           };
         }) =>
           transfer.relationships.wallet.data.id === expectedWalletId &&
@@ -94,9 +99,11 @@ export async function checkAndProcessDeposits() {
       );
 
       for (const transfer of relevantTransfers) {
-        const transferId = transfer.id;
+        const transferId = parseInt(transfer.id);
         const amount = transfer.attributes.amount_target;
         const status = getStatusText(transfer.attributes.status);
+        const createdAt = formatDate(transfer.attributes.created_at);
+        const updatedAt = formatDate(transfer.attributes.updated_at);
 
         console.log(
           `\n[${formatDateTime()}] 💰 Processing transfer ID: ${transferId}`,
@@ -105,6 +112,8 @@ export async function checkAndProcessDeposits() {
           `[${formatDateTime()}]    Amount: ${amount} ${userAddress.coinTicker}`,
         );
         console.log(`[${formatDateTime()}]    Status: ${status}`);
+        console.log(`[${formatDateTime()}]    Created at: ${createdAt}`);
+        console.log(`[${formatDateTime()}]    Updated at: ${updatedAt}`);
 
         // Проверяем, существует ли уже запись о депозите
         const existingDeposit = await db
@@ -123,6 +132,8 @@ export async function checkAndProcessDeposits() {
             coinTicker: userAddress.coinTicker,
             amount: amount,
             status: status,
+            created_at: createdAt,
+            updated_at: updatedAt,
           });
           console.log(`[${formatDateTime()}]    ✅ New deposit record created`);
 
@@ -174,7 +185,10 @@ export async function checkAndProcessDeposits() {
             );
             await db
               .update(depositsTable)
-              .set({ status: status })
+              .set({
+                status: status,
+                updated_at: updatedAt,
+              })
               .where(eq(depositsTable.depositId, transferId));
             console.log(
               `[${formatDateTime()}]    ✅ Status updated successfully`,

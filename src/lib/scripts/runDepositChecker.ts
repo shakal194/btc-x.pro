@@ -14,14 +14,3 @@ cron.schedule('*/2 * * * *', async () => {
 });
 
 console.log('Deposit checker scheduler started. Will run every 2 minutes.');
-
-// Держим процесс запущенным
-process.on('SIGINT', () => {
-  console.log('Received SIGINT. Shutting down gracefully...');
-  process.exit(0);
-});
-
-process.on('SIGTERM', () => {
-  console.log('Received SIGTERM. Shutting down gracefully...');
-  process.exit(0);
-});

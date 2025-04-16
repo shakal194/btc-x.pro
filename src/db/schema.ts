@@ -154,6 +154,8 @@ export const depositsTable = pgTable('deposits', {
   amount: decimal({ precision: 30, scale: 8 }).notNull(), // Сумма депозита
   status: varchar({ length: 255 }).notNull(), // Статус депозита (зачислен)
   depositId: integer().notNull(), // ID депозита в Coinsbuy
+  created_at: timestamp().notNull(), // Дата создания
+  updated_at: timestamp().notNull(), // Дата обновления
 });
 
 export const transactionsRefBonusTable = pgTable('transactions_refBonus', {

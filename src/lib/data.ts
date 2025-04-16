@@ -10,6 +10,7 @@ import {
   balancesTable,
   transactionsRefBonusTable,
   usersAddressTable,
+  depositsTable,
 } from '@/db/schema'; // Импортируем таблицу
 import { sql, desc, asc, eq, and } from 'drizzle-orm';
 import fs from 'fs';
@@ -1155,5 +1156,29 @@ export async function fetchCoinPrice(coinName: string): Promise<number> {
   } catch (error) {
     console.error(`Error fetching price for ${coinName}:`, error);
     return 0;
+  }
+}
+
+// Функция для получения депозитов пользователя
+export async function fetchUserDeposits(userId: number) {
+  try {
+    const result = await db
+      .select({
+        id: depositsTable.id,
+        depositId: depositsTable.depositId,
+        coinTicker: depositsTable.coinTicker,
+        amount: depositsTable.amount,
+        status: depositsTable.status,
+        created_at: depositsTable.created_at,
+        updated_at: depositsTable.updated_at,
+      })
+      .from(depositsTable)
+      .where(eq(depositsTable.user_id, userId))
+      .orderBy(desc(depositsTable.created_at));
+
+    return result;
+  } catch (error) {
+    console.error('Error fetching user deposits:', error);
+    return [];
   }
 }

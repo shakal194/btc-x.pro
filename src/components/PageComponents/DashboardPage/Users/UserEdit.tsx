@@ -224,7 +224,12 @@ export default function UserEdit({ uuid }: { uuid: string }) {
                 >
                   История начисления реферальных бонусов
                 </Button>
-                <Button className='mr-2 w-full bg-blue-500 p-2 text-white md:w-[400px] md:text-sm'>
+                <Button
+                  className='mr-2 w-full bg-blue-500 p-2 text-white md:w-[400px] md:text-sm'
+                  onPress={() =>
+                    router.push(`/dashboard/users/${uuid}/deposits`)
+                  }
+                >
                   История ввода-вывода средств
                 </Button>
                 <Button className='w-full bg-blue-500 p-2 text-white md:w-[400px] md:text-sm'>
