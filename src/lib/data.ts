@@ -1191,7 +1191,6 @@ export async function createWithdrawal({
   address,
   amount,
   fee,
-  totalAmount,
 }: {
   userId: number;
   coinTicker: string;
@@ -1199,10 +1198,71 @@ export async function createWithdrawal({
   address: string;
   amount: string;
   fee: string;
-  totalAmount: number;
 }) {
   try {
     const now = new Date();
+
+    // Проверяем валидность значений и форматируем их
+    const cleanAmount = amount?.toString().trim();
+    const cleanFee = fee?.toString().trim();
+
+    // Проверка на пустые значения
+    if (!cleanAmount || !cleanFee) {
+      throw new Error('Сумма вывода или комиссия не указаны');
+    }
+
+    // Проверка формата чисел (должны быть числа с не более чем 8 знаками после точки)
+    const amountRegex = /^\d+(\.\d{1,8})?$/;
+    const feeRegex = /^\d+(\.\d{1,8})?$/;
+
+    if (!amountRegex.test(cleanAmount)) {
+      throw new Error('Некорректный формат суммы вывода');
+    }
+
+    if (!feeRegex.test(cleanFee)) {
+      throw new Error('Некорректный формат комиссии');
+    }
+
+    // Преобразуем значения в числа с фиксированной точностью
+    const amountNum = parseFloat(parseFloat(cleanAmount).toFixed(8));
+    const feeNum = parseFloat(parseFloat(cleanFee).toFixed(8));
+
+    // Дополнительные проверки
+    if (amountNum <= 0) {
+      throw new Error('Сумма вывода должна быть больше 0');
+    }
+
+    if (feeNum < 0) {
+      throw new Error('Комиссия не может быть отрицательной');
+    }
+
+    // Проверяем достаточность баланса
+    const currentBalance = await fetchUserBalance(userId, coinTicker);
+    const totalAmount = amountNum + feeNum;
+
+    if (currentBalance < totalAmount) {
+      throw new Error('Недостаточно средств для вывода с учетом комиссии');
+    }
+
+    // Проверяем, нет ли уже недавней записи с такими же параметрами
+    const recentWithdrawal = await db
+      .select()
+      .from(withdrawalsTable)
+      .where(
+        and(
+          eq(withdrawalsTable.user_id, userId),
+          eq(withdrawalsTable.amount, amountNum.toString()),
+          eq(withdrawalsTable.coinTicker, coinTicker),
+          sql`${withdrawalsTable.created_at} > NOW() - INTERVAL '1 minute'`,
+        ),
+      )
+      .limit(1);
+
+    if (recentWithdrawal.length > 0) {
+      throw new Error(
+        'Дублирующий запрос на вывод. Пожалуйста, подождите минуту перед повторной попыткой.',
+      );
+    }
 
     // Создаем запись о выводе
     await db.insert(withdrawalsTable).values({
@@ -1210,27 +1270,19 @@ export async function createWithdrawal({
       coinTicker,
       network,
       address: address.trim(),
-      amount,
-      fee,
+      amount: amountNum.toString(),
+      fee: feeNum.toString(),
       status: 'created',
       created_at: now,
       updated_at: now,
     });
 
-    // Обновляем баланс пользователя
-    await db
-      .update(balancesTable)
-      .set({
-        coinAmount: (
-          (await fetchUserBalance(userId, coinTicker)) - totalAmount
-        ).toString(),
-      })
-      .where(
-        and(
-          eq(balancesTable.user_id, userId),
-          eq(balancesTable.coinTicker, coinTicker),
-        ),
-      );
+    // Создаем новую запись баланса
+    await db.insert(balancesTable).values({
+      user_id: userId,
+      coinTicker,
+      coinAmount: (currentBalance - totalAmount).toString(),
+    });
   } catch (error) {
     console.error('Error creating withdrawal:', error);
     throw new Error(
@@ -1260,4 +1312,109 @@ async function fetchUserBalance(
   }
 
   return Number(balance[0].amount);
+}
+
+// Функция для получения всех выводов с информацией о пользователях
+export async function fetchAllWithdrawals() {
+  try {
+    const withdrawals = await db
+      .select({
+        id: withdrawalsTable.id,
+        uuid: withdrawalsTable.uuid,
+        user_id: withdrawalsTable.user_id,
+        userEmail: usersTable.email,
+        coinTicker: withdrawalsTable.coinTicker,
+        network: withdrawalsTable.network,
+        address: withdrawalsTable.address,
+        amount: withdrawalsTable.amount,
+        fee: withdrawalsTable.fee,
+        status: withdrawalsTable.status,
+        created_at: withdrawalsTable.created_at,
+        updated_at: withdrawalsTable.updated_at,
+      })
+      .from(withdrawalsTable)
+      .innerJoin(usersTable, eq(withdrawalsTable.user_id, usersTable.id))
+      .orderBy(desc(withdrawalsTable.id));
+
+    return withdrawals;
+  } catch (error) {
+    console.error('Error fetching withdrawals:', error);
+    throw new Error('Failed to fetch withdrawals');
+  }
+}
+
+export async function confirmWithdrawal(id: number) {
+  try {
+    // Обновляем статус вывода на "confirmed"
+    await db
+      .update(withdrawalsTable)
+      .set({
+        status: 'confirmed',
+        updated_at: new Date(),
+      })
+      .where(eq(withdrawalsTable.id, id));
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error confirming withdrawal:', error);
+    return { success: false, error: 'Ошибка при подтверждении вывода' };
+  }
+}
+
+export async function cancelWithdrawal(id: number) {
+  try {
+    // Получаем информацию о выводе
+    const withdrawal = await db
+      .select()
+      .from(withdrawalsTable)
+      .where(eq(withdrawalsTable.id, id))
+      .limit(1);
+
+    if (!withdrawal || withdrawal.length === 0) {
+      throw new Error('Вывод не найден');
+    }
+
+    // Обновляем статус вывода на "canceled"
+    await db
+      .update(withdrawalsTable)
+      .set({
+        status: 'canceled',
+        updated_at: new Date(),
+      })
+      .where(eq(withdrawalsTable.id, id));
+
+    // Получаем последний баланс пользователя для данной монеты
+    const currentBalance = await db
+      .select()
+      .from(balancesTable)
+      .where(
+        and(
+          eq(balancesTable.user_id, withdrawal[0].user_id),
+          eq(balancesTable.coinTicker, withdrawal[0].coinTicker),
+        ),
+      )
+      .orderBy(desc(balancesTable.id))
+      .limit(1);
+
+    if (!currentBalance || currentBalance.length === 0) {
+      throw new Error('Баланс пользователя не найден');
+    }
+
+    // Возвращаем средства на баланс пользователя (сумма вывода + комиссия)
+    const totalAmount =
+      Number(withdrawal[0].amount) + Number(withdrawal[0].fee);
+    const newAmount = Number(currentBalance[0].coinAmount) + totalAmount;
+
+    // Создаем новую запись баланса
+    await db.insert(balancesTable).values({
+      user_id: withdrawal[0].user_id,
+      coinTicker: withdrawal[0].coinTicker,
+      coinAmount: newAmount.toString(),
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error canceling withdrawal:', error);
+    return { success: false, error: 'Ошибка при отмене вывода' };
+  }
 }

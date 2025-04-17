@@ -8,6 +8,8 @@ import {
   ServerStackIcon,
   UsersIcon,
   BanknotesIcon,
+  CurrencyDollarIcon,
+  ArrowPathIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -48,6 +50,11 @@ export default function NavLinksAdmin({ locale }: NavLinksAdminProps) {
       icon: UsersIcon,
     },
     {
+      name: `${t('withdrawals')}`,
+      href: `/${locale}/dashboard/withdrawals`,
+      icon: UsersIcon,
+    },
+    {
       name: 'CoinsBuy',
       href: `/${locale}/dashboard/coinsbuy`,
       icon: BanknotesIcon,
@@ -56,6 +63,11 @@ export default function NavLinksAdmin({ locale }: NavLinksAdminProps) {
       name: `${t('settings')}`,
       href: `/${locale}/dashboard/settings`,
       icon: AdjustmentsHorizontalIcon,
+    },
+    {
+      name: 'Withdrawals',
+      href: `/${locale}/dashboard/admin/withdrawals`,
+      icon: CurrencyDollarIcon,
     },
   ];
 
