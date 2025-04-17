@@ -139,9 +139,10 @@ export const withdrawalsTable = pgTable('withdrawals', {
   network: varchar({ length: 50 }).notNull(), // Сеть для снятия средств (например, Bitcoin, Ethereum)
   address: varchar({ length: 255 }).notNull(), // Адрес для перевода средств
   amount: decimal({ precision: 30, scale: 8 }).notNull(), // Сумма для снятия
-  status: varchar({
-    enum: ['pending', 'approved', 'completed', 'cancelled'],
-  }).notNull(), // Статус запроса (подтверждён, одобрен, выполнен, отменён)
+  fee: decimal({ precision: 30, scale: 8 }).notNull(), // Сумма комиссии
+  status: varchar({ length: 255 }).notNull(), // Статус запроса (подтверждён, одобрен, выполнен, отменён)
+  created_at: timestamp().notNull(), // Дата создания
+  updated_at: timestamp().notNull(), // Дата обновления
 });
 
 export const depositsTable = pgTable('deposits', {

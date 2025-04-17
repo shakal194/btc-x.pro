@@ -11,6 +11,7 @@ import {
   transactionsRefBonusTable,
   usersAddressTable,
   depositsTable,
+  withdrawalsTable,
 } from '@/db/schema'; // Импортируем таблицу
 import { sql, desc, asc, eq, and } from 'drizzle-orm';
 import fs from 'fs';
@@ -1181,4 +1182,82 @@ export async function fetchUserDeposits(userId: number) {
     console.error('Error fetching user deposits:', error);
     return [];
   }
+}
+
+export async function createWithdrawal({
+  userId,
+  coinTicker,
+  network,
+  address,
+  amount,
+  fee,
+  totalAmount,
+}: {
+  userId: number;
+  coinTicker: string;
+  network: string;
+  address: string;
+  amount: string;
+  fee: string;
+  totalAmount: number;
+}) {
+  try {
+    const now = new Date();
+
+    // Создаем запись о выводе
+    await db.insert(withdrawalsTable).values({
+      user_id: userId,
+      coinTicker,
+      network,
+      address: address.trim(),
+      amount,
+      fee,
+      status: 'created',
+      created_at: now,
+      updated_at: now,
+    });
+
+    // Обновляем баланс пользователя
+    await db
+      .update(balancesTable)
+      .set({
+        coinAmount: (
+          (await fetchUserBalance(userId, coinTicker)) - totalAmount
+        ).toString(),
+      })
+      .where(
+        and(
+          eq(balancesTable.user_id, userId),
+          eq(balancesTable.coinTicker, coinTicker),
+        ),
+      );
+  } catch (error) {
+    console.error('Error creating withdrawal:', error);
+    throw new Error(
+      error instanceof Error ? error.message : 'Error creating withdrawal',
+    );
+  }
+}
+
+// Вспомогательная функция для получения баланса пользователя
+async function fetchUserBalance(
+  userId: number,
+  coinTicker: string,
+): Promise<number> {
+  const balance = await db
+    .select({ amount: balancesTable.coinAmount })
+    .from(balancesTable)
+    .where(
+      and(
+        eq(balancesTable.user_id, userId),
+        eq(balancesTable.coinTicker, coinTicker),
+      ),
+    )
+    .limit(1);
+
+  if (!balance.length) {
+    throw new Error('Balance not found');
+  }
+
+  return Number(balance[0].amount);
 }

@@ -104,6 +104,8 @@ function generateRandomId(): string {
     .join('');
 }
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 // Получение токена доступа
 export const getAccessToken = async (): Promise<{
   access: string;
@@ -111,57 +113,88 @@ export const getAccessToken = async (): Promise<{
   access_expired_at: string;
   refresh_expired_at: string;
 }> => {
-  try {
-    const response = await fetch(`${COINSBUY_API_BASE_URL}/token/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/vnd.api+json',
-      },
-      body: JSON.stringify({
-        data: {
-          type: 'auth-token',
-          attributes: {
-            login: COINSBUY_API_KEY,
-            password: COINSBUY_API_SECRET,
-          },
+  let retryCount = 0;
+  const maxRetries = 3;
+  const baseDelay = 1000; // 1 second
+
+  while (retryCount < maxRetries) {
+    try {
+      const response = await fetch(`${COINSBUY_API_BASE_URL}/token/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/vnd.api+json',
         },
-      }),
-    });
+        body: JSON.stringify({
+          data: {
+            type: 'auth-token',
+            attributes: {
+              login: COINSBUY_API_KEY,
+              password: COINSBUY_API_SECRET,
+            },
+          },
+        }),
+      });
 
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error('Token response error:', errorData);
-      throw new Error(`Failed to obtain access token: ${errorData}`);
-    }
-
-    const data: CoinsbuyAuthResponse = await response.json();
-
-    // Проверяем подпись, если она есть в ответе
-    if (data.meta?.sign) {
-      const isValid = await verifySignature(
-        COINSBUY_API_KEY,
-        COINSBUY_API_SECRET,
-        data.meta.time,
-        data.data.attributes.refresh,
-        data.meta.sign,
-      );
-
-      if (!isValid) {
-        console.error('Signature verification failed');
-        throw new Error('Invalid response signature');
+      if (response.status === 429) {
+        const retryAfter = response.headers.get('Retry-After');
+        const waitTime = retryAfter
+          ? parseInt(retryAfter, 10) * 1000
+          : Math.min(baseDelay * Math.pow(2, retryCount), 45000);
+        console.log(
+          `Rate limited. Waiting ${waitTime / 1000} seconds before retry...`,
+        );
+        await sleep(waitTime);
+        retryCount++;
+        continue;
       }
-    }
 
-    return {
-      access: data.data.attributes.access,
-      refresh: data.data.attributes.refresh,
-      access_expired_at: data.data.attributes.access_expired_at,
-      refresh_expired_at: data.data.attributes.refresh_expired_at,
-    };
-  } catch (error) {
-    console.error('Error getting access token:', error);
-    throw error;
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error('Token response error:', errorData);
+        throw new Error(`Failed to obtain access token: ${errorData}`);
+      }
+
+      const data: CoinsbuyAuthResponse = await response.json();
+
+      // Проверяем подпись, если она есть в ответе
+      if (data.meta?.sign) {
+        const isValid = await verifySignature(
+          COINSBUY_API_KEY,
+          COINSBUY_API_SECRET,
+          data.meta.time,
+          data.data.attributes.refresh,
+          data.meta.sign,
+        );
+
+        if (!isValid) {
+          console.error('Signature verification failed');
+          throw new Error('Invalid response signature');
+        }
+      }
+
+      return {
+        access: data.data.attributes.access,
+        refresh: data.data.attributes.refresh,
+        access_expired_at: data.data.attributes.access_expired_at,
+        refresh_expired_at: data.data.attributes.refresh_expired_at,
+      };
+    } catch (error) {
+      if (retryCount === maxRetries - 1) {
+        console.error('Error getting access token after all retries:', error);
+        throw error;
+      }
+
+      // Если это не последняя попытка, ждем и пробуем снова
+      const waitTime = Math.min(baseDelay * Math.pow(2, retryCount), 45000);
+      console.log(
+        `Attempt ${retryCount + 1} failed. Waiting ${waitTime / 1000} seconds before retry...`,
+      );
+      await sleep(waitTime);
+      retryCount++;
+    }
   }
+
+  throw new Error('Failed to obtain access token after all retries');
 };
 
 // Интерфейс для параметров создания депозита

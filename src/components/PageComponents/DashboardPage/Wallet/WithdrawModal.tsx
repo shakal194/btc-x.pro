@@ -12,7 +12,13 @@ import {
 import { getAccessToken } from '@/lib/coinsbuy';
 import Notiflix from 'notiflix';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
-import { getWalletId, getCurrencyId, getMinDeposit } from '@/lib/constants';
+import {
+  getWalletId,
+  getCurrencyId,
+  getMinDeposit,
+  getCoinNetwork,
+} from '@/lib/constants';
+import { createWithdrawal } from '@/lib/data';
 
 interface WithdrawModalProps {
   isOpen: boolean;
@@ -36,9 +42,11 @@ export default function WithdrawModal({
   const minDeposit = getMinDeposit(coinTicker);
   const [amount, setAmount] = useState('');
   const [address, setAddress] = useState('');
+  const [addressError, setAddressError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [feeAmount, setFeeAmount] = useState<string>('0');
   const [feeInUSDT, setFeeInUSDT] = useState<string>('0');
+  const [isFeeCalculated, setIsFeeCalculated] = useState(false);
 
   const canIncludeFee = (ticker: string) => {
     const noFeeInclusionList = [
@@ -64,7 +72,7 @@ export default function WithdrawModal({
     try {
       const token = await getAccessToken();
       const response = await fetch(
-        `${process.env.COINSBUY_API_URL}/rates/?filter[left]=TRX&filter[right]=${coinTicker}`,
+        `${process.env.NEXT_PUBLIC_COINSBUY_API_URL}/rates/?filter[left]=TRX&filter[right]=${coinTicker}`,
         {
           headers: {
             Authorization: `Bearer ${token.access}`,
@@ -86,17 +94,27 @@ export default function WithdrawModal({
     }
   };
 
-  const calculateFee = async (value: string) => {
-    if (!value || isNaN(Number(value)) || Number(value) <= 0) return;
+  const sleep = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
+  const calculateFee = async (value: string) => {
     try {
+      if (!address) {
+        setFeeAmount('Введите адрес');
+        setFeeInUSDT('0');
+        setAddressError('');
+        setIsFeeCalculated(false);
+        return;
+      }
+
+      setIsFeeCalculated(false);
       const token = await getAccessToken();
       const feeCalcData = {
         data: {
           type: 'payout-calculation',
           attributes: {
             amount: value,
-            to_address: address,
+            to_address: address.trim(),
           },
           relationships: {
             wallet: {
@@ -116,7 +134,7 @@ export default function WithdrawModal({
       };
 
       const feeResponse = await fetch(
-        `${process.env.COINSBUY_API_URL}/payout/calculate/`,
+        `${process.env.NEXT_PUBLIC_COINSBUY_API_URL}/payout/calculate/`,
         {
           method: 'POST',
           headers: {
@@ -128,30 +146,174 @@ export default function WithdrawModal({
       );
 
       if (!feeResponse.ok) {
+        if (feeResponse.status === 429) {
+          const retryAfter = feeResponse.headers.get('Retry-After') || '10';
+          const seconds = parseInt(retryAfter, 10);
+          Notiflix.Notify.warning(
+            `Слишком много запросов. Пожалуйста, подождите ${seconds} секунд.`,
+            {
+              ID: 'rate-limit',
+              timeout: seconds * 1000,
+            },
+          );
+          throw new Error(
+            `Rate limit exceeded. Retry after ${seconds} seconds`,
+          );
+        }
         const errorData = await feeResponse.json();
-        throw new Error(
-          errorData?.errors?.[0]?.detail || 'Failed to calculate fee',
-        );
+        const errorDetail = errorData?.errors?.[0]?.detail;
+
+        // Проверяем на ошибку некорректного адреса
+        if (errorDetail?.includes('Incorrect address')) {
+          setFeeAmount('0');
+          setFeeInUSDT('0');
+          setAddressError('Некорректный адрес кошелька');
+          throw new Error('Некорректный адрес');
+        }
+
+        throw new Error(errorDetail || 'Failed to calculate fee');
       }
 
       const feeData = await feeResponse.json();
+
+      if (!feeData?.data?.attributes?.fee?.medium) {
+        throw new Error('Invalid fee data received from API');
+      }
+
       const fee = feeData.data.attributes.fee.medium;
-      setFeeAmount(fee);
+      setFeeAmount(Number(fee).toFixed(2));
 
       if (coinTicker === 'USDT' || coinTicker === 'USDC') {
-        const rate = await getRate();
-        const feeInUSDT = (Number(fee) * Number(rate)).toFixed(2);
-        setFeeInUSDT(feeInUSDT);
+        try {
+          const rate = await getRate();
+          if (!rate || rate === '0') {
+            throw new Error('Invalid rate received');
+          }
+          const feeInUSDT = (Number(fee) * Number(rate)).toFixed(2);
+          setFeeInUSDT(feeInUSDT);
+          setIsFeeCalculated(true);
+        } catch (rateError) {
+          console.error('Error calculating fee in USDT:', rateError);
+          setFeeInUSDT('Error calculating rate');
+          setIsFeeCalculated(false);
+          Notiflix.Notify.failure('Ошибка при расчете комиссии в USDT');
+        }
+      } else {
+        setIsFeeCalculated(true);
       }
     } catch (error) {
+      console.error('Error calculating fee:', error);
+      if (error instanceof Error) {
+        if (error.message.includes('throttled')) {
+          const match = error.message.match(
+            /Expected available in (\d+) seconds/,
+          );
+          const seconds = match ? match[1] : '10';
+          Notiflix.Notify.warning(
+            `Слишком много запросов. Пожалуйста, подождите ${seconds} секунд.`,
+            {
+              ID: 'rate-limit',
+              timeout: parseInt(seconds, 10) * 1000,
+            },
+          );
+        } else {
+          Notiflix.Notify.failure('Ошибка при расчете комиссии', {
+            ID: 'fee-error',
+          });
+        }
+      }
       setFeeAmount('Error calculating fee');
       setFeeInUSDT('0');
+      setIsFeeCalculated(false);
     }
   };
 
   const handleAmountChange = (value: string) => {
+    // Сохраняем исходное значение для инпута
     setAmount(value);
-    calculateFee(value);
+
+    // Если значение пустое или невалидное число, сбрасываем комиссию
+    if (!value || isNaN(Number(value)) || Number(value) <= 0) {
+      setFeeAmount('0');
+      setFeeInUSDT('0');
+      return;
+    }
+
+    // Округляем значение только для расчета комиссии
+    let calculationValue = value;
+    const numValue = parseFloat(value);
+    if (!isNaN(numValue)) {
+      if (coinTicker === 'USDT' || coinTicker === 'USDC') {
+        calculationValue = numValue.toFixed(2);
+      } else {
+        calculationValue = numValue.toFixed(8);
+      }
+    }
+
+    // Рассчитываем комиссию с округленным значением
+    calculateFee(calculationValue);
+  };
+
+  // Добавляем обработчик потери фокуса для округления
+  const handleAmountBlur = () => {
+    if (amount && !isNaN(Number(amount))) {
+      const numValue = parseFloat(amount);
+      if (coinTicker === 'USDT' || coinTicker === 'USDC') {
+        setAmount(numValue.toFixed(2));
+      } else {
+        setAmount(numValue.toFixed(8));
+      }
+    }
+  };
+
+  // Обновляем обработчик изменения адреса
+  const handleAddressChange = (value: string) => {
+    const trimmedValue = value.trim();
+    setAddress(value);
+    setAddressError('');
+
+    // Если адрес стал пустым, сбрасываем сумму и комиссию
+    if (!trimmedValue) {
+      setAmount('');
+      setFeeAmount('Введите адрес');
+      setFeeInUSDT('0');
+    } else if (amount && Number(amount) > 0) {
+      // Если адрес не пустой и есть сумма - пересчитываем комиссию
+      calculateFee(amount);
+    }
+  };
+
+  const handleMaxAmount = () => {
+    if (!address.trim()) return;
+
+    let maxAmount = balance.toString();
+    // Округляем максимальную сумму в зависимости от типа монеты
+    if (coinTicker === 'USDT' || coinTicker === 'USDC') {
+      maxAmount = Number(balance).toFixed(2);
+    } else {
+      maxAmount = Number(balance).toFixed(8);
+    }
+
+    handleAmountChange(maxAmount);
+  };
+
+  const getTotalAmount = () => {
+    if (!amount || isNaN(Number(amount))) return 0;
+    return coinTicker === 'USDT' || coinTicker === 'USDC'
+      ? Number(amount) + Number(feeInUSDT)
+      : Number(amount);
+  };
+
+  const getAmountError = () => {
+    if (!amount || isNaN(Number(amount))) return '';
+    const totalAmount = getTotalAmount();
+    if (totalAmount > balance) {
+      return `Сумма с комиссией (${totalAmount.toFixed(2)} ${coinTicker}) превышает доступные средства`;
+    }
+    if (Number(amount) < minDeposit) {
+      return `Минимальная сумма вывода ${minDeposit} ${coinTicker}`;
+    }
+    return '';
   };
 
   const handleWithdraw = async () => {
@@ -205,7 +367,7 @@ export default function WithdrawModal({
       };
 
       const feeResponse = await fetch(
-        `${process.env.COINSBUY_API_URL}/payout/calculate/`,
+        `${process.env.NEXT_PUBLIC_COINSBUY_API_URL}/payout/calculate/`,
         {
           method: 'POST',
           headers: {
@@ -227,91 +389,22 @@ export default function WithdrawModal({
       const calculatedFee = feeData.data.attributes.fee.medium;
       setFeeAmount(calculatedFee);
 
-      // Теперь создаем вывод с полученной комиссией
-      const payoutData = {
-        data: {
-          type: 'payout',
-          attributes: {
-            label: `Withdraw from user ${userId}`,
-            amount:
-              coinTicker === 'USDT'
-                ? (Number(amount) + Number(feeInUSDT)).toString()
-                : amount.toString(),
-            address: address,
-            fee_amount: calculatedFee,
-            is_fee_included: canIncludeFee(coinTicker),
-            tracking_id: `Withdraw from user ${userEmail}`,
-            confirmations_needed: 1,
-            travel_rule_info: {
-              beneficiary: {
-                beneficiaryPersons: [
-                  {
-                    naturalPerson: {
-                      name: [
-                        {
-                          nameIdentifier: [
-                            {
-                              primaryIdentifier: 'John',
-                              secondaryIdentifier: 'Doe',
-                            },
-                          ],
-                        },
-                      ],
-                      geographicAddress: [
-                        {
-                          addressLine: ['Not specified'],
-                          addressType: 'HOME',
-                          country: 'US',
-                        },
-                      ],
-                    },
-                  },
-                ],
-              },
-            },
-          },
-          relationships: {
-            wallet: {
-              data: {
-                type: 'wallet',
-                id: getWalletId(coinTicker),
-              },
-            },
-            currency: {
-              data: {
-                type: 'currency',
-                id: getCurrencyId(coinTicker),
-              },
-            },
-          },
-        },
-      };
-
-      const response = await fetch(`${process.env.COINSBUY_API_URL}/payout/`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token.access}`,
-          'Content-Type': 'application/vnd.api+json',
-          'idempotency-key': crypto.randomUUID(),
-        },
-        body: JSON.stringify(payoutData),
+      // Создаем запись в таблице выводов
+      await createWithdrawal({
+        userId,
+        coinTicker,
+        network: getCoinNetwork(coinTicker),
+        address: address.trim(),
+        amount: amount.toString(),
+        fee: calculatedFee.toString(),
+        totalAmount,
       });
-
-      console.log(payoutData);
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData?.errors?.[0]?.detail || 'Failed to create payout',
-        );
-      }
 
       onSuccess();
       Notiflix.Notify.success('Запрос на вывод создан успешно');
       handleClose();
     } catch (error) {
-      //console.error('Error creating withdrawal:', error);
-      console.log(error);
+      console.error('Error creating withdrawal:', error);
       Notiflix.Notify.failure(
         error instanceof Error
           ? error.message
@@ -350,9 +443,11 @@ export default function WithdrawModal({
               type='text'
               label={`Адрес ${coinTicker}`}
               value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              onChange={(e) => handleAddressChange(e.target.value)}
               placeholder={`Введите адрес ${coinTicker}`}
               className='w-full'
+              isInvalid={!!addressError}
+              errorMessage={addressError}
             />
 
             <Input
@@ -360,10 +455,28 @@ export default function WithdrawModal({
               label={`Сумма ${coinTicker}`}
               value={amount}
               onChange={(e) => handleAmountChange(e.target.value)}
+              onBlur={handleAmountBlur}
               placeholder='Введите сумму'
               min='0'
-              step='0.00000001'
+              step={
+                coinTicker === 'USDT' || coinTicker === 'USDC'
+                  ? '0.01'
+                  : '0.00000001'
+              }
               className='w-full'
+              isDisabled={!address.trim()}
+              isInvalid={!!getAmountError()}
+              errorMessage={getAmountError()}
+              endContent={
+                <Chip
+                  color='secondary'
+                  size='sm'
+                  className='cursor-pointer'
+                  onClick={handleMaxAmount}
+                >
+                  Макс.
+                </Chip>
+              }
             />
 
             <div className='rounded bg-gray-700 p-3'>
@@ -389,7 +502,8 @@ export default function WithdrawModal({
                   <li>
                     Итого с баланса спишется:{' '}
                     <Chip color='success' size='sm' variant='shadow'>
-                      {Number(amount) + Number(feeInUSDT)} {coinTicker}
+                      {Number(Number(amount) + Number(feeInUSDT)).toFixed(2)}{' '}
+                      {coinTicker}
                     </Chip>
                   </li>
                 )}
@@ -409,6 +523,7 @@ export default function WithdrawModal({
             isDisabled={
               !amount ||
               !address ||
+              !isFeeCalculated ||
               (coinTicker === 'USDT'
                 ? Number(amount) + Number(feeInUSDT) > balance
                 : Number(amount) > balance)
