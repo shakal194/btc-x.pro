@@ -14,17 +14,18 @@
   }
 }
 
-/*
+
 :root {
   --heroui-background: #000000;
-  --background: #000000;
+  /*--background: #000000;
   --foreground: #ffffff;
   --danger: #f31212;
   --secondary: #FE9900;
   --primary: #000000;
-  --default: #71717a;
+  --default: #71717a;*/
 }
 
+/*
 @media (prefers-color-scheme: dark) {
   :root {
     --primary: #000000;
