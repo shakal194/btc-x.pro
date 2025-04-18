@@ -17,6 +17,7 @@ export default {
         'spin-slow': 'spin 5s linear infinite', // медленное вращение за 5 секунд
       },
       colors: {
+        'heroui-background': '#000000',
         background: '#000000',
         foreground: '#ffffff',
         danger: '#f31212',
