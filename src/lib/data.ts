@@ -1418,3 +1418,32 @@ export async function cancelWithdrawal(id: number) {
     return { success: false, error: 'Ошибка при отмене вывода' };
   }
 }
+
+export async function fetchUserWithdrawals(userId: number) {
+  try {
+    const withdrawals = await db
+      .select({
+        id: withdrawalsTable.id,
+        uuid: withdrawalsTable.uuid,
+        user_id: withdrawalsTable.user_id,
+        userEmail: usersTable.email,
+        coinTicker: withdrawalsTable.coinTicker,
+        network: withdrawalsTable.network,
+        address: withdrawalsTable.address,
+        amount: withdrawalsTable.amount,
+        fee: withdrawalsTable.fee,
+        status: withdrawalsTable.status,
+        created_at: withdrawalsTable.created_at,
+        updated_at: withdrawalsTable.updated_at,
+      })
+      .from(withdrawalsTable)
+      .innerJoin(usersTable, eq(withdrawalsTable.user_id, usersTable.id))
+      .where(eq(withdrawalsTable.user_id, userId))
+      .orderBy(desc(withdrawalsTable.id));
+
+    return withdrawals;
+  } catch (error) {
+    console.error('Error fetching user withdrawals:', error);
+    throw new Error('Failed to fetch user withdrawals');
+  }
+}

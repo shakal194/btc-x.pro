@@ -20,9 +20,14 @@ import {
   DropdownItem,
   Button,
 } from '@heroui/react';
-import { fetchUserDeposits } from '@/lib/data';
+import { fetchUserDeposits, fetchUserWithdrawals } from '@/lib/data';
 import { useRouter } from 'next/navigation';
-import { FunnelIcon, ListBulletIcon } from '@heroicons/react/24/outline';
+import {
+  FunnelIcon,
+  ListBulletIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+} from '@heroicons/react/24/outline';
 
 type DepositStatus =
   | 'all'
@@ -33,22 +38,23 @@ type DepositStatus =
   | 'blocked'
   | 'canceled';
 
-interface Deposit {
+type OperationType = 'all' | 'deposit' | 'withdrawal';
+
+interface Operation {
   id: number;
-  depositId: number;
+  type: 'deposit' | 'withdrawal';
+  depositId?: number;
   coinTicker: string;
   amount: string;
   status: string;
   created_at: Date;
   updated_at: Date;
+  network?: string;
+  address?: string;
+  fee?: string;
 }
 
-const rowsPerPageOptions = [
-  { key: '20', label: '20 строк' },
-  { key: '50', label: '50 строк' },
-  { key: '100', label: '100 строк' },
-  { key: '200', label: '200 строк' },
-];
+const ROWS_PER_PAGE_OPTIONS = [20, 50, 100, 200];
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -114,11 +120,24 @@ export default function UserDepositsTable({
   userId: number;
   userEmail: string;
 }) {
-  const [deposits, setDeposits] = useState<Deposit[]>([]);
+  const [operations, setOperations] = useState<Operation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [depositStatus, setDepositStatus] = useState<DepositStatus>('all');
+  const [operationType, setOperationType] = useState<OperationType>('all');
+  const [selectedStatuses, setSelectedStatuses] = useState<Set<DepositStatus>>(
+    new Set([
+      'confirmed',
+      'unconfirmed',
+      'created',
+      'failed',
+      'blocked',
+      'canceled',
+    ]),
+  );
   const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [isRowsOpen, setIsRowsOpen] = useState(false);
+  const [isOperationTypeOpen, setIsOperationTypeOpen] = useState(false);
+  const [isStatusesOpen, setIsStatusesOpen] = useState(false);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: 'created_at',
     direction: 'descending',
@@ -129,23 +148,32 @@ export default function UserDepositsTable({
     async function fetchData() {
       try {
         setIsLoading(true);
-        const data = await fetchUserDeposits(userId);
-        console.log('Raw data from server:', data);
-        const transformedData = data.map((deposit) => {
-          const status = getStatusFromNumber(deposit.status);
-          console.log('Transforming status:', {
-            original: deposit.status,
-            transformed: status,
-          });
-          return {
-            ...deposit,
-            status: status,
-          };
-        });
-        console.log('Transformed data:', transformedData);
-        setDeposits(transformedData);
+        const [depositsData, withdrawalsData] = await Promise.all([
+          fetchUserDeposits(userId),
+          fetchUserWithdrawals(userId),
+        ]);
+
+        const transformedDeposits = depositsData.map((deposit) => ({
+          ...deposit,
+          type: 'deposit' as const,
+        }));
+
+        const transformedWithdrawals = withdrawalsData.map((withdrawal) => ({
+          id: withdrawal.id,
+          type: 'withdrawal' as const,
+          coinTicker: withdrawal.coinTicker,
+          amount: withdrawal.amount,
+          status: withdrawal.status,
+          created_at: withdrawal.created_at,
+          updated_at: withdrawal.updated_at,
+          network: withdrawal.network,
+          address: withdrawal.address,
+          fee: withdrawal.fee,
+        }));
+
+        setOperations([...transformedDeposits, ...transformedWithdrawals]);
       } catch (error) {
-        console.error('Error fetching deposits:', error);
+        console.error('Error fetching operations:', error);
       } finally {
         setIsLoading(false);
       }
@@ -159,12 +187,30 @@ export default function UserDepositsTable({
     setPage(1);
   }, [rowsPerPage]);
 
-  const filteredDeposits = deposits.filter((deposit) => {
-    if (depositStatus === 'all') return true;
-    return deposit.status === depositStatus;
+  const selectAllStatuses = () => {
+    const allStatuses: DepositStatus[] = [
+      'confirmed',
+      'unconfirmed',
+      'created',
+      'failed',
+      'blocked',
+      'canceled',
+    ];
+    setSelectedStatuses(new Set(allStatuses));
+  };
+
+  const deselectAllStatuses = () => {
+    setSelectedStatuses(new Set());
+  };
+
+  const filteredOperations = operations.filter((operation) => {
+    if (operationType !== 'all' && operation.type !== operationType)
+      return false;
+    if (selectedStatuses.size === 0) return false;
+    return selectedStatuses.has(operation.status as DepositStatus);
   });
 
-  const sortedDeposits = [...filteredDeposits].sort((a, b) => {
+  const sortedOperations = [...filteredOperations].sort((a, b) => {
     const { column, direction } = sortDescriptor;
     const multiplier = direction === 'ascending' ? 1 : -1;
 
@@ -172,7 +218,7 @@ export default function UserDepositsTable({
       case 'id':
         return (a.id - b.id) * multiplier;
       case 'depositId':
-        return (a.depositId - b.depositId) * multiplier;
+        return ((a.depositId || 0) - (b.depositId || 0)) * multiplier;
       case 'created_at':
         return (
           (new Date(a.created_at).getTime() -
@@ -196,15 +242,15 @@ export default function UserDepositsTable({
     }
   });
 
-  const pages = Math.max(1, Math.ceil(sortedDeposits.length / rowsPerPage));
-  const paginatedDeposits = sortedDeposits.slice(
+  const pages = Math.max(1, Math.ceil(sortedOperations.length / rowsPerPage));
+  const paginatedOperations = sortedOperations.slice(
     (page - 1) * rowsPerPage,
     page * rowsPerPage,
   );
 
   return (
     <div className='min-h-screen w-full space-y-4 bg-black/90 p-4'>
-      <div className='rounded-lg bg-gray-800 p-4'>
+      <div className='space-y-4 rounded-lg p-4'>
         <Breadcrumbs>
           <BreadcrumbItem href='/dashboard/users' className='text-gray-300'>
             Пользователи
@@ -221,63 +267,102 @@ export default function UserDepositsTable({
         </Breadcrumbs>
 
         <div className='mt-4 flex items-center justify-between'>
-          <Dropdown>
-            <DropdownTrigger>
-              <Button
-                variant='shadow'
-                color='secondary'
-                className='flex items-center gap-2'
-              >
-                <ListBulletIcon className='h-4 w-4' />
-                {rowsPerPageOptions.find(
-                  (option) => option.key === rowsPerPage.toString(),
-                )?.label || '20 строк'}
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              aria-label='Количество строк на странице'
-              onAction={(key) => setRowsPerPage(Number(key))}
-              selectedKeys={new Set([rowsPerPage.toString()])}
-              selectionMode='single'
+          <div>
+            <h1 className='text-2xl font-bold text-white'>История депозитов</h1>
+          </div>
+          <div className='flex gap-4'>
+            <Dropdown
+              isOpen={isOperationTypeOpen}
+              onOpenChange={setIsOperationTypeOpen}
             >
-              {rowsPerPageOptions.map((option) => (
-                <DropdownItem key={option.key}>{option.label}</DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
+              <DropdownTrigger>
+                <Button
+                  variant='ghost'
+                  color='secondary'
+                  className='flex items-center gap-2'
+                  endContent={
+                    isOperationTypeOpen ? (
+                      <ChevronUpIcon className='h-4 w-4' />
+                    ) : (
+                      <ChevronDownIcon className='h-4 w-4' />
+                    )
+                  }
+                >
+                  <FunnelIcon className='h-4 w-4' />
+                  {operationType === 'all'
+                    ? 'Все операции'
+                    : operationType === 'deposit'
+                      ? 'Депозиты'
+                      : 'Выводы'}
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label='Тип операции'
+                onAction={(key) => setOperationType(key as OperationType)}
+                selectedKeys={new Set([operationType])}
+                selectionMode='single'
+              >
+                <DropdownItem key='all'>Все операции</DropdownItem>
+                <DropdownItem key='deposit'>Депозиты</DropdownItem>
+                <DropdownItem key='withdrawal'>Выводы</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
 
-          <Dropdown>
-            <DropdownTrigger>
-              <Button
-                variant='shadow'
-                color='secondary'
-                className='flex items-center gap-2'
+            <Dropdown isOpen={isStatusesOpen} onOpenChange={setIsStatusesOpen}>
+              <DropdownTrigger>
+                <Button
+                  variant='ghost'
+                  color='secondary'
+                  className='flex items-center gap-2'
+                  endContent={
+                    isStatusesOpen ? (
+                      <ChevronUpIcon className='h-4 w-4' />
+                    ) : (
+                      <ChevronDownIcon className='h-4 w-4' />
+                    )
+                  }
+                >
+                  <FunnelIcon className='h-4 w-4' />
+                  {selectedStatuses.size === 0
+                    ? 'Все статусы'
+                    : selectedStatuses.size === 1
+                      ? getStatusText(Array.from(selectedStatuses)[0])
+                      : `${selectedStatuses.size} статусов`}
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label='Фильтр статусов'
+                selectionMode='multiple'
+                selectedKeys={selectedStatuses}
+                onSelectionChange={(keys) => {
+                  setSelectedStatuses(keys as Set<DepositStatus>);
+                }}
               >
-                <FunnelIcon className='h-4 w-4' />
-                {depositStatus === 'all'
-                  ? 'Все статусы'
-                  : depositStatus === 'confirmed'
-                    ? 'Подтвержденные'
-                    : depositStatus === 'unconfirmed'
-                      ? 'Неподтвержденные'
-                      : 'Ошибки'}
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              aria-label='Фильтр статусов'
-              onAction={(key) => setDepositStatus(key as DepositStatus)}
-              selectedKeys={new Set([depositStatus])}
-              selectionMode='single'
-            >
-              <DropdownItem key='all'>Все статусы</DropdownItem>
-              <DropdownItem key='confirmed'>Подтвержден</DropdownItem>
-              <DropdownItem key='unconfirmed'>Неподтвержден</DropdownItem>
-              <DropdownItem key='created'>Создан</DropdownItem>
-              <DropdownItem key='failed'>Ошибка</DropdownItem>
-              <DropdownItem key='blocked'>Заблокирован</DropdownItem>
-              <DropdownItem key='canceled'>Отменен</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+                <DropdownItem
+                  key='selectAll'
+                  onPress={selectAllStatuses}
+                  color='success'
+                  className='text-success'
+                >
+                  Выбрать все
+                </DropdownItem>
+                <DropdownItem
+                  key='deselectAll'
+                  onPress={deselectAllStatuses}
+                  color='danger'
+                  className='text-danger'
+                >
+                  Отменить все
+                </DropdownItem>
+                <DropdownItem key='confirmed'>Подтвержден</DropdownItem>
+                <DropdownItem key='unconfirmed'>Неподтвержден</DropdownItem>
+                <DropdownItem key='created'>Создан</DropdownItem>
+                <DropdownItem key='failed'>Ошибка</DropdownItem>
+                <DropdownItem key='blocked'>Заблокирован</DropdownItem>
+                <DropdownItem key='canceled'>Отменен</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
         </div>
 
         <div className='relative mt-4 overflow-x-auto rounded-lg bg-gray-900'>
@@ -288,24 +373,17 @@ export default function UserDepositsTable({
           )}
 
           <Table
-            aria-label='Deposits table'
+            aria-label='Operations table'
             sortDescriptor={sortDescriptor}
             onSortChange={setSortDescriptor}
             isHeaderSticky
             isVirtualized={true}
-            maxTableHeight={400}
+            maxTableHeight={600}
             color='success'
             classNames={{
-              base: 'bg-gray-700 border-0',
-              table: 'min-w-full',
-              thead: 'bg-gray-800',
-              tbody: 'bg-gray-800',
+              wrapper: 'max-h-[600px]',
+              td: 'text-default-600',
               tr: 'border-0 transition-colors hover:bg-gray-700',
-              th: 'bg-gray-800 text-gray-400 font-medium py-3',
-              td: 'group-data-[selected=true]:bg-gray-700',
-              sortIcon: 'text-gray-400',
-              emptyWrapper: 'bg-gray-800 text-white',
-              wrapper: 'bg-gray-800 rounded-lg border border-gray-800',
             }}
           >
             <TableHeader>
@@ -316,6 +394,14 @@ export default function UserDepositsTable({
               >
                 ID
               </TableColumn>
+              <TableColumn
+                key='type'
+                allowsSorting
+                className='whitespace-nowrap bg-gray-800 px-4 py-2 text-sm text-white'
+              >
+                Тип операции
+              </TableColumn>
+
               <TableColumn
                 key='depositId'
                 allowsSorting
@@ -360,38 +446,41 @@ export default function UserDepositsTable({
               </TableColumn>
             </TableHeader>
             <TableBody
-              items={paginatedDeposits}
+              items={paginatedOperations}
               emptyContent={isLoading ? ' ' : 'Нет данных'}
               className='text-white'
             >
-              {(deposit) => (
-                <TableRow key={deposit.id}>
+              {(operation) => (
+                <TableRow key={operation.id}>
                   <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
-                    {deposit.id}
+                    {operation.id}
                   </TableCell>
                   <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
-                    {deposit.depositId}
+                    {operation.type === 'deposit' ? 'Депозит' : 'Вывод'}
                   </TableCell>
                   <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
-                    {deposit.coinTicker}
+                    {operation.depositId || '-'}
                   </TableCell>
                   <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
-                    {deposit.amount}
+                    {operation.coinTicker}
+                  </TableCell>
+                  <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
+                    {operation.amount}
                   </TableCell>
                   <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
                     <Chip
-                      color={getStatusColor(deposit.status)}
-                      variant='solid'
+                      color={getStatusColor(operation.status)}
+                      variant='flat'
                       size='sm'
                     >
-                      {getStatusText(deposit.status)}
+                      {getStatusText(operation.status)}
                     </Chip>
                   </TableCell>
                   <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
-                    {new Date(deposit.created_at).toLocaleString()}
+                    {new Date(operation.created_at).toLocaleString()}
                   </TableCell>
                   <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
-                    {new Date(deposit.updated_at).toLocaleString()}
+                    {new Date(operation.updated_at).toLocaleString()}
                   </TableCell>
                 </TableRow>
               )}
@@ -407,12 +496,69 @@ export default function UserDepositsTable({
             showControls={true}
             classNames={{
               wrapper: 'gap-2 text-white',
-              item: 'bg-gray-700 text-white border-0 hover:bg-gray-600',
-              cursor: 'bg-secondary text-white',
+              item: 'dark:bg-gray-700 text-white border-0 hover:bg-gray-600',
+              cursor: 'dark:bg-secondary text-white',
               next: 'bg-gray-700 text-white hover:bg-gray-600',
               prev: 'bg-gray-700 text-white hover:bg-gray-600',
             }}
           />
+        </div>
+
+        <div className='flex flex-col justify-between space-y-4 text-gray-400 md:items-center'>
+          <div className='flex w-full items-center justify-between'>
+            <span className='text-sm'>
+              Всего операций: {filteredOperations.length}
+            </span>
+            <div className='flex items-center gap-2'>
+              <p className='text-sm text-white'>Строк на странице:</p>
+              <Dropdown
+                isOpen={isRowsOpen}
+                onOpenChange={setIsRowsOpen}
+                className='bg-gray-700'
+              >
+                <DropdownTrigger>
+                  <Button
+                    variant='flat'
+                    className='min-w-[70px] border-0 bg-gray-700 text-white'
+                    endContent={
+                      isRowsOpen ? (
+                        <ChevronUpIcon className='h-4 w-4 text-gray-400' />
+                      ) : (
+                        <ChevronDownIcon className='h-4 w-4 text-gray-400' />
+                      )
+                    }
+                  >
+                    {rowsPerPage}
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  disallowEmptySelection
+                  selectedKeys={new Set([rowsPerPage.toString()])}
+                  selectionMode='single'
+                  onSelectionChange={(keys) => {
+                    const value = Array.from(keys)[0];
+                    setRowsPerPage(Number(value));
+                    setPage(1);
+                  }}
+                  className='max-h-[30vh] border-0 bg-gray-700 text-sm'
+                  classNames={{
+                    base: 'bg-gray-700 border-0 focus:outline-none rounded-lg',
+                    list: 'bg-gray-700 text-white',
+                  }}
+                >
+                  {ROWS_PER_PAGE_OPTIONS.map((count) => (
+                    <DropdownItem
+                      key={count}
+                      textValue={count.toString()}
+                      className='text-sm text-white hover:bg-gray-700 data-[selected=true]:bg-gray-700'
+                    >
+                      {count}
+                    </DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+          </div>
         </div>
       </div>
     </div>

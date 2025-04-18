@@ -33,6 +33,7 @@ const protectedPaths = [
   '/dashboard/algorithms',
   '/dashboard/equipments',
   //'/dashboard/users',
+  //'/dashboard/withdrawals',
 ];
 
 function getProtectedRoutes(protectedPaths: string[], locales: Locale[]) {

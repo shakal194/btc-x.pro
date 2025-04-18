@@ -23,7 +23,6 @@ import {
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
 import FullScreenSpinner from '@/components/ui/Spinner';
-import Notiflix from 'notiflix';
 
 interface WithdrawalData {
   id: number;
@@ -73,12 +72,6 @@ export default function WithdrawalsTable({
   onCancelWithdrawal,
 }: WithdrawalsTableProps) {
   const [filterValue, setFilterValue] = useState('');
-  const [statusFilter, setStatusFilter] = useState<Selection>(
-    new Set(['created']),
-  );
-  const [visibleColumns, setVisibleColumns] = useState<Selection>(
-    new Set(INITIAL_VISIBLE_COLUMNS),
-  );
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: 'id',
     direction: 'descending',
@@ -264,11 +257,6 @@ export default function WithdrawalsTable({
     }
   }, []);
 
-  const handleStatusSelectionChange = (keys: Selection) => {
-    const selectedKeys = Array.from(keys);
-    setStatusFilter(new Set(['created']));
-  };
-
   const { paginatedItems, pages } = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
@@ -304,9 +292,12 @@ export default function WithdrawalsTable({
         <Table
           aria-label='Withdrawals table'
           isHeaderSticky
+          isVirtualized={true}
+          maxTableHeight={600}
           classNames={{
-            wrapper: 'max-h-[calc(100vh-400px)]',
+            wrapper: 'max-h-[600px]',
             td: 'text-default-600',
+            tr: 'border-0 transition-colors hover:bg-gray-700',
           }}
           sortDescriptor={sortDescriptor}
           onSortChange={setSortDescriptor}
@@ -317,12 +308,16 @@ export default function WithdrawalsTable({
                 key={column.uid}
                 align={column.uid === 'actions' ? 'center' : 'start'}
                 allowsSorting={column.sortable}
+                className='whitespace-nowrap bg-gray-800 px-4 py-2 text-sm text-white'
               >
                 {column.name}
               </TableColumn>
             ))}
           </TableHeader>
-          <TableBody items={paginatedItems}>
+          <TableBody
+            items={paginatedItems}
+            emptyContent={isLoading ? ' ' : 'Нет данных'}
+          >
             {(item) => (
               <TableRow key={item.id}>
                 {headerColumns.map((column) => (

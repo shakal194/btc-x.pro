@@ -193,7 +193,7 @@ export default function WithdrawalsTable({
             : String(cellValue);
         case 'amount':
         case 'fee':
-          return `${cellValue} ${withdrawal.coinTicker}`;
+          return `${Number(cellValue).toFixed(4)} ${withdrawal.coinTicker}`;
         default:
           return String(cellValue);
       }
@@ -209,21 +209,32 @@ export default function WithdrawalsTable({
     }
   }, []);
 
-  const handleStatusSelectionChange = (keys: Selection) => {
-    const selectedKeys = Array.from(keys);
+  const selectAllStatuses = useCallback(() => {
+    setStatusFilter(new Set(['created', 'pending', 'confirmed', 'canceled']));
+  }, []);
 
-    if (selectedKeys.includes('select-all')) {
-      setStatusFilter(new Set(['created', 'pending', 'confirmed', 'canceled']));
-      return;
-    }
+  const deselectAllStatuses = useCallback(() => {
+    setStatusFilter(new Set());
+  }, []);
 
-    if (selectedKeys.includes('clear-all')) {
-      setStatusFilter(new Set([]));
-      return;
-    }
+  const handleStatusSelectionChange = useCallback(
+    (keys: Selection) => {
+      const selectedKeys = Array.from(keys);
 
-    setStatusFilter(new Set(selectedKeys));
-  };
+      if (selectedKeys.includes('select-all')) {
+        selectAllStatuses();
+        return;
+      }
+
+      if (selectedKeys.includes('clear-all')) {
+        deselectAllStatuses();
+        return;
+      }
+
+      setStatusFilter(new Set(selectedKeys));
+    },
+    [selectAllStatuses, deselectAllStatuses],
+  );
 
   const topContent = useMemo(() => {
     return (
@@ -252,6 +263,8 @@ export default function WithdrawalsTable({
             <Dropdown isOpen={isStatusOpen} onOpenChange={setIsStatusOpen}>
               <DropdownTrigger>
                 <Button
+                  variant='ghost'
+                  color='secondary'
                   endContent={
                     isStatusOpen ? (
                       <ChevronUpIcon className='h-4 w-4' />
@@ -270,10 +283,20 @@ export default function WithdrawalsTable({
                 selectionMode='multiple'
                 onSelectionChange={handleStatusSelectionChange}
               >
-                <DropdownItem key='select-all' className='text-primary'>
+                <DropdownItem
+                  key='select-all'
+                  onPress={selectAllStatuses}
+                  color='success'
+                  className='text-success'
+                >
                   Выбрать все
                 </DropdownItem>
-                <DropdownItem key='clear-all' className='text-danger'>
+                <DropdownItem
+                  key='clear-all'
+                  onPress={deselectAllStatuses}
+                  color='danger'
+                  className='text-danger'
+                >
                   Очистить все
                 </DropdownItem>
                 <DropdownItem key='created'>Создан</DropdownItem>
@@ -285,6 +308,8 @@ export default function WithdrawalsTable({
             <Dropdown isOpen={isColumnsOpen} onOpenChange={setIsColumnsOpen}>
               <DropdownTrigger>
                 <Button
+                  variant='ghost'
+                  color='secondary'
                   endContent={
                     isColumnsOpen ? (
                       <ChevronUpIcon className='h-4 w-4' />
@@ -321,19 +346,24 @@ export default function WithdrawalsTable({
     onSearchChange,
     isColumnsOpen,
     isStatusOpen,
+    handleStatusSelectionChange,
+    deselectAllStatuses,
+    selectAllStatuses,
   ]);
 
   return (
     <div className='relative flex flex-col gap-4'>
+      {topContent}
       <div className='overflow-x-auto'>
         <Table
           aria-label='Withdrawals table'
           isHeaderSticky
-          topContent={topContent}
-          topContentPlacement='outside'
+          isVirtualized={true}
+          maxTableHeight={600}
           classNames={{
             wrapper: 'max-h-[600px]',
             td: 'text-default-600',
+            tr: 'border-0 transition-colors hover:bg-gray-700',
           }}
           sortDescriptor={sortDescriptor}
           onSortChange={setSortDescriptor}
@@ -348,12 +378,13 @@ export default function WithdrawalsTable({
                 key={column.uid}
                 align={column.uid === 'actions' ? 'center' : 'start'}
                 allowsSorting={column.sortable}
+                className='whitespace-nowrap bg-gray-800 px-4 py-2 text-sm text-white'
               >
                 {column.name}
               </TableColumn>
             )}
           </TableHeader>
-          <TableBody items={paginatedItems}>
+          <TableBody items={paginatedItems} emptyContent='Нет данных'>
             {(item) => (
               <TableRow key={item.id}>
                 {Array.from(visibleColumns).map((columnKey) => (
