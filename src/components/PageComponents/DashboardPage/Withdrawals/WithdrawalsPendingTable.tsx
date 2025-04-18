@@ -143,6 +143,16 @@ export default function WithdrawalsTable({
             .includes(filterValue.toLowerCase()) ||
           withdrawal.coinTicker
             .toLowerCase()
+            .includes(filterValue.toLowerCase()) ||
+          withdrawal.amount.toLowerCase().includes(filterValue.toLowerCase()) ||
+          withdrawal.fee.toLowerCase().includes(filterValue.toLowerCase()) ||
+          withdrawal.created_at
+            .toLocaleString()
+            .toLowerCase()
+            .includes(filterValue.toLowerCase()) ||
+          withdrawal.updated_at
+            .toLocaleString()
+            .toLowerCase()
             .includes(filterValue.toLowerCase())
         );
       });
@@ -249,14 +259,6 @@ export default function WithdrawalsTable({
     [isLoading, handleCancel, handleConfirm],
   );
 
-  const onSearchChange = useCallback((value?: string) => {
-    if (value) {
-      setFilterValue(value);
-    } else {
-      setFilterValue('');
-    }
-  }, []);
-
   const { paginatedItems, pages } = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
@@ -278,14 +280,17 @@ export default function WithdrawalsTable({
       <div className='flex items-end justify-between gap-3'>
         <Input
           isClearable
-          className='w-full sm:max-w-[44%]'
+          classNames={{
+            base: 'w-full sm:max-w-[44%]',
+            clearButton: 'text-default-700',
+          }}
           placeholder='Поиск по email, адресу или монете...'
           startContent={
-            <MagnifyingGlassIcon className='h-6 w-6 text-default-300' />
+            <MagnifyingGlassIcon className='h-6 w-6 text-default-700' />
           }
           value={filterValue}
-          onClear={() => onSearchChange('')}
-          onValueChange={onSearchChange}
+          onChange={(e) => setFilterValue(e.target.value)}
+          onClear={() => setFilterValue('')}
         />
       </div>
       <div className='overflow-x-auto'>
@@ -354,15 +359,11 @@ export default function WithdrawalsTable({
           </span>
           <div className='flex items-center gap-2'>
             <p className='text-sm text-white'>Строк на странице:</p>
-            <Dropdown
-              isOpen={isRowsOpen}
-              onOpenChange={setIsRowsOpen}
-              className='bg-gray-700'
-            >
+            <Dropdown isOpen={isRowsOpen} onOpenChange={setIsRowsOpen}>
               <DropdownTrigger>
                 <Button
-                  variant='flat'
-                  className='min-w-[70px] border-0 bg-gray-700 text-white'
+                  variant='ghost'
+                  color='secondary'
                   endContent={
                     isRowsOpen ? (
                       <ChevronUpIcon className='h-4 w-4 text-gray-400' />
@@ -383,18 +384,9 @@ export default function WithdrawalsTable({
                   setRowsPerPage(Number(value));
                   setPage(1);
                 }}
-                className='max-h-[30vh] border-0 bg-gray-700 text-sm'
-                classNames={{
-                  base: 'bg-gray-700 border-0 focus:outline-none rounded-lg',
-                  list: 'bg-gray-700 text-white',
-                }}
               >
                 {ROWS_PER_PAGE_OPTIONS.map((count) => (
-                  <DropdownItem
-                    key={count}
-                    textValue={count.toString()}
-                    className='text-sm text-white hover:bg-gray-700 data-[selected=true]:bg-gray-700'
-                  >
+                  <DropdownItem key={count} textValue={count.toString()}>
                     {count}
                   </DropdownItem>
                 ))}

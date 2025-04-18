@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import {
   Table,
   TableHeader,
@@ -36,9 +36,11 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   EllipsisVerticalIcon,
+  XCircleIcon,
 } from '@heroicons/react/24/solid';
 import { parseDate } from '@internationalized/date';
 import UserLinkButton from './UserLinkButton';
+import React from 'react';
 
 interface Equipment {
   id: number;
@@ -526,30 +528,24 @@ export default function UsersTable() {
     <div className='min-h-screen w-full space-y-4'>
       <div className='flex flex-col gap-4'>
         <div className='space-y-4 md:flex md:items-center md:justify-between md:space-y-0'>
-          <div className='flex items-center gap-3'>
-            <Input
-              variant='bordered'
-              classNames={{
-                base: 'w-full md:w-72',
-                inputWrapper:
-                  'border-1 border-gray-700 bg-gray-800 hover:border-gray-600 focus-within:!border-gray-500',
-                input: 'text-gray-300 placeholder:text-gray-300',
-                clearButton: 'text-gray-300 hover:text-gray-300',
-              }}
-              placeholder='Поиск по имени...'
-              startContent={
-                <MagnifyingGlassIcon className='h-4 w-4 text-gray-300' />
-              }
-              value={filterValue}
-              onChange={(e) => setFilterValue(e.target.value)}
-              isClearable
-              onClear={() => setFilterValue('')}
-            />
-          </div>
+          <Input
+            isClearable
+            classNames={{
+              base: 'w-full sm:max-w-[44%]',
+              clearButton: 'text-default-700',
+            }}
+            placeholder='Поиск по email, адресу или монете...'
+            startContent={
+              <MagnifyingGlassIcon className='h-6 w-6 text-default-700' />
+            }
+            value={filterValue}
+            onChange={(e) => setFilterValue(e.target.value)}
+            onClear={() => setFilterValue('')}
+          />
           <div className='flex justify-between gap-3'>
             <Button
-              variant='flat'
-              className='w-full border-0 bg-gray-800 text-white md:w-auto'
+              variant='ghost'
+              color='secondary'
               onPress={() => setShowFilters(!showFilters)}
               startContent={<FunnelIcon className='h-4 w-4' />}
               endContent={
@@ -565,12 +561,12 @@ export default function UsersTable() {
             <Dropdown
               isOpen={isColumnsOpen}
               onOpenChange={setIsColumnsOpen}
-              className='bg-gray-700'
+              className='w-full bg-inherit'
             >
               <DropdownTrigger>
                 <Button
-                  variant='flat'
-                  className='border-0 bg-gray-800 text-white'
+                  variant='ghost'
+                  color='secondary'
                   endContent={
                     isColumnsOpen ? (
                       <ChevronUpIcon className='h-4 w-4 text-gray-400' />
@@ -589,19 +585,14 @@ export default function UsersTable() {
                 selectedKeys={visibleColumns}
                 selectionMode='multiple'
                 onSelectionChange={setVisibleColumns}
-                className='border-0 bg-gray-700'
+                className='max-h-[30vh] border-0 bg-white text-sm'
                 classNames={{
-                  base: 'bg-gray-700 border-0 focus:outline-none rounded-lg',
-                  list: 'bg-gray-700 text-white',
+                  base: 'bg-white border-0 focus:outline-none rounded-lg',
+                  list: 'bg-white text-gray-900',
                 }}
               >
                 {columns.map((column) => (
-                  <DropdownItem
-                    key={column.uid}
-                    className='text-white hover:bg-gray-700'
-                  >
-                    {column.name}
-                  </DropdownItem>
+                  <DropdownItem key={column.uid}>{column.name}</DropdownItem>
                 ))}
               </DropdownMenu>
             </Dropdown>
@@ -635,106 +626,132 @@ export default function UsersTable() {
               </div>
 
               <div className='w-full justify-between space-y-4 md:flex md:space-y-0'>
-                <div className='flex w-full max-w-[200px] flex-col gap-2'>
+                <div className='flex w-full max-w-[250px] flex-col gap-2'>
                   <Dropdown
                     isOpen={isAlgorithmOpen}
                     onOpenChange={setIsAlgorithmOpen}
                     className='w-full bg-inherit'
                   >
-                    <DropdownTrigger className='w-full'>
+                    <DropdownTrigger>
                       <Button
-                        variant='flat'
-                        className='w-full border-1 border-gray-700 bg-gray-900 text-white'
+                        variant='ghost'
+                        color='secondary'
+                        className='flex items-center gap-2'
                         endContent={
                           isAlgorithmOpen ? (
-                            <ChevronUpIcon className='h-4 w-4 text-gray-400' />
+                            <ChevronUpIcon className='h-4 w-4' />
                           ) : (
-                            <ChevronDownIcon className='h-4 w-4 text-gray-400' />
+                            <ChevronDownIcon className='h-4 w-4' />
                           )
                         }
                       >
-                        {Array.from(
-                          selectedAlgorithm instanceof Set
-                            ? selectedAlgorithm
-                            : new Set(),
-                        ).length
-                          ? `Выбрано: ${selectedAlgorithm instanceof Set ? selectedAlgorithm.size : 0}`
+                        <FunnelIcon className='h-4 w-4' />
+                        {Array.from(selectedAlgorithm).length
+                          ? `Выбрано: ${Array.from(selectedAlgorithm).length}`
                           : 'Выберите алгоритм'}
                       </Button>
                     </DropdownTrigger>
                     <DropdownMenu
-                      disallowEmptySelection={false}
                       aria-label='Выбор алгоритма'
-                      closeOnSelect={false}
-                      selectedKeys={selectedAlgorithm}
                       selectionMode='multiple'
+                      selectedKeys={selectedAlgorithm}
                       onSelectionChange={setSelectedAlgorithm}
-                      className='w-full min-w-[300px] bg-gray-700'
+                      className='max-h-[30vh] border-0 bg-white text-sm'
                       classNames={{
-                        base: 'bg-gray-700 border-0 focus:outline-none rounded-lg',
-                        list: 'bg-gray-700 text-white',
+                        base: 'bg-white border-0 focus:outline-none rounded-lg',
+                        list: 'bg-white text-gray-900',
                       }}
                     >
-                      {filterOptions.algorithms.map((algorithm) => (
-                        <DropdownItem
-                          key={algorithm}
-                          className='text-white hover:bg-gray-700'
-                        >
-                          {algorithm}
-                        </DropdownItem>
-                      ))}
+                      <DropdownItem
+                        key='select-all-algorithms'
+                        onPress={() =>
+                          setSelectedAlgorithm(
+                            new Set(filterOptions.algorithms),
+                          )
+                        }
+                        color='success'
+                        className='text-success'
+                      >
+                        Выбрать все
+                      </DropdownItem>
+                      <DropdownItem
+                        key='clear-all-algorithms'
+                        onPress={() => setSelectedAlgorithm(new Set())}
+                        color='danger'
+                        className='text-danger'
+                      >
+                        Очистить все
+                      </DropdownItem>
+                      <React.Fragment>
+                        {filterOptions.algorithms.map((algorithm) => (
+                          <DropdownItem key={algorithm}>
+                            {algorithm}
+                          </DropdownItem>
+                        ))}
+                      </React.Fragment>
                     </DropdownMenu>
                   </Dropdown>
                 </div>
 
-                <div className='flex w-full max-w-[200px] flex-col gap-2'>
+                <div className='flex w-full max-w-[250px] flex-col gap-2'>
                   <Dropdown
                     isOpen={isDeviceOpen}
                     onOpenChange={setIsDeviceOpen}
                     className='w-full bg-inherit'
                   >
-                    <DropdownTrigger className='w-full'>
+                    <DropdownTrigger>
                       <Button
-                        variant='flat'
-                        className='w-full border-1 border-gray-700 bg-gray-900 text-white'
+                        variant='ghost'
+                        color='secondary'
+                        className='flex items-center gap-2'
                         endContent={
                           isDeviceOpen ? (
-                            <ChevronUpIcon className='h-4 w-4 text-gray-400' />
+                            <ChevronUpIcon className='h-4 w-4' />
                           ) : (
-                            <ChevronDownIcon className='h-4 w-4 text-gray-400' />
+                            <ChevronDownIcon className='h-4 w-4' />
                           )
                         }
                       >
-                        {Array.from(
-                          selectedDevice instanceof Set
-                            ? selectedDevice
-                            : new Set(),
-                        ).length
-                          ? `Выбрано: ${selectedDevice instanceof Set ? selectedDevice.size : 0}`
+                        <FunnelIcon className='h-4 w-4' />
+                        {Array.from(selectedDevice).length
+                          ? `Выбрано: ${Array.from(selectedDevice).length}`
                           : 'Выберите устройство'}
                       </Button>
                     </DropdownTrigger>
                     <DropdownMenu
-                      disallowEmptySelection={false}
                       aria-label='Выбор устройства'
-                      closeOnSelect={false}
-                      selectedKeys={selectedDevice}
                       selectionMode='multiple'
+                      selectedKeys={selectedDevice}
                       onSelectionChange={setSelectedDevice}
-                      className='w-full min-w-[300px] bg-gray-700'
+                      className='max-h-[30vh] border-0 bg-white text-sm'
                       classNames={{
-                        base: 'bg-gray-700 border-0 focus:outline-none rounded-lg',
-                        list: 'bg-gray-700 text-white',
+                        base: 'bg-white border-0 focus:outline-none rounded-lg',
+                        list: 'bg-white text-gray-900',
                       }}
                     >
-                      {filterOptions.devices.map((device) => (
-                        <DropdownItem
-                          key={device}
-                          className='text-white hover:bg-gray-700'
-                        >
-                          {device}
-                        </DropdownItem>
-                      ))}
+                      <DropdownItem
+                        key='select-all-devices'
+                        onPress={() =>
+                          setSelectedDevice(new Set(filterOptions.devices))
+                        }
+                        color='success'
+                        className='text-success'
+                      >
+                        Выбрать все
+                      </DropdownItem>
+                      <DropdownItem
+                        key='clear-all-devices'
+                        onPress={() => setSelectedDevice(new Set())}
+                        color='danger'
+                        className='text-danger'
+                      >
+                        Очистить все
+                      </DropdownItem>
+                      <React.Fragment>
+                        {filterOptions.devices.map((device) => (
+                          <DropdownItem key={device}>{device}</DropdownItem>
+                        ))}
+                      </React.Fragment>
                     </DropdownMenu>
                   </Dropdown>
                 </div>
@@ -743,50 +760,61 @@ export default function UsersTable() {
                   <Dropdown
                     isOpen={isCoinOpen}
                     onOpenChange={setIsCoinOpen}
-                    className='w-full bg-inherit'
+                    className='bg-gray-700'
                   >
-                    <DropdownTrigger className='w-full'>
+                    <DropdownTrigger>
                       <Button
-                        variant='flat'
-                        className='w-full border-1 border-gray-700 bg-gray-900 text-white'
+                        variant='ghost'
+                        color='secondary'
+                        className='flex items-center gap-2'
                         endContent={
                           isCoinOpen ? (
-                            <ChevronUpIcon className='h-4 w-4 text-gray-400' />
+                            <ChevronUpIcon className='h-4 w-4' />
                           ) : (
-                            <ChevronDownIcon className='h-4 w-4 text-gray-400' />
+                            <ChevronDownIcon className='h-4 w-4' />
                           )
                         }
                       >
-                        {Array.from(
-                          selectedCoin instanceof Set
-                            ? selectedCoin
-                            : new Set(),
-                        ).length
-                          ? `Выбрано: ${selectedCoin instanceof Set ? selectedCoin.size : 0}`
+                        <FunnelIcon className='h-4 w-4' />
+                        {Array.from(selectedCoin).length
+                          ? `Выбрано: ${Array.from(selectedCoin).length}`
                           : 'Выберите монету'}
                       </Button>
                     </DropdownTrigger>
                     <DropdownMenu
-                      disallowEmptySelection={false}
                       aria-label='Выбор монеты'
-                      closeOnSelect={false}
-                      selectedKeys={selectedCoin}
                       selectionMode='multiple'
+                      selectedKeys={selectedCoin}
                       onSelectionChange={setSelectedCoin}
-                      className='w-full min-w-[300px] bg-gray-700'
+                      className='max-h-[30vh] border-0 bg-white text-sm'
                       classNames={{
-                        base: 'bg-gray-700 border-0 focus:outline-none rounded-lg',
-                        list: 'bg-gray-700 text-white',
+                        base: 'bg-white border-0 focus:outline-none rounded-lg',
+                        list: 'bg-white text-gray-900',
                       }}
                     >
-                      {filterOptions.coins.map((coin) => (
-                        <DropdownItem
-                          key={coin}
-                          className='text-white hover:bg-gray-700'
-                        >
-                          {coin}
-                        </DropdownItem>
-                      ))}
+                      <DropdownItem
+                        key='select-all-coins'
+                        onPress={() =>
+                          setSelectedCoin(new Set(filterOptions.coins))
+                        }
+                        color='success'
+                        className='text-success'
+                      >
+                        Выбрать все
+                      </DropdownItem>
+                      <DropdownItem
+                        key='clear-all-coins'
+                        onPress={() => setSelectedCoin(new Set())}
+                        color='danger'
+                        className='text-danger'
+                      >
+                        Очистить все
+                      </DropdownItem>
+                      <React.Fragment>
+                        {filterOptions.coins.map((coin) => (
+                          <DropdownItem key={coin}>{coin}</DropdownItem>
+                        ))}
+                      </React.Fragment>
                     </DropdownMenu>
                   </Dropdown>
                 </div>
@@ -832,16 +860,9 @@ export default function UsersTable() {
           maxTableHeight={600}
           color='success'
           classNames={{
-            base: 'bg-gray-800 border-0',
-            table: 'min-w-full',
-            thead: 'bg-gray-800',
-            tbody: 'bg-gray-800',
-            //tr: 'border-0 transition-colors hover:bg-gray-700 group-data-[hover=true]:bg-default',
-            th: 'bg-gray-800 text-gray-400 font-medium py-3',
-            td: 'group-data-[selected=true]:bg-gray-700',
-            sortIcon: 'text-gray-400',
-            emptyWrapper: 'bg-gray-800 text-white',
-            wrapper: 'bg-gray-800 rounded-lg border border-gray-800',
+            wrapper: 'max-h-[600px]',
+            td: 'text-default-600',
+            tr: 'border-0 transition-colors hover:bg-gray-700',
           }}
         >
           <TableHeader columns={headerColumns}>
@@ -902,15 +923,11 @@ export default function UsersTable() {
           </span>
           <div className='flex items-center gap-2'>
             <p className='text-sm text-white'>Строк на странице:</p>
-            <Dropdown
-              isOpen={isRowsOpen}
-              onOpenChange={setIsRowsOpen}
-              className='bg-gray-700'
-            >
+            <Dropdown isOpen={isRowsOpen} onOpenChange={setIsRowsOpen}>
               <DropdownTrigger>
                 <Button
-                  variant='flat'
-                  className='min-w-[70px] border-0 bg-gray-700 text-white'
+                  variant='ghost'
+                  color='secondary'
                   endContent={
                     isRowsOpen ? (
                       <ChevronUpIcon className='h-4 w-4 text-gray-400' />
@@ -931,18 +948,9 @@ export default function UsersTable() {
                   setRowsPerPage(Number(value));
                   setPage(1);
                 }}
-                className='max-h-[30vh] border-0 bg-gray-700 text-sm'
-                classNames={{
-                  base: 'bg-gray-700 border-0 focus:outline-none rounded-lg',
-                  list: 'bg-gray-700 text-white',
-                }}
               >
                 {ROWS_PER_PAGE_OPTIONS.map((count) => (
-                  <DropdownItem
-                    key={count}
-                    textValue={count.toString()}
-                    className='text-sm text-white hover:bg-gray-700 data-[selected=true]:bg-gray-700'
-                  >
+                  <DropdownItem key={count} textValue={count.toString()}>
                     {count}
                   </DropdownItem>
                 ))}

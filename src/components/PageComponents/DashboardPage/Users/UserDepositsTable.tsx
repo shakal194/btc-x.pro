@@ -92,27 +92,6 @@ const getStatusText = (status: string): string => {
   }
 };
 
-const getStatusFromNumber = (status: string): string => {
-  console.log('Converting status:', status);
-  switch (status.toLowerCase()) {
-    case 'canceled':
-      return 'canceled';
-    case 'blocked':
-      return 'blocked';
-    case 'failed':
-      return 'failed';
-    case 'created':
-      return 'created';
-    case 'unconfirmed':
-      return 'unconfirmed';
-    case 'confirmed':
-      return 'confirmed';
-    default:
-      console.log('Unknown status:', status);
-      return 'unknown';
-  }
-};
-
 export default function UserDepositsTable({
   userId,
   userEmail,
@@ -511,15 +490,11 @@ export default function UserDepositsTable({
             </span>
             <div className='flex items-center gap-2'>
               <p className='text-sm text-white'>Строк на странице:</p>
-              <Dropdown
-                isOpen={isRowsOpen}
-                onOpenChange={setIsRowsOpen}
-                className='bg-gray-700'
-              >
+              <Dropdown isOpen={isRowsOpen} onOpenChange={setIsRowsOpen}>
                 <DropdownTrigger>
                   <Button
-                    variant='flat'
-                    className='min-w-[70px] border-0 bg-gray-700 text-white'
+                    variant='ghost'
+                    color='secondary'
                     endContent={
                       isRowsOpen ? (
                         <ChevronUpIcon className='h-4 w-4 text-gray-400' />
@@ -540,18 +515,9 @@ export default function UserDepositsTable({
                     setRowsPerPage(Number(value));
                     setPage(1);
                   }}
-                  className='max-h-[30vh] border-0 bg-gray-700 text-sm'
-                  classNames={{
-                    base: 'bg-gray-700 border-0 focus:outline-none rounded-lg',
-                    list: 'bg-gray-700 text-white',
-                  }}
                 >
                   {ROWS_PER_PAGE_OPTIONS.map((count) => (
-                    <DropdownItem
-                      key={count}
-                      textValue={count.toString()}
-                      className='text-sm text-white hover:bg-gray-700 data-[selected=true]:bg-gray-700'
-                    >
+                    <DropdownItem key={count} textValue={count.toString()}>
                       {count}
                     </DropdownItem>
                   ))}
