@@ -22,6 +22,7 @@ import {
 import { fetchUserRefBonusTransactions } from '@/lib/data';
 import { useRouter } from 'next/navigation';
 import { ListBulletIcon } from '@heroicons/react/24/outline';
+import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 
 interface ApiRefBonusTransaction {
   id: number;
@@ -57,6 +58,7 @@ export default function UserRefBonusTable({
   });
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const router = useRouter();
+  const [isRowsOpen, setIsRowsOpen] = useState(false);
 
   const rowsPerPageOptions = [
     { key: '20', label: '20 строк' },
@@ -126,7 +128,7 @@ export default function UserRefBonusTable({
 
   return (
     <div className='min-h-screen w-full space-y-4 bg-black/90 p-4'>
-      <div className='rounded-lg bg-gray-800 p-4'>
+      <div className='space-y-4 rounded-lg p-4'>
         <Breadcrumbs>
           <BreadcrumbItem href='/dashboard/users' className='text-gray-300'>
             Пользователи
@@ -142,31 +144,12 @@ export default function UserRefBonusTable({
           </BreadcrumbItem>
         </Breadcrumbs>
 
-        <div className='mt-4'>
-          <Dropdown>
-            <DropdownTrigger>
-              <Button
-                variant='shadow'
-                color='secondary'
-                className='flex items-center gap-2'
-              >
-                <ListBulletIcon className='h-4 w-4' />
-                {rowsPerPageOptions.find(
-                  (option) => option.key === rowsPerPage.toString(),
-                )?.label || '20 строк'}
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              aria-label='Количество строк на странице'
-              onAction={(key) => setRowsPerPage(Number(key))}
-              selectedKeys={new Set([rowsPerPage.toString()])}
-              selectionMode='single'
-            >
-              {rowsPerPageOptions.map((option) => (
-                <DropdownItem key={option.key}>{option.label}</DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
+        <div className='mt-4 flex items-center justify-between'>
+          <div>
+            <h1 className='text-2xl font-bold text-white'>
+              История реферальных начислений
+            </h1>
+          </div>
         </div>
 
         <div className='relative mt-4 overflow-x-auto rounded-lg bg-gray-900'>
@@ -180,21 +163,14 @@ export default function UserRefBonusTable({
             aria-label='Referral bonus transactions table'
             isHeaderSticky
             isVirtualized={true}
-            maxTableHeight={500}
+            maxTableHeight={600}
             color='success'
             sortDescriptor={sortDescriptor}
             onSortChange={setSortDescriptor}
             classNames={{
-              base: 'bg-gray-700 border-0',
-              table: 'min-w-full',
-              thead: 'bg-gray-800',
-              tbody: 'bg-gray-800',
+              wrapper: 'max-h-[600px]',
+              td: 'text-default-600',
               tr: 'border-0 transition-colors hover:bg-gray-700',
-              th: 'bg-gray-800 text-gray-400 font-medium py-3',
-              td: 'group-data-[selected=true]:bg-gray-700',
-              sortIcon: 'text-gray-400',
-              emptyWrapper: 'bg-gray-800 text-white',
-              wrapper: 'bg-gray-800 rounded-lg border border-gray-800',
             }}
           >
             <TableHeader>
@@ -270,12 +246,56 @@ export default function UserRefBonusTable({
             showControls={true}
             classNames={{
               wrapper: 'gap-2 text-white',
-              item: 'bg-gray-700 text-white border-0 hover:bg-gray-600',
-              cursor: 'bg-secondary text-white',
+              item: 'dark:bg-gray-700 text-white border-0 hover:bg-gray-600',
+              cursor: 'dark:bg-secondary text-white',
               next: 'bg-gray-700 text-white hover:bg-gray-600',
               prev: 'bg-gray-700 text-white hover:bg-gray-600',
             }}
           />
+        </div>
+
+        <div className='flex flex-col justify-between space-y-4 text-gray-400 md:items-center'>
+          <div className='flex w-full items-center justify-between'>
+            <span className='text-sm'>
+              Всего операций: {transactions.length}
+            </span>
+            <div className='flex items-center gap-2'>
+              <p className='text-sm text-white'>Строк на странице:</p>
+              <Dropdown isOpen={isRowsOpen} onOpenChange={setIsRowsOpen}>
+                <DropdownTrigger>
+                  <Button
+                    variant='ghost'
+                    color='secondary'
+                    endContent={
+                      isRowsOpen ? (
+                        <ChevronUpIcon className='h-4 w-4 text-gray-400' />
+                      ) : (
+                        <ChevronDownIcon className='h-4 w-4 text-gray-400' />
+                      )
+                    }
+                  >
+                    {rowsPerPage}
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  disallowEmptySelection
+                  selectedKeys={new Set([rowsPerPage.toString()])}
+                  selectionMode='single'
+                  onSelectionChange={(keys) => {
+                    const value = Array.from(keys)[0];
+                    setRowsPerPage(Number(value));
+                    setPage(1);
+                  }}
+                >
+                  {rowsPerPageOptions.map((count) => (
+                    <DropdownItem key={count.key} textValue={count.key}>
+                      {count.label}
+                    </DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+          </div>
         </div>
       </div>
     </div>

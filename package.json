@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --project tsconfig.json --pretty --noEmit && echo",
-    "check-deposits": "tsx src/lib/scripts/runDepositChecker.ts"
+    "check-deposits": "tsx src/lib/scripts/deposits/runDepositChecker.ts",
+    "calculate-mining-rewards": "tsx src/lib/scripts/mining/runCalculateMiningRewards.ts"
   },
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.5.10",

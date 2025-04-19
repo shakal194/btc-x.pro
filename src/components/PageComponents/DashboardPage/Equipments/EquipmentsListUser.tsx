@@ -6,18 +6,20 @@ import {
   fetchAllUserBalanceShares,
   fetchElectricityPrice,
   fetchAllUserBalances,
-  fetchCoinPrice,
   fetchRefBalance,
+  fetchMiningStats,
+  getUserUuidById,
 } from '@/lib/data';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import BuySellShareCountComponent from '@/components/PageComponents/DashboardPage/Equipments/BuySellShareCountComponent';
 import FullScreenSpinner from '@/components/ui/Spinner';
-import { Tabs, Tab, Button } from '@heroui/react';
+import { Tabs, Tab, Button, Card, CardHeader, CardBody } from '@heroui/react';
 import DepositModal from '../Wallet/DepositModal';
 import WithdrawModal from '../Wallet/WithdrawModal';
 import { EquipmentSkeleton } from '@/components/ui/Skeletons';
+import { useRouter } from 'next/navigation';
 
 import { getAccessToken } from '@/lib/coinsbuy';
 
@@ -46,21 +48,23 @@ interface Equipment {
   uuid: string | null;
 }
 
-interface CoinTicker {
-  name: string;
-  pricePerHashrate: number;
-}
-
 interface Algorithm {
   id: number;
-  name: string;
   uuid: string | null;
-  coinTickers: CoinTicker[] | null;
+  name: string;
+  coinTickers: { name: string; pricePerHashrate: number }[] | null;
+  hashrate_unit?: string | null;
 }
 
 interface EquipmentData {
   equipmentId: number;
   balanceShareCount: number;
+}
+
+interface MiningStats {
+  totalMined: number;
+  profit24h: number;
+  mined24h: number;
 }
 
 export default function EquipmentsListUser({
@@ -70,6 +74,7 @@ export default function EquipmentsListUser({
   const { data: session } = useSession();
   const user_id = serverUserId || session?.user?.id;
   const userEmail = serverUserEmail || session?.user?.email || '';
+  const [userUuid, setUserUuid] = useState<string>('');
 
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>('');
   const [selectedModalCoin, setSelectedModalCoin] = useState<string>('');
@@ -90,6 +95,17 @@ export default function EquipmentsListUser({
   } | null>(null);
   const [coinPrices, setCoinPrices] = useState<Record<string, number>>({});
   const [refBalance, setRefBalance] = useState<number>(0);
+  const [miningStats, setMiningStats] = useState<
+    Record<
+      string,
+      {
+        totalHashrate: number;
+        hashrate_unit: string;
+        stats: Record<string, MiningStats>;
+      }
+    >
+  >({});
+  const router = useRouter();
 
   useEffect(() => {
     const getelectricityPrice = async () => {
@@ -318,6 +334,96 @@ export default function EquipmentsListUser({
     setIsDepositModalOpen(true);
   };
 
+  const fetchAllMiningStats = useCallback(async () => {
+    const stats: Record<
+      string,
+      {
+        totalHashrate: number;
+        hashrate_unit: string;
+        stats: Record<string, MiningStats>;
+      }
+    > = {};
+
+    for (const algorithm of algorithms) {
+      const algorithmEquipment = userEquipmentsFetch
+        .map((equipmentData) => {
+          const equipment = equipments.find(
+            (equip) => equip.id === equipmentData.equipmentId,
+          );
+          return equipment?.algorithm_id === algorithm.id
+            ? { equipment, equipmentData }
+            : null;
+        })
+        .filter(
+          (
+            item,
+          ): item is { equipment: Equipment; equipmentData: EquipmentData } =>
+            item !== null,
+        );
+
+      const totalHashrate = algorithmEquipment.reduce(
+        (sum, { equipment, equipmentData }) => {
+          const userBalanceShareCount = equipmentData.balanceShareCount;
+          return (
+            sum +
+            (equipment.hashrate * userBalanceShareCount) / equipment.shareCount
+          );
+        },
+        0,
+      );
+
+      // Получаем hashrate_unit из первого оборудования алгоритма
+      const hashrate_unit =
+        algorithmEquipment[0]?.equipment.hashrate_unit || '';
+
+      const coinStats: Record<string, MiningStats> = {};
+
+      if (algorithm.coinTickers) {
+        for (const coinTicker of algorithm.coinTickers) {
+          const miningData = await fetchMiningStats(
+            coinTicker.name,
+            Number(user_id),
+          );
+          coinStats[coinTicker.name] = miningData;
+        }
+      }
+
+      stats[algorithm.name] = {
+        totalHashrate,
+        hashrate_unit,
+        stats: coinStats,
+      };
+    }
+
+    setMiningStats(stats);
+  }, [algorithms, equipments, userEquipmentsFetch, user_id]);
+
+  useEffect(() => {
+    if (userEquipmentsFetch.length > 0) {
+      fetchAllMiningStats();
+    }
+  }, [userEquipmentsFetch, fetchAllMiningStats]);
+
+  // Add new useEffect for fetching UUID
+  useEffect(() => {
+    const fetchUserUuid = async () => {
+      if (!user_id || isNaN(Number(user_id))) return;
+
+      try {
+        const uuid = await getUserUuidById(Number(user_id));
+        if (uuid) {
+          setUserUuid(uuid);
+        }
+      } catch (error) {
+        console.error('Error fetching user UUID:', error);
+      }
+    };
+
+    if (!userUuid) {
+      fetchUserUuid();
+    }
+  }, [user_id, userUuid]);
+
   return (
     <section className='space-y-4'>
       {isLoading ? (
@@ -363,12 +469,14 @@ export default function EquipmentsListUser({
                 {balances.map((balance) => (
                   <div
                     key={balance.id}
-                    className='flex items-center justify-between'
+                    className='flex items-center justify-between gap-4'
                   >
                     <div className='flex items-center gap-2'>
                       <span>{balance.coinTicker}</span>
                       <span className='font-bold'>
-                        {Number(balance.coinAmount).toFixed(2)}
+                        {Number(balance.coinAmount).toFixed(
+                          ['USDT', 'USDC'].includes(balance.coinTicker) ? 2 : 8,
+                        )}
                       </span>
                     </div>
                     <div className='flex gap-2'>
@@ -402,6 +510,89 @@ export default function EquipmentsListUser({
             >
               {algorithms.map((algorithm: Algorithm) => (
                 <Tab key={algorithm.name} title={algorithm.name}>
+                  <Button
+                    color='secondary'
+                    variant='ghost'
+                    onPress={() =>
+                      router.push(`/dashboard/${userUuid}/mining-rewards`)
+                    }
+                  >
+                    История начислений
+                  </Button>
+                  {miningStats[algorithm.name] && (
+                    <div className='mb-4 flex justify-between gap-4 rounded-lg p-4'>
+                      <Card className='w-[200px] border-1 border-secondary bg-default-100 shadow-md shadow-secondary'>
+                        <CardHeader className='flex items-center justify-center'>
+                          Хешрейт
+                        </CardHeader>
+                        <CardBody className='flex items-center justify-center'>
+                          {miningStats[algorithm.name].totalHashrate.toFixed(2)}{' '}
+                          {miningStats[algorithm.name].hashrate_unit}
+                        </CardBody>
+                      </Card>
+                      <Card className='w-[200px] border-1 border-secondary bg-default-200 shadow-md shadow-secondary'>
+                        <CardHeader className='flex items-center justify-center'>
+                          Намайнено всего
+                        </CardHeader>
+                        <CardBody className='flex flex-col gap-2'>
+                          {algorithm.coinTickers?.map((coinTicker) => (
+                            <div
+                              key={coinTicker.name}
+                              className='flex justify-between'
+                            >
+                              <span>{coinTicker.name}:</span>
+                              <span>
+                                {miningStats[algorithm.name].stats[
+                                  coinTicker.name
+                                ]?.totalMined.toFixed(8)}
+                              </span>
+                            </div>
+                          ))}
+                        </CardBody>
+                      </Card>
+                      <Card className='w-[200px] border-1 border-secondary bg-transparent shadow-md shadow-secondary'>
+                        <CardHeader className='flex items-center justify-center'>
+                          Прибыль за 24ч.
+                        </CardHeader>
+                        <CardBody className='flex flex-col gap-2'>
+                          {algorithm.coinTickers?.map((coinTicker) => (
+                            <div
+                              key={coinTicker.name}
+                              className='flex justify-between'
+                            >
+                              <span>{coinTicker.name}:</span>
+                              <span>
+                                {miningStats[algorithm.name].stats[
+                                  coinTicker.name
+                                ]?.profit24h.toFixed(8)}
+                              </span>
+                            </div>
+                          ))}
+                        </CardBody>
+                      </Card>
+                      <Card className='w-[200px] border-1 border-secondary bg-transparent shadow-sm shadow-secondary'>
+                        <CardHeader className='flex items-center justify-center'>
+                          Намайнено за 24ч.
+                        </CardHeader>
+                        <CardBody className='flex flex-col gap-2'>
+                          {algorithm.coinTickers?.map((coinTicker) => (
+                            <div
+                              key={coinTicker.name}
+                              className='flex justify-between'
+                            >
+                              <span>{coinTicker.name}:</span>
+                              <span>
+                                {miningStats[algorithm.name].stats[
+                                  coinTicker.name
+                                ]?.mined24h.toFixed(8)}
+                              </span>
+                            </div>
+                          ))}
+                        </CardBody>
+                      </Card>
+                    </div>
+                  )}
+
                   <ul className='space-y-4'>
                     {isLoadingUserEquipments ? (
                       <div className='flex min-h-[200px] items-center justify-center'>

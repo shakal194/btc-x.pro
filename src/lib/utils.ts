@@ -34,3 +34,17 @@ export async function verifyPassword(
   // Сравниваем хеши
   return enteredHash === storedHash;
 }
+
+export function formatDate(date: Date): string {
+  return date.toLocaleString('ru-RU', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+export function formatNumber(value: number, decimalPlaces: number = 8): string {
+  return value.toFixed(decimalPlaces);
+}

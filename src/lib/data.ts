@@ -12,10 +12,17 @@ import {
   usersAddressTable,
   depositsTable,
   withdrawalsTable,
+  miningRewardsTable,
 } from '@/db/schema'; // Импортируем таблицу
-import { sql, desc, asc, eq, and } from 'drizzle-orm';
+import { sql, desc, asc, eq, and, gte, gt } from 'drizzle-orm';
 import fs from 'fs';
 import { createDepositForCoin } from './balance';
+
+export interface MiningStats {
+  totalMined: number;
+  mined24h: number;
+  profit24h: number;
+}
 
 // ============= Функции для работы с алгоритмами =============
 
@@ -918,8 +925,6 @@ export async function fetchUserDataByUuid(uuid: string) {
       .from(usersTable)
       .where(sql`${usersTable.uuid} = ${uuid}`);
 
-    console.log(userDataByUuid);
-
     if (userDataByUuid.length === 0) {
       throw new Error('User not found');
     }
@@ -1445,5 +1450,196 @@ export async function fetchUserWithdrawals(userId: number) {
   } catch (error) {
     console.error('Error fetching user withdrawals:', error);
     throw new Error('Failed to fetch user withdrawals');
+  }
+}
+
+// Функция для получения статистики майнинга по UUID оборудования
+export async function fetchMiningStats(
+  coinTicker: string,
+  userId: number,
+): Promise<MiningStats> {
+  try {
+    // Get all mined amounts for the coin
+    const allRecords = await db
+      .select({
+        minedAmount: miningRewardsTable.minedAmount,
+      })
+      .from(miningRewardsTable)
+      .where(
+        and(
+          eq(miningRewardsTable.coinTicker, coinTicker),
+          eq(miningRewardsTable.user_id, userId),
+        ),
+      );
+
+    const totalMined = allRecords.reduce(
+      (sum, record) => sum + Number(record.minedAmount),
+      0,
+    );
+
+    // Get records for last 24 hours
+    const last24Hours = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+    const records = await db
+      .select({
+        minedAmount: miningRewardsTable.minedAmount,
+        rewardAmount: miningRewardsTable.rewardAmount,
+        recordDate: miningRewardsTable.recordDate,
+      })
+      .from(miningRewardsTable)
+      .where(
+        and(
+          eq(miningRewardsTable.coinTicker, coinTicker),
+          eq(miningRewardsTable.user_id, userId),
+          gt(miningRewardsTable.recordDate, last24Hours),
+        ),
+      );
+
+    console.log(
+      `Found ${records.length} records for user ${userId} in last 24h`,
+    );
+
+    const mined24h = records.reduce(
+      (sum, record) => sum + Number(record.minedAmount),
+      0,
+    );
+    const profit24h = records.reduce(
+      (sum, record) => sum + Number(record.rewardAmount),
+      0,
+    );
+
+    return {
+      totalMined,
+      mined24h,
+      profit24h,
+    };
+  } catch (error) {
+    console.error('Error fetching mining stats:', error);
+    return {
+      totalMined: 0,
+      mined24h: 0,
+      profit24h: 0,
+    };
+  }
+}
+
+export async function fetchMiningRewardsHistory(
+  userId: string | number,
+): Promise<MiningRewardRecord[]> {
+  try {
+    // Получаем все записи майнинга для пользователя
+    const records = await db
+      .select({
+        id: miningRewardsTable.id,
+        recordDate: miningRewardsTable.recordDate,
+        minedAmount: miningRewardsTable.minedAmount,
+        electricityCost: miningRewardsTable.electricityCost,
+        rewardAmount: miningRewardsTable.rewardAmount,
+        balanceAfter: miningRewardsTable.balanceAfter,
+        coinTicker: miningRewardsTable.coinTicker,
+      })
+      .from(miningRewardsTable)
+      .where(eq(miningRewardsTable.user_id, Number(userId)))
+      .orderBy(desc(miningRewardsTable.recordDate));
+
+    // Получаем информацию об оборудовании пользователя
+    const equipmentInfo = await db
+      .select({
+        equipment_id: transactionsTable.equipment_id,
+        shareCount: transactionsTable.balanceShareCount,
+        equipmentName: equipmentsTable.name,
+        equipmentHashrate: equipmentsTable.hashrate,
+        equipmentHashrateUnit: equipmentsTable.hashrate_unit,
+        coinTickers: algorithmTable.coinTickers,
+      })
+      .from(transactionsTable)
+      .innerJoin(
+        equipmentsTable,
+        eq(transactionsTable.equipment_id, equipmentsTable.id),
+      )
+      .innerJoin(
+        algorithmTable,
+        eq(equipmentsTable.algorithm_id, algorithmTable.id),
+      )
+      .where(eq(transactionsTable.user_id, Number(userId)))
+      .orderBy(desc(transactionsTable.id));
+
+    // Создаем мапу последних транзакций для каждого оборудования
+    const latestEquipmentInfo = equipmentInfo.reduce<
+      Record<string, (typeof equipmentInfo)[0]>
+    >((acc, curr) => {
+      const key = curr.equipment_id.toString();
+      if (!acc[key] || acc[key].shareCount < curr.shareCount) {
+        acc[key] = curr;
+      }
+      return acc;
+    }, {});
+
+    // Форматируем записи
+    const formattedRecords = records.map((record) => {
+      // Находим оборудование для данной монеты
+      const equipment = Object.values(latestEquipmentInfo).find((eq) => {
+        const tickers =
+          typeof eq.coinTickers === 'string'
+            ? JSON.parse(eq.coinTickers)
+            : eq.coinTickers;
+        return tickers.some(
+          (t: { name: string }) => t.name === record.coinTicker,
+        );
+      });
+
+      return {
+        ...record,
+        recordDate: record.recordDate.toISOString(),
+        equipmentName: equipment?.equipmentName || 'Unknown',
+        equipmentHashrate: (equipment?.equipmentHashrate || 0).toString(),
+        equipmentHashrateUnit: equipment?.equipmentHashrateUnit || 'H/s',
+        shareCount: equipment?.shareCount || 0,
+      };
+    });
+
+    return formattedRecords;
+  } catch (error) {
+    console.error(
+      '[Mining Rewards] Error fetching mining rewards history:',
+      error,
+    );
+    return [];
+  }
+}
+
+// Интерфейс для записи майнинга
+export interface MiningRewardRecord {
+  id: number;
+  recordDate: string;
+  minedAmount: string;
+  electricityCost: string;
+  rewardAmount: string;
+  equipmentName: string;
+  equipmentHashrate: string;
+  equipmentHashrateUnit: string;
+  shareCount: number;
+  balanceAfter: string;
+  coinTicker: string;
+}
+
+export async function getUserUuidById(userId: number) {
+  try {
+    const user = await db
+      .select({
+        uuid: usersTable.uuid,
+      })
+      .from(usersTable)
+      .where(eq(usersTable.id, userId))
+      .limit(1);
+
+    if (!user || user.length === 0) {
+      throw new Error('User not found');
+    }
+
+    return user[0].uuid;
+  } catch (error) {
+    console.error('Error fetching user UUID:', error);
+    throw error;
   }
 }

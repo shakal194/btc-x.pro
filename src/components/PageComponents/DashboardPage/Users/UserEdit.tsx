@@ -121,8 +121,8 @@ export default function UserEdit({ uuid }: { uuid: string }) {
   };
 
   return (
-    <div className='min-h-screen w-full space-y-4 bg-black/90 p-4'>
-      <div className='rounded-lg bg-gray-800 p-4'>
+    <div className='min-h-screen w-full space-y-4 p-4'>
+      <div className='rounded-lg p-4'>
         {isLoading ? (
           <div className='flex h-[200px] items-center justify-center'>
             <FullScreenSpinner />
@@ -151,9 +151,21 @@ export default function UserEdit({ uuid }: { uuid: string }) {
                   defaultSelectedKeys={[`{status}`]}
                   selectedKeys={[status]}
                 >
-                  <SelectItem key='admin'>Admin</SelectItem>
+                  <SelectItem
+                    key='admin'
+                    color='success'
+                    className='text-success'
+                  >
+                    Admin
+                  </SelectItem>
                   <SelectItem key='user'>User</SelectItem>
-                  <SelectItem key='delete'>Deleted</SelectItem>
+                  <SelectItem
+                    key='delete'
+                    color='danger'
+                    className='text-danger'
+                  >
+                    Deleted
+                  </SelectItem>
                 </Select>
               </div>
               <div className='mt-4'>
@@ -188,7 +200,6 @@ export default function UserEdit({ uuid }: { uuid: string }) {
                   value={usdtAmount}
                   onChange={(e) => handleUsdtAmountChange(e.target.value)}
                   className='w-full md:w-[400px]'
-                  description='Введите новое значение баланса'
                 />
               </div>
               <div className='mt-4'>
@@ -213,7 +224,12 @@ export default function UserEdit({ uuid }: { uuid: string }) {
                 >
                   История покупок и продаж оборудования
                 </Button>
-                <Button className='mr-2 w-full bg-blue-500 p-2 text-white md:w-[400px] md:text-sm'>
+                <Button
+                  className='mr-2 w-full bg-blue-500 p-2 text-white md:w-[400px] md:text-sm'
+                  onPress={() =>
+                    router.push(`/dashboard/users/${uuid}/mining-rewards`)
+                  }
+                >
                   История начисления вознаграждений за майнинг
                 </Button>
                 <Button
