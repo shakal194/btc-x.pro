@@ -9,6 +9,7 @@ import {
   fetchRefBalance,
   fetchMiningStats,
   getUserUuidById,
+  calculateTotalBalanceInUSDT,
 } from '@/lib/data';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -106,6 +107,7 @@ export default function EquipmentsListUser({
     >
   >({});
   const router = useRouter();
+  const [totalBalance, setTotalBalance] = useState<number>(0);
 
   useEffect(() => {
     const getelectricityPrice = async () => {
@@ -424,6 +426,14 @@ export default function EquipmentsListUser({
     }
   }, [user_id, userUuid]);
 
+  useEffect(() => {
+    const fetchTotalBalance = async () => {
+      const balance = await calculateTotalBalanceInUSDT(Number(user_id));
+      setTotalBalance(balance);
+    };
+    fetchTotalBalance();
+  }, [user_id]);
+
   return (
     <section className='space-y-4'>
       {isLoading ? (
@@ -455,11 +465,7 @@ export default function EquipmentsListUser({
                   <span>Всего активов</span>
                   <div className='flex items-center gap-2'>
                     <span className='text-2xl font-bold'>
-                      $
-                      {Number(
-                        balances.find((b) => b.coinTicker === 'USDT')
-                          ?.coinAmount || 0,
-                      ).toFixed(2)}
+                      ${totalBalance.toFixed(2)}
                     </span>
                   </div>
                 </div>

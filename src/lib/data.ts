@@ -1643,3 +1643,47 @@ export async function getUserUuidById(userId: number) {
     throw error;
   }
 }
+
+export async function calculateTotalBalanceInUSDT(
+  userId: number,
+): Promise<number> {
+  try {
+    // Получаем последние балансы по каждой монете для пользователя
+    const latestBalances = await db
+      .select({
+        coinTicker: balancesTable.coinTicker,
+        coinAmount: balancesTable.coinAmount,
+      })
+      .from(balancesTable)
+      .where(eq(balancesTable.user_id, userId))
+      .orderBy(desc(balancesTable.id));
+
+    // Группируем балансы по тикеру, берем последний баланс для каждого тикера
+    const uniqueBalances = latestBalances.reduce(
+      (acc, curr) => {
+        if (!acc[curr.coinTicker]) {
+          acc[curr.coinTicker] = curr;
+        }
+        return acc;
+      },
+      {} as Record<string, (typeof latestBalances)[0]>,
+    );
+
+    let totalUSDT = 0;
+
+    // Для каждой монеты получаем цену в USDT и считаем общий баланс
+    for (const balance of Object.values(uniqueBalances)) {
+      if (balance.coinTicker === 'USDT') {
+        totalUSDT += Number(balance.coinAmount);
+      } else {
+        const priceInUSDT = await fetchCoinPrice(balance.coinTicker);
+        totalUSDT += Number(balance.coinAmount) * priceInUSDT;
+      }
+    }
+
+    return totalUSDT;
+  } catch (error) {
+    console.error('Error calculating total balance in USDT:', error);
+    return 0;
+  }
+}

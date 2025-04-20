@@ -59,7 +59,7 @@ export default function HeroCloudPage() {
           <div className='my-6 hidden border-t opacity-[33%] lg:block'></div>
           <div className='mt-[20px] grid grid-cols-2 gap-2 md:gap-4 lg:mt-0 lg:gap-8'>
             <Link
-              href='/signin'
+              href={`/${currentLocale}/signin`}
               className='block w-full rounded-full border px-5 py-3 text-center text-font18 font-bold leading-[110%] transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white sm:w-[250px]'
             >
               {t('loginButton')}
