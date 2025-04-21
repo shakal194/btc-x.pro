@@ -27,7 +27,7 @@ import {
   ChevronUpIcon,
   ChevronDownIcon,
 } from '@heroicons/react/24/outline';
-import { formatNumber } from '@/lib/utils';
+import { formatDate, formatNumber } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 
 interface UserMiningRewardsTableProps {
@@ -44,13 +44,11 @@ const rowsPerPageOptions = [
 
 const columns = [
   { uid: 'id', name: 'ID' },
-  { uid: 'equipmentName', name: 'Устройство' },
-  { uid: 'shareCount', name: 'Количество долей' },
-  { uid: 'equipmentHashrate', name: 'Хешрейт' },
   { uid: 'minedAmount', name: 'Доходность' },
   { uid: 'electricityCost', name: 'Стоимость электричества' },
   { uid: 'rewardAmount', name: 'Прибыль' },
   { uid: 'balanceAfter', name: 'Итоговый баланс' },
+  { uid: 'recordDate', name: 'Дата' },
 ];
 
 export default function UserMiningRewardsTable({
@@ -108,15 +106,6 @@ export default function UserMiningRewardsTable({
     switch (column) {
       case 'id':
         return (a.id - b.id) * multiplier;
-      case 'equipmentName':
-        return a.equipmentName.localeCompare(b.equipmentName) * multiplier;
-      case 'shareCount':
-        return (a.shareCount - b.shareCount) * multiplier;
-      case 'equipmentHashrate':
-        return (
-          (Number(a.equipmentHashrate) - Number(b.equipmentHashrate)) *
-          multiplier
-        );
       case 'minedAmount':
         return (Number(a.minedAmount) - Number(b.minedAmount)) * multiplier;
       case 'electricityCost':
@@ -324,11 +313,6 @@ export default function UserMiningRewardsTable({
                       className='whitespace-pre-wrap px-4 py-2 text-sm text-white'
                     >
                       {column.uid === 'id' && record.id}
-                      {column.uid === 'equipmentName' && record.equipmentName}
-                      {column.uid === 'shareCount' &&
-                        formatNumber(record.shareCount, 0)}
-                      {column.uid === 'equipmentHashrate' &&
-                        `${formatNumber(Number(record.equipmentHashrate), 2)} ${record.equipmentHashrateUnit}`}
                       {column.uid === 'minedAmount' &&
                         `${formatNumber(Number(record.minedAmount))} ${record.coinTicker}`}
                       {column.uid === 'electricityCost' &&
@@ -337,6 +321,8 @@ export default function UserMiningRewardsTable({
                         `${formatNumber(Number(record.rewardAmount))} ${record.coinTicker}`}
                       {column.uid === 'balanceAfter' &&
                         `${formatNumber(Number(record.balanceAfter))} ${record.coinTicker}`}
+                      {column.uid === 'recordDate' &&
+                        formatDate(record.recordDate)}
                     </TableCell>
                   ))}
                 </TableRow>

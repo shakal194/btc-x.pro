@@ -1,74 +1,76 @@
 import { Card, Skeleton, CardBody, Button } from '@heroui/react';
 
-export function EquipmentSkeleton() {
+export function MiningRewardsSkeleton() {
   return (
-    <div className='space-y-4'>
-      {/* Statistics Cards */}
-      <div className='mb-4 flex justify-between gap-4 rounded-lg p-4'>
-        {/* Hashrate Card */}
-        <div className='w-[200px] rounded-lg border-1 border-secondary bg-default-100 p-4 shadow-md shadow-secondary'>
-          <Skeleton className='mb-2 rounded-lg bg-secondary/40'>
-            <div className='h-6 w-full rounded-lg bg-inherit text-center'>
-              Хешрейт
-            </div>
+    <div className='mb-4 grid grid-cols-1 gap-4 rounded-lg p-4 md:grid-cols-2 md:justify-between xl:grid-cols-4'>
+      {/* Hashrate Card */}
+      <div className='rounded-lg border-1 border-secondary bg-default-100 p-4 shadow-md shadow-secondary'>
+        <Skeleton className='mb-2 rounded-lg bg-secondary/40'>
+          <div className='h-6 w-full rounded-lg bg-inherit text-center'>
+            Хешрейт
+          </div>
+        </Skeleton>
+        <Skeleton className='rounded-lg bg-secondary/40'>
+          <div className='h-8 w-full rounded-lg bg-inherit text-center' />
+        </Skeleton>
+      </div>
+
+      {/* Total Mined Card */}
+      <div className='rounded-lg border-1 border-secondary bg-default-200 p-4 shadow-md shadow-secondary'>
+        <Skeleton className='mb-2 rounded-lg bg-secondary/40'>
+          <div className='h-6 w-full rounded-lg bg-inherit text-center'>
+            Намайнено всего
+          </div>
+        </Skeleton>
+        <div className='space-y-2'>
+          <Skeleton className='rounded-lg bg-secondary/40'>
+            <div className='h-6 w-full rounded-lg bg-inherit' />
           </Skeleton>
           <Skeleton className='rounded-lg bg-secondary/40'>
-            <div className='h-8 w-full rounded-lg bg-inherit text-center' />
+            <div className='h-6 w-full rounded-lg bg-inherit' />
           </Skeleton>
-        </div>
-
-        {/* Total Mined Card */}
-        <div className='w-[200px] rounded-lg border-1 border-secondary bg-default-200 p-4 shadow-md shadow-secondary'>
-          <Skeleton className='mb-2 rounded-lg bg-secondary/40'>
-            <div className='h-6 w-full rounded-lg bg-inherit text-center'>
-              Намайнено всего
-            </div>
-          </Skeleton>
-          <div className='space-y-2'>
-            <Skeleton className='rounded-lg bg-secondary/40'>
-              <div className='h-6 w-full rounded-lg bg-inherit' />
-            </Skeleton>
-            <Skeleton className='rounded-lg bg-secondary/40'>
-              <div className='h-6 w-full rounded-lg bg-inherit' />
-            </Skeleton>
-          </div>
-        </div>
-
-        {/* 24h Profit Card */}
-        <div className='w-[200px] rounded-lg border-1 border-secondary bg-transparent p-4 shadow-md shadow-secondary'>
-          <Skeleton className='mb-2 rounded-lg bg-secondary/40'>
-            <div className='h-6 w-full rounded-lg bg-inherit text-center'>
-              Прибыль за 24ч.
-            </div>
-          </Skeleton>
-          <div className='space-y-2'>
-            <Skeleton className='rounded-lg bg-secondary/40'>
-              <div className='h-6 w-full rounded-lg bg-inherit' />
-            </Skeleton>
-            <Skeleton className='rounded-lg bg-secondary/40'>
-              <div className='h-6 w-full rounded-lg bg-inherit' />
-            </Skeleton>
-          </div>
-        </div>
-
-        {/* 24h Mined Card */}
-        <div className='w-[200px] rounded-lg border-1 border-secondary bg-transparent p-4 shadow-sm shadow-secondary'>
-          <Skeleton className='mb-2 rounded-lg bg-secondary/40'>
-            <div className='h-6 w-full rounded-lg bg-inherit text-center'>
-              Намайнено за 24ч.
-            </div>
-          </Skeleton>
-          <div className='space-y-2'>
-            <Skeleton className='rounded-lg bg-secondary/40'>
-              <div className='h-6 w-full rounded-lg bg-inherit' />
-            </Skeleton>
-            <Skeleton className='rounded-lg bg-secondary/40'>
-              <div className='h-6 w-full rounded-lg bg-inherit' />
-            </Skeleton>
-          </div>
         </div>
       </div>
 
+      {/* 24h Profit Card */}
+      <div className='rounded-lg border-1 border-secondary bg-transparent p-4 shadow-md shadow-secondary'>
+        <Skeleton className='mb-2 rounded-lg bg-secondary/40'>
+          <div className='h-6 w-full rounded-lg bg-inherit text-center'>
+            Прибыль за 24ч.
+          </div>
+        </Skeleton>
+        <div className='space-y-2'>
+          <Skeleton className='rounded-lg bg-secondary/40'>
+            <div className='h-6 w-full rounded-lg bg-inherit' />
+          </Skeleton>
+          <Skeleton className='rounded-lg bg-secondary/40'>
+            <div className='h-6 w-full rounded-lg bg-inherit' />
+          </Skeleton>
+        </div>
+      </div>
+
+      {/* 24h Mined Card */}
+      <div className='rounded-lg border-1 border-secondary bg-transparent p-4 shadow-sm shadow-secondary'>
+        <Skeleton className='mb-2 rounded-lg bg-secondary/40'>
+          <div className='h-6 w-full rounded-lg bg-inherit text-center'>
+            Намайнено за 24ч.
+          </div>
+        </Skeleton>
+        <div className='space-y-2'>
+          <Skeleton className='rounded-lg bg-secondary/40'>
+            <div className='h-6 w-full rounded-lg bg-inherit' />
+          </Skeleton>
+          <Skeleton className='rounded-lg bg-secondary/40'>
+            <div className='h-6 w-full rounded-lg bg-inherit' />
+          </Skeleton>
+        </div>
+      </div>
+    </div>
+  );
+}
+export function EquipmentSkeleton() {
+  return (
+    <div className='space-y-4'>
       {/* Equipment List */}
       <div className='border-b-1 border-secondary p-2'>
         <div className='flex flex-col items-center gap-4 md:flex-row'>
@@ -110,6 +112,9 @@ export function EquipmentSkeleton() {
               </Skeleton>
             </div>
             <div className='mt-4 flex justify-between gap-2'>
+              <Skeleton className='rounded-lg bg-secondary/40'>
+                <div className='h-9 w-32 rounded-lg bg-inherit' />
+              </Skeleton>
               <Skeleton className='rounded-lg bg-secondary/40'>
                 <div className='h-9 w-32 rounded-lg bg-inherit' />
               </Skeleton>

@@ -19,7 +19,10 @@ import FullScreenSpinner from '@/components/ui/Spinner';
 import { Tabs, Tab, Button, Card, CardHeader, CardBody } from '@heroui/react';
 import DepositModal from '../Wallet/DepositModal';
 import WithdrawModal from '../Wallet/WithdrawModal';
-import { EquipmentSkeleton } from '@/components/ui/Skeletons';
+import {
+  EquipmentSkeleton,
+  MiningRewardsSkeleton,
+} from '@/components/ui/Skeletons';
 import { useRouter } from 'next/navigation';
 
 import { getAccessToken } from '@/lib/coinsbuy';
@@ -108,77 +111,56 @@ export default function EquipmentsListUser({
   >({});
   const router = useRouter();
   const [totalBalance, setTotalBalance] = useState<number>(0);
+  const [isLoadingMiningStats, setIsLoadingMiningStats] =
+    useState<boolean>(true);
 
   useEffect(() => {
-    const getelectricityPrice = async () => {
+    const initializeAllData = async () => {
+      if (!user_id || isNaN(Number(user_id))) return;
+
+      setIsLoading(true);
+      setIsLoadingMiningStats(true);
+      setIsLoadingUserEquipments(true);
+
       try {
-        const data = await fetchElectricityPrice();
-        setElectricityPrice(data);
-      } catch (error) {
-        console.error('Ошибка при получении данных о цене', error);
-      }
-    };
+        // 1. Загружаем базовые данные параллельно
+        const [
+          equipmentsData,
+          algorithmsData,
+          electricityPriceData,
+          balancesData,
+          refBalanceData,
+          userUuidData,
+          totalBalanceData,
+        ] = await Promise.all([
+          fetchEquipments(),
+          fetchAlgorithms(),
+          fetchElectricityPrice(),
+          fetchAllUserBalances(Number(user_id)),
+          fetchRefBalance(Number(user_id)),
+          getUserUuidById(Number(user_id)),
+          calculateTotalBalanceInUSDT(Number(user_id)),
+        ]);
 
-    getelectricityPrice();
-  }, []);
+        // Устанавливаем полученные данные
+        setEquipments(equipmentsData);
+        setAlgorithms(algorithmsData);
+        setElectricityPrice(electricityPriceData);
+        setBalances(balancesData);
+        setRefBalance(
+          typeof refBalanceData === 'string'
+            ? parseFloat(refBalanceData)
+            : Number(refBalanceData),
+        );
+        setUserUuid(userUuidData || '');
+        setTotalBalance(totalBalanceData);
 
-  useEffect(() => {
-    const getRefBalance = async () => {
-      try {
-        if (!user_id || isNaN(Number(user_id))) {
-          return;
-        }
-
-        const data = await fetchRefBalance(Number(user_id));
-        const numericData =
-          typeof data === 'string' ? parseFloat(data) : Number(data);
-        setRefBalance(numericData || 0);
-      } catch (error) {
-        console.error('Error getting referral balance:', error);
-        setRefBalance(0);
-      }
-    };
-
-    if (user_id && !isNaN(Number(user_id))) {
-      getRefBalance();
-    }
-  }, [user_id]);
-
-  const getBalances = useCallback(async () => {
-    try {
-      if (!user_id) return;
-      const balancesData = await fetchAllUserBalances(Number(user_id));
-      setBalances(balancesData);
-    } catch (error) {
-      console.error('Error fetching balances:', error);
-    }
-  }, [user_id]);
-
-  useEffect(() => {
-    if (user_id && !isNaN(Number(user_id))) {
-      getBalances();
-    }
-  }, [user_id, getBalances]);
-
-  useEffect(() => {
-    if (!user_id || equipments.length === 0) {
-      return;
-    }
-
-    setIsLoadingUserEquipments(true);
-    const controller = new AbortController();
-    let isMounted = true;
-    const renderCycle = Math.random();
-
-    const fetchAllEquipments = async () => {
-      try {
+        // 2. После получения оборудования и алгоритмов, загружаем данные пользователя
         const userBalanceShares = await fetchAllUserBalanceShares(
           Number(user_id),
         );
 
-        if (!isMounted) return;
-
-        const validEquipments = equipments
+        const validEquipments = equipmentsData
           .map((equipment) => {
             const balanceShareCount =
               userBalanceShares[equipment.id]?.balanceShareCount || 0;
@@ -190,12 +172,15 @@ export default function EquipmentsListUser({
           .filter((item): item is NonNullable<typeof item> => item !== null);
 
         setUserEquipmentsFetch(validEquipments);
+        setIsLoadingUserEquipments(false);
+        setIsLoading(false);
 
-        if (validEquipments.length > 0 && algorithms.length > 0) {
-          const firstPurchasedAlgorithm = algorithms.find((algorithm) =>
+        // 3. Устанавливаем начальный выбранный алгоритм
+        if (validEquipments.length > 0 && algorithmsData.length > 0) {
+          const firstPurchasedAlgorithm = algorithmsData.find((algorithm) =>
             validEquipments.some(
               (equipment) =>
-                equipments.find((e) => e.id === equipment.equipmentId)
+                equipmentsData.find((e) => e.id === equipment.equipmentId)
                   ?.algorithm_id === algorithm.id,
             ),
           );
@@ -203,86 +188,30 @@ export default function EquipmentsListUser({
           if (firstPurchasedAlgorithm) {
             setSelectedAlgorithm(firstPurchasedAlgorithm.name);
           }
-        } else if (algorithms.length > 0) {
-          setSelectedAlgorithm(algorithms[0].name);
+        } else if (algorithmsData.length > 0) {
+          setSelectedAlgorithm(algorithmsData[0].name);
         }
+
+        // 4. Загружаем цены монет
+        const prices: { [key: string]: number } = {};
+        for (const algorithm of algorithmsData) {
+          if (algorithm.coinTickers) {
+            for (const coin of algorithm.coinTickers) {
+              const rate = await getRate(coin.name);
+              prices[coin.name] = Number(rate);
+            }
+          }
+        }
+        setCoinPrices(prices);
       } catch (error) {
-        if (!controller.signal.aborted) {
-          console.error(
-            `[Error ${renderCycle}] Ошибка при получении данных оборудования:`,
-            error,
-          );
-        }
-      } finally {
+        console.error('Ошибка при инициализации данных:', error);
+        setIsLoading(false);
         setIsLoadingUserEquipments(false);
       }
     };
 
-    fetchAllEquipments();
-
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
-  }, [user_id, equipments, algorithms]);
-
-  const updateEquipmentData = async (user_id: string, equipmentId: number) => {
-    const userBalanceShares = await fetchAllUserBalanceShares(Number(user_id));
-    const balanceShareCount =
-      userBalanceShares[equipmentId]?.balanceShareCount || 0;
-
-    setUserEquipmentsFetch((prevState) => {
-      if (balanceShareCount === 0) {
-        return prevState.filter((item) => item.equipmentId !== equipmentId);
-      }
-
-      const existingIndex = prevState.findIndex(
-        (item) => item.equipmentId === equipmentId,
-      );
-
-      if (existingIndex !== -1) {
-        const newState = [...prevState];
-        newState[existingIndex] = { equipmentId, balanceShareCount };
-        return newState;
-      }
-
-      return [...prevState, { equipmentId, balanceShareCount }];
-    });
-
-    await getBalances();
-
-    return balanceShareCount;
-  };
-
-  const getEquipments = async () => {
-    setIsLoading(true);
-    try {
-      const data = await fetchEquipments();
-      setEquipments(data);
-      return data;
-    } catch (error) {
-      console.error('Ошибка при получении данных по алгоритмам', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getEquipments();
-  }, []);
-
-  useEffect(() => {
-    const getAlgorithms = async () => {
-      try {
-        const data = await fetchAlgorithms();
-        setAlgorithms(data);
-      } catch (error) {
-        console.error('Ошибка при получении алгоритмов', error);
-      }
-    };
-
-    getAlgorithms();
-  }, []);
+    initializeAllData();
+  }, [user_id]);
 
   const getRate = async (coinTicker: string) => {
     try {
@@ -308,23 +237,6 @@ export default function EquipmentsListUser({
       return '0';
     }
   };
-
-  useEffect(() => {
-    const fetchCoinPrices = async () => {
-      const prices: { [key: string]: number } = {};
-      for (const algorithm of algorithms) {
-        if (algorithm.coinTickers) {
-          for (const coin of algorithm.coinTickers) {
-            const rate = await getRate(coin.name);
-            prices[coin.name] = Number(rate);
-          }
-        }
-      }
-      setCoinPrices(prices);
-    };
-
-    fetchCoinPrices();
-  }, [algorithms]);
 
   const handleWithdrawClick = (ticker: string) => {
     setSelectedModalCoin(ticker);
@@ -398,6 +310,7 @@ export default function EquipmentsListUser({
     }
 
     setMiningStats(stats);
+    setIsLoadingMiningStats(false);
   }, [algorithms, equipments, userEquipmentsFetch, user_id]);
 
   useEffect(() => {
@@ -406,33 +319,42 @@ export default function EquipmentsListUser({
     }
   }, [userEquipmentsFetch, fetchAllMiningStats]);
 
-  // Add new useEffect for fetching UUID
-  useEffect(() => {
-    const fetchUserUuid = async () => {
-      if (!user_id || isNaN(Number(user_id))) return;
-
+  const updateEquipmentData = useCallback(
+    async (userId: string, equipmentId: number): Promise<number> => {
       try {
-        const uuid = await getUserUuidById(Number(user_id));
-        if (uuid) {
-          setUserUuid(uuid);
-        }
+        // Получаем все необходимые данные
+        const [userBalanceShares, balancesData, totalBalanceData] =
+          await Promise.all([
+            fetchAllUserBalanceShares(Number(userId)),
+            fetchAllUserBalances(Number(userId)),
+            calculateTotalBalanceInUSDT(Number(userId)),
+          ]);
+
+        // Обновляем состояние долей пользователя
+        const validEquipments = equipments
+          .map((equipment) => {
+            const balanceShareCount =
+              userBalanceShares[equipment.id]?.balanceShareCount || 0;
+            if (balanceShareCount > 0) {
+              return { equipmentId: equipment.id, balanceShareCount };
+            }
+            return null;
+          })
+          .filter((item): item is NonNullable<typeof item> => item !== null);
+
+        // Обновляем все состояния
+        setUserEquipmentsFetch(validEquipments);
+        setBalances(balancesData);
+        setTotalBalance(totalBalanceData);
+
+        return totalBalanceData;
       } catch (error) {
-        console.error('Error fetching user UUID:', error);
+        console.error('Error updating equipment data:', error);
+        return 0;
       }
-    };
-
-    if (!userUuid) {
-      fetchUserUuid();
-    }
-  }, [user_id, userUuid]);
-
-  useEffect(() => {
-    const fetchTotalBalance = async () => {
-      const balance = await calculateTotalBalanceInUSDT(Number(user_id));
-      setTotalBalance(balance);
-    };
-    fetchTotalBalance();
-  }, [user_id]);
+    },
+    [equipments],
+  );
 
   return (
     <section className='space-y-4'>
@@ -525,84 +447,90 @@ export default function EquipmentsListUser({
                   >
                     История начислений
                   </Button>
-                  {miningStats[algorithm.name] && (
-                    <div className='mb-4 flex justify-between gap-4 rounded-lg p-4'>
-                      <Card className='w-[200px] border-1 border-secondary bg-default-100 shadow-md shadow-secondary'>
-                        <CardHeader className='flex items-center justify-center'>
-                          Хешрейт
-                        </CardHeader>
-                        <CardBody className='flex items-center justify-center'>
-                          {miningStats[algorithm.name].totalHashrate.toFixed(2)}{' '}
-                          {miningStats[algorithm.name].hashrate_unit}
-                        </CardBody>
-                      </Card>
-                      <Card className='w-[200px] border-1 border-secondary bg-default-200 shadow-md shadow-secondary'>
-                        <CardHeader className='flex items-center justify-center'>
-                          Намайнено всего
-                        </CardHeader>
-                        <CardBody className='flex flex-col gap-2'>
-                          {algorithm.coinTickers?.map((coinTicker) => (
-                            <div
-                              key={coinTicker.name}
-                              className='flex justify-between'
-                            >
-                              <span>{coinTicker.name}:</span>
-                              <span>
-                                {miningStats[algorithm.name].stats[
-                                  coinTicker.name
-                                ]?.totalMined.toFixed(8)}
-                              </span>
-                            </div>
-                          ))}
-                        </CardBody>
-                      </Card>
-                      <Card className='w-[200px] border-1 border-secondary bg-transparent shadow-md shadow-secondary'>
-                        <CardHeader className='flex items-center justify-center'>
-                          Прибыль за 24ч.
-                        </CardHeader>
-                        <CardBody className='flex flex-col gap-2'>
-                          {algorithm.coinTickers?.map((coinTicker) => (
-                            <div
-                              key={coinTicker.name}
-                              className='flex justify-between'
-                            >
-                              <span>{coinTicker.name}:</span>
-                              <span>
-                                {miningStats[algorithm.name].stats[
-                                  coinTicker.name
-                                ]?.profit24h.toFixed(8)}
-                              </span>
-                            </div>
-                          ))}
-                        </CardBody>
-                      </Card>
-                      <Card className='w-[200px] border-1 border-secondary bg-transparent shadow-sm shadow-secondary'>
-                        <CardHeader className='flex items-center justify-center'>
-                          Намайнено за 24ч.
-                        </CardHeader>
-                        <CardBody className='flex flex-col gap-2'>
-                          {algorithm.coinTickers?.map((coinTicker) => (
-                            <div
-                              key={coinTicker.name}
-                              className='flex justify-between'
-                            >
-                              <span>{coinTicker.name}:</span>
-                              <span>
-                                {miningStats[algorithm.name].stats[
-                                  coinTicker.name
-                                ]?.mined24h.toFixed(8)}
-                              </span>
-                            </div>
-                          ))}
-                        </CardBody>
-                      </Card>
-                    </div>
+                  {isLoadingMiningStats ? (
+                    <MiningRewardsSkeleton />
+                  ) : (
+                    miningStats[algorithm.name] && (
+                      <div className='mb-4 grid grid-cols-1 gap-4 rounded-lg p-4 md:grid-cols-2 md:justify-between xl:grid-cols-4'>
+                        <Card className='border-1 border-secondary bg-default-100 shadow-md shadow-secondary'>
+                          <CardHeader className='flex items-center justify-center'>
+                            Хешрейт
+                          </CardHeader>
+                          <CardBody className='flex items-center justify-center'>
+                            {miningStats[algorithm.name].totalHashrate.toFixed(
+                              2,
+                            )}{' '}
+                            {miningStats[algorithm.name].hashrate_unit}
+                          </CardBody>
+                        </Card>
+                        <Card className='border-1 border-secondary bg-default-200 shadow-md shadow-secondary'>
+                          <CardHeader className='flex items-center justify-center'>
+                            Намайнено всего
+                          </CardHeader>
+                          <CardBody className='flex flex-col gap-2'>
+                            {algorithm.coinTickers?.map((coinTicker) => (
+                              <div
+                                key={coinTicker.name}
+                                className='flex justify-between'
+                              >
+                                <span>{coinTicker.name}:</span>
+                                <span>
+                                  {miningStats[algorithm.name].stats[
+                                    coinTicker.name
+                                  ]?.totalMined.toFixed(8)}
+                                </span>
+                              </div>
+                            ))}
+                          </CardBody>
+                        </Card>
+                        <Card className='border-1 border-secondary bg-transparent shadow-md shadow-secondary'>
+                          <CardHeader className='flex items-center justify-center'>
+                            Прибыль за 24ч.
+                          </CardHeader>
+                          <CardBody className='flex flex-col gap-2'>
+                            {algorithm.coinTickers?.map((coinTicker) => (
+                              <div
+                                key={coinTicker.name}
+                                className='flex justify-between'
+                              >
+                                <span>{coinTicker.name}:</span>
+                                <span>
+                                  {miningStats[algorithm.name].stats[
+                                    coinTicker.name
+                                  ]?.profit24h.toFixed(8)}
+                                </span>
+                              </div>
+                            ))}
+                          </CardBody>
+                        </Card>
+                        <Card className='border-1 border-secondary bg-transparent shadow-sm shadow-secondary'>
+                          <CardHeader className='flex items-center justify-center'>
+                            Намайнено за 24ч.
+                          </CardHeader>
+                          <CardBody className='flex flex-col gap-2'>
+                            {algorithm.coinTickers?.map((coinTicker) => (
+                              <div
+                                key={coinTicker.name}
+                                className='flex justify-between'
+                              >
+                                <span>{coinTicker.name}:</span>
+                                <span>
+                                  {miningStats[algorithm.name].stats[
+                                    coinTicker.name
+                                  ]?.mined24h.toFixed(8)}
+                                </span>
+                              </div>
+                            ))}
+                          </CardBody>
+                        </Card>
+                      </div>
+                    )
                   )}
 
                   <ul className='space-y-4'>
                     {isLoadingUserEquipments ? (
                       <div className='flex min-h-[200px] items-center justify-center'>
-                        <FullScreenSpinner />
+                        <EquipmentSkeleton />
                       </div>
                     ) : (
                       (() => {
@@ -870,13 +798,13 @@ export default function EquipmentsListUser({
         </>
       )}
 
-      {isWithdrawModalOpen && (
+      {isWithdrawModalOpen && user_id && (
         <WithdrawModal
           isOpen={isWithdrawModalOpen}
           onClose={() => setIsWithdrawModalOpen(false)}
-          onSuccess={() => {
+          onSuccess={async () => {
             setIsWithdrawModalOpen(false);
-            getBalances();
+            await updateEquipmentData(user_id as string, 0);
           }}
           userId={Number(user_id)}
           userEmail={userEmail}
@@ -888,12 +816,12 @@ export default function EquipmentsListUser({
         />
       )}
 
-      {isDepositModalOpen && (
+      {isDepositModalOpen && user_id && (
         <DepositModal
           isOpen={isDepositModalOpen}
-          onClose={() => {
+          onClose={async () => {
             setIsDepositModalOpen(false);
-            getBalances();
+            await updateEquipmentData(user_id as string, 0);
           }}
           userId={Number(user_id)}
           userEmail={userEmail}

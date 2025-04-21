@@ -1,5 +1,5 @@
 import { fetchUserDataByUuid } from '@/lib/data';
-import { MiningRewardsTable } from '@/components/PageComponents/DashboardPage/Users/MiningRewards/MiningRewardsTable';
+import { MiningRewardsTable } from '@/components/PageComponents/DashboardPage/MiningRewards/MiningRewardsTable';
 import { notFound } from 'next/navigation';
 
 export default async function UserMiningRewardsPage(props: {

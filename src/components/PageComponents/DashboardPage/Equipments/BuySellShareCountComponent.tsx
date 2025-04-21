@@ -199,10 +199,7 @@ export default function BuySellShareCountComponent({
         const userEmail = session?.user?.email || '';
         if (userEmail) {
           for (const coinTicker of equipment.algorithm.coinTickers) {
-            // Убеждаемся, что запись баланса существует для каждой монеты
             await ensureBalanceRecordExists(Number(user_id), coinTicker.name);
-
-            // Создаем депозитный адрес для каждой монеты
             try {
               await createDepositForCoin(
                 Number(user_id),
@@ -214,7 +211,6 @@ export default function BuySellShareCountComponent({
                 `Error creating deposit address for ${coinTicker.name}:`,
                 error,
               );
-              // Не прерываем транзакцию, если не удалось создать адрес
             }
           }
         }
@@ -250,34 +246,30 @@ export default function BuySellShareCountComponent({
       if (isPurchase) {
         const { referralBonus: referralPercent, referrerId } =
           await fetchReferralBonus(Number(user_id));
-
-        // referralBonus is integer (e.g. 10 for 10%)
         const referralBonusAmount = Number(
           (totalAmount * (referralPercent / 100)).toFixed(2),
         );
 
         if (referralBonusAmount > 0 && referrerId) {
           await updateReferralBonus(referrerId, referralBonusAmount);
-
           await insertReferralBonusTransaction(
-            Number(user_id), // ID пользователя, который совершает покупку
-            referrerId, // ID реферера, который получит бонус
-            referralPercent, // Процент реферального бонуса
-            referralBonusAmount, // Сумма бонуса
-          );
-
-          Notiflix.Notify.success(
-            `Реферальный бонус в размере $${referralBonusAmount.toFixed(2)} начислен рефереру`,
+            Number(user_id),
+            referrerId,
+            referralPercent,
+            referralBonusAmount,
           );
         }
       }
 
       if (user_id) {
-        const newBalance = await updateEquipmentData(
-          user_id.toString(),
-          equipmentId,
+        await updateEquipmentData(user_id.toString(), equipmentId);
+        // Обновляем локальное состояние баланса долей
+        const userBalanceShares = await fetchAllUserBalanceShares(
+          Number(user_id),
         );
-        setUserShareBalance(newBalance);
+        const newBalanceShareCount =
+          userBalanceShares[equipmentId]?.balanceShareCount || 0;
+        setUserShareBalance(newBalanceShareCount);
       }
 
       handleCloseModal();

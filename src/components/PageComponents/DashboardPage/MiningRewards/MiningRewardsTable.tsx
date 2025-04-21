@@ -27,7 +27,8 @@ import {
   ChevronUpIcon,
   ChevronDownIcon,
 } from '@heroicons/react/24/outline';
-import { formatNumber } from '@/lib/utils';
+import { formatDate, formatNumber } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 interface MiningRewardsTableProps {
   userId: string;
@@ -37,13 +38,11 @@ const ROWS_PER_PAGE_OPTIONS = [20, 50, 100, 200];
 
 const columns = [
   { uid: 'id', name: 'ID' },
-  { uid: 'equipmentName', name: 'Устройство' },
-  { uid: 'shareCount', name: 'Количество долей' },
-  { uid: 'equipmentHashrate', name: 'Хешрейт' },
   { uid: 'minedAmount', name: 'Доходность' },
   { uid: 'electricityCost', name: 'Стоимость электричества' },
   { uid: 'rewardAmount', name: 'Прибыль' },
   { uid: 'balanceAfter', name: 'Итоговый баланс' },
+  { uid: 'recordDate', name: 'Дата' },
 ];
 
 export function MiningRewardsTable({ userId }: MiningRewardsTableProps) {
@@ -65,7 +64,7 @@ export function MiningRewardsTable({ userId }: MiningRewardsTableProps) {
     const coins = new Set(records.map((record) => record.coinTicker));
     return coins;
   });
-
+  const router = useRouter();
   useEffect(() => {
     setPage(1);
   }, [rowsPerPage]);
@@ -103,15 +102,7 @@ export function MiningRewardsTable({ userId }: MiningRewardsTableProps) {
     switch (column) {
       case 'id':
         return (a.id - b.id) * multiplier;
-      case 'equipmentName':
-        return a.equipmentName.localeCompare(b.equipmentName) * multiplier;
-      case 'shareCount':
-        return (a.shareCount - b.shareCount) * multiplier;
-      case 'equipmentHashrate':
-        return (
-          (Number(a.equipmentHashrate) - Number(b.equipmentHashrate)) *
-          multiplier
-        );
+
       case 'minedAmount':
         return (Number(a.minedAmount) - Number(b.minedAmount)) * multiplier;
       case 'electricityCost':
@@ -124,6 +115,8 @@ export function MiningRewardsTable({ userId }: MiningRewardsTableProps) {
         return (Number(a.balanceAfter) - Number(b.balanceAfter)) * multiplier;
       case 'coinTicker':
         return a.coinTicker.localeCompare(b.coinTicker) * multiplier;
+      case 'recordDate':
+        return a.recordDate.localeCompare(b.recordDate) * multiplier;
       default:
         return 0;
     }
@@ -146,6 +139,18 @@ export function MiningRewardsTable({ userId }: MiningRewardsTableProps) {
   return (
     <div className='min-h-screen w-full space-y-4'>
       <div className='flex flex-col gap-4'>
+        <Breadcrumbs>
+          <BreadcrumbItem
+            href='/dashboard'
+            className='text-gray-300'
+            onClick={() => router.back()}
+          >
+            Дашбоард
+          </BreadcrumbItem>
+          <BreadcrumbItem isCurrent className='text-gray-200'>
+            История начислений майнинга
+          </BreadcrumbItem>
+        </Breadcrumbs>
         <div className='space-y-4 md:flex md:items-center md:justify-between md:space-y-0'>
           <div>
             <h1 className='text-2xl font-bold text-default-500'>
@@ -219,9 +224,10 @@ export function MiningRewardsTable({ userId }: MiningRewardsTableProps) {
                   }
                 >
                   <FunnelIcon className='h-4 w-4' />
-                  {Array.from(selectedCoin).length
+                  {/*{Array.from(selectedCoin).length
                     ? `Выбрано: ${Array.from(selectedCoin).length}`
-                    : 'Выберите монету'}
+                    : 'Выберите монету'}*/}
+                  Выберите монету
                 </Button>
               </DropdownTrigger>
               <DropdownMenu
@@ -315,11 +321,6 @@ export function MiningRewardsTable({ userId }: MiningRewardsTableProps) {
                       className='whitespace-pre-wrap px-4 py-2 text-sm text-white'
                     >
                       {column.uid === 'id' && record.id}
-                      {column.uid === 'equipmentName' && record.equipmentName}
-                      {column.uid === 'shareCount' &&
-                        formatNumber(record.shareCount, 0)}
-                      {column.uid === 'equipmentHashrate' &&
-                        `${formatNumber(Number(record.equipmentHashrate), 2)} ${record.equipmentHashrateUnit}`}
                       {column.uid === 'minedAmount' &&
                         `${formatNumber(Number(record.minedAmount))} ${record.coinTicker}`}
                       {column.uid === 'electricityCost' &&
@@ -328,6 +329,8 @@ export function MiningRewardsTable({ userId }: MiningRewardsTableProps) {
                         `${formatNumber(Number(record.rewardAmount))} ${record.coinTicker}`}
                       {column.uid === 'balanceAfter' &&
                         `${formatNumber(Number(record.balanceAfter))} ${record.coinTicker}`}
+                      {column.uid === 'recordDate' &&
+                        formatDate(record.recordDate)}
                     </TableCell>
                   ))}
                 </TableRow>

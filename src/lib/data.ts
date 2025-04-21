@@ -1495,10 +1495,6 @@ export async function fetchMiningStats(
         ),
       );
 
-    console.log(
-      `Found ${records.length} records for user ${userId} in last 24h`,
-    );
-
     const mined24h = records.reduce(
       (sum, record) => sum + Number(record.minedAmount),
       0,
@@ -1546,10 +1542,10 @@ export async function fetchMiningRewardsHistory(
     const equipmentInfo = await db
       .select({
         equipment_id: transactionsTable.equipment_id,
-        shareCount: transactionsTable.balanceShareCount,
-        equipmentName: equipmentsTable.name,
-        equipmentHashrate: equipmentsTable.hashrate,
-        equipmentHashrateUnit: equipmentsTable.hashrate_unit,
+        //shareCount: transactionsTable.balanceShareCount,
+        //equipmentName: equipmentsTable.name,
+        //equipmentHashrate: equipmentsTable.hashrate,
+        //equipmentHashrateUnit: equipmentsTable.hashrate_unit,
         coinTickers: algorithmTable.coinTickers,
       })
       .from(transactionsTable)
@@ -1569,7 +1565,7 @@ export async function fetchMiningRewardsHistory(
       Record<string, (typeof equipmentInfo)[0]>
     >((acc, curr) => {
       const key = curr.equipment_id.toString();
-      if (!acc[key] || acc[key].shareCount < curr.shareCount) {
+      if (!acc[key]) {
         acc[key] = curr;
       }
       return acc;
@@ -1591,10 +1587,10 @@ export async function fetchMiningRewardsHistory(
       return {
         ...record,
         recordDate: record.recordDate.toISOString(),
-        equipmentName: equipment?.equipmentName || 'Unknown',
-        equipmentHashrate: (equipment?.equipmentHashrate || 0).toString(),
-        equipmentHashrateUnit: equipment?.equipmentHashrateUnit || 'H/s',
-        shareCount: equipment?.shareCount || 0,
+        //equipmentName: equipment?.equipmentName || 'Unknown',
+        //equipmentHashrate: (equipment?.equipmentHashrate || 0).toString(),
+        //equipmentHashrateUnit: equipment?.equipmentHashrateUnit || 'H/s',
+        //shareCount: equipment?.shareCount || 0,
       };
     });
 
@@ -1615,10 +1611,10 @@ export interface MiningRewardRecord {
   minedAmount: string;
   electricityCost: string;
   rewardAmount: string;
-  equipmentName: string;
-  equipmentHashrate: string;
-  equipmentHashrateUnit: string;
-  shareCount: number;
+  //equipmentName: string;
+  //equipmentHashrate: string;
+  //equipmentHashrateUnit: string;
+  //shareCount: number;
   balanceAfter: string;
   coinTicker: string;
 }

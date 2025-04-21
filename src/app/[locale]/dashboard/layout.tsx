@@ -14,7 +14,7 @@ export default async function Layout({
   const locale = resolvedParams.locale;
 
   return (
-    <div className='container mx-auto flex h-screen flex-col space-y-4 bg-background p-4 lg:flex-row lg:space-y-0 lg:overflow-hidden'>
+    <div className='mx-auto flex h-screen flex-col space-y-4 bg-background p-4 lg:flex-row lg:space-y-0 lg:overflow-hidden'>
       <div className='w-full flex-none lg:w-64'>
         <SideNav userStatus={userStatus} locale={locale} />
       </div>

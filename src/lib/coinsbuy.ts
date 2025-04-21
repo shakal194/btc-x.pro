@@ -1,5 +1,9 @@
 'use server';
 
+import db from '@/db/db';
+import { electricityPriceTable } from '@/db/schema';
+import { eq, desc, sql } from 'drizzle-orm';
+
 // Константы для API
 const COINSBUY_API_BASE_URL = process.env.COINSBUY_API_URL!;
 const COINSBUY_API_KEY = process.env.COINSBUY_API_KEY!;
@@ -113,88 +117,221 @@ export const getAccessToken = async (): Promise<{
   access_expired_at: string;
   refresh_expired_at: string;
 }> => {
-  let retryCount = 0;
-  const maxRetries = 3;
-  const baseDelay = 1000; // 1 second
+  try {
+    // Получаем последнюю запись, содержащую токены
+    const [lastTokenRecord] = await db
+      .select({
+        id: electricityPriceTable.id,
+        access_token: electricityPriceTable.access_token,
+        refresh_token: electricityPriceTable.refresh_token,
+        access_expired_at: electricityPriceTable.access_expired_at,
+        refresh_expired_at: electricityPriceTable.refresh_expired_at,
+        pricePerKWh: electricityPriceTable.pricePerKWh,
+      })
+      .from(electricityPriceTable)
+      .where(
+        sql`${electricityPriceTable.access_token} IS NOT NULL 
+            AND ${electricityPriceTable.refresh_token} IS NOT NULL 
+            AND ${electricityPriceTable.access_expired_at} IS NOT NULL 
+            AND ${electricityPriceTable.refresh_expired_at} IS NOT NULL`,
+      )
+      .orderBy(desc(electricityPriceTable.access_expired_at))
+      .limit(1);
 
-  while (retryCount < maxRetries) {
-    try {
-      const response = await fetch(`${COINSBUY_API_BASE_URL}/token/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/vnd.api+json',
-        },
-        body: JSON.stringify({
-          data: {
-            type: 'auth-token',
-            attributes: {
-              login: COINSBUY_API_KEY,
-              password: COINSBUY_API_SECRET,
+    const now = new Date();
+
+    // Проверяем наличие токенов и их валидность
+    if (lastTokenRecord) {
+      const accessExpired = new Date(lastTokenRecord.access_expired_at!) <= now;
+      const refreshExpired =
+        new Date(lastTokenRecord.refresh_expired_at!) <= now;
+
+      // Если refresh токен валиден, но access истек - обновляем access
+      if (!refreshExpired && accessExpired) {
+        try {
+          const response = await fetch(
+            `${COINSBUY_API_BASE_URL}/token/refresh/`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/vnd.api+json',
+              },
+              body: JSON.stringify({
+                data: {
+                  type: 'auth-token',
+                  attributes: {
+                    refresh: lastTokenRecord.refresh_token!,
+                  },
+                },
+              }),
             },
-          },
-        }),
-      });
+          );
 
-      if (response.status === 429) {
-        const retryAfter = response.headers.get('Retry-After');
-        const waitTime = retryAfter
-          ? parseInt(retryAfter, 10) * 1000
-          : Math.min(baseDelay * Math.pow(2, retryCount), 45000);
-        console.log(
-          `Rate limited. Waiting ${waitTime / 1000} seconds before retry...`,
-        );
-        await sleep(waitTime);
-        retryCount++;
-        continue;
-      }
+          if (!response.ok) {
+            // Если refresh токен не работает, удаляем старые токены из БД
+            await db
+              .update(electricityPriceTable)
+              .set({
+                access_token: null,
+                refresh_token: null,
+                access_expired_at: null,
+                refresh_expired_at: null,
+              })
+              .where(eq(electricityPriceTable.id, lastTokenRecord.id));
 
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error('Token response error:', errorData);
-        throw new Error(`Failed to obtain access token: ${errorData}`);
-      }
+            console.log(
+              'Invalid refresh token detected, old tokens cleared from database',
+            );
+            throw new Error('Failed to refresh token');
+          }
 
-      const data: CoinsbuyAuthResponse = await response.json();
+          const data = await response.json();
 
-      // Проверяем подпись, если она есть в ответе
-      if (data.meta?.sign) {
-        const isValid = await verifySignature(
-          COINSBUY_API_KEY,
-          COINSBUY_API_SECRET,
-          data.meta.time,
-          data.data.attributes.refresh,
-          data.meta.sign,
-        );
+          // Создаем новую запись только с обновленными токенами
+          await db.insert(electricityPriceTable).values({
+            access_token: data.data.attributes.access,
+            refresh_token: data.data.attributes.refresh,
+            access_expired_at: new Date(data.data.attributes.access_expired_at),
+            refresh_expired_at: new Date(
+              data.data.attributes.refresh_expired_at,
+            ),
+          });
 
-        if (!isValid) {
-          console.error('Signature verification failed');
-          throw new Error('Invalid response signature');
+          return {
+            access: data.data.attributes.access,
+            refresh: data.data.attributes.refresh,
+            access_expired_at: data.data.attributes.access_expired_at,
+            refresh_expired_at: data.data.attributes.refresh_expired_at,
+          };
+        } catch (error) {
+          console.error('Error refreshing token:', error);
+          // Если не удалось обновить токен, получаем новый
         }
       }
 
-      return {
-        access: data.data.attributes.access,
-        refresh: data.data.attributes.refresh,
-        access_expired_at: data.data.attributes.access_expired_at,
-        refresh_expired_at: data.data.attributes.refresh_expired_at,
-      };
-    } catch (error) {
-      if (retryCount === maxRetries - 1) {
-        console.error('Error getting access token after all retries:', error);
-        throw error;
+      // Если токены еще валидны - возвращаем их
+      if (!accessExpired && !refreshExpired) {
+        return {
+          access: lastTokenRecord.access_token!,
+          refresh: lastTokenRecord.refresh_token!,
+          access_expired_at: lastTokenRecord.access_expired_at!.toISOString(),
+          refresh_expired_at: lastTokenRecord.refresh_expired_at!.toISOString(),
+        };
       }
-
-      // Если это не последняя попытка, ждем и пробуем снова
-      const waitTime = Math.min(baseDelay * Math.pow(2, retryCount), 45000);
-      console.log(
-        `Attempt ${retryCount + 1} failed. Waiting ${waitTime / 1000} seconds before retry...`,
-      );
-      await sleep(waitTime);
-      retryCount++;
     }
-  }
 
-  throw new Error('Failed to obtain access token after all retries');
+    // Если токенов нет или они истекли - получаем новые
+    let retryCount = 0;
+    const maxRetries = 3;
+    const baseDelay = 1000;
+
+    while (retryCount < maxRetries) {
+      try {
+        const response = await fetch(`${COINSBUY_API_BASE_URL}/token/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/vnd.api+json',
+          },
+          body: JSON.stringify({
+            data: {
+              type: 'auth-token',
+              attributes: {
+                login: COINSBUY_API_KEY,
+                password: COINSBUY_API_SECRET,
+              },
+            },
+          }),
+        });
+
+        if (response.status === 429) {
+          const retryAfter = response.headers.get('Retry-After');
+          const waitTime = retryAfter
+            ? parseInt(retryAfter, 10) * 1000
+            : Math.min(baseDelay * Math.pow(2, retryCount), 45000);
+          console.log(
+            `Rate limited. Waiting ${waitTime / 1000} seconds before retry...`,
+          );
+          await sleep(waitTime);
+          retryCount++;
+          continue;
+        }
+
+        if (!response.ok) {
+          const errorData = await response.text();
+          throw new Error(`Failed to obtain access token: ${errorData}`);
+        }
+
+        const data: CoinsbuyAuthResponse = await response.json();
+
+        // Проверяем подпись
+        if (data.meta?.sign) {
+          const isValid = await verifySignature(
+            COINSBUY_API_KEY,
+            COINSBUY_API_SECRET,
+            data.meta.time,
+            data.data.attributes.refresh,
+            data.meta.sign,
+          );
+
+          if (!isValid) {
+            throw new Error('Invalid response signature');
+          }
+        }
+
+        // Сохраняем новые токены в БД
+        if (lastTokenRecord) {
+          await db
+            .update(electricityPriceTable)
+            .set({
+              access_token: data.data.attributes.access,
+              refresh_token: data.data.attributes.refresh,
+              access_expired_at: new Date(
+                data.data.attributes.access_expired_at,
+              ),
+              refresh_expired_at: new Date(
+                data.data.attributes.refresh_expired_at,
+              ),
+            })
+            .where(eq(electricityPriceTable.id, lastTokenRecord.id));
+        } else {
+          // Если записи нет, создаем новую
+          await db.insert(electricityPriceTable).values({
+            pricePerKWh: '0',
+            access_token: data.data.attributes.access,
+            refresh_token: data.data.attributes.refresh,
+            access_expired_at: new Date(data.data.attributes.access_expired_at),
+            refresh_expired_at: new Date(
+              data.data.attributes.refresh_expired_at,
+            ),
+          });
+        }
+
+        return {
+          access: data.data.attributes.access,
+          refresh: data.data.attributes.refresh,
+          access_expired_at: data.data.attributes.access_expired_at,
+          refresh_expired_at: data.data.attributes.refresh_expired_at,
+        };
+      } catch (error) {
+        if (retryCount === maxRetries - 1) {
+          console.error('Error getting access token after all retries:', error);
+          throw error;
+        }
+
+        const waitTime = Math.min(baseDelay * Math.pow(2, retryCount), 45000);
+        console.log(
+          `Attempt ${retryCount + 1} failed. Waiting ${waitTime / 1000} seconds before retry...`,
+        );
+        await sleep(waitTime);
+        retryCount++;
+      }
+    }
+
+    throw new Error('Failed to obtain access token after all retries');
+  } catch (error) {
+    console.error('Error in getAccessToken:', error);
+    throw error;
+  }
 };
 
 // Интерфейс для параметров создания депозита

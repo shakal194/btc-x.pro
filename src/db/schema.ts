@@ -7,6 +7,7 @@ import {
   boolean,
   jsonb,
   uuid,
+  text,
 } from 'drizzle-orm/pg-core';
 
 export const usersTable = pgTable('users', {
@@ -81,6 +82,10 @@ export const electricityPriceTable = pgTable('electricity_price', {
   pricePerKWh: decimal({ precision: 30, scale: 8 }), // Цена электричества в $ за кВт
   recordDate: timestamp().notNull().defaultNow(), // Дата и время записи
   referral_percent_default: integer(),
+  access_token: text(), // Токен доступа к API
+  refresh_token: text(), // Рефреш токен
+  access_expired_at: timestamp(), // Время истечения токена доступа
+  refresh_expired_at: timestamp(), // Время истечения рефреш токена
 });
 
 export const miningRewardsTable = pgTable('mining_rewards', {
