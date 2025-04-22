@@ -7,7 +7,7 @@ export default function Promo() {
 
   return (
     <main>
-      <section className='bg-black py-[25px] lg:py-[100px]'>
+      <section className='bg-black py-[25px]'>
         <div className='container relative mx-auto px-4 text-white'>
           <h2 className='mb-[20px] text-center text-xl font-bold'>
             {t('title')} № 1
@@ -29,7 +29,7 @@ export default function Promo() {
             </div>
             <div>
               <Image
-                src='/promo_50usdt.png'
+                src='/promo_air50.png'
                 alt='Promo 1'
                 width={630}
                 height={284}

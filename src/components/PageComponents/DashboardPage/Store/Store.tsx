@@ -179,7 +179,7 @@ export default function Store() {
                         >
                           <div className='flex flex-col items-center gap-4 md:flex-row'>
                             <div className='mr-4'>
-                              <p>
+                              <p className='text-center'>
                                 <b>
                                   {equipment.name} {equipment.hashrate}
                                   {equipment.hashrate_unit}
@@ -192,9 +192,9 @@ export default function Store() {
                                     '',
                                   )}
                                   alt={equipment.name}
-                                  width={350}
-                                  height={300}
-                                  className='h-[350px] w-[350px]'
+                                  width={450}
+                                  height={450}
+                                  className='h-[350px] w-[350px] rounded-lg md:h-[450px] md:w-[450px]'
                                 />
                               )}
                             </div>
@@ -229,48 +229,81 @@ export default function Store() {
                                 <p>
                                   <b>Прибыль в сутки всех долей:</b>
                                 </p>
-                                {algorithm.coinTickers &&
-                                  algorithm.coinTickers.map((coin: any) => {
-                                    // Рассчитываем доход для всей мощности устройства
-                                    const dailyIncome =
-                                      coin.pricePerHashrate *
-                                      equipment.hashrate;
+                                {algorithm.coinTickers && (
+                                  <div className='flex flex-col gap-2'>
+                                    {algorithm.coinTickers.map((coin: any) => {
+                                      // Рассчитываем доход для всей мощности устройства
+                                      const dailyIncome =
+                                        coin.pricePerHashrate *
+                                        equipment.hashrate;
 
-                                    // Рассчитываем затраты на электроэнергию для всего устройства
-                                    const dailyPowerConsumption: number =
-                                      Number(equipment.power) * 24;
-                                    const dailyElectricityCostUSD: number =
-                                      dailyPowerConsumption * electricityPrice;
-                                    const currentCoinPrice =
-                                      coinPrices[coin.name] ?? 0;
-                                    const dailyElectricityCostInCoin: number =
-                                      currentCoinPrice > 0
-                                        ? dailyElectricityCostUSD /
-                                          currentCoinPrice
-                                        : 0;
+                                      // Рассчитываем затраты на электроэнергию для всего устройства
+                                      const dailyPowerConsumption: number =
+                                        Number(equipment.power) * 24;
+                                      const dailyElectricityCostUSD: number =
+                                        dailyPowerConsumption *
+                                        electricityPrice;
+                                      const currentCoinPrice =
+                                        coinPrices[coin.name] ?? 0;
+                                      const dailyElectricityCostInCoin: number =
+                                        currentCoinPrice > 0
+                                          ? dailyElectricityCostUSD /
+                                            currentCoinPrice
+                                          : 0;
 
-                                    // Рассчитываем прибыль для всего устройства
-                                    const profit =
-                                      dailyIncome - dailyElectricityCostInCoin;
+                                      // Рассчитываем прибыль для всего устройства
+                                      const profit =
+                                        dailyIncome -
+                                        dailyElectricityCostInCoin;
 
-                                    return (
-                                      <div
-                                        key={coin.name}
-                                        className='flex flex-col gap-1'
-                                      >
-                                        <p>
-                                          {profit.toFixed(8)} {coin.name}
-                                        </p>
-                                        <div className='flex items-center gap-1'>
-                                          <span>Окупаемость: </span>
-                                          {profit > 0 ? (
+                                      return (
+                                        <div
+                                          key={coin.name}
+                                          className='flex flex-col gap-1'
+                                        >
+                                          <p>
+                                            {profit.toFixed(8)} {coin.name}
+                                          </p>
+                                        </div>
+                                      );
+                                    })}
+                                    <div className='flex items-center gap-1'>
+                                      <span>Окупаемость: </span>
+                                      {(() => {
+                                        // Рассчитываем общую прибыль по всем монетам
+                                        const totalDailyProfit =
+                                          algorithm.coinTickers.reduce(
+                                            (total: number, coin: any) => {
+                                              const dailyIncome =
+                                                coin.pricePerHashrate *
+                                                equipment.hashrate;
+                                              const dailyPowerConsumption =
+                                                Number(equipment.power) * 24;
+                                              const dailyElectricityCostUSD =
+                                                dailyPowerConsumption *
+                                                electricityPrice;
+                                              const currentCoinPrice =
+                                                coinPrices[coin.name] ?? 0;
+                                              const dailyElectricityCostInCoin =
+                                                currentCoinPrice > 0
+                                                  ? dailyElectricityCostUSD /
+                                                    currentCoinPrice
+                                                  : 0;
+                                              const profit =
+                                                dailyIncome -
+                                                dailyElectricityCostInCoin;
+                                              return total + profit;
+                                            },
+                                            0,
+                                          );
+
+                                        if (totalDailyProfit > 0) {
+                                          return (
                                             <>
                                               {Math.ceil(
                                                 Number(
                                                   equipment.purchasePrice,
-                                                ) /
-                                                  currentCoinPrice /
-                                                  profit,
+                                                ) / totalDailyProfit,
                                               ).toLocaleString()}{' '}
                                               дней
                                               <Tooltip
@@ -278,8 +311,8 @@ export default function Store() {
                                                   <div className='w-[200px] p-3 text-sm'>
                                                     <p>
                                                       Расчёт по текущему курсу
-                                                      криптовалюты, которая
-                                                      добывается, без учёта
+                                                      всех криптовалют, которые
+                                                      добываются, без учёта
                                                       остаточной стоимости
                                                       оборудования
                                                     </p>
@@ -290,15 +323,18 @@ export default function Store() {
                                                 <InformationCircleIcon className='h-5 w-5 cursor-help text-white' />
                                               </Tooltip>
                                             </>
-                                          ) : (
+                                          );
+                                        } else {
+                                          return (
                                             <span className='text-danger'>
                                               Не окупится
                                             </span>
-                                          )}
-                                        </div>
-                                      </div>
-                                    );
-                                  })}
+                                          );
+                                        }
+                                      })()}
+                                    </div>
+                                  </div>
+                                )}
                               </div>
                               <div className='mt-4 flex justify-between gap-2'>
                                 <BuyShareCountComponent

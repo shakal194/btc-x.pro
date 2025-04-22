@@ -103,7 +103,7 @@ export default function EditEquipmentModal({
 
   return (
     <>
-      <Button size='lg' className='bg-white' onPress={onOpen}>
+      <Button size='lg' onPress={onOpen}>
         Изменить оборудование
       </Button>
       <Modal

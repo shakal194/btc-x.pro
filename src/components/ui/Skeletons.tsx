@@ -4,23 +4,19 @@ export function MiningRewardsSkeleton() {
   return (
     <div className='mb-4 grid grid-cols-1 gap-4 rounded-lg p-4 md:grid-cols-2 md:justify-between xl:grid-cols-4'>
       {/* Hashrate Card */}
-      <div className='rounded-lg border-1 border-secondary bg-default-100 p-4 shadow-md shadow-secondary'>
-        <Skeleton className='mb-2 rounded-lg bg-secondary/40'>
-          <div className='h-6 w-full rounded-lg bg-inherit text-center'>
-            Хешрейт
-          </div>
+      <div className='rounded-lg border-1 border-secondary p-4 shadow-md shadow-secondary'>
+        <Skeleton className='mb-2 rounded-lg bg-secondary'>
+          <div className='h-6 w-full rounded-lg bg-inherit text-center'></div>
         </Skeleton>
-        <Skeleton className='rounded-lg bg-secondary/40'>
+        <Skeleton className='rounded-lg bg-secondary'>
           <div className='h-8 w-full rounded-lg bg-inherit text-center' />
         </Skeleton>
       </div>
 
       {/* Total Mined Card */}
-      <div className='rounded-lg border-1 border-secondary bg-default-200 p-4 shadow-md shadow-secondary'>
+      <div className='rounded-lg border-1 border-secondary p-4 shadow-md shadow-secondary'>
         <Skeleton className='mb-2 rounded-lg bg-secondary/40'>
-          <div className='h-6 w-full rounded-lg bg-inherit text-center'>
-            Намайнено всего
-          </div>
+          <div className='h-6 w-full rounded-lg bg-inherit text-center'></div>
         </Skeleton>
         <div className='space-y-2'>
           <Skeleton className='rounded-lg bg-secondary/40'>
@@ -33,11 +29,9 @@ export function MiningRewardsSkeleton() {
       </div>
 
       {/* 24h Profit Card */}
-      <div className='rounded-lg border-1 border-secondary bg-transparent p-4 shadow-md shadow-secondary'>
+      <div className='rounded-lg border-1 border-secondary p-4 shadow-md shadow-secondary'>
         <Skeleton className='mb-2 rounded-lg bg-secondary/40'>
-          <div className='h-6 w-full rounded-lg bg-inherit text-center'>
-            Прибыль за 24ч.
-          </div>
+          <div className='h-6 w-full rounded-lg bg-inherit text-center'></div>
         </Skeleton>
         <div className='space-y-2'>
           <Skeleton className='rounded-lg bg-secondary/40'>
@@ -52,9 +46,7 @@ export function MiningRewardsSkeleton() {
       {/* 24h Mined Card */}
       <div className='rounded-lg border-1 border-secondary bg-transparent p-4 shadow-sm shadow-secondary'>
         <Skeleton className='mb-2 rounded-lg bg-secondary/40'>
-          <div className='h-6 w-full rounded-lg bg-inherit text-center'>
-            Намайнено за 24ч.
-          </div>
+          <div className='h-6 w-full rounded-lg bg-inherit text-center'></div>
         </Skeleton>
         <div className='space-y-2'>
           <Skeleton className='rounded-lg bg-secondary/40'>

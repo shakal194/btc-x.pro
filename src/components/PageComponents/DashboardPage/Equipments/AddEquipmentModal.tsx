@@ -167,7 +167,7 @@ export default function AddEquipmentModal({
 
   return (
     <>
-      <Button size='lg' className='bg-white' onPress={onOpen}>
+      <Button size='lg' onPress={onOpen}>
         Добавить оборудование
       </Button>
       <Modal

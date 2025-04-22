@@ -132,7 +132,7 @@ export default function AlgorithmModal({
 
   return (
     <section className='space-y-4'>
-      <Button size='lg' className='my-4 bg-white' onPress={onOpen}>
+      <Button size='lg' className='my-4' onPress={onOpen}>
         Добавить алгоритм
       </Button>
       <Modal

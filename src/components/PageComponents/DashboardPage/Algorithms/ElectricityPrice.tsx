@@ -184,11 +184,7 @@ export default function ElectricityPrice() {
                   }
                   isInvalid={!!errorPrice} // Проверка на наличие ошибки
                 />
-                <Button
-                  size='lg'
-                  className='bg-white'
-                  onPress={handleSavePrice}
-                >
+                <Button size='lg' onPress={handleSavePrice}>
                   <CloudArrowDownIcon className='h-5 w-5' />
                 </Button>
                 {isPending && <FullScreenSpinner />}
@@ -231,11 +227,7 @@ export default function ElectricityPrice() {
                   }
                   isInvalid={!!errorRefBonus} // Проверка на наличие ошибки
                 />
-                <Button
-                  size='lg'
-                  className='bg-white'
-                  onPress={handleSaveRefBonus}
-                >
+                <Button size='lg' onPress={handleSaveRefBonus}>
                   <CloudArrowDownIcon className='h-5 w-5' />
                 </Button>
                 {isPending && <FullScreenSpinner />}

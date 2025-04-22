@@ -60,7 +60,8 @@ export default function HeroCloudPage() {
           <div className='mt-[20px] grid grid-cols-2 gap-2 md:gap-4 lg:mt-0 lg:gap-8'>
             <Link
               href={`/${currentLocale}/signin`}
-              className='block w-full rounded-full border px-5 py-3 text-center text-font18 font-bold leading-[110%] transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white sm:w-[250px]'
+              //className='block w-full rounded-full border px-5 py-3 text-center text-font18 font-bold leading-[110%] transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white sm:w-[250px]'
+              className='rounded-full bg-[#dd8f1a] px-[12px] py-[8px] text-center text-[16px] font-semibold leading-[100%] text-black transition delay-200 hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white lg:px-5 lg:py-3 lg:text-font18 lg:leading-[130%]'
             >
               {t('loginButton')}
             </Link>

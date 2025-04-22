@@ -452,7 +452,7 @@ export default function EquipmentsListUser({
                   ) : (
                     miningStats[algorithm.name] && (
                       <div className='mb-4 grid grid-cols-1 gap-4 rounded-lg p-4 md:grid-cols-2 md:justify-between xl:grid-cols-4'>
-                        <Card className='border-1 border-secondary bg-default-100 shadow-md shadow-secondary'>
+                        <Card className='border-1 border-secondary bg-warning-100/50 shadow-md shadow-secondary'>
                           <CardHeader className='flex items-center justify-center'>
                             Хешрейт
                           </CardHeader>
@@ -463,7 +463,7 @@ export default function EquipmentsListUser({
                             {miningStats[algorithm.name].hashrate_unit}
                           </CardBody>
                         </Card>
-                        <Card className='border-1 border-secondary bg-default-200 shadow-md shadow-secondary'>
+                        <Card className='border-1 border-secondary bg-warning-200/50 shadow-md shadow-secondary'>
                           <CardHeader className='flex items-center justify-center'>
                             Намайнено всего
                           </CardHeader>
@@ -483,7 +483,7 @@ export default function EquipmentsListUser({
                             ))}
                           </CardBody>
                         </Card>
-                        <Card className='border-1 border-secondary bg-transparent shadow-md shadow-secondary'>
+                        <Card className='border-1 border-secondary bg-warning-300/50 shadow-md shadow-secondary'>
                           <CardHeader className='flex items-center justify-center'>
                             Прибыль за 24ч.
                           </CardHeader>
@@ -503,7 +503,7 @@ export default function EquipmentsListUser({
                             ))}
                           </CardBody>
                         </Card>
-                        <Card className='border-1 border-secondary bg-transparent shadow-sm shadow-secondary'>
+                        <Card className='border-1 border-secondary bg-warning-400/50 shadow-md shadow-secondary'>
                           <CardHeader className='flex items-center justify-center'>
                             Намайнено за 24ч.
                           </CardHeader>
@@ -651,9 +651,9 @@ export default function EquipmentsListUser({
                                             '',
                                           )}
                                           alt={equipment.name}
-                                          width={350}
-                                          height={350}
-                                          className='h-[350px] w-[350px] rounded-lg'
+                                          width={450}
+                                          height={450}
+                                          className='h-[350px] w-[350px] rounded-lg md:h-[450px] md:w-[450px]'
                                         />
                                       )}
                                   </div>

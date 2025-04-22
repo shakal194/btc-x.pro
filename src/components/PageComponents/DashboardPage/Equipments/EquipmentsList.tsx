@@ -76,7 +76,7 @@ export default function EquipmentsList() {
                           alt={equipment.name}
                           width={350}
                           height={350}
-                          className='h-[350px] w-[350px]'
+                          className='h-[350px] w-[350px] rounded-lg'
                         />
                       )}
                     </div>
