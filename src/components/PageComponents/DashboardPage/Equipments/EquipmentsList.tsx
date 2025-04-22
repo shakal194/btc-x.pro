@@ -72,7 +72,7 @@ export default function EquipmentsList() {
                       </p>
                       {equipment.photoUrl && (
                         <Image
-                          src={equipment.photoUrl.replace(/^public/, '')}
+                          src={equipment.photoUrl}
                           alt={equipment.name}
                           width={350}
                           height={350}

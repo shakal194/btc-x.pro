@@ -646,10 +646,7 @@ export default function EquipmentsListUser({
                                     {equipment.photoUrl &&
                                       equipment.photoUrl !== null && (
                                         <Image
-                                          src={equipment.photoUrl.replace(
-                                            /^public/,
-                                            '',
-                                          )}
+                                          src={equipment.photoUrl}
                                           alt={equipment.name}
                                           width={450}
                                           height={450}

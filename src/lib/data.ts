@@ -327,7 +327,7 @@ export async function insertRefBonusDefault(referral_percent_default: number) {
 export async function insertEquipment(equipmentData: {
   name: string;
   algorithm_id: number;
-  hashrate_unit: string; // Указываем возможные значения для hashrate_unit
+  hashrate_unit: string;
   hashrate: number;
   power: number;
   purchasePrice: number;
@@ -336,7 +336,6 @@ export async function insertEquipment(equipmentData: {
   photoUrl: string;
 }) {
   try {
-    // Подготовка данных для вставки в базу
     const {
       name,
       algorithm_id,
@@ -349,12 +348,23 @@ export async function insertEquipment(equipmentData: {
       photoUrl,
     } = equipmentData;
 
-    const buffer = Buffer.from(photoUrl.split(',')[1], 'base64');
-    const filePath = `public/equipments/${name}_${hashrate}_${power}.jpg`;
+    // Создаем уникальное имя файла, заменяя все пробелы на подчеркивания
+    const fileName = `${name.replace(/\s+/g, '_')}_${hashrate}_${power}.jpg`;
+    const filePath = `public/equipments/${fileName}`;
+    const dbPath = `/equipments/${fileName}`;
+
+    // Декодируем base64 и сохраняем файл
+    const base64Data = photoUrl.replace(/^data:image\/\w+;base64,/, '');
+    const buffer = Buffer.from(base64Data, 'base64');
+
+    // Создаем директорию, если её нет
+    if (!fs.existsSync('public/equipments')) {
+      fs.mkdirSync('public/equipments', { recursive: true });
+    }
 
     fs.writeFileSync(filePath, buffer);
 
-    // Вставка данных в таблицу
+    // Сохраняем только путь к файлу в базе данных
     await db.insert(equipmentsTable).values({
       name: sql`${name}`,
       algorithm_id: sql`${algorithm_id}`,
@@ -364,8 +374,7 @@ export async function insertEquipment(equipmentData: {
       purchasePrice: sql`${purchasePrice}`,
       salePrice: sql`${salePrice}`,
       shareCount: sql`${shareCount}`,
-      photoUrl: sql`${filePath}`,
-      // Тут можно добавить поле photoUrl, если оно потребуется
+      photoUrl: sql`${dbPath}`,
     });
 
     console.log('Оборудование успешно добавлено');

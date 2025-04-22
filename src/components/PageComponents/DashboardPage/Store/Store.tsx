@@ -187,14 +187,12 @@ export default function Store() {
                               </p>
                               {equipment.photoUrl && (
                                 <Image
-                                  src={equipment.photoUrl.replace(
-                                    /^public/,
-                                    '',
-                                  )}
+                                  src={equipment.photoUrl}
                                   alt={equipment.name}
                                   width={450}
                                   height={450}
                                   className='h-[350px] w-[350px] rounded-lg md:h-[450px] md:w-[450px]'
+                                  priority
                                 />
                               )}
                             </div>
