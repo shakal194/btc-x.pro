@@ -59,16 +59,6 @@ export default function NavLinksAdmin({ locale }: NavLinksAdminProps) {
       href: `/${locale}/dashboard/coinsbuy`,
       icon: BanknotesIcon,
     },
-    {
-      name: `${t('settings')}`,
-      href: `/${locale}/dashboard/settings`,
-      icon: AdjustmentsHorizontalIcon,
-    },
-    {
-      name: 'Withdrawals',
-      href: `/${locale}/dashboard/admin/withdrawals`,
-      icon: CurrencyDollarIcon,
-    },
   ];
 
   return (

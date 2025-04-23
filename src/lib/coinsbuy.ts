@@ -296,7 +296,6 @@ export const getAccessToken = async (): Promise<{
         } else {
           // Если записи нет, создаем новую
           await db.insert(electricityPriceTable).values({
-            pricePerKWh: '0',
             access_token: data.data.attributes.access,
             refresh_token: data.data.attributes.refresh,
             access_expired_at: new Date(data.data.attributes.access_expired_at),

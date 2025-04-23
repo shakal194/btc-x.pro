@@ -744,71 +744,43 @@ export async function fetchAllUserBalances(userId: number) {
 }
 
 //Получаем реф.бонус реферрера
-export async function fetchReferralBonus(userId: number) {
+export async function fetchReferralBonus(userId: number): Promise<{
+  referralBonus: string;
+  referrerId: number | null;
+}> {
   try {
-    // Получаем реферера пользователя, если он есть
-    const userResult = await db
-      .select({ referrer_id: usersTable.referrer_id })
-      .from(usersTable)
-      .where(sql`${usersTable.id} = ${userId}`)
-      .limit(1);
-
-    if (!userResult || userResult.length === 0 || !userResult[0].referrer_id) {
-      console.log(`[Referral Bonus] No referrer found for user ${userId}`);
-      return { referralBonus: 0, referrerId: null }; // Возвращаем объект с дефолтными значениями
-    }
-
-    console.log(
-      `[Referral Bonus] Fetching referral bonus for user ${userResult[0].referrer_id}`,
-    );
-
-    // Получаем реферальный бонус для реферера
     const referrer = await db
-      .select({ referral_percent: usersTable.referral_percent })
+      .select({
+        referral_percent: usersTable.referral_percent,
+        id: usersTable.id,
+      })
       .from(usersTable)
-      .where(sql`${usersTable.id} = ${userResult[0].referrer_id}`)
-      .limit(1);
+      .where(eq(usersTable.id, userId));
 
-    console.log('[referrer] - ', referrer);
-
-    // Проверяем, что реферер найден
-    if (!referrer || referrer.length === 0) {
-      console.log(`[Referral Bonus] No referral bonus found for referrer`);
-      return { referralBonus: 0, referrerId: userResult[0].referrer_id }; // Если бонус не найден, возвращаем 0
-    }
-
-    // Получаем общий реферальный процент из таблицы electricity_price
     const electricityPrice = await db
       .select({
         referral_percent_default:
           electricityPriceTable.referral_percent_default,
       })
       .from(electricityPriceTable)
-      .orderBy(desc(electricityPriceTable.id)) // Получаем последнюю запись
-      .where(sql`${electricityPriceTable.referral_percent_default} IS NOT NULL`) // Получаем последнюю запись
+      .where(sql`${electricityPriceTable.referral_percent_default} IS NOT NULL`)
+      .orderBy(desc(electricityPriceTable.id))
       .limit(1);
 
-    console.log('[electricityPrice] - ', electricityPrice);
-
-    // Если у реферера есть индивидуальный бонус, используем его, иначе используем общий
     const referralBonusPercent = referrer[0]?.referral_percent
       ? referrer[0].referral_percent
-      : electricityPrice[0]?.referral_percent_default || 0;
+      : electricityPrice[0]?.referral_percent_default || '0';
 
-    console.log('[referralBonusPercent] - ', referralBonusPercent);
-
-    console.log(
-      `[Referral Bonus] Referral bonus for user ${userResult[0].referrer_id}: ${referralBonusPercent}%`,
-    );
-
-    // Возвращаем как бонус, так и реферер айди
     return {
       referralBonus: referralBonusPercent,
-      referrerId: userResult[0].referrer_id,
+      referrerId: referrer[0]?.id || null,
     };
   } catch (error) {
-    console.error('[Referral Bonus] Error fetching referral bonus:', error);
-    throw new Error('Ошибка при получении реферального бонуса');
+    console.error('Error fetching referral bonus:', error);
+    return {
+      referralBonus: '0',
+      referrerId: null,
+    };
   }
 }
 

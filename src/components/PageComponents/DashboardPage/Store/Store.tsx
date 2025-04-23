@@ -235,24 +235,41 @@ export default function Store() {
                                         coin.pricePerHashrate *
                                         equipment.hashrate;
 
-                                      // Рассчитываем затраты на электроэнергию для всего устройства
-                                      const dailyPowerConsumption: number =
-                                        Number(equipment.power) * 24;
-                                      const dailyElectricityCostUSD: number =
+                                      // Рассчитываем доход на одну долю
+                                      const dailyIncomePerShare =
+                                        dailyIncome / equipment.shareCount;
+
+                                      // Рассчитываем затраты на электроэнергию для одной доли
+                                      const powerPerShare =
+                                        Number(equipment.power) /
+                                        equipment.shareCount;
+                                      const dailyPowerConsumption =
+                                        powerPerShare * 24;
+                                      const dailyElectricityCostUSD =
                                         dailyPowerConsumption *
                                         electricityPrice;
+
+                                      // Конвертируем затраты в монету
                                       const currentCoinPrice =
                                         coinPrices[coin.name] ?? 0;
-                                      const dailyElectricityCostInCoin: number =
+                                      const dailyElectricityCostInCoin =
                                         currentCoinPrice > 0
                                           ? dailyElectricityCostUSD /
                                             currentCoinPrice
                                           : 0;
 
-                                      // Рассчитываем прибыль для всего устройства
-                                      const profit =
-                                        dailyIncome -
+                                      // Рассчитываем прибыль для одной доли
+                                      const profitPerShare =
+                                        dailyIncomePerShare -
                                         dailyElectricityCostInCoin;
+
+                                      // Рассчитываем общую прибыль для всех долей
+                                      const totalProfit =
+                                        profitPerShare * equipment.shareCount;
+
+                                      // Рассчитываем доход в USDT
+                                      const incomeInUSDT =
+                                        dailyIncome * currentCoinPrice;
 
                                       return (
                                         <div
@@ -260,7 +277,16 @@ export default function Store() {
                                           className='flex flex-col gap-1'
                                         >
                                           <p>
-                                            {profit.toFixed(8)} {coin.name}
+                                            {dailyIncome.toFixed(8)} {coin.name}{' '}
+                                            ({incomeInUSDT.toFixed(2)} USDT)
+                                          </p>
+                                          <p>
+                                            Прибыль: {totalProfit.toFixed(8)}{' '}
+                                            {coin.name} (
+                                            {(
+                                              totalProfit * currentCoinPrice
+                                            ).toFixed(2)}{' '}
+                                            USDT)
                                           </p>
                                         </div>
                                       );
@@ -272,14 +298,27 @@ export default function Store() {
                                         const totalDailyProfit =
                                           algorithm.coinTickers.reduce(
                                             (total: number, coin: any) => {
+                                              // Рассчитываем доход для всей мощности устройства
                                               const dailyIncome =
                                                 coin.pricePerHashrate *
                                                 equipment.hashrate;
+
+                                              // Рассчитываем доход на одну долю
+                                              const dailyIncomePerShare =
+                                                dailyIncome /
+                                                equipment.shareCount;
+
+                                              // Рассчитываем затраты на электроэнергию для одной доли
+                                              const powerPerShare =
+                                                Number(equipment.power) /
+                                                equipment.shareCount;
                                               const dailyPowerConsumption =
-                                                Number(equipment.power) * 24;
+                                                powerPerShare * 24;
                                               const dailyElectricityCostUSD =
                                                 dailyPowerConsumption *
                                                 electricityPrice;
+
+                                              // Конвертируем затраты в монету
                                               const currentCoinPrice =
                                                 coinPrices[coin.name] ?? 0;
                                               const dailyElectricityCostInCoin =
@@ -287,10 +326,22 @@ export default function Store() {
                                                   ? dailyElectricityCostUSD /
                                                     currentCoinPrice
                                                   : 0;
-                                              const profit =
-                                                dailyIncome -
+
+                                              // Рассчитываем прибыль для одной доли
+                                              const profitPerShare =
+                                                dailyIncomePerShare -
                                                 dailyElectricityCostInCoin;
-                                              return total + profit;
+
+                                              // Рассчитываем общую прибыль для всех долей
+                                              const totalProfit =
+                                                profitPerShare *
+                                                equipment.shareCount;
+
+                                              // Конвертируем прибыль в USDT для общего расчета
+                                              const profitInUSDT =
+                                                totalProfit * currentCoinPrice;
+
+                                              return total + profitInUSDT;
                                             },
                                             0,
                                           );

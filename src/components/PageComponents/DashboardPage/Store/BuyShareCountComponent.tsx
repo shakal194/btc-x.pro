@@ -187,7 +187,7 @@ export default function BuyShareCountComponent({
       const { referralBonus: referralPercent, referrerId } =
         await fetchReferralBonus(Number(user_id));
       const bonusAmount = Number(
-        (totalAmount * (referralPercent / 100)).toFixed(2),
+        (totalAmount * (parseFloat(referralPercent) / 100)).toFixed(2),
       );
 
       // Если есть реферальный бонус, обновляем его
@@ -196,7 +196,7 @@ export default function BuyShareCountComponent({
         await insertReferralBonusTransaction(
           Number(user_id),
           referrerId,
-          referralPercent,
+          parseFloat(referralPercent),
           bonusAmount,
         );
       }

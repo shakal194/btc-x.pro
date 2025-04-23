@@ -28,7 +28,7 @@ interface ApiRefBonusTransaction {
   recordDate: Date;
   uuid: string | null;
   referral_id: number;
-  referral_percent: number;
+  referral_percent: string;
   referral_bonus: string;
   referralEmail: string;
 }
@@ -89,7 +89,7 @@ export default function ReferralHistoryTable({
               id: item.id,
               transactionDate: item.recordDate,
               referralEmail: item.referralEmail,
-              bonusPercent: item.referral_percent,
+              bonusPercent: Number(item.referral_percent),
               bonusAmount: bonusAmount,
               balanceAfter: currentBalance,
             };

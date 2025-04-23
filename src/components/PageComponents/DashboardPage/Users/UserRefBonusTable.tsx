@@ -42,6 +42,14 @@ interface RefBonusTransaction {
   bonusAmount: number;
 }
 
+interface RefBonusRecord {
+  id: number;
+  recordDate: Date;
+  referral_percent: string;
+  referral_bonus: string;
+  referralEmail: string;
+}
+
 export default function UserRefBonusTable({
   userId,
   userEmail,
@@ -76,16 +84,14 @@ export default function UserRefBonusTable({
       try {
         setIsLoading(true);
         const data = await fetchUserRefBonusTransactions(userId);
-        const mappedData: RefBonusTransaction[] = data.map(
-          (item: ApiRefBonusTransaction) => ({
-            id: item.id,
-            transactionDate: item.recordDate,
-            referralEmail: item.referralEmail,
-            bonusPercent: item.referral_percent,
-            bonusAmount: Number(item.referral_bonus),
-          }),
-        );
-        setTransactions(mappedData);
+        const records = data.map((item) => ({
+          id: item.id,
+          transactionDate: item.recordDate,
+          referralEmail: item.referralEmail,
+          bonusPercent: parseFloat(item.referral_percent),
+          bonusAmount: parseFloat(item.referral_bonus),
+        }));
+        setTransactions(records);
       } catch (error) {
         console.error('Error fetching referral bonus transactions:', error);
       } finally {

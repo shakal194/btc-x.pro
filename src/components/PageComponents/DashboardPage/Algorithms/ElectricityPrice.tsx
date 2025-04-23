@@ -75,12 +75,14 @@ export default function ElectricityPrice() {
 
   // Функция для валидации инпута реф.бонуса
   const handleInputChangeRefBonus = (value: string) => {
-    // Регулярное выражение для проверки числа с максимум 8 знаками после точки
-    const regex = /^\d+(\.\d{2})?$/;
+    // Регулярное выражение для проверки числа с максимум 2 знаками после точки
+    const regex = /^\d+(\.\d{0,2})?$/;
 
     // Если значение не соответствует формату, отображаем ошибку
     if (!regex.test(value)) {
-      setErrorRefBonus('Цена должна быть числом');
+      setErrorRefBonus(
+        'Реф.бонус должен быть числом с максимальной точностью до 2 знаков после запятой',
+      );
     } else {
       setErrorRefBonus(null); // Если формат правильный, убираем ошибку
     }
@@ -155,7 +157,7 @@ export default function ElectricityPrice() {
             <div className='text-white'>
               {electricityPrice ? (
                 <div>
-                  <p>Текущая цена: {electricityPrice} $</p>
+                  <p>Текущая цена: {Number(electricityPrice).toFixed(4)} $</p>
                   <p>
                     Дата обновления:{' '}
                     {new Date(electricityPriceDate).toLocaleString()}
@@ -198,7 +200,7 @@ export default function ElectricityPrice() {
             <div className='text-white'>
               {lastRefBonus ? (
                 <div>
-                  <p>Текущий реф.бонус: {lastRefBonus} %</p>
+                  <p>Текущий реф.бонус: {Number(lastRefBonus).toFixed(2)} %</p>
                   <p>
                     Дата обновления:{' '}
                     {new Date(lastRefBonusDate).toLocaleString()}

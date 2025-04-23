@@ -22,7 +22,7 @@ export const usersTable = pgTable('users', {
     .default('user'),
   referral_code: integer().notNull(),
   referrer_id: integer(),
-  referral_percent: integer(),
+  referral_percent: decimal({ precision: 30, scale: 8 }),
   referral_bonus: decimal({ precision: 10, scale: 2 }).default('0'),
 });
 
@@ -81,7 +81,7 @@ export const electricityPriceTable = pgTable('electricity_price', {
   uuid: uuid().defaultRandom(), // ID записи
   pricePerKWh: decimal({ precision: 30, scale: 8 }), // Цена электричества в $ за кВт
   recordDate: timestamp().notNull().defaultNow(), // Дата и время записи
-  referral_percent_default: integer(),
+  referral_percent_default: decimal({ precision: 30, scale: 8 }),
   access_token: text(), // Токен доступа к API
   refresh_token: text(), // Рефреш токен
   access_expired_at: timestamp(), // Время истечения токена доступа
@@ -170,6 +170,6 @@ export const transactionsRefBonusTable = pgTable('transactions_refBonus', {
   uuid: uuid().defaultRandom(), // ID
   user_id: integer().notNull(), // ID пользователя, которому зачисляется реф.бонус
   referral_id: integer().notNull(), // ID реферала, который покупает доли
-  referral_percent: integer().notNull(), //Реф.бонус в %
+  referral_percent: decimal({ precision: 30, scale: 8 }).notNull(), //Реф.бонус в %
   referral_bonus: decimal({ precision: 10, scale: 2 }).notNull(), // Сумма бонуса
 });
