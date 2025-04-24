@@ -1,9 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 export default function ForWhoSection() {
   const t = useTranslations('cloudMiningPage.forWho');
+  const currentLocale = useLocale();
 
   return (
     <section className='py-[30px] lg:pt-[100px]'>
@@ -68,7 +69,7 @@ export default function ForWhoSection() {
 
                   {/* Кнопка */}
                   <Link
-                    href='https://onelink.to/js2s8h'
+                    href={`/${currentLocale}/signin`}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='hidden rounded-full border px-5 py-3 text-font18 font-bold leading-[110%] transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white lg:inline-block'

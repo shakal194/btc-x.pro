@@ -70,8 +70,8 @@ export default function HowItWorksSection() {
           </div>
           <div>
             <Image
-              src='/ref_client.png'
-              alt='Referral client'
+              src='/cloud_mining_howitworks.webp'
+              alt='How it works'
               width={670}
               height={560}
               className='w-full lg:h-[560px] lg:w-[670px]'
