@@ -1664,3 +1664,87 @@ export async function calculateTotalBalanceInUSDT(
     return 0;
   }
 }
+
+export async function deleteEquipment(equipmentId: number): Promise<void> {
+  // Проверяем наличие купленных долей
+  const lastTransaction = await db
+    .select()
+    .from(transactionsTable)
+    .where(eq(transactionsTable.equipment_id, equipmentId))
+    .orderBy(desc(transactionsTable.transactionDate))
+    .limit(1);
+
+  if (lastTransaction[0] && lastTransaction[0].balanceShareCount > 0) {
+    throw new Error(
+      'Невозможно удалить устройство, так как есть купленные доли',
+    );
+  }
+
+  // Удаляем оборудование
+  await db.delete(equipmentsTable).where(eq(equipmentsTable.id, equipmentId));
+}
+
+export async function hasPurchasedShares(
+  equipmentId: number,
+): Promise<boolean> {
+  const result = await db
+    .select({
+      balanceShareCount: transactionsTable.balanceShareCount,
+    })
+    .from(transactionsTable)
+    .where(eq(transactionsTable.equipment_id, equipmentId))
+    .orderBy(desc(transactionsTable.transactionDate))
+    .limit(1);
+
+  return result.length > 0 && (result[0].balanceShareCount ?? 0) > 0;
+}
+
+export async function getEquipmentSharesInfo(equipmentId: number): Promise<{
+  totalPurchasedShares: number;
+  activeDevices: number;
+}> {
+  // Получаем все транзакции для данного оборудования
+  const allTransactions = await db
+    .select({
+      id: transactionsTable.id,
+      user_id: transactionsTable.user_id,
+      balanceShareCount: transactionsTable.balanceShareCount,
+    })
+    .from(transactionsTable)
+    .where(eq(transactionsTable.equipment_id, equipmentId))
+    .orderBy(desc(transactionsTable.id));
+
+  // Группируем транзакции по user_id, оставляя только последнюю запись для каждого пользователя
+  const latestBalances = allTransactions.reduce(
+    (acc, curr) => {
+      if (!acc[curr.user_id] || acc[curr.user_id].id < curr.id) {
+        acc[curr.user_id] = curr;
+      }
+      return acc;
+    },
+    {} as Record<number, (typeof allTransactions)[0]>,
+  );
+
+  // Суммируем balanceShareCount из последних записей каждого пользователя
+  const totalPurchasedShares = Object.values(latestBalances).reduce(
+    (sum, record) => sum + (record.balanceShareCount ?? 0),
+    0,
+  );
+
+  // Получаем shareCount для оборудования
+  const equipment = await db
+    .select({
+      shareCount: equipmentsTable.shareCount,
+    })
+    .from(equipmentsTable)
+    .where(eq(equipmentsTable.id, equipmentId))
+    .limit(1);
+
+  const shareCount = equipment[0]?.shareCount ?? 1;
+  const activeDevices = totalPurchasedShares / shareCount;
+
+  return {
+    totalPurchasedShares,
+    activeDevices,
+  };
+}
