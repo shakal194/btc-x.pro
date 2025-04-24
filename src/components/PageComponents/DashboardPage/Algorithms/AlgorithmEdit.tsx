@@ -56,7 +56,7 @@ export default function AlgorithmEdit({
               (acc: any, ticker: any) => {
                 acc[ticker.name] = {
                   name: ticker.name,
-                  price: ticker.pricePerHashrate.toString(),
+                  price: Number(ticker.pricePerHashrate).toFixed(8),
                 };
                 return acc;
               },
@@ -336,9 +336,10 @@ export default function AlgorithmEdit({
                         value={editedTickers[ticker.name]?.price || ''}
                         onChange={(e) => {
                           const newEdits = { ...editedTickers };
+                          const value = e.target.value.replace(',', '.');
                           newEdits[ticker.name] = {
                             ...newEdits[ticker.name],
-                            price: e.target.value,
+                            price: Number(value).toFixed(8),
                           };
                           setEditedTickers(newEdits);
                         }}

@@ -404,7 +404,8 @@
       "text": "Start earning on cryptocurrency",
       "text_2": "with minimal capital",
       "text_3": " - invest in mining today!",
-      "loginButton": "Login"
+      "signinButton": "Sign in",
+      "signupButton": "Sign up"
     },
     "howItWorks": {
       "title": "How does it work?",
@@ -436,7 +437,7 @@
       "content_3_price": "Price: $450",
       "content_3_profit": "Profit 24h: $8",
       "content_4": "Antminer L9 17.6Gh",
-      "content_4_price": "Price: $1600",
+      "content_4_price": "Price: $950",
       "content_4_profit": "Profit 24h: $19",
       "text_button": "Buy"
     },
@@ -459,7 +460,8 @@
       "benefits3_text": "You don't need to do anything - we'll take care of mining, and you'll enjoy a stable income.",
       "title2": "Earn with BTC-X",
       "title3": "Join our program and start earn with our referral program",
-      "loginButton": "Login"
+      "signinButton": "Sign in",
+      "signupButton": "Sign up"
     },
     "signin": {
       "title_signin": "Sign in",

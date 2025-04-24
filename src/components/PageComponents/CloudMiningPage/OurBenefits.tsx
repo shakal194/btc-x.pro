@@ -95,10 +95,16 @@ export default function OurBenefitsSection() {
           </div>*/}
           <div className='mt-5 flex justify-center gap-4'>
             <Link
-              href='/signin'
+              href='/signin?tab=signin'
               className='block w-full rounded-full border bg-black px-5 py-3 text-center text-font18 font-bold leading-[110%] text-white transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white sm:w-[250px]'
             >
-              {t('loginButton')}
+              {t('signinButton')}
+            </Link>{' '}
+            <Link
+              href='/signin?tab=signup'
+              className='block w-full rounded-full border bg-black px-5 py-3 text-center text-font18 font-bold leading-[110%] text-white transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white sm:w-[250px]'
+            >
+              {t('signupButton')}
             </Link>
           </div>
         </div>

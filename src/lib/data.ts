@@ -1748,3 +1748,137 @@ export async function getEquipmentSharesInfo(equipmentId: number): Promise<{
     activeDevices,
   };
 }
+
+// Получение количества пользователей по статусу
+export async function getUserCountByStatus(status: string) {
+  try {
+    const result = await db
+      .select({ count: sql`COUNT(*)` })
+      .from(usersTable)
+      .where(eq(usersTable.status, status as 'user' | 'admin' | 'delete'));
+    return Number(result[0]?.count || 0);
+  } catch (error) {
+    console.error('Error getting user count:', error);
+    return 0;
+  }
+}
+
+// Получение общего количества купленных долей
+export async function getTotalPurchasedShares() {
+  try {
+    // Сначала получим все последние транзакции для каждой пары user_id-equipment_id
+    const latestTransactions = await db
+      .select({
+        user_id: transactionsTable.user_id,
+        equipment_id: transactionsTable.equipment_id,
+        balance_share_count: transactionsTable.balanceShareCount,
+        transaction_date: transactionsTable.transactionDate,
+      })
+      .from(transactionsTable)
+      .orderBy(desc(transactionsTable.transactionDate));
+
+    console.log('Found transactions:', latestTransactions.length);
+
+    // Создаем объект для хранения последних транзакций
+    const latestBalances: Record<string, number> = {};
+
+    // Для каждой транзакции проверяем, является ли она последней для данной пары user_id-equipment_id
+    latestTransactions.forEach((transaction) => {
+      const key = `${transaction.user_id}-${transaction.equipment_id}`;
+      if (!(key in latestBalances)) {
+        latestBalances[key] = transaction.balance_share_count;
+      }
+    });
+
+    console.log(
+      'Unique user-equipment pairs:',
+      Object.keys(latestBalances).length,
+    );
+
+    // Суммируем все балансы
+    const totalShares = Object.values(latestBalances).reduce(
+      (sum, count) => sum + (count || 0),
+      0,
+    );
+
+    console.log('Total shares:', totalShares);
+
+    return totalShares;
+  } catch (error) {
+    console.error('Error getting total shares:', error);
+    return 0;
+  }
+}
+
+// Получение общего баланса по всем монетам
+export async function getTotalBalancesByCoin() {
+  try {
+    console.log('Starting getTotalBalancesByCoin function...');
+
+    // Сначала получим все балансы
+    const allBalances = await db
+      .select({
+        coinTicker: balancesTable.coinTicker,
+        coinAmount: balancesTable.coinAmount,
+        userId: balancesTable.user_id,
+        id: balancesTable.id,
+      })
+      .from(balancesTable)
+      .orderBy(desc(balancesTable.id));
+
+    console.log('Found balances:', allBalances.length);
+
+    // Группируем по пользователю и монете, оставляя только последние записи
+    const latestBalances = allBalances.reduce(
+      (acc, curr) => {
+        const key = `${curr.userId}-${curr.coinTicker}`;
+        if (!acc[key] || acc[key].id < curr.id) {
+          acc[key] = curr;
+        }
+        return acc;
+      },
+      {} as Record<string, (typeof allBalances)[0]>,
+    );
+
+    console.log('Unique user-coin pairs:', Object.keys(latestBalances).length);
+
+    // Группируем по монете и суммируем балансы
+    const result = Object.values(latestBalances).reduce(
+      (acc, curr) => {
+        const amount = Number(curr.coinAmount) || 0;
+        if (amount > 0) {
+          acc[curr.coinTicker] = (acc[curr.coinTicker] || 0) + amount;
+        }
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
+
+    // Преобразуем в нужный формат
+    const formattedResult = Object.entries(result).map(([ticker, amount]) => ({
+      coin_ticker: ticker,
+      total_amount: amount.toFixed(8),
+    }));
+
+    console.log('Final result:', formattedResult);
+    return formattedResult;
+  } catch (error) {
+    console.error('Error getting total balances:', error);
+    return [];
+  }
+}
+
+// Получение общего реферального баланса
+export async function getTotalReferralBalance() {
+  try {
+    const result = await db
+      .select({
+        total: sql`SUM(CAST(${usersTable.referral_bonus} AS DECIMAL(20,2)))`,
+      })
+      .from(usersTable);
+    return Number(result[0]?.total || 0);
+  } catch (error) {
+    console.error('Error getting total referral balance:', error);
+    return 0;
+  }
+}

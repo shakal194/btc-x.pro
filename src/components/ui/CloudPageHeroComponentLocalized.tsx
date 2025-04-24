@@ -51,19 +51,24 @@ export default function HeroCloudPage() {
             </span>{' '}
           </h1>
         </div>
-        <div className='mt-[62px] lg:w-[435px] xl:mt-[100px]'>
-          <p className='w-[238px] text-[13px] font-semibold leading-[130%] text-white/40 md:w-[338px] md:text-font18 lg:w-full lg:max-w-3xl lg:text-white'>
-            {t('text')} <span className='text-white'>{t('text_2')}</span>{' '}
+        <div className='mt-[62px] lg:w-[470px] xl:mt-[100px]'>
+          <p className='w-[238px] text-[13px] font-semibold leading-[130%] text-white md:w-[338px] md:text-font18 lg:w-full lg:max-w-3xl'>
+            {t('text')} <span className='text-[#FD6B06]'>{t('text_2')}</span>{' '}
             {t('text_3')}
           </p>
           <div className='my-6 hidden border-t opacity-[33%] lg:block'></div>
           <div className='mt-[20px] grid grid-cols-2 gap-2 md:gap-4 lg:mt-0 lg:gap-8'>
             <Link
-              href={`/${currentLocale}/signin`}
-              //className='block w-full rounded-full border px-5 py-3 text-center text-font18 font-bold leading-[110%] transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white sm:w-[250px]'
-              className='rounded-full bg-[#dd8f1a] px-[12px] py-[8px] text-center text-[16px] font-semibold leading-[100%] text-black transition delay-200 hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white lg:px-5 lg:py-3 lg:text-font18 lg:leading-[130%]'
+              href={`/${currentLocale}/signin?tab=signin`}
+              className='w-full rounded-full bg-[#dd8f1a] px-[12px] py-[8px] text-center text-[16px] font-semibold leading-[100%] text-black transition delay-200 hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white lg:px-5 lg:py-3 lg:text-font18 lg:leading-[130%]'
             >
-              {t('loginButton')}
+              {t('signinButton')}
+            </Link>
+            <Link
+              href={`/${currentLocale}/signin?tab=signup`}
+              className='w-full rounded-full bg-[#dd8f1a] px-[12px] py-[8px] text-center text-[16px] font-semibold leading-[100%] text-black transition delay-200 hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white lg:px-5 lg:py-3 lg:text-font18 lg:leading-[130%]'
+            >
+              {t('signupButton')}
             </Link>
           </div>
         </div>

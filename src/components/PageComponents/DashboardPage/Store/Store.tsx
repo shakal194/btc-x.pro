@@ -212,6 +212,11 @@ export default function Store() {
                                   {equipment.purchasePrice}
                                 </p>
                                 <p>
+                                  <b>Цена одной доли:</b> $
+                                  {equipment.purchasePrice /
+                                    equipment.shareCount}
+                                </p>
+                                <p>
                                   <b>Доход в сутки одного устройства:</b>{' '}
                                 </p>
                                 {algorithm.coinTickers &&
@@ -277,12 +282,8 @@ export default function Store() {
                                           className='flex flex-col gap-1'
                                         >
                                           <p>
-                                            {dailyIncome.toFixed(8)} {coin.name}{' '}
-                                            ({incomeInUSDT.toFixed(2)} USDT)
-                                          </p>
-                                          <p>
-                                            Прибыль: {totalProfit.toFixed(8)}{' '}
-                                            {coin.name} (
+                                            {totalProfit.toFixed(8)} {coin.name}{' '}
+                                            (
                                             {(
                                               totalProfit * currentCoinPrice
                                             ).toFixed(2)}{' '}
@@ -364,6 +365,88 @@ export default function Store() {
                                                       добываются, без учёта
                                                       остаточной стоимости
                                                       оборудования
+                                                    </p>
+                                                  </div>
+                                                }
+                                                placement='right'
+                                              >
+                                                <InformationCircleIcon className='h-5 w-5 cursor-help text-white' />
+                                              </Tooltip>
+                                            </>
+                                          );
+                                        } else {
+                                          return (
+                                            <span className='text-danger'>
+                                              Не окупится
+                                            </span>
+                                          );
+                                        }
+                                      })()}
+                                    </div>
+                                    <div className='flex items-center gap-1'>
+                                      <span>Выход в безубыток: </span>
+                                      {(() => {
+                                        // Рассчитываем общую прибыль по всем монетам
+                                        const totalDailyProfit =
+                                          algorithm.coinTickers.reduce(
+                                            (total: number, coin: any) => {
+                                              const dailyIncome =
+                                                coin.pricePerHashrate *
+                                                equipment.hashrate;
+                                              const dailyIncomePerShare =
+                                                dailyIncome /
+                                                equipment.shareCount;
+                                              const powerPerShare =
+                                                Number(equipment.power) /
+                                                equipment.shareCount;
+                                              const dailyPowerConsumption =
+                                                powerPerShare * 24;
+                                              const dailyElectricityCostUSD =
+                                                dailyPowerConsumption *
+                                                electricityPrice;
+                                              const currentCoinPrice =
+                                                coinPrices[coin.name] ?? 0;
+                                              const dailyElectricityCostInCoin =
+                                                currentCoinPrice > 0
+                                                  ? dailyElectricityCostUSD /
+                                                    currentCoinPrice
+                                                  : 0;
+                                              const profitPerShare =
+                                                dailyIncomePerShare -
+                                                dailyElectricityCostInCoin;
+                                              const totalProfit =
+                                                profitPerShare *
+                                                equipment.shareCount;
+                                              const profitInUSDT =
+                                                totalProfit * currentCoinPrice;
+                                              return total + profitInUSDT;
+                                            },
+                                            0,
+                                          );
+
+                                        // Разница между ценой покупки и продажи
+                                        const priceDifference =
+                                          equipment.purchasePrice -
+                                          equipment.salePrice;
+
+                                        if (totalDailyProfit > 0) {
+                                          return (
+                                            <>
+                                              {Math.ceil(
+                                                priceDifference /
+                                                  totalDailyProfit,
+                                              ).toLocaleString()}{' '}
+                                              дней
+                                              <Tooltip
+                                                content={
+                                                  <div className='w-[200px] p-3 text-sm'>
+                                                    <p>
+                                                      Расчёт по текущему курсу с
+                                                      учетом разницы между ценой
+                                                      покупки ($
+                                                      {equipment.purchasePrice})
+                                                      и продажи ($
+                                                      {equipment.salePrice})
                                                     </p>
                                                   </div>
                                                 }
