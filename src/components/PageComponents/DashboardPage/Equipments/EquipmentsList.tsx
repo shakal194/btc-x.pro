@@ -114,7 +114,7 @@ export default function EquipmentsList() {
                   <li key={index} className='border-b-1 border-secondary p-4'>
                     <div className='flex flex-col items-center gap-4 md:flex-row'>
                       <div className='mr-4'>
-                        <p>
+                        <p className='text-center'>
                           <b>
                             {equipment.name} {equipment.hashrate}
                             {equipment.hashrate_unit}

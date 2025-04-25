@@ -1,4 +1,5 @@
 import SignInWrapper from '@/components/PageComponents/SignInPage/SignInWrapper';
+import HeaderDashboard from '@/components/HeaderDashboard';
 import Image from 'next/image';
 
 export default async function LoginPage(props: {
@@ -9,6 +10,7 @@ export default async function LoginPage(props: {
 
   return (
     <>
+      <HeaderDashboard />
       <main className='lg:p-10'>
         <div className='container mx-auto flex grid-flow-col-dense flex-col-reverse items-center gap-8 p-4 md:grid md:grid-cols-2'>
           <div className='mx-auto w-full rounded-xl bg-gradient-to-r from-[#553300] to-[#FE9900] p-[1px] md:w-[350px] lg:w-[400px] xl:w-[500px]'>

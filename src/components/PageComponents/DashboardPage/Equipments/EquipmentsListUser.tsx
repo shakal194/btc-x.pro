@@ -639,7 +639,7 @@ export default function EquipmentsListUser({
                               >
                                 <div className='flex flex-col items-center gap-4 md:flex-row'>
                                   <div className='mr-4 flex flex-col items-center'>
-                                    <p>
+                                    <p className='text-center'>
                                       <b>
                                         {equipment.name} {equipment.hashrate}{' '}
                                         {equipment.hashrate_unit}
@@ -719,185 +719,221 @@ export default function EquipmentsListUser({
                                       <p>
                                         <b>Прибыль в сутки всех долей:</b>
                                       </p>
-                                      {algorithm.coinTickers &&
-                                        algorithm.coinTickers.map(
-                                          (coin: any) => {
-                                            // Рассчитываем доход для всей мощности устройства
-                                            const dailyIncome =
-                                              coin.pricePerHashrate *
-                                              equipment.hashrate;
+                                      {algorithm.coinTickers && (
+                                        <div className='flex flex-col gap-2'>
+                                          {(() => {
+                                            // Рассчитываем общий доход в USDT от всех монет
+                                            const totalIncomeUSDT =
+                                              algorithm.coinTickers.reduce(
+                                                (total: number, coin: any) => {
+                                                  const dailyIncome =
+                                                    coin.pricePerHashrate *
+                                                    equipment.hashrate;
+                                                  const dailyIncomePerShare =
+                                                    dailyIncome /
+                                                    equipment.shareCount;
+                                                  const totalDailyIncome =
+                                                    dailyIncomePerShare *
+                                                    userBalanceShareCount;
+                                                  const coinPrice =
+                                                    coinPrices[coin.name] ?? 0;
+                                                  return (
+                                                    total +
+                                                    totalDailyIncome * coinPrice
+                                                  );
+                                                },
+                                                0,
+                                              );
 
-                                            // Рассчитываем доход на одну долю с учетом всех долей
-                                            const dailyIncomePerShare =
-                                              dailyIncome /
-                                              equipment.shareCount;
-
-                                            // Рассчитываем общий доход для всех долей пользователя
-                                            const totalDailyIncome =
-                                              dailyIncomePerShare *
-                                              userBalanceShareCount;
-
-                                            // Рассчитываем затраты на электроэнергию в USDT
-                                            const powerPerShare: number =
+                                            // Рассчитываем общие затраты на электроэнергию в USDT для всех долей пользователя
+                                            const powerPerShare =
                                               Number(equipment.power) /
                                               equipment.shareCount;
-                                            const dailyPowerConsumption: number =
+                                            const dailyPowerConsumption =
                                               powerPerShare *
                                               userBalanceShareCount *
                                               24;
-                                            const dailyElectricityCostUSD: number =
+                                            const totalElectricityCostUSDT =
                                               dailyPowerConsumption *
                                               Number(
                                                 electricityPrice?.pricePerKWh ??
                                                   0,
                                               );
 
-                                            // Конвертируем доход в USDT
-                                            const coinPrice =
-                                              coinPrices[coin.name] ?? 0;
-                                            const dailyIncomeInUSDT =
-                                              totalDailyIncome * coinPrice;
-
-                                            const dailyElectricityCostInCoin: number =
-                                              currentCoinPrice > 0
-                                                ? dailyElectricityCostUSD /
-                                                  currentCoinPrice
-                                                : 0;
-
-                                            // Рассчитываем прибыль
-                                            const profit =
-                                              totalDailyIncome -
-                                              dailyElectricityCostInCoin;
-
-                                            // Рассчитываем прибыль в USDT
-                                            const profitInUSDT =
-                                              dailyIncomeInUSDT -
-                                              dailyElectricityCostUSD;
-
-                                            return (
-                                              <p key={coin.name}>
-                                                {profit.toFixed(8)} {coin.name}{' '}
-                                                ({profitInUSDT.toFixed(2)} USDT)
-                                              </p>
-                                            );
-                                          },
-                                        )}
-                                      <div className='flex items-center gap-1'>
-                                        <span>Выход в безубыток: </span>
-                                        {(() => {
-                                          if (!algorithm.coinTickers) {
-                                            return (
-                                              <span className='text-danger'>
-                                                Нет данных
-                                              </span>
-                                            );
-                                          }
-
-                                          // Рассчитываем общую прибыль по всем монетам
-                                          const totalDailyProfit =
-                                            algorithm.coinTickers.reduce(
-                                              (total: number, coin: any) => {
-                                                // Рассчитываем доход для всей мощности устройства
+                                            return algorithm.coinTickers.map(
+                                              (coin: any) => {
+                                                // Рассчитываем доход для всех долей пользователя
                                                 const dailyIncome =
                                                   coin.pricePerHashrate *
                                                   equipment.hashrate;
-
-                                                // Рассчитываем доход на одну долю
                                                 const dailyIncomePerShare =
                                                   dailyIncome /
                                                   equipment.shareCount;
-
-                                                // Рассчитываем общий доход для всех долей пользователя
                                                 const totalDailyIncome =
                                                   dailyIncomePerShare *
                                                   userBalanceShareCount;
 
-                                                // Рассчитываем затраты на электроэнергию
-                                                const powerPerShare =
-                                                  Number(equipment.power) /
-                                                  equipment.shareCount;
-                                                const dailyPowerConsumption =
-                                                  powerPerShare *
-                                                  userBalanceShareCount *
-                                                  24;
-                                                const dailyElectricityCostUSD =
-                                                  dailyPowerConsumption *
-                                                  Number(
-                                                    electricityPrice?.pricePerKWh ??
-                                                      0,
-                                                  );
-
                                                 // Конвертируем в USDT
                                                 const coinPrice =
                                                   coinPrices[coin.name] ?? 0;
-                                                const dailyIncomeInUSDT =
+                                                const incomeInUSDT =
                                                   totalDailyIncome * coinPrice;
 
-                                                // Считаем чистую прибыль в USDT
+                                                // Рассчитываем долю этой монеты в общем доходе
+                                                const incomeShare =
+                                                  totalIncomeUSDT > 0
+                                                    ? incomeInUSDT /
+                                                      totalIncomeUSDT
+                                                    : 0;
+
+                                                // Распределяем затраты на электричество пропорционально доходу
+                                                const electricityCostForCoin =
+                                                  totalElectricityCostUSDT *
+                                                  incomeShare;
+
+                                                // Конвертируем затраты в монету
+                                                const electricityCostInCoin =
+                                                  coinPrice > 0
+                                                    ? electricityCostForCoin /
+                                                      coinPrice
+                                                    : 0;
+
+                                                // Рассчитываем чистую прибыль
+                                                const profit =
+                                                  totalDailyIncome -
+                                                  electricityCostInCoin;
                                                 const profitInUSDT =
-                                                  dailyIncomeInUSDT -
-                                                  dailyElectricityCostUSD;
+                                                  incomeInUSDT -
+                                                  electricityCostForCoin;
 
-                                                return total + profitInUSDT;
+                                                return (
+                                                  <p key={coin.name}>
+                                                    {profit.toFixed(8)}{' '}
+                                                    {coin.name} (
+                                                    {profitInUSDT.toFixed(2)}{' '}
+                                                    USDT)
+                                                  </p>
+                                                );
                                               },
-                                              0,
                                             );
+                                          })()}
+                                          <div className='flex items-center gap-1'>
+                                            <span>Выход в безубыток: </span>
+                                            {(() => {
+                                              if (!algorithm.coinTickers) {
+                                                return (
+                                                  <span className='text-danger'>
+                                                    Нет данных
+                                                  </span>
+                                                );
+                                              }
 
-                                          // Разница между ценой покупки и продажи для всех долей пользователя
-                                          const purchasePricePerShare =
-                                            equipment.purchasePrice /
-                                            equipment.shareCount;
-                                          const salePricePerShare =
-                                            equipment.salePrice /
-                                            equipment.shareCount;
-                                          const priceDifference =
-                                            (purchasePricePerShare -
-                                              salePricePerShare) *
-                                            userBalanceShareCount;
+                                              // Рассчитываем общий доход в USDT
+                                              const totalIncomeUSDT =
+                                                algorithm.coinTickers.reduce(
+                                                  (
+                                                    total: number,
+                                                    coin: any,
+                                                  ) => {
+                                                    const dailyIncome =
+                                                      coin.pricePerHashrate *
+                                                      equipment.hashrate;
+                                                    const dailyIncomePerShare =
+                                                      dailyIncome /
+                                                      equipment.shareCount;
+                                                    const totalDailyIncome =
+                                                      dailyIncomePerShare *
+                                                      userBalanceShareCount;
+                                                    const coinPrice =
+                                                      coinPrices[coin.name] ??
+                                                      0;
+                                                    return (
+                                                      total +
+                                                      totalDailyIncome *
+                                                        coinPrice
+                                                    );
+                                                  },
+                                                  0,
+                                                );
 
-                                          if (totalDailyProfit > 0) {
-                                            return (
-                                              <>
-                                                {Math.ceil(
-                                                  priceDifference /
-                                                    totalDailyProfit,
-                                                ).toLocaleString()}{' '}
-                                                дней
-                                                <Tooltip
-                                                  content={
-                                                    <div className='w-[200px] p-3 text-sm'>
-                                                      <p>
-                                                        Расчёт по текущему курсу
-                                                        с учетом разницы между
-                                                        ценой покупки ($
-                                                        {(
-                                                          purchasePricePerShare *
-                                                          userBalanceShareCount
-                                                        ).toFixed(2)}
-                                                        ) и ценой продажи ($
-                                                        {(
-                                                          salePricePerShare *
-                                                          userBalanceShareCount
-                                                        ).toFixed(2)}
-                                                        ) ваших долей
-                                                      </p>
-                                                    </div>
-                                                  }
-                                                  placement='right'
-                                                >
-                                                  <InformationCircleIcon className='h-5 w-5 cursor-help text-white' />
-                                                </Tooltip>
-                                              </>
-                                            );
-                                          } else {
-                                            return (
-                                              <span className='text-danger'>
-                                                Не окупится
-                                              </span>
-                                            );
-                                          }
-                                        })()}
-                                      </div>
+                                              // Рассчитываем общие затраты на электроэнергию в USDT
+                                              const powerPerShare =
+                                                Number(equipment.power) /
+                                                equipment.shareCount;
+                                              const dailyPowerConsumption =
+                                                powerPerShare *
+                                                userBalanceShareCount *
+                                                24;
+                                              const totalElectricityCostUSDT =
+                                                dailyPowerConsumption *
+                                                Number(
+                                                  electricityPrice?.pricePerKWh ??
+                                                    0,
+                                                );
+
+                                              // Рассчитываем общую прибыль в USDT
+                                              const totalProfitUSDT =
+                                                totalIncomeUSDT -
+                                                totalElectricityCostUSDT;
+
+                                              // Разница между ценой покупки и продажи для всех долей пользователя
+                                              const purchasePricePerShare =
+                                                equipment.purchasePrice /
+                                                equipment.shareCount;
+                                              const salePricePerShare =
+                                                equipment.salePrice /
+                                                equipment.shareCount;
+                                              const priceDifference =
+                                                (purchasePricePerShare -
+                                                  salePricePerShare) *
+                                                userBalanceShareCount;
+
+                                              if (totalProfitUSDT > 0) {
+                                                return (
+                                                  <>
+                                                    {Math.ceil(
+                                                      priceDifference /
+                                                        totalProfitUSDT,
+                                                    ).toLocaleString()}{' '}
+                                                    дней
+                                                    <Tooltip
+                                                      content={
+                                                        <div className='w-[200px] p-3 text-sm'>
+                                                          <p>
+                                                            Расчёт по текущему
+                                                            курсу с учетом
+                                                            разницы между ценой
+                                                            покупки ($
+                                                            {(
+                                                              purchasePricePerShare *
+                                                              userBalanceShareCount
+                                                            ).toFixed(2)}
+                                                            ) и ценой продажи ($
+                                                            {(
+                                                              salePricePerShare *
+                                                              userBalanceShareCount
+                                                            ).toFixed(2)}
+                                                            ) ваших долей
+                                                          </p>
+                                                        </div>
+                                                      }
+                                                      placement='right'
+                                                    >
+                                                      <InformationCircleIcon className='h-5 w-5 cursor-help text-white' />
+                                                    </Tooltip>
+                                                  </>
+                                                );
+                                              } else {
+                                                return (
+                                                  <span className='text-danger'>
+                                                    Не окупится
+                                                  </span>
+                                                );
+                                              }
+                                            })()}
+                                          </div>
+                                        </div>
+                                      )}
                                     </div>
                                     <div className='mt-4 flex justify-between gap-2'>
                                       <BuySellShareCountComponent
