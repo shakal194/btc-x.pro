@@ -1,1 +1,0 @@
-ALTER TABLE "users" ALTER COLUMN "referral_bonus" SET DEFAULT '0';

@@ -99,7 +99,7 @@ export default function AdminDashboard() {
             <CardBody className='grid grid-cols-1 gap-4 md:grid-cols-2'>
               <Card className='border-1 border-success bg-success/20'>
                 <CardHeader className='text-success-500'>
-                  Общее количество долей
+                  Общее количество купленных долей
                 </CardHeader>
                 <CardBody>
                   <span className='text-2xl font-bold text-white'>

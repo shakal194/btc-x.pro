@@ -1,5 +1,5 @@
 {
-  "id": "cbc68fbc-42df-4550-87ff-84f8bc97a3da",
+  "id": "8e9f09b9-fca9-435a-a2c2-cc65598f9273",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -44,6 +44,13 @@
           "primaryKey": false,
           "notNull": false,
           "default": "'[]'::jsonb"
+        },
+        "hashrate_unit": {
+          "name": "hashrate_unit",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Th'"
         }
       },
       "indexes": {},
@@ -102,17 +109,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "balances_user_id_users_id_fk": {
-          "name": "balances_user_id_users_id_fk",
-          "tableFrom": "balances",
-          "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -165,9 +162,27 @@
           "primaryKey": false,
           "notNull": true
         },
-        "enrolled": {
-          "name": "enrolled",
-          "type": "varchar",
+        "status": {
+          "name": "status",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "depositId": {
+          "name": "depositId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         }
@@ -178,8 +193,12 @@
           "name": "deposits_user_id_users_id_fk",
           "tableFrom": "deposits",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -222,7 +241,7 @@
           "name": "pricePerKWh",
           "type": "numeric(30, 8)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "recordDate": {
           "name": "recordDate",
@@ -230,6 +249,36 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "referral_percent_default": {
+          "name": "referral_percent_default",
+          "type": "numeric(30, 8)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "access_token": {
+          "name": "access_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "refresh_token": {
+          "name": "refresh_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "access_expired_at": {
+          "name": "access_expired_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "refresh_expired_at": {
+          "name": "refresh_expired_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -282,7 +331,7 @@
         },
         "hashrate_unit": {
           "name": "hashrate_unit",
-          "type": "varchar",
+          "type": "varchar(10)",
           "primaryKey": false,
           "notNull": true
         },
@@ -294,7 +343,7 @@
         },
         "power": {
           "name": "power",
-          "type": "numeric",
+          "type": "numeric(10, 4)",
           "primaryKey": false,
           "notNull": true
         },
@@ -329,8 +378,25 @@
           "name": "equipments_algorithm_id_algorithms_id_fk",
           "tableFrom": "equipments",
           "tableTo": "algorithms",
-          "columnsFrom": ["algorithm_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "algorithm_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "equipments_hashrate_unit_algorithms_hashrate_unit_fk": {
+          "name": "equipments_hashrate_unit_algorithms_hashrate_unit_fk",
+          "tableFrom": "equipments",
+          "tableTo": "algorithms",
+          "columnsFrom": [
+            "hashrate_unit"
+          ],
+          "columnsTo": [
+            "hashrate_unit"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -407,8 +473,12 @@
           "name": "history_changes_user_id_users_id_fk",
           "tableFrom": "history_changes",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -466,8 +536,12 @@
           "name": "mining_income_algorithm_id_algorithms_id_fk",
           "tableFrom": "mining_income",
           "tableTo": "algorithms",
-          "columnsFrom": ["algorithm_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "algorithm_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -556,12 +630,84 @@
           "name": "mining_rewards_user_id_users_id_fk",
           "tableFrom": "mining_rewards",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.transactions_refBonus": {
+      "name": "transactions_refBonus",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "transactions_refBonus_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "recordDate": {
+          "name": "recordDate",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "uuid": {
+          "name": "uuid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "referral_id": {
+          "name": "referral_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "referral_percent": {
+          "name": "referral_percent",
+          "type": "numeric(30, 8)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "referral_bonus": {
+          "name": "referral_bonus",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -621,6 +767,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "balanceShareCount": {
+          "name": "balanceShareCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "pricePerShare": {
           "name": "pricePerShare",
           "type": "numeric(10, 2)",
@@ -640,8 +792,12 @@
           "name": "transactions_user_id_users_id_fk",
           "tableFrom": "transactions",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -649,8 +805,94 @@
           "name": "transactions_equipment_id_equipments_id_fk",
           "tableFrom": "transactions",
           "tableTo": "equipments",
-          "columnsFrom": ["equipment_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "equipment_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.users_address": {
+      "name": "users_address",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "users_address_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "uuid": {
+          "name": "uuid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "coinTicker": {
+          "name": "coinTicker",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "depositAddress": {
+          "name": "depositAddress",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "depositId": {
+          "name": "depositId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "users_address_user_id_users_id_fk": {
+          "name": "users_address_user_id_users_id_fk",
+          "tableFrom": "users_address",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -708,6 +950,12 @@
           "notNull": true,
           "default": "now()"
         },
+        "deleting_date": {
+          "name": "deleting_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
         "status": {
           "name": "status",
           "type": "varchar",
@@ -721,11 +969,24 @@
           "primaryKey": false,
           "notNull": true
         },
-        "invitee": {
-          "name": "invitee",
+        "referrer_id": {
+          "name": "referrer_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
+        },
+        "referral_percent": {
+          "name": "referral_percent",
+          "type": "numeric(30, 8)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "referral_bonus": {
+          "name": "referral_bonus",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0'"
         }
       },
       "indexes": {},
@@ -735,7 +996,9 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": [
+            "email"
+          ]
         }
       },
       "policies": {},
@@ -800,9 +1063,27 @@
           "primaryKey": false,
           "notNull": true
         },
+        "fee": {
+          "name": "fee",
+          "type": "numeric(30, 8)",
+          "primaryKey": false,
+          "notNull": true
+        },
         "status": {
           "name": "status",
-          "type": "varchar",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         }
@@ -813,8 +1094,12 @@
           "name": "withdrawals_user_id_users_id_fk",
           "tableFrom": "withdrawals",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

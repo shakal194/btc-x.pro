@@ -25,7 +25,7 @@ export default function AddEquipmentModal({
   const [isPending, startTransition] = useTransition();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [hashrateUnit, setHashrateUnit] = useState('');
-  const [algorithm_id, setAlgorithm] = useState('');
+  const [algorithm_id, setAlgorithm_id] = useState('');
   const [name, setName] = useState('');
   const [hashrate, setHashrate] = useState('');
   const [power, setPower] = useState('');
@@ -57,12 +57,19 @@ export default function AddEquipmentModal({
     { key: 'Gh', label: 'Gh' },
   ];
 
-  const handlehashrateUnitSelectChange = (e: any) => {
-    setHashrateUnit(e.target.value);
-  };
+  const handleAlgorithmSelectChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const selectedAlgorithmId = e.target.value;
+    setAlgorithm_id(selectedAlgorithmId);
 
-  const handleAlgorithmSelectChange = (e: any) => {
-    setAlgorithm(e.target.value);
+    // Находим выбранный алгоритм и устанавливаем его единицу измерения
+    const selectedAlgorithm = algorithms.find(
+      (alg) => alg.id.toString() === selectedAlgorithmId,
+    );
+    if (selectedAlgorithm) {
+      setHashrateUnit(selectedAlgorithm.hashrate_unit);
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +81,7 @@ export default function AddEquipmentModal({
   // Функция для очистки инпутов при закрытии модального окна
   const handleCloseModal = () => {
     setName('');
-    setAlgorithm('');
+    setAlgorithm_id('');
     setHashrate('');
     setPower('');
     setPurchasePrice('');
@@ -201,9 +208,39 @@ export default function AddEquipmentModal({
                 onChange={handleAlgorithmSelectChange}
               >
                 {algorithms.map((algorithm) => (
-                  <SelectItem key={algorithm.id}>{algorithm.name}</SelectItem>
+                  <SelectItem
+                    key={algorithm.id}
+                    textValue={
+                      algorithm.name +
+                      ' ' +
+                      '(' +
+                      algorithm.hashrate_unit +
+                      '/s)'
+                    }
+                  >
+                    {algorithm.name} ({algorithm.hashrate_unit}/s)
+                  </SelectItem>
                 ))}
               </Select>
+              <Input
+                size='sm'
+                label='Единица измерения хешрейта'
+                labelPlacement='inside'
+                value={`${hashrateUnit}/s`}
+                isDisabled
+                className='w-full sm:w-[350px] md:w-[400px]'
+              />
+              <Input
+                size='sm'
+                label='Хешрейт'
+                labelPlacement='inside'
+                placeholder='Хешрейт'
+                type='number'
+                isRequired
+                value={hashrate}
+                onChange={(e) => setHashrate(e.target.value)}
+                className='w-full sm:w-[350px] md:w-[400px]'
+              />
               <Input
                 size='sm'
                 label='Мощность'
@@ -220,27 +257,6 @@ export default function AddEquipmentModal({
                 onChange={(e) => setPower(e.target.value)}
                 className='w-full sm:w-[350px] md:w-[400px]'
               />
-              <Input
-                size='sm'
-                label='Хешрейт'
-                labelPlacement='inside'
-                placeholder='Хешрейт'
-                type='number'
-                isRequired
-                value={hashrate}
-                onChange={(e) => setHashrate(e.target.value)}
-                className='w-full sm:w-[350px] md:w-[400px]'
-              />
-              <Select
-                label='Единица измерения'
-                value={hashrateUnit}
-                size='sm'
-                onChange={handlehashrateUnitSelectChange}
-              >
-                {hashrateUnitArray.map((unit) => (
-                  <SelectItem key={unit.key}>{unit.label}</SelectItem>
-                ))}
-              </Select>
               <Input
                 size='sm'
                 label='Цена покупки'

@@ -33,6 +33,7 @@ export const algorithmTable = pgTable('algorithms', {
   coinTickers: jsonb('coinTickers')
     .$type<{ name: string; pricePerHashrate: number }[]>()
     .default([]),
+  hashrate_unit: varchar({ length: 10 }).notNull().default('Th'),
 });
 
 export const equipmentsTable = pgTable('equipments', {

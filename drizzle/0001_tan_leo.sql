@@ -1,1 +1,0 @@
-ALTER TABLE "equipments" ALTER COLUMN "photoUrl" SET DATA TYPE text;

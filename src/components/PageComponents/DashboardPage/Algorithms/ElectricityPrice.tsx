@@ -29,7 +29,7 @@ export default function ElectricityPrice() {
     const getelectricityPrice = async () => {
       try {
         const data = await fetchElectricityPrice(); // Получаем данные с сервера
-        console.log('fetchElectricityPrice', data);
+
         setElectricityPrice(data.pricePerKWh); // Устанавливаем данные в состояние
         setElectricityPriceDate(data.recordDate); // Устанавливаем данные в состояние
       } catch (error) {

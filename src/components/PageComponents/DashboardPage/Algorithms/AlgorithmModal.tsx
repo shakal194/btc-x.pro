@@ -9,6 +9,8 @@ import {
   Button,
   useDisclosure,
   ModalFooter,
+  Select,
+  SelectItem,
 } from '@heroui/react';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import { TrashIcon } from '@heroicons/react/24/outline';
@@ -22,6 +24,7 @@ export default function AlgorithmModal({
 }) {
   const [isPending, startTransition] = useTransition();
   const [algorithm, setAlgorithm] = useState(''); // Состояние для хранения алгоритма
+  const [hashrateUnit, setHashrateUnit] = useState('TH');
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [tickerPairs, setTickerPairs] = useState([
@@ -59,12 +62,15 @@ export default function AlgorithmModal({
 
   // Обработка изменений в поле "Количество монет на единицу хешрейта"
   const handleCoinsPerHashrateChange = (index: number, value: string) => {
+    // Заменяем запятую на точку
+    const formattedValue = value.replace(',', '.');
+
     const newPairs = [...tickerPairs];
-    newPairs[index].coinsPerHashrate = value;
+    newPairs[index].coinsPerHashrate = formattedValue;
     setTickerPairs(newPairs);
 
     // Валидация при изменении
-    validateCoinsPerHashrate(value);
+    validateCoinsPerHashrate(formattedValue);
   };
 
   const handleSaveAlgorithm = async () => {
@@ -75,6 +81,12 @@ export default function AlgorithmModal({
       Notiflix.Notify.warning(
         'Название алгоритма должно содержать минимум 3 символа',
       );
+      return;
+    }
+
+    if (!hashrateUnit) {
+      setErrorAlgorithm('Выберите единицу измерения хешрейта');
+      Notiflix.Notify.warning('Выберите единицу измерения хешрейта');
       return;
     }
 
@@ -116,7 +128,7 @@ export default function AlgorithmModal({
           pricePerHashrate: parseFloat(pair.coinsPerHashrate),
         }));
 
-        await insertAlgorithm(algorithm, coinsTickers);
+        await insertAlgorithm(algorithm, coinsTickers, hashrateUnit);
 
         // Обновляем список алгоритмов после добавления
         onAlgorithmAdded();
@@ -156,6 +168,23 @@ export default function AlgorithmModal({
               isInvalid={!!errorAlgorithm}
               onChange={(e) => setAlgorithm(e.target.value)}
             />
+            <Select
+              size='lg'
+              label='Единица измерения хешрейта'
+              labelPlacement='inside'
+              placeholder='Выберите единицу измерения'
+              isRequired
+              value={hashrateUnit}
+              onChange={(e) => setHashrateUnit(e.target.value)}
+            >
+              {[
+                { label: 'Th/s', value: 'Th' },
+                { label: 'Gh/s', value: 'Gh' },
+                { label: 'Mh/s', value: 'Mh' },
+              ].map((unit) => (
+                <SelectItem key={unit.value}>{unit.label}</SelectItem>
+              ))}
+            </Select>
             {errorAlgorithm && (
               <div className='mt-4 text-secondary'>{errorAlgorithm}</div>
             )}

@@ -103,10 +103,24 @@ export default function AlgorithmEdit({
     try {
       setIsLoading(true);
       await addTickerToAlgorithm(algorithmUuid, newTicker, price);
+
+      // Получаем обновленные данные
       const updatedData = await fetchAlgorithmByUuid(algorithmUuid);
       setAlgorithm(updatedData);
+
+      // Обновляем editedTickers для нового тикера
+      setEditedTickers((prev) => ({
+        ...prev,
+        [newTicker]: {
+          name: newTicker,
+          price: price.toFixed(8),
+        },
+      }));
+
+      // Очищаем поля ввода
       setNewTicker('');
       setNewTickerPrice('');
+
       Notiflix.Notify.success('Монета добавлена');
     } catch (error) {
       console.error('Error adding ticker:', error);
@@ -235,6 +249,15 @@ export default function AlgorithmEdit({
       originalTicker.name !== editedTicker.name ||
       originalTicker.pricePerHashrate.toString() !== editedTicker.price
     );
+  };
+
+  const handlePriceChange = (value: string) => {
+    // Заменяем запятую на точку
+    const formattedValue = value.replace(',', '.');
+    // Проверяем, что значение соответствует формату числа с максимум 8 знаками после точки
+    if (/^\d*\.?\d{0,8}$/.test(formattedValue)) {
+      setNewTickerPrice(formattedValue);
+    }
   };
 
   if (!algorithm) {
@@ -384,9 +407,8 @@ export default function AlgorithmEdit({
                   <Input
                     label='Количество монет в сутки'
                     labelPlacement='inside'
-                    type='number'
                     value={newTickerPrice}
-                    onChange={(e) => setNewTickerPrice(e.target.value)}
+                    onChange={(e) => handlePriceChange(e.target.value)}
                     className='w-full md:w-[200px]'
                   />
                   <Button color='success' size='lg' onPress={handleAddTicker}>

@@ -59,33 +59,45 @@ export async function fetchAlgorithmByUuid(uuid: string) {
 
 // Добавление нового алгоритма
 export async function insertAlgorithm(
-  algorithm: string,
+  name: string,
   coinTickers: { name: string; pricePerHashrate: number }[],
+  hashrate_unit: string = 'TH',
 ) {
   try {
-    if (!coinTickers || !Array.isArray(coinTickers)) {
-      throw new Error('coinTickers must be an array of objects');
+    // Проверяем, что coinTickers это массив
+    if (!Array.isArray(coinTickers)) {
+      throw new Error('coinTickers должен быть массивом');
     }
 
-    coinTickers.forEach((ticker) => {
-      if (!ticker.name || typeof ticker.pricePerHashrate !== 'number') {
+    // Проверяем каждый элемент массива
+    coinTickers.forEach((ticker, index) => {
+      if (!ticker.name || typeof ticker.name !== 'string') {
+        throw new Error(`Некорректное имя тикера в элементе ${index}`);
+      }
+      if (
+        typeof ticker.pricePerHashrate !== 'number' ||
+        isNaN(ticker.pricePerHashrate)
+      ) {
         throw new Error(
-          'Each coin ticker must have a name and pricePerHashrate',
+          `Некорректная цена за единицу хешрейта в элементе ${index}`,
         );
       }
     });
 
-    const coinTickersJson = JSON.stringify(coinTickers);
-
-    await db.insert(algorithmTable).values({
-      name: algorithm,
-      coinTickers: sql`CAST(${coinTickersJson} AS jsonb)`,
-    });
-
-    console.log('Algorithm saved successfully');
+    // Единица измерения хешрейта (TH/s, GH/s, MH/s) одинакова для всех монет в алгоритме,
+    // так как это характеристика самого алгоритма майнинга, а не конкретной монеты
+    const result = await db
+      .insert(algorithmTable)
+      .values({
+        name,
+        hashrate_unit,
+        coinTickers,
+      })
+      .returning();
+    return result[0];
   } catch (error) {
-    console.error('Error saving algorithm:', error);
-    throw new Error('Error saving algorithm');
+    console.error('Error inserting algorithm:', error);
+    throw error;
   }
 }
 

@@ -5,36 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1741956232778,
-      "tag": "0000_pink_ultron",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1741959058075,
-      "tag": "0001_tan_leo",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1743522493535,
-      "tag": "0002_chief_skreet",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1743669566020,
-      "tag": "0003_strange_felicia_hardy",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1743669630971,
-      "tag": "0004_tough_fat_cobra",
+      "when": 1745572192470,
+      "tag": "0000_dazzling_owl",
       "breakpoints": true
     }
   ]
