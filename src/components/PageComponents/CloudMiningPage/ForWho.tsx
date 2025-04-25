@@ -56,14 +56,14 @@ export default function ForWhoSection() {
                 />
 
                 {/* Текст */}
-                <div className='group-transition absolute bottom-0 left-0 w-full px-4 text-white transition-transform delay-200 duration-300 ease-in-out group-hover:-translate-y-20 lg:bottom-[-50px] lg:text-center'>
-                  <h4 className='mb-[20px] text-[13px] leading-[120%] md:text-[22px]'>
+                <div className='group-transition absolute bottom-4 left-0 w-full space-y-2 px-4 text-white delay-200 duration-300 ease-in-out md:space-y-4 lg:bottom-0 lg:bottom-[-50px] lg:text-center lg:transition-transform lg:group-hover:-translate-y-20'>
+                  <h4 className='text-[13px] leading-[120%] md:text-[22px]'>
                     {program.text}
                   </h4>
-                  <h4 className='mb-[20px] text-[13px] leading-[120%] md:text-[22px]'>
+                  <h4 className='text-[13px] leading-[120%] md:text-[22px]'>
                     {program.price}
                   </h4>
-                  <h4 className='mb-[20px] text-[13px] leading-[120%] md:text-[22px]'>
+                  <h4 className='text-[13px] leading-[120%] md:text-[22px]'>
                     {program.profit}
                   </h4>
 
@@ -72,7 +72,7 @@ export default function ForWhoSection() {
                     href={`/${currentLocale}/signin`}
                     target='_blank'
                     rel='noopener noreferrer'
-                    className='hidden rounded-full border px-5 py-3 text-font18 font-bold leading-[110%] transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white lg:inline-block'
+                    className='block rounded-full border p-2 text-center text-[12px] font-bold leading-[110%] transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white md:px-5 md:py-3 md:text-font18 lg:inline-block'
                   >
                     {t('text_button')}
                   </Link>
