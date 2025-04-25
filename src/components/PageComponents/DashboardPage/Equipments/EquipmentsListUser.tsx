@@ -490,19 +490,87 @@ export default function EquipmentsListUser({
                             Прибыль за 24ч.
                           </CardHeader>
                           <CardBody className='flex flex-col gap-2'>
-                            {algorithm.coinTickers?.map((coinTicker) => (
-                              <div
-                                key={coinTicker.name}
-                                className='flex justify-between'
-                              >
-                                <span>{coinTicker.name}:</span>
-                                <span>
-                                  {miningStats[algorithm.name].stats[
-                                    coinTicker.name
-                                  ]?.profit24h.toFixed(8)}
-                                </span>
-                              </div>
-                            ))}
+                            {(() => {
+                              // Рассчитываем общий доход в USDT от всех монет за 24ч
+                              const totalIncomeUSDT =
+                                algorithm.coinTickers?.reduce(
+                                  (total, coinTicker) => {
+                                    const mined24h =
+                                      miningStats[algorithm.name].stats[
+                                        coinTicker.name
+                                      ]?.mined24h || 0;
+                                    const coinPrice =
+                                      coinPrices[coinTicker.name] || 0;
+                                    return total + mined24h * coinPrice;
+                                  },
+                                  0,
+                                ) || 0;
+
+                              return algorithm.coinTickers?.map(
+                                (coinTicker) => {
+                                  const mined24h =
+                                    miningStats[algorithm.name].stats[
+                                      coinTicker.name
+                                    ]?.mined24h || 0;
+                                  const coinPrice =
+                                    coinPrices[coinTicker.name] || 0;
+                                  const incomeUSDT = mined24h * coinPrice;
+
+                                  // Рассчитываем долю этой монеты в общем доходе
+                                  const incomeShare =
+                                    totalIncomeUSDT > 0
+                                      ? incomeUSDT / totalIncomeUSDT
+                                      : 0;
+
+                                  // Получаем общее потребление электроэнергии в кВт*ч за 24ч
+                                  const totalPowerConsumption =
+                                    equipments.reduce((total, equipment) => {
+                                      const userShares =
+                                        userEquipmentsFetch.find(
+                                          (e) => e.equipmentId === equipment.id,
+                                        )?.balanceShareCount || 0;
+                                      if (
+                                        equipment.algorithm_id ===
+                                          algorithm.id &&
+                                        userShares > 0
+                                      ) {
+                                        const powerPerShare =
+                                          Number(equipment.power) /
+                                          equipment.shareCount;
+                                        return (
+                                          total +
+                                          powerPerShare * userShares * 24
+                                        );
+                                      }
+                                      return total;
+                                    }, 0);
+
+                                  // Рассчитываем затраты на электричество для этой монеты
+                                  const electricityCostUSDT =
+                                    totalPowerConsumption *
+                                    Number(electricityPrice?.pricePerKWh || 0) *
+                                    incomeShare;
+                                  const electricityCostInCoin =
+                                    coinPrice > 0
+                                      ? electricityCostUSDT / coinPrice
+                                      : 0;
+
+                                  // Рассчитываем чистую прибыль
+                                  const profit =
+                                    mined24h - electricityCostInCoin;
+
+                                  return (
+                                    <div
+                                      key={coinTicker.name}
+                                      className='flex justify-between'
+                                    >
+                                      <span>{coinTicker.name}:</span>
+                                      <span>{profit.toFixed(8)}</span>
+                                    </div>
+                                  );
+                                },
+                              );
+                            })()}
                           </CardBody>
                         </Card>
                         <Card className='border-1 border-secondary bg-warning-400/50 shadow-md shadow-secondary'>
