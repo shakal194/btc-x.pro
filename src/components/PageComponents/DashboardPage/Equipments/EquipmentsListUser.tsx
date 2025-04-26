@@ -157,6 +157,9 @@ export default function EquipmentsListUser({
         setUserUuid(userUuidData || '');
         setTotalBalance(totalBalanceData);
 
+        // Убираем общий спиннер после загрузки базовых данных
+        setIsLoading(false);
+
         // 2. После получения оборудования и алгоритмов, загружаем данные пользователя
         const userBalanceShares = await fetchAllUserBalanceShares(
           Number(user_id),
@@ -175,7 +178,6 @@ export default function EquipmentsListUser({
 
         setUserEquipmentsFetch(validEquipments);
         setIsLoadingUserEquipments(false);
-        setIsLoading(false);
 
         // 3. Устанавливаем начальный выбранный алгоритм
         if (validEquipments.length > 0 && algorithmsData.length > 0) {
@@ -209,6 +211,7 @@ export default function EquipmentsListUser({
         console.error('Ошибка при инициализации данных:', error);
         setIsLoading(false);
         setIsLoadingUserEquipments(false);
+        setIsLoadingMiningStats(false);
       }
     };
 
@@ -261,6 +264,7 @@ export default function EquipmentsListUser({
     > = {};
 
     for (const algorithm of algorithms) {
+      // Получаем оборудование для текущего алгоритма
       const algorithmEquipment = userEquipmentsFetch
         .map((equipmentData) => {
           const equipment = equipments.find(
@@ -277,6 +281,12 @@ export default function EquipmentsListUser({
             item !== null,
         );
 
+      // Получаем hashrate_unit из первого доступного оборудования алгоритма
+      const hashrate_unit =
+        equipments.find((e) => e.algorithm_id === algorithm.id)
+          ?.hashrate_unit || '';
+
+      // Считаем текущий хешрейт только если есть активное оборудование
       const totalHashrate = algorithmEquipment.reduce(
         (sum, { equipment, equipmentData }) => {
           const userBalanceShareCount = equipmentData.balanceShareCount;
@@ -288,12 +298,9 @@ export default function EquipmentsListUser({
         0,
       );
 
-      // Получаем hashrate_unit из первого оборудования алгоритма
-      const hashrate_unit =
-        algorithmEquipment[0]?.equipment.hashrate_unit || '';
-
       const coinStats: Record<string, MiningStats> = {};
 
+      // Получаем статистику майнинга для всех монет алгоритма
       if (algorithm.coinTickers) {
         for (const coinTicker of algorithm.coinTickers) {
           const miningData = await fetchMiningStats(
@@ -316,11 +323,8 @@ export default function EquipmentsListUser({
   }, [algorithms, equipments, userEquipmentsFetch, user_id]);
 
   useEffect(() => {
-    if (userEquipmentsFetch.length > 0) {
-      fetchAllMiningStats();
-    } else {
-      setIsLoadingMiningStats(false);
-    }
+    // Запускаем получение статистики даже если нет активного оборудования
+    fetchAllMiningStats();
   }, [userEquipmentsFetch, fetchAllMiningStats]);
 
   const updateEquipmentData = useCallback(
@@ -451,16 +455,18 @@ export default function EquipmentsListUser({
                   >
                     История начислений
                   </Button>
-                  {isLoadingMiningStats ? (
+                  {isLoadingMiningStats || !miningStats[algorithm.name] ? (
                     <MiningRewardsSkeleton />
                   ) : (
-                    <div className='mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+                    <div className='mb-4 grid grid-cols-1 gap-4 rounded-lg p-4 md:grid-cols-2 md:justify-between xl:grid-cols-4'>
                       <Card className='border-1 border-secondary bg-warning-100/50 shadow-md shadow-secondary'>
                         <CardHeader className='flex items-center justify-center'>
                           Хешрейт
                         </CardHeader>
                         <CardBody className='flex items-center justify-center'>
-                          N/A
+                          {miningStats[algorithm.name]?.totalHashrate > 0
+                            ? `${miningStats[algorithm.name].totalHashrate.toFixed(2)} ${miningStats[algorithm.name].hashrate_unit}`
+                            : 'N/A'}
                         </CardBody>
                       </Card>
                       <Card className='border-1 border-secondary bg-warning-200/50 shadow-md shadow-secondary'>
@@ -474,28 +480,20 @@ export default function EquipmentsListUser({
                               className='flex justify-between'
                             >
                               <span>{coinTicker.name}:</span>
-                              <span>N/A</span>
+                              <span>
+                                {miningStats[algorithm.name]?.stats[
+                                  coinTicker.name
+                                ]?.totalMined > 0
+                                  ? miningStats[algorithm.name].stats[
+                                      coinTicker.name
+                                    ].totalMined.toFixed(8)
+                                  : 'N/A'}
+                              </span>
                             </div>
                           ))}
                         </CardBody>
                       </Card>
                       <Card className='border-1 border-secondary bg-warning-300/50 shadow-md shadow-secondary'>
-                        <CardHeader className='flex items-center justify-center'>
-                          Прибыль за 24ч.
-                        </CardHeader>
-                        <CardBody className='flex flex-col gap-2'>
-                          {algorithm.coinTickers?.map((coinTicker) => (
-                            <div
-                              key={coinTicker.name}
-                              className='flex justify-between'
-                            >
-                              <span>{coinTicker.name}:</span>
-                              <span>N/A</span>
-                            </div>
-                          ))}
-                        </CardBody>
-                      </Card>
-                      <Card className='border-1 border-secondary bg-warning-400/50 shadow-md shadow-secondary'>
                         <CardHeader className='flex items-center justify-center'>
                           Намайнено за 24ч.
                         </CardHeader>
@@ -506,7 +504,39 @@ export default function EquipmentsListUser({
                               className='flex justify-between'
                             >
                               <span>{coinTicker.name}:</span>
-                              <span>N/A</span>
+                              <span>
+                                {miningStats[algorithm.name]?.stats[
+                                  coinTicker.name
+                                ]?.mined24h > 0
+                                  ? miningStats[algorithm.name].stats[
+                                      coinTicker.name
+                                    ].mined24h.toFixed(8)
+                                  : 'N/A'}
+                              </span>
+                            </div>
+                          ))}
+                        </CardBody>
+                      </Card>
+                      <Card className='border-1 border-secondary bg-warning-400/50 shadow-md shadow-secondary'>
+                        <CardHeader className='flex items-center justify-center'>
+                          Прибыль за 24ч.
+                        </CardHeader>
+                        <CardBody className='flex flex-col gap-2'>
+                          {algorithm.coinTickers?.map((coinTicker) => (
+                            <div
+                              key={coinTicker.name}
+                              className='flex justify-between'
+                            >
+                              <span>{coinTicker.name}:</span>
+                              <span>
+                                {miningStats[algorithm.name]?.stats[
+                                  coinTicker.name
+                                ]?.profit24h > 0
+                                  ? miningStats[algorithm.name].stats[
+                                      coinTicker.name
+                                    ].profit24h.toFixed(8)
+                                  : 'N/A'}
+                              </span>
                             </div>
                           ))}
                         </CardBody>
@@ -948,7 +978,9 @@ export default function EquipmentsListUser({
       {isWithdrawModalOpen && user_id && (
         <WithdrawModal
           isOpen={isWithdrawModalOpen}
-          onClose={() => setIsWithdrawModalOpen(false)}
+          onClose={async () => {
+            setIsWithdrawModalOpen(false);
+          }}
           onSuccess={async () => {
             setIsWithdrawModalOpen(false);
             await updateEquipmentData(user_id as string, 0);
