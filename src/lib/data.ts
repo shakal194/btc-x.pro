@@ -17,6 +17,7 @@ import {
 import { sql, desc, asc, eq, and, gte, gt } from 'drizzle-orm';
 import fs from 'fs';
 import { createDepositForCoin } from './balance';
+import { formatDate } from './utils';
 
 export interface MiningStats {
   totalMined: number;
@@ -701,10 +702,9 @@ export async function updateUSDTBalance(
     console.log(`[USDT Transaction] New balance will be: ${newBalance}`);
 
     if (isPurchase && newBalance < 0) {
-      console.error(
-        `[USDT Transaction] Insufficient funds. Required: ${amount}, Available: ${currentBalance}`,
+      throw new Error(
+        `[${formatDate(new Date())}] Недостаточно средств для вывода с учетом комиссии. Баланс: ${currentBalance}, Сумма вывода с комиссией: ${amount}`,
       );
-      throw new Error('Недостаточно USDT для покупки');
     }
 
     // Создаем новую запись в таблице balances
@@ -726,7 +726,6 @@ export async function updateUSDTBalance(
 
 export async function fetchAllUserBalances(userId: number) {
   try {
-    console.log(`[Balances] Fetching all balances for user ${userId}`);
     const result = await db
       .select({
         coinAmount: balancesTable.coinAmount,
@@ -1239,7 +1238,9 @@ export async function createWithdrawal({
     const totalAmount = amountNum + feeNum;
 
     if (currentBalance < totalAmount) {
-      throw new Error('Недостаточно средств для вывода с учетом комиссии');
+      throw new Error(
+        `[${formatDate(new Date())}] Недостаточно средств для вывода с учетом комиссии. Баланс: ${currentBalance}, Сумма вывода с комиссией: ${totalAmount}`,
+      );
     }
 
     // Проверяем, нет ли уже недавней записи с такими же параметрами
@@ -1303,6 +1304,7 @@ async function fetchUserBalance(
         eq(balancesTable.coinTicker, coinTicker),
       ),
     )
+    .orderBy(desc(balancesTable.id))
     .limit(1);
 
   if (!balance.length) {
@@ -1838,8 +1840,6 @@ export async function getTotalBalancesByCoin() {
       .from(balancesTable)
       .orderBy(desc(balancesTable.id));
 
-    console.log('Found balances:', allBalances.length);
-
     // Группируем по пользователю и монете, оставляя только последние записи
     const latestBalances = allBalances.reduce(
       (acc, curr) => {
@@ -1851,8 +1851,6 @@ export async function getTotalBalancesByCoin() {
       },
       {} as Record<string, (typeof allBalances)[0]>,
     );
-
-    console.log('Unique user-coin pairs:', Object.keys(latestBalances).length);
 
     // Группируем по монете и суммируем балансы
     const result = Object.values(latestBalances).reduce(
@@ -1872,7 +1870,6 @@ export async function getTotalBalancesByCoin() {
       total_amount: amount.toFixed(8),
     }));
 
-    console.log('Final result:', formattedResult);
     return formattedResult;
   } catch (error) {
     console.error('Error getting total balances:', error);

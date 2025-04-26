@@ -46,7 +46,7 @@ export default function SliderRefProgram() {
             className='max-w-full'
             defaultValue={10}
             maxValue={100}
-            //label={t('slider_title_1')}
+            label={t('slider_title_1')}
             showOutline={true}
             onChange={handleUserValueChange}
             color='secondary'
@@ -95,7 +95,7 @@ export default function SliderRefProgram() {
             className='max-w-full'
             defaultValue={100}
             maxValue={10000}
-            //label={t('slider_title_1')}
+            label={t('slider_title_1')}
             showOutline={true}
             onChange={handleVolumeValueChange}
             color='secondary'

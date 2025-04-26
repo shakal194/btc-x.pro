@@ -202,7 +202,6 @@ export default function WithdrawModal({
         }
         const feeInCurrency = (Number(calculatedFee) * Number(rate)).toFixed(2);
         setFeeInUSDT(feeInCurrency);
-        console.log('Fee calculation:', { calculatedFee, rate, feeInCurrency });
       }
 
       setIsFeeCalculated(true);
@@ -216,16 +215,21 @@ export default function WithdrawModal({
   };
 
   const handleAmountChange = async (value: string) => {
-    const cleanValue = value.trim();
+    // Заменяем запятую на точку и удаляем все нечисловые символы, кроме точки
+    const processedValue = value.replace(',', '.').replace(/[^\d.]/g, '');
     const numberRegex = /^\d*\.?\d{0,8}$/;
 
-    if (cleanValue === '' || numberRegex.test(cleanValue)) {
-      setAmount(cleanValue);
+    if (processedValue === '' || numberRegex.test(processedValue)) {
+      setAmount(processedValue);
       setError('');
       setIsFeeCalculated(false);
 
-      if (cleanValue !== '' && Number(cleanValue) > 0 && address.trim()) {
-        await calculateFee(cleanValue, address);
+      if (
+        processedValue !== '' &&
+        Number(processedValue) > 0 &&
+        address.trim()
+      ) {
+        await calculateFee(processedValue, address);
       } else {
         setFeeAmount('0');
         setFeeInUSDT('0');
@@ -390,18 +394,13 @@ export default function WithdrawModal({
               />
 
               <Input
-                type='number'
+                type='text'
+                inputMode='decimal'
                 label={`Сумма ${coinTicker}`}
                 value={amount}
                 onChange={(e) => handleAmountChange(e.target.value)}
                 onBlur={handleAmountBlur}
                 placeholder='Введите сумму'
-                min='0'
-                step={
-                  coinTicker === 'USDT' || coinTicker === 'USDC'
-                    ? '0.01'
-                    : '0.00000001'
-                }
                 className='w-full'
                 isDisabled={!address.trim()}
                 isInvalid={!!getAmountError()}

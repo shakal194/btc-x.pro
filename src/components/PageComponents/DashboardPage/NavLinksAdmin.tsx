@@ -2,14 +2,10 @@
 
 import {
   HomeIcon,
-  //DocumentDuplicateIcon,
-  AdjustmentsHorizontalIcon,
   CodeBracketSquareIcon,
   ServerStackIcon,
   UsersIcon,
   BanknotesIcon,
-  CurrencyDollarIcon,
-  ArrowPathIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -39,11 +35,6 @@ export default function NavLinksAdmin({ locale }: NavLinksAdminProps) {
       href: `/${locale}/dashboard/equipments`,
       icon: ServerStackIcon,
     },
-    //{
-    //  name: `${t('yourMiners')}`,
-    //   href: '/dashboard/miners',
-    //    icon: DocumentDuplicateIcon,
-    //  },
     {
       name: `${t('customers')}`,
       href: `/${locale}/dashboard/users`,
@@ -52,11 +43,6 @@ export default function NavLinksAdmin({ locale }: NavLinksAdminProps) {
     {
       name: `${t('withdrawals')}`,
       href: `/${locale}/dashboard/withdrawals`,
-      icon: UsersIcon,
-    },
-    {
-      name: 'CoinsBuy',
-      href: `/${locale}/dashboard/coinsbuy`,
       icon: BanknotesIcon,
     },
   ];

@@ -34,10 +34,10 @@ export default function SliderCloudMiningProgram() {
             </p>
           </div>
           <Slider
+            label={t('title_2')}
             className='max-w-full'
             defaultValue={100}
             maxValue={1000}
-            //label={t('slider_title_1')}
             showOutline={true}
             onChange={handleUserValueChange}
             color='secondary'

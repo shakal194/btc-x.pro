@@ -3,6 +3,7 @@
 import db from '@/db/db';
 import { electricityPriceTable } from '@/db/schema';
 import { eq, desc, sql } from 'drizzle-orm';
+import { formatDate } from './utils';
 
 // Константы для API
 const COINSBUY_API_BASE_URL = process.env.COINSBUY_API_URL!;
@@ -179,10 +180,9 @@ export const getAccessToken = async (): Promise<{
               })
               .where(eq(electricityPriceTable.id, lastTokenRecord.id));
 
-            console.log(
-              'Invalid refresh token detected, old tokens cleared from database',
+            throw new Error(
+              `[${formatDate(new Date())}] Failed to refresh token`,
             );
-            throw new Error('Failed to refresh token');
           }
 
           const data = await response.json();
@@ -543,7 +543,6 @@ export const getDeposits = async (token: { access: string }) => {
     }
 
     const data = await response.json();
-    console.log('Deposits response:', data); // Добавляем лог для отладки
     return data;
   } catch (error) {
     console.error('Error getting deposits:', error);
@@ -614,27 +613,3 @@ export async function getToken() {
     throw error;
   }
 }
-
-export const handleBuyShares = async (
-  equipmentUuid: string,
-  shareCount: number,
-) => {
-  const token = await getAccessToken();
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/equipments/${equipmentUuid}/buy`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ shareCount }),
-    },
-  );
-
-  if (!response.ok) {
-    throw new Error('Failed to buy shares');
-  }
-
-  return response.json();
-};

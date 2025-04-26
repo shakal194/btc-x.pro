@@ -74,7 +74,7 @@ export default function HowItWorksSection() {
               alt='How it works'
               width={670}
               height={560}
-              className='w-full lg:h-[560px] lg:w-[670px]'
+              className='h-[300px] w-full rounded-lg lg:h-[560px] lg:w-[670px]'
             ></Image>
           </div>
         </div>

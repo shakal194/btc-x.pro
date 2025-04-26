@@ -138,7 +138,6 @@ export default function UsersTable() {
   useEffect(() => {
     async function getUsersData() {
       try {
-        const startTime = performance.now();
         setIsLoading(true);
 
         // Измеряем загрузку данных
@@ -148,12 +147,7 @@ export default function UsersTable() {
           fetchEquipments(),
           fetchAlgorithms(),
         ]);
-        console.log(
-          `[Performance] Data fetching took: ${performance.now() - fetchStart}ms`,
-        );
 
-        // Измеряем обработку данных
-        const processingStart = performance.now();
         const formattedUsers = await Promise.all(
           usersData.map(async (user: any) => {
             // Параллельная загрузка всех данных пользователя
@@ -209,16 +203,10 @@ export default function UsersTable() {
             };
           }),
         );
-        console.log(
-          `[Performance] Data processing took: ${performance.now() - processingStart}ms`,
-        );
 
         setUsers(formattedUsers);
         setEquipmentsFetch(equipments);
         setAlgorithms(algorithmsData);
-
-        const totalTime = performance.now() - startTime;
-        console.log(`[Performance] Total operation took: ${totalTime}ms`);
       } catch (error) {
         console.error('Error fetching users data:', error);
       } finally {

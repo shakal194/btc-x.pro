@@ -318,6 +318,8 @@ export default function EquipmentsListUser({
   useEffect(() => {
     if (userEquipmentsFetch.length > 0) {
       fetchAllMiningStats();
+    } else {
+      setIsLoadingMiningStats(false);
     }
   }, [userEquipmentsFetch, fetchAllMiningStats]);
 
@@ -411,17 +413,17 @@ export default function EquipmentsListUser({
                     </div>
                     <div className='flex gap-2'>
                       <Button
-                        color='primary'
-                        onPress={() => handleWithdrawClick(balance.coinTicker)}
-                      >
-                        Вывести
-                      </Button>
-                      <Button
                         color='success'
                         className='text-white'
                         onPress={() => handleDepositClick(balance.coinTicker)}
                       >
                         Пополнить
+                      </Button>
+                      <Button
+                        color='primary'
+                        onPress={() => handleWithdrawClick(balance.coinTicker)}
+                      >
+                        Вывести
                       </Button>
                     </div>
                   </div>
@@ -452,149 +454,64 @@ export default function EquipmentsListUser({
                   {isLoadingMiningStats ? (
                     <MiningRewardsSkeleton />
                   ) : (
-                    miningStats[algorithm.name] && (
-                      <div className='mb-4 grid grid-cols-1 gap-4 rounded-lg p-4 md:grid-cols-2 md:justify-between xl:grid-cols-4'>
-                        <Card className='border-1 border-secondary bg-warning-100/50 shadow-md shadow-secondary'>
-                          <CardHeader className='flex items-center justify-center'>
-                            Хешрейт
-                          </CardHeader>
-                          <CardBody className='flex items-center justify-center'>
-                            {miningStats[algorithm.name].totalHashrate.toFixed(
-                              2,
-                            )}{' '}
-                            {miningStats[algorithm.name].hashrate_unit}
-                          </CardBody>
-                        </Card>
-                        <Card className='border-1 border-secondary bg-warning-200/50 shadow-md shadow-secondary'>
-                          <CardHeader className='flex items-center justify-center'>
-                            Намайнено всего
-                          </CardHeader>
-                          <CardBody className='flex flex-col gap-2'>
-                            {algorithm.coinTickers?.map((coinTicker) => (
-                              <div
-                                key={coinTicker.name}
-                                className='flex justify-between'
-                              >
-                                <span>{coinTicker.name}:</span>
-                                <span>
-                                  {miningStats[algorithm.name].stats[
-                                    coinTicker.name
-                                  ]?.totalMined.toFixed(8)}
-                                </span>
-                              </div>
-                            ))}
-                          </CardBody>
-                        </Card>
-                        <Card className='border-1 border-secondary bg-warning-300/50 shadow-md shadow-secondary'>
-                          <CardHeader className='flex items-center justify-center'>
-                            Прибыль за 24ч.
-                          </CardHeader>
-                          <CardBody className='flex flex-col gap-2'>
-                            {(() => {
-                              // Рассчитываем общий доход в USDT от всех монет за 24ч
-                              const totalIncomeUSDT =
-                                algorithm.coinTickers?.reduce(
-                                  (total, coinTicker) => {
-                                    const mined24h =
-                                      miningStats[algorithm.name].stats[
-                                        coinTicker.name
-                                      ]?.mined24h || 0;
-                                    const coinPrice =
-                                      coinPrices[coinTicker.name] || 0;
-                                    return total + mined24h * coinPrice;
-                                  },
-                                  0,
-                                ) || 0;
-
-                              return algorithm.coinTickers?.map(
-                                (coinTicker) => {
-                                  const mined24h =
-                                    miningStats[algorithm.name].stats[
-                                      coinTicker.name
-                                    ]?.mined24h || 0;
-                                  const coinPrice =
-                                    coinPrices[coinTicker.name] || 0;
-                                  const incomeUSDT = mined24h * coinPrice;
-
-                                  // Рассчитываем долю этой монеты в общем доходе
-                                  const incomeShare =
-                                    totalIncomeUSDT > 0
-                                      ? incomeUSDT / totalIncomeUSDT
-                                      : 0;
-
-                                  // Получаем общее потребление электроэнергии в кВт*ч за 24ч
-                                  const totalPowerConsumption =
-                                    equipments.reduce((total, equipment) => {
-                                      const userShares =
-                                        userEquipmentsFetch.find(
-                                          (e) => e.equipmentId === equipment.id,
-                                        )?.balanceShareCount || 0;
-                                      if (
-                                        equipment.algorithm_id ===
-                                          algorithm.id &&
-                                        userShares > 0
-                                      ) {
-                                        const powerPerShare =
-                                          Number(equipment.power) /
-                                          equipment.shareCount;
-                                        return (
-                                          total +
-                                          powerPerShare * userShares * 24
-                                        );
-                                      }
-                                      return total;
-                                    }, 0);
-
-                                  // Рассчитываем затраты на электричество для этой монеты
-                                  const electricityCostUSDT =
-                                    totalPowerConsumption *
-                                    Number(electricityPrice?.pricePerKWh || 0) *
-                                    incomeShare;
-                                  const electricityCostInCoin =
-                                    coinPrice > 0
-                                      ? electricityCostUSDT / coinPrice
-                                      : 0;
-
-                                  // Рассчитываем чистую прибыль
-                                  const profit =
-                                    mined24h - electricityCostInCoin;
-
-                                  return (
-                                    <div
-                                      key={coinTicker.name}
-                                      className='flex justify-between'
-                                    >
-                                      <span>{coinTicker.name}:</span>
-                                      <span>{profit.toFixed(8)}</span>
-                                    </div>
-                                  );
-                                },
-                              );
-                            })()}
-                          </CardBody>
-                        </Card>
-                        <Card className='border-1 border-secondary bg-warning-400/50 shadow-md shadow-secondary'>
-                          <CardHeader className='flex items-center justify-center'>
-                            Намайнено за 24ч.
-                          </CardHeader>
-                          <CardBody className='flex flex-col gap-2'>
-                            {algorithm.coinTickers?.map((coinTicker) => (
-                              <div
-                                key={coinTicker.name}
-                                className='flex justify-between'
-                              >
-                                <span>{coinTicker.name}:</span>
-                                <span>
-                                  {miningStats[algorithm.name].stats[
-                                    coinTicker.name
-                                  ]?.mined24h.toFixed(8)}
-                                </span>
-                              </div>
-                            ))}
-                          </CardBody>
-                        </Card>
-                      </div>
-                    )
+                    <div className='mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+                      <Card className='border-1 border-secondary bg-warning-100/50 shadow-md shadow-secondary'>
+                        <CardHeader className='flex items-center justify-center'>
+                          Хешрейт
+                        </CardHeader>
+                        <CardBody className='flex items-center justify-center'>
+                          N/A
+                        </CardBody>
+                      </Card>
+                      <Card className='border-1 border-secondary bg-warning-200/50 shadow-md shadow-secondary'>
+                        <CardHeader className='flex items-center justify-center'>
+                          Намайнено всего
+                        </CardHeader>
+                        <CardBody className='flex flex-col gap-2'>
+                          {algorithm.coinTickers?.map((coinTicker) => (
+                            <div
+                              key={coinTicker.name}
+                              className='flex justify-between'
+                            >
+                              <span>{coinTicker.name}:</span>
+                              <span>N/A</span>
+                            </div>
+                          ))}
+                        </CardBody>
+                      </Card>
+                      <Card className='border-1 border-secondary bg-warning-300/50 shadow-md shadow-secondary'>
+                        <CardHeader className='flex items-center justify-center'>
+                          Прибыль за 24ч.
+                        </CardHeader>
+                        <CardBody className='flex flex-col gap-2'>
+                          {algorithm.coinTickers?.map((coinTicker) => (
+                            <div
+                              key={coinTicker.name}
+                              className='flex justify-between'
+                            >
+                              <span>{coinTicker.name}:</span>
+                              <span>N/A</span>
+                            </div>
+                          ))}
+                        </CardBody>
+                      </Card>
+                      <Card className='border-1 border-secondary bg-warning-400/50 shadow-md shadow-secondary'>
+                        <CardHeader className='flex items-center justify-center'>
+                          Намайнено за 24ч.
+                        </CardHeader>
+                        <CardBody className='flex flex-col gap-2'>
+                          {algorithm.coinTickers?.map((coinTicker) => (
+                            <div
+                              key={coinTicker.name}
+                              className='flex justify-between'
+                            >
+                              <span>{coinTicker.name}:</span>
+                              <span>N/A</span>
+                            </div>
+                          ))}
+                        </CardBody>
+                      </Card>
+                    </div>
                   )}
 
                   <ul className='space-y-4'>
@@ -625,7 +542,7 @@ export default function EquipmentsListUser({
 
                         if (algorithmEquipment.length === 0) {
                           return (
-                            <p>
+                            <p className='mt-4'>
                               У вас ещё нет оборудования в данной категории.{' '}
                               <Link
                                 href='/dashboard/store'
