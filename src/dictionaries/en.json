@@ -509,6 +509,7 @@
       "form_validate_loginExists": "Login already exists",
       "form_validate_errorTimeOut": "Something went wrong. Please try again later",
       "form_validate_errorDatabase": "Database Error: Failed to Create User",
+      "form_error_email_send": "Email not sent",
       "button": "Send"
     },
     "dashboard": {
@@ -838,11 +839,40 @@
   "supportPage": {
     "title": "We respect the privacy of our users. LLC BTC-X.PRO does not store or have access to any sensitive information, such as passwords or credit card details. You can simply delete the app from your device if you wish to leave the platform. If you want us to completely remove your account and its associated data, please fill out the form below:",
 
-    "email_placeholder": "Enter your email in BTC-X.pro",
+    "email_placeholder": "Enter your email in BTC-X.PRO",
     "form_success_message": "Request sent",
     "form_error_default": "Error sending email",
     "form_error_unknown": "An unknown error occurred",
     "form_error_title": "Please enter a valid email",
     "button": "Send"
+  },
+  "emailTemplates": {
+    "otp": {
+      "title": "Your Verification Code",
+      "greeting": "Dear,",
+      "content": "This is verification code for Cloud-Mining BTC-X.PRO is",
+      "expiration": "This code will expire in 30 minutes.",
+      "ignore": "If you didn't request this code, please ignore this email.",
+      "footer": "Best regards, The BTC-X.PRO Team",
+      "copyright": "© 2024 BTC-X.PRO. All rights reserved."
+    },
+    "promo": {
+      "title": "New Promo Subscription",
+      "content": "New subscription details:",
+      "footer": "Best regards,<br>The Promotions Team",
+      "copyright": "© 2024 BTC-X.PRO. All rights reserved."
+    },
+    "newsletter": {
+      "title": "New Newsletter Subscription",
+      "content": "A new user has subscribed to the newsletter:",
+      "footer": "Best regards,<br>The Newsletter Team",
+      "copyright": "© 2024 BTC-X.PRO. All rights reserved."
+    },
+    "delete": {
+      "title": "Account Deletion Request",
+      "content": "A user has requested to delete their account:",
+      "footer": "Best regards,<br>The Support Team",
+      "copyright": "© 2024 BTC-X.PRO. All rights reserved."
+    }
   }
 }

@@ -72,6 +72,7 @@ export default function HowItWorksSection() {
             <Image
               src='/cloud_mining_howitworks.webp'
               alt='How it works'
+              unoptimized={true}
               width={670}
               height={560}
               className='h-[300px] w-full rounded-lg lg:h-[560px] lg:w-[670px]'

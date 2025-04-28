@@ -9,14 +9,10 @@ export default function SubscriptionFormFooter() {
   const t = useTranslations('footer');
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSuccessMessage('');
-    setErrorMessage('');
 
     try {
       const response = await fetch('/api/subscribe', {
@@ -29,25 +25,19 @@ export default function SubscriptionFormFooter() {
 
       const result = await response.json();
 
-      if (response.ok) {
-        setSuccessMessage(result.message);
+      if (result.success) {
         Notiflix.Notify.success(`${t('form_success_message')}`);
         setEmail('');
       } else {
-        // Если ошибка "You are already subscribed"
-        if (result.error === 'You are already subscribed') {
+        if (result.message === 'You are already subscribed') {
           Notiflix.Notify.failure(`${t('form_error_already_subscribed')}`);
         } else {
-          // Для других ошибок
-          setErrorMessage(result.error || `${t('form_error_default')}`);
           Notiflix.Notify.failure(
             `${t('form_error_message')}` || `${t('form_error_default')}`,
           );
         }
       }
     } catch (error: unknown) {
-      setErrorMessage('An error occurred while subscribing');
-      // Проверка типа ошибки
       if (error instanceof Error) {
         Notiflix.Notify.failure(`${t('form_error_message')}` || error.message);
       } else {

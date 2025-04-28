@@ -1793,8 +1793,6 @@ export async function getTotalPurchasedShares() {
       .from(transactionsTable)
       .orderBy(desc(transactionsTable.transactionDate));
 
-    console.log('Found transactions:', latestTransactions.length);
-
     // Создаем объект для хранения последних транзакций
     const latestBalances: Record<string, number> = {};
 
@@ -1806,18 +1804,11 @@ export async function getTotalPurchasedShares() {
       }
     });
 
-    console.log(
-      'Unique user-equipment pairs:',
-      Object.keys(latestBalances).length,
-    );
-
     // Суммируем все балансы
     const totalShares = Object.values(latestBalances).reduce(
       (sum, count) => sum + (count || 0),
       0,
     );
-
-    console.log('Total shares:', totalShares);
 
     return totalShares;
   } catch (error) {
@@ -1829,8 +1820,6 @@ export async function getTotalPurchasedShares() {
 // Получение общего баланса по всем монетам
 export async function getTotalBalancesByCoin() {
   try {
-    console.log('Starting getTotalBalancesByCoin function...');
-
     // Сначала получим все балансы
     const allBalances = await db
       .select({

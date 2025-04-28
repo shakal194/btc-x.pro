@@ -182,3 +182,24 @@ export const otpCodesTable = pgTable('otp_codes', {
   createdAt: timestamp().defaultNow().notNull(),
   expiredAt: timestamp().notNull(),
 });
+
+export const newsletterSubscriptionsTable = pgTable(
+  'newsletter_subscriptions',
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    email: varchar({ length: 255 }).notNull().unique(),
+    createdAt: timestamp().defaultNow().notNull(),
+    isActive: boolean().default(true).notNull(),
+  },
+);
+
+export const promoSubscriptionsTable = pgTable('promo_subscriptions', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  email: varchar({ length: 255 }).notNull(),
+  youtube: varchar({ length: 255 }),
+  telegram: varchar({ length: 255 }),
+  instagram: varchar({ length: 255 }),
+  rating: varchar({ length: 255 }),
+  createdAt: timestamp().defaultNow().notNull(),
+  isActive: boolean().default(true).notNull(),
+});
