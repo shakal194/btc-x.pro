@@ -975,26 +975,6 @@ export default function EquipmentsListUser({
         </>
       )}
 
-      {isWithdrawModalOpen && user_id && (
-        <WithdrawModal
-          isOpen={isWithdrawModalOpen}
-          onClose={async () => {
-            setIsWithdrawModalOpen(false);
-          }}
-          onSuccess={async () => {
-            setIsWithdrawModalOpen(false);
-            await updateEquipmentData(user_id as string, 0);
-          }}
-          userId={Number(user_id)}
-          userEmail={userEmail}
-          coinTicker={selectedModalCoin}
-          balance={parseFloat(
-            balances.find((b) => b.coinTicker === selectedModalCoin)
-              ?.coinAmount || '0',
-          )}
-        />
-      )}
-
       {isDepositModalOpen && user_id && (
         <DepositModal
           isOpen={isDepositModalOpen}
@@ -1005,6 +985,25 @@ export default function EquipmentsListUser({
           userId={Number(user_id)}
           userEmail={userEmail}
           coinTicker={selectedModalCoin}
+        />
+      )}
+
+      {isWithdrawModalOpen && user_id && (
+        <WithdrawModal
+          isOpen={isWithdrawModalOpen}
+          onSuccess={async () => {
+            setIsWithdrawModalOpen(false);
+            await updateEquipmentData(user_id as string, 0);
+          }}
+          onClose={async () => {
+            setIsWithdrawModalOpen(false);
+          }}
+          userId={Number(user_id)}
+          coinTicker={selectedModalCoin}
+          balance={parseFloat(
+            balances.find((b) => b.coinTicker === selectedModalCoin)
+              ?.coinAmount || '0',
+          )}
         />
       )}
     </section>

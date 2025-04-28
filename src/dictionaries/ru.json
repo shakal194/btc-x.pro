@@ -529,6 +529,8 @@
       "title": "Восстановление пароля",
       "email": "Email",
       "email_placeholder": "Введите ваш email адрес",
+      "otpcode": "OTP код",
+      "otpcode_placeholder": "Введите OTP код",
       "new_password": "Новый пароль",
       "password_placeholder": "Введите новый пароль",
       "confirm_password": "Подтвердите пароль",
@@ -537,9 +539,11 @@
       "reset_password": "Обновить пароль",
       "form_error_email": "Неверный формат email адреса",
       "form_error_email_notFound": "Email не найден",
+      "form_error_otpcode": "OTP код должен содержать 5 цифр",
       "form_error_password": "Пароль должен содержать минимум 8 символов",
       "form_error_password_2": "Пароль должен содержать минимум 1 специальный символ",
       "form_error_confirm_password": "Пароли не совпадают",
+      "form_validate_otpcode_notValid": "OTP код не валидный",
       "form_validate_errorTimeOut": "Произошла ошибка. Попробуйте позже"
     },
     "aml": {

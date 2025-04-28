@@ -13,11 +13,13 @@ import {
   depositsTable,
   withdrawalsTable,
   miningRewardsTable,
+  otpCodesTable,
 } from '@/db/schema'; // Импортируем таблицу
 import { sql, desc, asc, eq, and, gte, gt } from 'drizzle-orm';
 import fs from 'fs';
 import { createDepositForCoin } from './balance';
 import { formatDate } from './utils';
+import { sendOTPEmail } from './emailService';
 
 export interface MiningStats {
   totalMined: number;
@@ -1890,4 +1892,48 @@ export async function getTotalReferralBalance() {
     console.error('Error getting total referral balance:', error);
     return 0;
   }
+}
+
+// Функция для генерации OTP кода
+export async function generateOTP(): Promise<string> {
+  return Math.floor(10000 + Math.random() * 90000).toString();
+}
+
+// Функция для создания нового OTP кода
+export async function createOTPCode(email: string): Promise<string> {
+  const otpCode = await generateOTP();
+  const expiredAt = new Date();
+  expiredAt.setMinutes(expiredAt.getMinutes() + 30); // Добавляем 30 минут к текущей дате
+
+  // Удаляем старые OTP коды для этого email
+  await db.delete(otpCodesTable).where(sql`${otpCodesTable.email} = ${email}`);
+
+  // Создаем новый OTP код
+  await db.insert(otpCodesTable).values({
+    email,
+    otpCode,
+    expiredAt,
+  });
+
+  return otpCode;
+}
+
+// Функция для проверки OTP кода
+export async function validateOTPCode(
+  email: string,
+  otpCode: string,
+): Promise<boolean> {
+  const result = await db
+    .select()
+    .from(otpCodesTable)
+    .where(
+      sql`
+      ${otpCodesTable.email} = ${email} AND 
+      ${otpCodesTable.otpCode} = ${otpCode} AND 
+      ${otpCodesTable.expiredAt} > NOW()
+    `,
+    )
+    .limit(1);
+
+  return result.length > 0;
 }

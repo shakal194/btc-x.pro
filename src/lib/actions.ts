@@ -7,14 +7,19 @@ import { redirect } from 'next/navigation';
 import { AuthError } from 'next-auth';
 import { getTranslations } from 'next-intl/server';
 import db from '@/db/db';
-import { usersTable } from '@/db/schema';
+import { usersTable, otpCodesTable } from '@/db/schema';
 import { sql } from 'drizzle-orm';
 import { hashPassword } from '@/lib/utils';
-import { fetchUserIdByReferralCode } from '@/lib/data';
+import {
+  fetchUserIdByReferralCode,
+  createOTPCode,
+  validateOTPCode,
+} from '@/lib/data';
 import { createDeposit, getToken } from '@/lib/coinsbuy';
 import { saveAddress } from '@/lib/balance';
 import { getWalletId } from '@/lib/constants';
 import { createInitialBalances } from '@/lib/data';
+import { sendOTPEmail } from './emailService';
 
 export async function handleEmailSubmitSign(email: string) {
   const t = await getTranslations('cloudMiningPage.signin');
@@ -24,7 +29,6 @@ export async function handleEmailSubmitSign(email: string) {
     return {
       errors: { email: [t('form_error_email_empty')] },
     };
-    //throw new Error('Email не может быть пустым.');
   }
 
   const validateEmail = (email: string) => {
@@ -40,7 +44,6 @@ export async function handleEmailSubmitSign(email: string) {
     return {
       errors: { email: [t('form_error_email')] },
     };
-    //throw new Error('Введите корректный email.');
   }
 
   try {
@@ -56,6 +59,23 @@ export async function handleEmailSubmitSign(email: string) {
         errors: { email: [t('form_error_email_notFound')] },
       };
     }
+
+    // Генерируем OTP код
+    const otpCode = await createOTPCode(email);
+
+    try {
+      // Отправляем код на email
+      await sendOTPEmail(email, otpCode);
+    } catch (emailError) {
+      console.error('Error sending OTP email:', emailError);
+      // Удаляем созданный код, так как не смогли отправить email
+      await db
+        .delete(otpCodesTable)
+        .where(sql`${otpCodesTable.email} = ${email}`);
+      throw new Error(t('form_error_email_send'));
+    }
+
+    return { success: true };
   } catch (error) {
     console.error(t('form_validate_errorTimeOut'), error);
     throw new Error(t('form_validate_errorTimeOut'));
@@ -67,18 +87,18 @@ export async function authenticate(
   formData: FormData,
 ) {
   const t = await getTranslations('cloudMiningPage.signin');
+  const email = formData.get('email') as string;
+  const otpCode = formData.get('otpcode') as string;
 
   try {
+    // Проверяем OTP код
+    const isValidOTP = await validateOTPCode(email, otpCode);
+    if (!isValidOTP) {
+      return t('form_validate_otpcode_notValid');
+    }
+
     await signIn('credentials', formData);
   } catch (error) {
-    /*if (error instanceof InvalidOtpError) {
-      return 'OTP not valid';
-    }
-    if (error instanceof InvalidLoginError) {
-      return 'Login or password incorrect';
-    } else {
-      return 'Oooops';
-    }*/
     console.log('actions', error);
     if (error instanceof AuthError) {
       switch (error.type) {
@@ -102,7 +122,6 @@ export async function handleEmailSubmitRegister(email: string) {
     return {
       errors: { email: [t('form_error_email_empty')] },
     };
-    //throw new Error('Email не может быть пустым.');
   }
 
   const validateEmail = (email: string) => {
@@ -118,7 +137,6 @@ export async function handleEmailSubmitRegister(email: string) {
     return {
       errors: { email: [t('form_error_email')] },
     };
-    //throw new Error('Введите корректный email.');
   }
 
   try {
@@ -129,13 +147,16 @@ export async function handleEmailSubmitRegister(email: string) {
       .limit(1);
 
     if (existingUser.length > 0) {
-      console.log(t('form_error_email_validation'));
       return {
         errors: { email: [t('form_error_email_validation')] },
       };
     }
 
-    console.log('Email is valid and unique. Proceeding with OTP sending.');
+    // Генерируем и сохраняем OTP код
+    const otpCode = await createOTPCode(email);
+
+    // Отправляем OTP на email
+    await sendOTPEmail(email, otpCode);
   } catch (error) {
     console.error(t('form_error_otp_notSend'), error);
     throw new Error(t('form_error_otp_notSend'));
@@ -147,6 +168,7 @@ export async function handleEmailSubmitRegister(email: string) {
 export type AddUserErrors = {
   email?: string[];
   login?: string[];
+  otpcode?: string[];
   referral_code?: string[];
   password?: string[];
   confirmPassword?: string[];
@@ -171,6 +193,30 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
   const t = await getTranslations('cloudMiningPage.signin');
   let referrer_id: number | null = null;
 
+  // Проверяем OTP код
+  const email = formData.get('email') as string;
+  const otpCode = formData.get('otpcode') as string;
+
+  if (!otpCode || !/^\d{5}$/.test(otpCode)) {
+    return {
+      errors: {
+        otpcode: [t('form_error_otpcode')],
+      },
+      message: t('form_validate_errorValidation'),
+    };
+  }
+
+  // Проверяем валидность OTP кода
+  const isValidOTP = await validateOTPCode(email, otpCode);
+  if (!isValidOTP) {
+    return {
+      errors: {
+        otpcode: [t('form_validate_otpcode_notValid')],
+      },
+      message: t('form_validate_errorValidation'),
+    };
+  }
+
   const AddUserRefCode = z.object({
     referral_code: z
       .union([
@@ -185,39 +231,6 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
       ])
       .optional(),
   });
-
-  const AddUser = z
-    .object({
-      login: z.string({ invalid_type_error: 'Please input login.' }),
-      email: z.string({ invalid_type_error: 'Please input email.' }),
-      referral_code: z
-        .union([
-          z.string().length(0),
-          z
-            .string({
-              invalid_type_error: 'Please input a valid Referral Code.',
-            })
-            .regex(/^\d{6}$/, {
-              message: 'Referral Code must be exactly 6 digits.',
-            }),
-        ])
-        .optional(),
-      password: z
-        .string({ invalid_type_error: 'Please input password.' })
-        .min(8, {
-          message: 'Passwords must contains 8 or more symbols.',
-        })
-        .regex(/[!@#$%^&*(),.?":{}|<>]/, {
-          message: 'Passwords must contains special symbols.',
-        }),
-      confirmPassword: z.string({
-        invalid_type_error: 'Please input confirm password.',
-      }),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      path: ['password'],
-      message: 'Passwords do not match.',
-    });
 
   const validatedReferralCode = AddUserRefCode.safeParse({
     referral_code: formData.get('referral_code'),
@@ -253,9 +266,44 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
     }
   }
 
+  const AddUser = z
+    .object({
+      login: z.string({ invalid_type_error: 'Please input login.' }),
+      email: z.string({ invalid_type_error: 'Please input email.' }),
+      otpcode: z.string({ invalid_type_error: 'Please input OTP code.' }),
+      referral_code: z
+        .union([
+          z.string().length(0),
+          z
+            .string({
+              invalid_type_error: 'Please input a valid Referral Code.',
+            })
+            .regex(/^\d{6}$/, {
+              message: 'Referral Code must be exactly 6 digits.',
+            }),
+        ])
+        .optional(),
+      password: z
+        .string({ invalid_type_error: 'Please input password.' })
+        .min(8, {
+          message: 'Passwords must contains 8 or more symbols.',
+        })
+        .regex(/[!@#$%^&*(),.?":{}|<>]/, {
+          message: 'Passwords must contains special symbols.',
+        }),
+      confirmPassword: z.string({
+        invalid_type_error: 'Please input confirm password.',
+      }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      path: ['password'],
+      message: 'Passwords do not match.',
+    });
+
   const validatedFields = AddUser.safeParse({
     email: formData.get('email'),
     login: formData.get('email'),
+    otpcode: formData.get('otpcode'),
     password: formData.get('password'),
     confirmPassword: formData.get('confirmPassword'),
   });
@@ -416,8 +464,28 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
   redirect('/signin');
 }
 
-export async function handlePasswordReset(email: string, password: string) {
+export async function handlePasswordResetServer(
+  prevState: any,
+  formData: FormData,
+) {
   const t = await getTranslations('cloudMiningPage.recovery');
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
+  const otpcode = formData.get('otpcode') as string;
+
+  // Проверка OTP
+  const isValidOTP = await validateOTPCode(email, otpcode);
+  if (!isValidOTP) {
+    return {
+      errors: {
+        email: undefined,
+        otpcode: [t('form_validate_otpcode_notValid')],
+        password: undefined,
+        confirmPassword: undefined,
+      },
+      success: false,
+    };
+  }
 
   try {
     // Проверяем существование пользователя
@@ -429,7 +497,13 @@ export async function handlePasswordReset(email: string, password: string) {
 
     if (existingUser.length === 0) {
       return {
-        errors: { email: [t('form_error_email_notFound')] },
+        errors: {
+          email: [t('form_error_email_notFound')],
+          otpcode: undefined,
+          password: undefined,
+          confirmPassword: undefined,
+        },
+        success: false,
       };
     }
 
@@ -445,7 +519,15 @@ export async function handlePasswordReset(email: string, password: string) {
     return { success: true };
   } catch (error) {
     console.error('Error resetting password:', error);
-    throw new Error(t('form_validate_errorTimeOut'));
+    return {
+      errors: {
+        email: [t('form_validate_errorTimeOut')],
+        otpcode: undefined,
+        password: undefined,
+        confirmPassword: undefined,
+      },
+      success: false,
+    };
   }
 }
 //END REGISTR API

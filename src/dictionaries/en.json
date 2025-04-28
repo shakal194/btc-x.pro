@@ -528,6 +528,8 @@
       "title": "Password Recovery",
       "email": "Email",
       "email_placeholder": "Enter your email address",
+      "otpcode": "OTP Code",
+      "otpcode_placeholder": "Enter OTP code",
       "new_password": "New Password",
       "password_placeholder": "Enter new password",
       "confirm_password": "Confirm Password",
@@ -536,9 +538,11 @@
       "reset_password": "Reset Password",
       "form_error_email": "Invalid email format",
       "form_error_email_notFound": "Email not found",
+      "form_error_otpcode": "OTP Code must be exactly 5 digits",
       "form_error_password": "Password must be at least 8 characters long",
       "form_error_password_2": "Password must contain at least 1 special character",
       "form_error_confirm_password": "Passwords do not match",
+      "form_validate_otpcode_notValid": "OTP Code not valid",
       "form_validate_errorTimeOut": "An error occurred. Please try again later"
     }
   },

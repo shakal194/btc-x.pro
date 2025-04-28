@@ -529,6 +529,8 @@
       "title": "Відновлення паролю",
       "email": "Email",
       "email_placeholder": "Введіть вашу email адресу",
+      "otpcode": "ОТР код",
+      "otpcode_placeholder": "Введіть ОТР код",
       "new_password": "Новий пароль",
       "password_placeholder": "Введіть новий пароль",
       "confirm_password": "Підтвердіть пароль",
@@ -537,9 +539,11 @@
       "reset_password": "Оновити пароль",
       "form_error_email": "Невірний формат email адреси",
       "form_error_email_notFound": "Email не знайдено",
+      "form_error_otpcode": "OTP код має включати 5 цифр",
       "form_error_password": "Пароль повинен містити мінімум 8 символів",
       "form_error_password_2": "Пароль повинен містити мінімум 1 спеціальний символ",
       "form_error_confirm_password": "Паролі не співпадають",
+      "form_validate_otpcode_notValid": "OTP код не валідний",
       "form_validate_errorTimeOut": "Сталася помилка. Спробуйте пізніше"
     }
   },

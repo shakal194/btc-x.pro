@@ -9,7 +9,13 @@ import {
 } from '@heroicons/react/24/solid';
 import { Button } from '@/components/button';
 import { authenticate, handleEmailSubmitSign } from '@/lib/actions';
-import { useState, useMemo, useActionState, useTransition } from 'react';
+import {
+  useState,
+  useMemo,
+  useActionState,
+  useTransition,
+  useEffect,
+} from 'react';
 import { Form, Input } from '@heroui/react';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import { useTranslations } from 'next-intl';
@@ -30,6 +36,33 @@ export default function SignInForm({ locale }: SignInFormProps) {
   // Using useActionState hook to handle the form submission
   const [state, formAction] = useActionState(authenticate, undefined);
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    // Всегда отключаем спиннер при получении любого ответа
+    setShowSpinnerStep2(false);
+
+    if (state) {
+      // Если state это строка - это сообщение об ошибке
+      if (typeof state === 'string') {
+        const errorMessage = state.toLowerCase();
+        setErrorMessageForm(state);
+
+        // Устанавливаем соответствующие ошибки в зависимости от типа
+        if (errorMessage.includes('otp')) {
+          setErrorMessageOTP(state);
+        } else if (errorMessage.includes('password')) {
+          setErrorMessagePassword(state);
+        }
+      }
+    }
+  }, [state]);
+
+  useEffect(() => {
+    // Отключаем спиннер когда меняется состояние isPending
+    if (!isPending) {
+      setShowSpinnerStep2(false);
+    }
+  }, [isPending]);
 
   const callbackUrl = `/${locale}/dashboard`;
 
@@ -52,9 +85,10 @@ export default function SignInForm({ locale }: SignInFormProps) {
     return valueEmail === '' || !validateEmail(valueEmail);
   }, [valueEmail]);
 
-  /*const isInvalidOTP = useMemo(() => {
-    return valueOTPCode === '' || !/^\d{5}$/.test(valueOTPCode);
-  }, [valueOTPCode]);*/
+  const isInvalidOTP = useMemo(
+    () => valueOTPCode === '' || !/^\d{5}$/.test(valueOTPCode),
+    [valueOTPCode],
+  );
 
   if (valuePassword.length < 8) {
     passwordErrors.push(t('form_error_password'));
@@ -73,19 +107,25 @@ export default function SignInForm({ locale }: SignInFormProps) {
 
   const isInvalidStep2 = useMemo(() => {
     return (
-      valueEmail === '' /*|| valueOTPCode.length !== 5*/ || valuePassword === ''
+      valueEmail === '' || valueOTPCode.length !== 5 || valuePassword === ''
     );
-  }, [valueEmail, /*valueOTPCode,*/ valuePassword]);
+  }, [valueEmail, valueOTPCode, valuePassword]);
 
   const handleEmailChange = (value: string) => {
     setValueEmail(value);
     setErrorMessageEmail(''); // Clear email error when value changes
   };
 
-  /*const handleOTPChange = (value: string) => {
+  const handleOTPChange = (value: string) => {
     setValueOTPCode(value);
-    setErrorMessageOTP(''); // Clear OTP error when value changes
-  };*/
+    if (!/^\d{5}$/.test(value)) {
+      setErrorMessageOTP(t('form_error_otpcode'));
+    } else {
+      setErrorMessageOTP('');
+      setErrorMessageForm('');
+    }
+    setShowSpinnerStep2(false);
+  };
 
   const handlePasswordChange = (value: string) => {
     setValuePassword(value);
@@ -120,34 +160,25 @@ export default function SignInForm({ locale }: SignInFormProps) {
   // Submit step 2
   const handleSubmitStep2 = (e: any) => {
     e.preventDefault();
-    setShowSpinnerStep2(true); // Включаем спиннер
-    setErrorMessageForm('');
 
     // Валидация
-    if (isInvalidEmail || /*isInvalidOTP ||*/ isInvalidPassword) {
-      setShowSpinnerStep2(false); // Отключаем спиннер при ошибке
+    if (isInvalidPassword || isInvalidOTP || isInvalidEmail) {
       return;
     }
+
+    setShowSpinnerStep2(true);
+    setErrorMessageForm('');
 
     // Создаем FormData
     const formData = new FormData();
     formData.append('email', valueEmail);
-    //formData.append('otpcode', valueOTPCode);
+    formData.append('otpcode', valueOTPCode);
     formData.append('password', valuePassword);
     formData.append('redirectTo', callbackUrl || '/dashboard');
 
-    try {
-      setShowSpinnerStep2(true);
-      startTransition(() => {
-        formAction(formData);
-      });
-
-      if (state) {
-        setErrorMessageForm(state);
-      }
-    } catch (error) {
-      setErrorMessageForm(t('form_validate_errorTimeOut'));
-    }
+    startTransition(() => {
+      formAction(formData);
+    });
   };
 
   return (
@@ -163,29 +194,24 @@ export default function SignInForm({ locale }: SignInFormProps) {
               <Input
                 label={t('email')}
                 labelPlacement='inside'
-                isInvalid={isInvalidEmail}
-                color={isInvalidEmail ? 'danger' : 'success'}
+                isInvalid={isInvalidEmail || !!errorMessageEmail}
+                color={
+                  isInvalidEmail || !!errorMessageEmail ? 'danger' : 'success'
+                }
                 name='email'
                 className='text-white'
                 placeholder={t('email_placeholder')}
                 isRequired
-                errorMessage={t('form_error_email')}
+                errorMessage={errorMessageEmail || t('form_error_email')}
                 type='email'
                 value={valueEmail}
                 variant='bordered'
                 onValueChange={handleEmailChange}
                 onClear={() => {}}
               />
-              <div id='email-error' aria-live='polite' aria-atomic='true'>
-                {errorMessageEmail && (
-                  <p className='text-sm text-danger dark:text-red-400'>
-                    {errorMessageEmail}
-                  </p>
-                )}
-              </div>
               <Button
                 type='submit'
-                className={`${isInvalidEmail ? 'bg-danger' : 'bg-success'} mt-4 w-full`}
+                className={`${isInvalidEmail || !!errorMessageEmail ? 'bg-danger' : 'bg-success'} mt-4 w-full`}
                 onClick={handleSubmitStep1}
               >
                 {t('button')}
@@ -211,26 +237,28 @@ export default function SignInForm({ locale }: SignInFormProps) {
                 type='email'
                 value={valueEmail}
                 variant='bordered'
-                //onValueChange={handleEmailChange}
-                //onClear={() => {}}
               />
-              {/*<Input
+              <Input
                 label={t('otpcode')}
                 labelPlacement='inside'
-                isInvalid={isInvalidOTP}
+                isInvalid={!!isInvalidOTP}
                 color={isInvalidOTP ? 'danger' : 'success'}
                 name='otpcode'
-                id='otpcode'
                 className='text-white'
                 placeholder={t('otpcode_placeholder')}
                 isRequired
-                errorMessage={t('form_error_otpcode')}
+                errorMessage={
+                  isInvalidOTP ? t('form_error_otpcode') : undefined
+                }
                 type='text'
                 value={valueOTPCode}
                 variant='bordered'
-                onValueChange={handleOTPChange}
-                onClear={() => {}}
-              />*/}
+                onValueChange={(value) => {
+                  const digitsOnly = value.replace(/[^\d]/g, '').slice(0, 5);
+                  handleOTPChange(digitsOnly);
+                }}
+                onClear={() => handleOTPChange('')}
+              />
               <div>
                 <Input
                   label={t('password')}
@@ -254,13 +282,17 @@ export default function SignInForm({ locale }: SignInFormProps) {
                       )}
                     </div>
                   }
-                  errorMessage={() => (
-                    <ul>
-                      {passwordErrors.map((error, i) => (
-                        <li key={i}>{error}</li>
-                      ))}
-                    </ul>
-                  )}
+                  errorMessage={
+                    passwordErrors.length > 0
+                      ? () => (
+                          <ul>
+                            {passwordErrors.map((error, i) => (
+                              <li key={i}>{error}</li>
+                            ))}
+                          </ul>
+                        )
+                      : undefined
+                  }
                   isInvalid={passwordErrors.length > 0}
                   color={isInvalidPassword ? 'danger' : 'success'}
                   name='password'
@@ -293,7 +325,7 @@ export default function SignInForm({ locale }: SignInFormProps) {
                 className={`${isInvalidStep2 ? 'bg-danger' : 'bg-success'} mt-4 w-full`}
                 onClick={handleSubmitStep2}
               >
-                {isPending ? <FullScreenSpinner /> : `${t('button')}`}
+                {showSpinnerStep2 ? <FullScreenSpinner /> : `${t('button')}`}
               </Button>
             </div>
           )}

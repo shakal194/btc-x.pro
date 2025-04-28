@@ -174,3 +174,11 @@ export const transactionsRefBonusTable = pgTable('transactions_refBonus', {
   referral_percent: decimal({ precision: 30, scale: 8 }).notNull(), //Реф.бонус в %
   referral_bonus: decimal({ precision: 10, scale: 2 }).notNull(), // Сумма бонуса
 });
+
+export const otpCodesTable = pgTable('otp_codes', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  email: varchar({ length: 255 }).notNull(),
+  otpCode: varchar({ length: 5 }).notNull(),
+  createdAt: timestamp().defaultNow().notNull(),
+  expiredAt: timestamp().notNull(),
+});

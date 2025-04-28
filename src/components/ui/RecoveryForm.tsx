@@ -8,26 +8,53 @@ import {
   ExclamationCircleIcon,
 } from '@heroicons/react/24/solid';
 import { Button } from '@/components/button';
-import { handleEmailSubmitSign, handlePasswordReset } from '@/lib/actions';
-import { useState, useMemo } from 'react';
 import { Form, Input } from '@heroui/react';
+import { handleEmailSubmitSign } from '@/lib/actions';
+import { handlePasswordResetServer } from '@/lib/actions';
+import {
+  useState,
+  useMemo,
+  useEffect,
+  useTransition,
+  useActionState,
+} from 'react';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
 export default function RecoveryForm() {
   const t = useTranslations('cloudMiningPage.recovery');
-  const [errorMessageForm, setErrorMessageForm] = useState('');
   const [errorMessageEmail, setErrorMessageEmail] = useState('');
   const [step, setStep] = useState(1);
   const [showSpinnerStep1, setShowSpinnerStep1] = useState(false);
-  const [showSpinnerStep2, setShowSpinnerStep2] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isVisibleConfirm, setIsVisibleConfirm] = useState(false);
   const [email, setEmail] = useState('');
+  const [otpCode, setOtpCode] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const router = useRouter();
+  const [touchedOTP, setTouchedOTP] = useState(false);
+
+  // Серверный экшн для useActionState
+  const initialState = { errors: undefined, success: false };
+  const [state, formAction] = useActionState(
+    handlePasswordResetServer,
+    initialState,
+  );
+  const [isPending, startTransition] = useTransition();
+
+  const errors = (
+    typeof state.errors === 'object' && state.errors !== null
+      ? state.errors
+      : {}
+  ) as Record<string, any>;
+
+  useEffect(() => {
+    if (state.success) {
+      router.push('/signin');
+    }
+  }, [state.success, router]);
 
   const validateEmail = (value: string) =>
     value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i);
@@ -35,6 +62,11 @@ export default function RecoveryForm() {
   const isInvalidEmail = useMemo(() => {
     return email === '' || !validateEmail(email);
   }, [email]);
+
+  const isInvalidOTP = useMemo(
+    () => otpCode === '' || !/^\d{5}$/.test(otpCode),
+    [otpCode],
+  );
 
   const passwordErrors = useMemo(() => {
     const errors: string[] = [];
@@ -57,14 +89,8 @@ export default function RecoveryForm() {
 
   const toggleVisibility = () => setIsVisible(!isVisible);
   const toggleVisibilityConfirm = () => setIsVisibleConfirm(!isVisibleConfirm);
-
-  const handleClear = () => {
-    setPassword('');
-  };
-
-  const handleClearConfirm = () => {
-    setConfirmPassword('');
-  };
+  const handleClear = () => setPassword('');
+  const handleClearConfirm = () => setConfirmPassword('');
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,34 +116,30 @@ export default function RecoveryForm() {
     }
   };
 
-  const handlePasswordSubmit = async (e: React.FormEvent) => {
+  // Сброс ошибок при изменении OTP
+  const handleOTPChange = (value: string) => {
+    setOtpCode(value);
+    setTouchedOTP(true);
+  };
+
+  // Submit второго шага через серверный экшн
+  const handleSubmitStep2 = (e: React.FormEvent) => {
     e.preventDefault();
-    setShowSpinnerStep2(true);
-    setErrorMessageForm('');
-
-    if (isInvalidPassword || isInvalidConfirmPassword) {
-      setShowSpinnerStep2(false);
-      return;
-    }
-
-    try {
-      const result = await handlePasswordReset(email, password);
-      if (result.errors) {
-        setErrorMessageForm(result.errors.email[0]);
-      } else {
-        router.push('/signin');
-      }
-    } catch (error) {
-      setErrorMessageForm((error as Error).message);
-    } finally {
-      setShowSpinnerStep2(false);
-    }
+    setTouchedOTP(false);
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('otpcode', otpCode);
+    formData.append('password', password);
+    formData.append('confirmPassword', confirmPassword);
+    startTransition(() => {
+      formAction(formData);
+    });
   };
 
   return (
     <Form
       className='mx-auto w-full max-w-xs gap-3 overflow-x-hidden'
-      onSubmit={step === 1 ? handleEmailSubmit : handlePasswordSubmit}
+      onSubmit={step === 1 ? handleEmailSubmit : handleSubmitStep2}
     >
       <div className='mx-auto flex w-[250px] flex-col items-center text-foreground lg:w-[300px]'>
         <h1 className='mb-3 text-center text-2xl'>{t('title')}</h1>
@@ -173,6 +195,25 @@ export default function RecoveryForm() {
               variant='bordered'
               onValueChange={setEmail}
               onClear={() => {}}
+            />
+            <Input
+              label={t('otpcode')}
+              labelPlacement='inside'
+              isInvalid={isInvalidOTP}
+              color={isInvalidOTP ? 'danger' : 'success'}
+              name='otpcode'
+              className='text-white'
+              placeholder={t('otpcode_placeholder')}
+              isRequired
+              type='text'
+              value={otpCode}
+              variant='bordered'
+              onValueChange={(value) => {
+                const digitsOnly = value.replace(/[^\d]/g, '').slice(0, 5);
+                handleOTPChange(digitsOnly);
+              }}
+              onClear={() => handleOTPChange('')}
+              errorMessage={isInvalidOTP ? t('form_error_otpcode') : ''}
             />
             <Input
               label={t('new_password')}
@@ -249,18 +290,25 @@ export default function RecoveryForm() {
               onValueChange={setConfirmPassword}
             />
             <div id='form-error' aria-live='polite' aria-atomic='true'>
-              {errorMessageForm && (
+              {(state.errors?.otpcode?.[0] ||
+                state.errors?.password?.[0] ||
+                state.errors?.confirmPassword?.[0]) && (
                 <div className='mt-2 flex items-center'>
                   <ExclamationCircleIcon className='mr-2 h-5 w-5 text-danger' />
-                  <p className='text-sm text-danger'>{errorMessageForm}</p>
+                  <p className='text-sm text-danger'>
+                    {state.errors?.otpcode?.[0] ||
+                      state.errors?.password?.[0] ||
+                      state.errors?.confirmPassword?.[0]}
+                  </p>
                 </div>
               )}
             </div>
             <Button
               type='submit'
-              className={`${isInvalidPassword || isInvalidConfirmPassword ? 'bg-danger' : 'bg-success'} mt-4 w-full`}
+              className={`${isInvalidPassword || isInvalidConfirmPassword || isInvalidOTP ? 'bg-danger' : 'bg-success'} mt-4 w-full`}
+              disabled={isPending}
             >
-              {showSpinnerStep2 ? <FullScreenSpinner /> : t('reset_password')}
+              {isPending ? <FullScreenSpinner /> : t('reset_password')}
             </Button>
           </div>
         )}

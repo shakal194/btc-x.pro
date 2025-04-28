@@ -26,7 +26,6 @@ interface WithdrawModalProps {
   onClose: () => void;
   onSuccess: () => void;
   userId: number;
-  userEmail: string;
   coinTicker: string;
   balance: number;
 }
@@ -36,7 +35,6 @@ export default function WithdrawModal({
   onClose,
   onSuccess,
   userId,
-  userEmail,
   coinTicker,
   balance,
 }: WithdrawModalProps) {

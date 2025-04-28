@@ -5,6 +5,7 @@ import {
   EyeSlashIcon,
   XMarkIcon,
   ArrowRightIcon,
+  ExclamationCircleIcon,
 } from '@heroicons/react/24/solid';
 import { Button } from '@/components/button';
 import { addUser, handleEmailSubmitRegister } from '@/lib/actions';
@@ -25,14 +26,14 @@ export default function SignUpForm() {
   // All state hooks
   const [errorMessageForm, setErrorMessageForm] = useState('');
   const [errorMessageEmail, setErrorMessageEmail] = useState('');
-  /*const [errorMessageOTP, setErrorMessageOTP] = useState('');*/
+  const [errorMessageOTP, setErrorMessageOTP] = useState('');
   const [errorMessagePassword, setErrorMessagePassword] = useState<string[]>(
     [],
   );
   const [step, setStep] = useState(1); // 1 - Email, 2 - OTP and Password
   const [showSpinnerStep, setShowSpinnerStep] = useState(false);
   const [valueEmail, setValueEmail] = useState('');
-  /*const [valueOTPCode, setValueOTPCode] = useState('');*/
+  const [valueOTPCode, setValueOTPCode] = useState('');
   const [valueReferralCode, setValueReferralCode] = useState('');
   const [valuePassword, setValuePassword] = useState('');
   const [valueConfirmPassword, setValueConfirmPassword] = useState('');
@@ -56,6 +57,7 @@ export default function SignUpForm() {
     errors: {
       email: undefined,
       login: undefined,
+      otpcode: undefined,
       referral_code: undefined,
       password: undefined,
       confirmPassword: undefined,
@@ -77,6 +79,44 @@ export default function SignUpForm() {
     setErrorMessagePassword(errors);
   }, [valuePassword, t]);
 
+  useEffect(() => {
+    if (state.errors) {
+      setShowSpinnerStep(false);
+
+      // Проверяем наличие ошибок через switch
+      const getFirstError = () => {
+        if ('otpcode' in state.errors && state.errors.otpcode?.length) {
+          return { type: 'otpcode', message: state.errors.otpcode[0] };
+        }
+        if ('email' in state.errors && state.errors.email?.length) {
+          return { type: 'email', message: state.errors.email[0] };
+        }
+        if ('password' in state.errors && state.errors.password?.length) {
+          return { type: 'password', message: state.errors.password[0] };
+        }
+        if ('error' in state.errors && state.errors.error?.length) {
+          return { type: 'error', message: state.errors.error[0] };
+        }
+        return { type: 'default', message: t('form_validate_errorValidation') };
+      };
+
+      const { type, message } = getFirstError();
+
+      switch (type) {
+        case 'otpcode':
+        case 'email':
+        case 'error':
+          setErrorMessageForm(message);
+          break;
+        case 'password':
+          setErrorMessagePassword([message]);
+          break;
+        default:
+          setErrorMessageForm(message);
+      }
+    }
+  }, [state, t]);
+
   // Render the error messages
   const renderPasswordErrors = () => (
     <ul>
@@ -93,9 +133,10 @@ export default function SignUpForm() {
     return valueEmail === '' || !validateEmail(valueEmail);
   }, [valueEmail]);
 
-  /*const isInvalidOTP = useMemo(() => {
-    return valueOTPCode === '' || !/^\d{5}$/.test(valueOTPCode);
-  }, [valueOTPCode]);*/
+  const isInvalidOTP = useMemo(
+    () => valueOTPCode === '' || !/^\d{5}$/.test(valueOTPCode),
+    [valueOTPCode],
+  );
 
   const isInvalidReferralCode = useMemo(() => {
     return valueReferralCode !== '' && !/^\d{6}$/.test(valueReferralCode);
@@ -112,7 +153,7 @@ export default function SignUpForm() {
   const isInvalidStep2 = useMemo(() => {
     return (
       valueEmail === '' ||
-      /*valueOTPCode.length !== 5 ||*/
+      valueOTPCode.length !== 5 ||
       (valueReferralCode !== '' && valueReferralCode.length !== 6) ||
       valuePassword === '' ||
       valueConfirmPassword === '' ||
@@ -120,7 +161,7 @@ export default function SignUpForm() {
     );
   }, [
     valueEmail,
-    /*valueOTPCode,*/
+    valueOTPCode,
     valuePassword,
     valueReferralCode,
     valueConfirmPassword,
@@ -138,10 +179,11 @@ export default function SignUpForm() {
     setErrorMessageEmail('');
   };
 
-  /*const handleOTPChange = (value: string) => {
+  const handleOTPChange = (value: string) => {
     setValueOTPCode(value);
     setErrorMessageOTP('');
-  };*/
+    setErrorMessageForm('');
+  };
 
   const handleReferralCodeChange = (value: string) => {
     setValueReferralCode(value);
@@ -160,6 +202,7 @@ export default function SignUpForm() {
   const handlePasswordChange = (value: string) => {
     setValuePassword(value);
     setErrorMessagePassword([]);
+    setErrorMessageForm('');
   };
 
   const handleConfirmPasswordChange = (value: string) => {
@@ -201,42 +244,26 @@ export default function SignUpForm() {
     // Валидация
     if (
       isInvalidPassword ||
+      isInvalidOTP ||
       valuePassword !== valueConfirmPassword ||
       !valuePrivacy ||
       (valueReferralCode && !/^\d{6}$/.test(valueReferralCode))
     ) {
       setShowSpinnerStep(false);
-      if (valueReferralCode && !/^\d{6}$/.test(valueReferralCode)) {
-        startTransition(() => {
-          formAction(new FormData());
-        });
-      }
       return;
     }
 
     // Создаем FormData
     const formData = new FormData();
     formData.append('email', valueEmail);
+    formData.append('otpcode', valueOTPCode);
     formData.append('referral_code', valueReferralCode || '415384');
     formData.append('password', valuePassword);
     formData.append('confirmPassword', valueConfirmPassword);
 
-    try {
-      setShowSpinnerStep(true);
-      startTransition(async () => {
-        await formAction(formData);
-      });
-
-      if (state.errors) {
-        console.log('state.errors', state.errors);
-        setShowSpinnerStep(false);
-      }
-    } catch (error) {
-      console.log('state.errors', state.errors);
-      setErrorMessageForm(t('form_validate_errorValidation'));
-    } finally {
-      setShowSpinnerStep(false);
-    }
+    startTransition(() => {
+      formAction(formData);
+    });
   };
 
   return (
@@ -297,33 +324,32 @@ export default function SignUpForm() {
                 onValueChange={handleEmailChange}
                 onClear={() => {}}
               />
-              {/*<Input
+              <Input
                 label={t('otpcode')}
                 labelPlacement='inside'
-                isInvalid={isInvalidOTP}
+                isInvalid={!!isInvalidOTP}
                 color={isInvalidOTP ? 'danger' : 'success'}
                 name='otpcode'
                 className='text-white'
                 placeholder={t('otpcode_placeholder')}
                 isRequired
-                errorMessage={t('form_error_otpcode')}
+                errorMessage={
+                  isInvalidOTP
+                    ? t('form_error_otpcode')
+                    : errorMessageForm &&
+                        errorMessageForm.toLowerCase().includes('otp')
+                      ? errorMessageForm
+                      : undefined
+                }
                 type='text'
                 value={valueOTPCode}
                 variant='bordered'
-                onValueChange={handleOTPChange}
-                onClear={() => {}}
+                onValueChange={(value) => {
+                  const digitsOnly = value.replace(/[^\d]/g, '').slice(0, 5);
+                  handleOTPChange(digitsOnly);
+                }}
+                onClear={() => handleOTPChange('')}
               />
-              <div id='otpcode-error' aria-live='polite' aria-atomic='true'>
-                {state.errors?.otpcode &&
-                  state.errors.otpcode.map((error: string) => (
-                    <div key={error} className='mt-2 flex items-center'>
-                      <ExclamationCircleIcon className='mr-2 h-5 w-5 text-danger' />
-                      <p className='mt-2 text-sm text-danger' key={error}>
-                        {error}
-                      </p>
-                    </div>
-                  ))}
-              </div>*/}
               <Input
                 label={t('referralcode')}
                 labelPlacement='inside'
@@ -436,9 +462,10 @@ export default function SignUpForm() {
               </label>
               <div id='form-error' aria-live='polite' aria-atomic='true'>
                 {errorMessageForm && (
-                  <p className='text-sm text-danger dark:text-red-400'>
-                    {errorMessageForm}
-                  </p>
+                  <div className='flex items-center gap-2'>
+                    <ExclamationCircleIcon className='h-5 w-5 text-danger' />
+                    <p className='text-sm text-danger'>{errorMessageForm}</p>
+                  </div>
                 )}
               </div>
               <Button
@@ -446,7 +473,7 @@ export default function SignUpForm() {
                 className={`${isInvalidStep2 ? 'bg-danger' : 'bg-success'} mt-4 w-full`}
                 onClick={handleSubmitStep2}
               >
-                {isPending ? <FullScreenSpinner /> : `${t('button')}`}
+                {showSpinnerStep ? <FullScreenSpinner /> : `${t('button')}`}
               </Button>
             </div>
           )}

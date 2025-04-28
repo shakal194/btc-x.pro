@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { Card, CardBody } from '@heroui/react';
 import { useTranslations } from 'next-intl';
+import Header from '@/components/Header';
 import RecoveryForm from '@/components/ui/RecoveryForm';
 
 export default function RecoveryPage() {
@@ -10,6 +11,7 @@ export default function RecoveryPage() {
 
   return (
     <>
+      <Header />
       <main className='lg:p-10'>
         <div className='container mx-auto flex grid-flow-col-dense flex-col-reverse items-center gap-8 p-4 md:grid md:grid-cols-2'>
           <div className='mx-auto w-full rounded-xl bg-gradient-to-r from-[#553300] to-[#FE9900] p-[1px] md:w-[350px] lg:w-[400px] xl:w-[500px]'>
