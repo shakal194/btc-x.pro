@@ -211,8 +211,7 @@ export async function sendOTPEmail(email, otpCode) {
 
 export async function sendPromoEmail(data) {
   try {
-    const dict = await getTranslations('emailTemplates.promo');
-    const t = dict.emailTemplates.promo;
+    const t = await getTranslations('emailTemplates.promo');
 
     const mailOptions = {
       from: SMTP_USER,
@@ -271,8 +270,7 @@ export async function sendPromoEmail(data) {
 
 export async function sendSubscriptionEmail(email) {
   try {
-    const dict = await getTranslations('emailTemplates.newsletter');
-    const t = dict.emailTemplates.newsletter;
+    const t = await getTranslations('emailTemplates.newsletter');
 
     const mailOptions = {
       from: SMTP_USER,
@@ -422,8 +420,7 @@ export async function sendWithdrawalOTPEmail(email, otpCode, amount, coinTicker,
 
 export async function sendSupportEmail(email, message) {
   try {
-    const messages = (await import(`@/dictionaries/ru.json`)).default;
-    const t = createTranslator({ locale: 'ru', messages, namespace: 'emailTemplates.support' });
+    const t = await getTranslations('emailTemplates.support');
     
     const mailOptions = {
       from: SMTP_USER,
