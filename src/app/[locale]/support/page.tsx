@@ -80,7 +80,7 @@ export default function SupportPage() {
 
   return (
     <main>
-      <section className='relative z-20 rounded-xl bg-[#F4F4F4] py-[30px] text-black lg:py-[100px]'>
+      <section className='relative z-20 rounded-xl py-[30px] text-foreground lg:py-[100px]'>
         <div className='container mx-auto space-y-8 p-4'>
           {isSubmitting && <FullScreenSpinner />}
           <h2 className='p-4 text-font16Leading120 lg:text-font22Leading120'>
@@ -104,9 +104,8 @@ export default function SupportPage() {
                 type='email'
                 value={email}
                 variant='bordered'
-                className='dark'
                 onValueChange={setEmail}
-                onClear={() => setEmail('')}
+                onClear={() => {}}
               />
               <Textarea
                 label={t('message_label')}

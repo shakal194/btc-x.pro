@@ -2,11 +2,10 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-
 @layer components {
 
-  /* Light theme autofill */
-  .light input:-webkit-autofill {
+
+  input:-webkit-autofill {
     transition-delay: 0s, 0s;
     transition-timing-function: ease-in-out, ease-in-out;
     transition-duration: 99999s, 99999s;
@@ -14,14 +13,6 @@
     -webkit-text-fill-color: rgb(234, 236, 239);
   }
 
-  /* Dark theme autofill */
-  .dark input:-webkit-autofill {
-    transition-delay: 0s, 0s;
-    transition-timing-function: ease-in-out, ease-in-out;
-    transition-duration: 99999s, 99999s;
-    transition-property: color, background-color;
-    -webkit-text-fill-color: rgb(17, 19, 23);
-  }
 }
 
 

@@ -146,20 +146,20 @@ const baseStyles = `
 const createLogoHtml = () => {
   const siteUrl = NEXT_PUBLIC_SITE_URL || 'https://btc-x.pro';
   return `
-    <div class="logo-container" style="background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.1), rgba(255,255,255,0));">
+    <div class="logo-container" style="background: transparent;">
       <img src="${siteUrl}/logo_black.png" 
            alt="BTC-X.PRO Logo" 
            class="logo" 
-           style="pointer-events: none; user-select: none; mix-blend-mode: multiply;"
+           style="pointer-events: none; user-select: none;"
            oncontextmenu="return false;"
       />
     </div>
   `;
 };
 
-/*const replacePlaceholders = (text, data) => {
+const replacePlaceholders = (text, data) => {
   return text.replace(/{{(\w+)}}/g, (match, key) => data[key] || match);
-};*/
+};
 
 export async function sendOTPEmail(email, otpCode) {
   try {
