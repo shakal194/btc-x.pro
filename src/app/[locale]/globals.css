@@ -4,13 +4,23 @@
 
 
 @layer components {
-  input:-webkit-autofill {
+
+  /* Light theme autofill */
+  .light input:-webkit-autofill {
     transition-delay: 0s, 0s;
     transition-timing-function: ease-in-out, ease-in-out;
     transition-duration: 99999s, 99999s;
     transition-property: color, background-color;
     -webkit-text-fill-color: rgb(234, 236, 239);
-    /* Цвет текста для автозаполнения */
+  }
+
+  /* Dark theme autofill */
+  .dark input:-webkit-autofill {
+    transition-delay: 0s, 0s;
+    transition-timing-function: ease-in-out, ease-in-out;
+    transition-duration: 99999s, 99999s;
+    transition-property: color, background-color;
+    -webkit-text-fill-color: rgb(17, 19, 23);
   }
 }
 

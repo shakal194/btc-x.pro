@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import {
   Modal,
@@ -18,7 +20,8 @@ import {
   getMinDeposit,
   getCoinNetwork,
 } from '@/lib/constants';
-import { createWithdrawal } from '@/lib/data';
+import { createWithdrawal, validateOTPCode } from '@/lib/data';
+import { useLocale } from 'next-intl';
 import FullScreenSpinner from '@/components/ui/Spinner';
 
 interface WithdrawModalProps {
@@ -28,6 +31,7 @@ interface WithdrawModalProps {
   userId: number;
   coinTicker: string;
   balance: number;
+  userEmail: string;
 }
 
 export default function WithdrawModal({
@@ -37,6 +41,7 @@ export default function WithdrawModal({
   userId,
   coinTicker,
   balance,
+  userEmail,
 }: WithdrawModalProps) {
   const minDeposit = getMinDeposit(coinTicker);
   const [amount, setAmount] = useState('');
@@ -47,6 +52,10 @@ export default function WithdrawModal({
   const [feeInUSDT, setFeeInUSDT] = useState<string>('0');
   const [isFeeCalculated, setIsFeeCalculated] = useState(false);
   const [error, setError] = useState('');
+  const [otpCode, setOtpCode] = useState('');
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [otpError, setOtpError] = useState('');
+  const locale = useLocale();
 
   const canIncludeFee = (ticker: string) => {
     const noFeeInclusionList = [
@@ -293,8 +302,66 @@ export default function WithdrawModal({
     return '';
   };
 
+  const handleGetOTP = async () => {
+    if (!amount || !address || !isFeeCalculated) {
+      Notiflix.Notify.warning('Пожалуйста, заполните все поля корректно');
+      return;
+    }
+
+    const amountError = getAmountError();
+    if (amountError) {
+      Notiflix.Notify.warning(amountError);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      // Generate 6-digit OTP code
+      const generatedOTP = Math.floor(10000 + Math.random() * 90000).toString();
+
+      // Send email with OTP through API
+      const response = await fetch('/api/sendWithdrawalOTP', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: userEmail,
+          otpCode: generatedOTP,
+          amount: amount.toString(),
+          coinTicker,
+          address: address.trim(),
+        }),
+      });
+
+      // Read response body once
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(responseData.error || 'Failed to send OTP');
+      }
+
+      setIsOtpSent(true);
+      Notiflix.Notify.success('Код подтверждения отправлен на вашу почту');
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+      Notiflix.Notify.failure(
+        error instanceof Error
+          ? error.message
+          : 'Ошибка при отправке кода подтверждения',
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleWithdraw = async () => {
     if (isLoading) return;
+
+    if (!otpCode || otpCode.length !== 5) {
+      setOtpError('Введите корректный код подтверждения');
+      return;
+    }
 
     if (!isFeeCalculated) {
       Notiflix.Notify.warning('Дождитесь расчета комиссии');
@@ -319,6 +386,14 @@ export default function WithdrawModal({
 
     setIsLoading(true);
     try {
+      // Verify OTP code
+      const isValidOTP = await validateOTPCode(userEmail, otpCode);
+      if (!isValidOTP) {
+        throw new Error(
+          'Неверный код подтверждения или срок его действия истек',
+        );
+      }
+
       // Create withdrawal record
       await createWithdrawal({
         userId,
@@ -414,7 +489,32 @@ export default function WithdrawModal({
                   </Chip>
                 }
               />
-
+              <Input
+                type='text'
+                label='Код подтверждения'
+                value={otpCode}
+                onChange={(e) => {
+                  setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 5));
+                  setOtpError('');
+                }}
+                placeholder='Введите код из письма'
+                className='flex-1'
+                maxLength={5}
+                isInvalid={!!otpError}
+                errorMessage={otpError}
+                endContent={
+                  <Button
+                    color='primary'
+                    className='self-end'
+                    onPress={handleGetOTP}
+                    isDisabled={
+                      !amount || !address || !isFeeCalculated || isLoading
+                    }
+                  >
+                    Получить код
+                  </Button>
+                }
+              />
               <div className='rounded bg-gray-700 p-3'>
                 <div className='flex items-center gap-2 text-sm font-bold text-yellow-400'>
                   <ExclamationTriangleIcon className='h-6 w-6' />
@@ -459,6 +559,9 @@ export default function WithdrawModal({
                 !amount ||
                 !address ||
                 !isFeeCalculated ||
+                !isOtpSent ||
+                !otpCode ||
+                otpCode.length !== 5 ||
                 Number(getTotalAmount()) > balance ||
                 Number(amount) < minDeposit
               }

@@ -840,16 +840,20 @@
     "title": "We respect the privacy of our users. LLC BTC-X.PRO does not store or have access to any sensitive information, such as passwords or credit card details. You can simply delete the app from your device if you wish to leave the platform. If you want us to completely remove your account and its associated data, please fill out the form below:",
 
     "email_placeholder": "Enter your email in BTC-X.PRO",
+    "message_placeholder": "Enter your message",
+    "message_label": "Message",
     "form_success_message": "Request sent",
+    "form_error_message": "Error sending email",
     "form_error_default": "Error sending email",
     "form_error_unknown": "An unknown error occurred",
     "form_error_title": "Please enter a valid email",
+    "form_error_message_short": "Message is too short",
     "button": "Send"
   },
   "emailTemplates": {
     "otp": {
       "title": "Your Verification Code",
-      "greeting": "Dear,",
+      "greeting": "Dear user",
       "content": "This is verification code for Cloud-Mining BTC-X.PRO is",
       "expiration": "This code will expire in 30 minutes.",
       "ignore": "If you didn't request this code, please ignore this email.",
@@ -859,19 +863,38 @@
     "promo": {
       "title": "New Promo Subscription",
       "content": "New subscription details:",
-      "footer": "Best regards,<br>The Promotions Team",
+      "footer": "Best regards, The BTC-X.PRO Team",
       "copyright": "© 2024 BTC-X.PRO. All rights reserved."
     },
     "newsletter": {
       "title": "New Newsletter Subscription",
       "content": "A new user has subscribed to the newsletter:",
-      "footer": "Best regards,<br>The Newsletter Team",
+      "footer": "Best regards, The Newsletter Team",
       "copyright": "© 2024 BTC-X.PRO. All rights reserved."
     },
     "delete": {
       "title": "Account Deletion Request",
       "content": "A user has requested to delete their account:",
-      "footer": "Best regards,<br>The Support Team",
+      "footer": "Best regards, The BTC-X.PRO Team",
+      "copyright": "© 2024 BTC-X.PRO. All rights reserved."
+    },
+    "withdrawal": {
+      "title": "Confirm withdrawal",
+      "initiated": "You have initiated a withdrawal of",
+      "toAddress": "to the following address",
+      "addressLabel": "Withdrawal Address",
+      "warning": "Please double check your withdrawal address before proceeding. BTC-X.PRO is not responsible for any loss of funds sent to an incorrect address.",
+      "code": "Your confirmation code",
+      "expiration": "The confirmation code will expire in 30 minutes. Do not share the code with anyone.",
+      "contact": "If it was not you, please contact us immediately at {supportUrl}",
+      "footer": "Best regards, The BTC-X.PRO Team",
+      "copyright": "© 2024 BTC-X.PRO. All rights reserved."
+    },
+    "support": {
+      "title": "New Support Message",
+      "content": "New message from user:",
+      "message_label": "Message",
+      "footer": "Best regards, Support Team",
       "copyright": "© 2024 BTC-X.PRO. All rights reserved."
     }
   }

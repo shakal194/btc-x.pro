@@ -1,62 +1,75 @@
 'use client';
 
-import { Form, Input, Button } from '@heroui/react';
+import { Form, Input, Button, Textarea } from '@heroui/react';
 import { useState, useMemo } from 'react';
 import Notiflix from 'notiflix';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 
 export default function SupportPage() {
   const t = useTranslations('supportPage');
+  const { locale } = useParams();
 
-  const [value, setValue] = useState('btc-x.pro');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
   const [errors, setErrors] = useState({});
-  /*const [formData, setFormData] = useState({
-    email: '',
-  });*/
   const [isSubmitting, setIsSubmitting] = useState(false);
-  //const [successMessage, setSuccessMessage] = useState('');
-  //const [errorMessage, setErrorMessage] = useState('');
 
   const validateEmail = (value: string) =>
     value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i);
 
-  const isInvalid = useMemo(() => {
-    if (value === '') return true;
+  const isEmailInvalid = useMemo(() => {
+    if (email === '') return true;
+    return validateEmail(email) ? false : true;
+  }, [email]);
 
-    return validateEmail(value) ? false : true;
-  }, [value]);
+  const isMessageInvalid = useMemo(() => {
+    return message.length < 10;
+  }, [message]);
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
 
-    const data = Object.fromEntries(new FormData(e.currentTarget));
-
-    if (!data.email) {
+    if (!email) {
       setErrors({ email: t('form_error_email_empty') });
       return;
     }
 
-    if (isInvalid) {
+    if (isEmailInvalid) {
       setErrors({ email: t('form_error_title') });
+      return;
+    }
+
+    if (!message) {
+      setErrors({ message: t('form_error_message_empty') });
+      return;
+    }
+
+    if (isMessageInvalid) {
+      setErrors({ message: t('form_error_message_short') });
       return;
     }
 
     setIsSubmitting(true);
     try {
-      const response = await fetch('/api/deleteEmail', {
+      const response = await fetch('/api/supportEmail', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: value }),
+        body: JSON.stringify({
+          email,
+          message,
+        }),
       });
 
       await response.json();
 
       if (response.ok) {
         Notiflix.Notify.success(`${t('form_success_message')}`);
-        setValue('');
+        setEmail('');
+        setMessage('');
       } else {
-        Notiflix.Notify.failure(`${t('form_success_message')}`);
+        Notiflix.Notify.failure(`${t('form_error_message')}`);
       }
     } catch (error) {
       Notiflix.Notify.failure(`${t('form_error_unknown')}`);
@@ -82,22 +95,41 @@ export default function SupportPage() {
               <Input
                 label='Email'
                 labelPlacement='outside'
-                color={isInvalid ? 'danger' : 'success'}
-                isInvalid={isInvalid}
+                color={isEmailInvalid ? 'danger' : 'success'}
+                isInvalid={isEmailInvalid}
                 name='email'
                 placeholder={t('email_placeholder')}
                 isRequired
                 errorMessage={t('form_error_title')}
                 type='email'
-                value={value}
+                value={email}
                 variant='bordered'
-                onValueChange={setValue}
-                onClear={() => {}}
+                className='dark'
+                onValueChange={setEmail}
+                onClear={() => setEmail('')}
+              />
+              <Textarea
+                label={t('message_label')}
+                labelPlacement='outside'
+                color={isMessageInvalid ? 'danger' : 'success'}
+                isInvalid={isMessageInvalid}
+                name='message'
+                placeholder={t('message_placeholder')}
+                isRequired
+                errorMessage={t('form_error_message_short')}
+                value={message}
+                variant='bordered'
+                minRows={3}
+                maxRows={6}
+                onValueChange={setMessage}
               />
               <Button
                 type='submit'
                 variant='solid'
-                color={isInvalid ? 'danger' : 'success'}
+                color={
+                  isEmailInvalid || isMessageInvalid ? 'danger' : 'success'
+                }
+                isDisabled={isEmailInvalid || isMessageInvalid}
               >
                 {t('button')}
               </Button>

@@ -1000,6 +1000,7 @@ export default function EquipmentsListUser({
           }}
           userId={Number(user_id)}
           coinTicker={selectedModalCoin}
+          userEmail={userEmail}
           balance={parseFloat(
             balances.find((b) => b.coinTicker === selectedModalCoin)
               ?.coinAmount || '0',

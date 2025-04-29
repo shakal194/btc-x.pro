@@ -22,7 +22,7 @@ export default {
         danger: '#f31212',
         secondary: '#FE9900',
         primary: '#71717a',
-        autofillTextColor: 'rgb(234, 236, 239)',
+        autofillTextColor: 'rgb(64, 64, 64)',
       },
       fontSize: {
         font18: '18px',
