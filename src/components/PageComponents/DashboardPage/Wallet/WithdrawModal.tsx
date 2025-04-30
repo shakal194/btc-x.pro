@@ -294,23 +294,71 @@ export default function WithdrawModal({
   };
 
   const handleMaxAmount = async () => {
-    if (!address.trim()) return;
-
-    let maxAmount = balance.toString();
-    if (coinTicker === 'USDT' || coinTicker === 'USDC') {
-      maxAmount = Number(balance).toFixed(2);
-    } else {
-      maxAmount = Number(balance).toFixed(8);
+    if (!address.trim()) {
+      Notiflix.Notify.warning('Пожалуйста, введите адрес кошелька');
+      return;
     }
 
-    await handleAmountChange(maxAmount);
+    try {
+      // Сначала рассчитаем комиссию для максимальной суммы
+      await calculateFee(balance.toString(), address);
+
+      // После расчета комиссии вычисляем максимально доступную сумму
+      let maxAvailable = balance;
+
+      if (coinTicker === 'USDT' || coinTicker === 'USDC') {
+        // Для USDT/USDC (TRC20) вычитаем комиссию в USDT
+        maxAvailable = Math.max(0, balance - Number(feeInUSDT));
+      } else if (coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL') {
+        // Для USDT/USDC (SOL) устанавливаем полный баланс,
+        // так как комиссия уже будет учтена в проверке getTotalAmount
+        maxAvailable = balance;
+      }
+
+      let formattedAmount = maxAvailable.toString();
+      if (
+        coinTicker === 'USDT' ||
+        coinTicker === 'USDC' ||
+        coinTicker === 'USDT_SOL' ||
+        coinTicker === 'USDC_SOL'
+      ) {
+        formattedAmount = maxAvailable.toFixed(2);
+      } else {
+        formattedAmount = maxAvailable.toFixed(8);
+      }
+
+      // Устанавливаем максимальную сумму
+      await handleAmountChange(formattedAmount);
+
+      // Дополнительная проверка для USDT_SOL/USDC_SOL
+      if (
+        (coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL') &&
+        Number(feeInUSDT) > 0
+      ) {
+        const totalWithFee = Number(maxAvailable) + Number(feeInUSDT);
+        if (totalWithFee > balance) {
+          const actualMax = Math.max(0, balance - Number(feeInUSDT));
+          await handleAmountChange(actualMax.toFixed(2));
+        }
+      }
+    } catch (error) {
+      console.error('Error calculating max amount:', error);
+      Notiflix.Notify.failure('Ошибка при расчете максимальной суммы');
+    }
   };
 
   const getTotalAmount = () => {
     if (!amount || isNaN(Number(amount))) return 0;
-    return coinTicker === 'USDT' || coinTicker === 'USDC'
-      ? Number(amount) + Number(feeInUSDT)
-      : Number(amount);
+    // Учитываем комиссию в USDT для всех стейблкоинов
+    if (
+      coinTicker === 'USDT' ||
+      coinTicker === 'USDC' ||
+      coinTicker === 'USDT_SOL' ||
+      coinTicker === 'USDC_SOL'
+    ) {
+      return Number(amount) + Number(feeInUSDT);
+    }
+    return Number(amount);
   };
 
   const getAmountError = () => {
@@ -546,16 +594,16 @@ export default function WithdrawModal({
                 isInvalid={!!otpError}
                 errorMessage={otpError}
                 endContent={
-                  <Button
-                    color='primary'
-                    className='self-end'
-                    onPress={handleGetOTP}
+                  <Chip
+                    color='secondary'
+                    className='cursor-pointer'
+                    onClick={handleGetOTP}
                     isDisabled={
                       !amount || !address || !isFeeCalculated || isLoading
                     }
                   >
                     Получить код
-                  </Button>
+                  </Chip>
                 }
               />
               <div className='rounded bg-gray-700 p-3'>

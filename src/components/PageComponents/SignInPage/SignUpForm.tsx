@@ -257,7 +257,7 @@ export default function SignUpForm() {
     const formData = new FormData();
     formData.append('email', valueEmail);
     formData.append('otpcode', valueOTPCode);
-    formData.append('referral_code', valueReferralCode || '415384');
+    formData.append('referral_code', valueReferralCode);
     formData.append('password', valuePassword);
     formData.append('confirmPassword', valueConfirmPassword);
 

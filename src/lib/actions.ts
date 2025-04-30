@@ -9,7 +9,7 @@ import { getTranslations } from 'next-intl/server';
 import db from '@/db/db';
 import { usersTable, otpCodesTable } from '@/db/schema';
 import { sql } from 'drizzle-orm';
-import { hashPassword } from '@/lib/utils';
+import { hashPassword, formatDate } from '@/lib/utils';
 import {
   fetchUserIdByReferralCode,
   createOTPCode,
@@ -20,6 +20,10 @@ import { saveAddress } from '@/lib/balance';
 import { getWalletId } from '@/lib/constants';
 import { createInitialBalances } from '@/lib/data';
 import { sendOTPEmail } from './emailService';
+
+interface CustomAuthError extends Error {
+  type?: string;
+}
 
 export async function handleEmailSubmitSign(email: string) {
   const t = await getTranslations('cloudMiningPage.signin');
@@ -54,7 +58,9 @@ export async function handleEmailSubmitSign(email: string) {
       .limit(1);
 
     if (existingUser.length === 0) {
-      console.log(t('form_error_email_notFound'));
+      console.log(
+        `[${formatDate(new Date())}] ${t('form_error_email_notFound')}`,
+      );
       return {
         errors: { email: [t('form_error_email_notFound')] },
       };
@@ -67,7 +73,10 @@ export async function handleEmailSubmitSign(email: string) {
       // Отправляем код на email
       await sendOTPEmail(email, otpCode);
     } catch (emailError) {
-      console.error('Error sending OTP email:', emailError);
+      console.error(
+        `[${formatDate(new Date())}] Error sending OTP email:`,
+        emailError,
+      );
       // Удаляем созданный код, так как не смогли отправить email
       await db
         .delete(otpCodesTable)
@@ -99,14 +108,13 @@ export async function authenticate(
 
     await signIn('credentials', formData);
   } catch (error) {
-    console.log('actions', error);
+    console.log(`[${formatDate(new Date())}] Authentication error:`, error);
     if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          return t('form_validate_login_password');
-        default:
-          return t('form_validate_errorTimeOut');
+      const authError = error as CustomAuthError;
+      if (authError.type === 'CredentialsSignin') {
+        return t('form_validate_login_password');
       }
+      return t('form_validate_errorTimeOut');
     }
     throw error;
   }
@@ -335,6 +343,9 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
         .limit(1);
 
       if (existingUser.length > 0) {
+        console.log(
+          `[${formatDate(new Date())}] User already exists with email: ${email}`,
+        );
         return {
           errors: {
             email: [t('form_validate_loginExists')],
@@ -383,14 +394,12 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
         },
       });
 
-      console.log('USDT Deposit response:', depositResponseUSDT);
-
       if (
         !depositResponseUSDT.data?.attributes?.address ||
         !depositResponseUSDT.data?.id
       ) {
         console.error(
-          'Failed to create USDT deposit address:',
+          `[${formatDate(new Date())}] Failed to create USDT deposit address:`,
           depositResponseUSDT,
         );
         throw new Error('Failed to create USDT deposit address');
@@ -413,14 +422,12 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
         },
       });
 
-      console.log('USDC Deposit response:', depositResponseUSDC);
-
       if (
         !depositResponseUSDC.data?.attributes?.address ||
         !depositResponseUSDC.data?.id
       ) {
         console.error(
-          'Failed to create USDC deposit address:',
+          `[${formatDate(new Date())}] Failed to create USDC deposit address:`,
           depositResponseUSDC,
         );
         throw new Error('Failed to create USDC deposit address');
@@ -428,8 +435,8 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
 
       // Create deposit address for USDT (SOL)
       const depositResponseUSDTSOL = await createDeposit(token, {
-        label: `Create USDT-SOL address ${newUser[0].id}`,
-        tracking_id: `Create USDT-SOL address ${email}`,
+        label: `Create USDTSOL address ${newUser[0].id}`,
+        tracking_id: `Create USDTSOL address ${email}`,
         confirmations_needed: 1,
         payment_page_redirect_url: 'https://btc-x.pro/dashboard',
         payment_page_button_text: 'Вернуться в кабинет',
@@ -443,14 +450,12 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
         },
       });
 
-      console.log('USDT-SOL Deposit response:', depositResponseUSDTSOL);
-
       if (
         !depositResponseUSDTSOL.data?.attributes?.address ||
         !depositResponseUSDTSOL.data?.id
       ) {
         console.error(
-          'Failed to create USDT-SOL deposit address:',
+          `[${formatDate(new Date())}] Failed to create USDT-SOL deposit address:`,
           depositResponseUSDTSOL,
         );
         throw new Error('Failed to create USDT-SOL deposit address');
@@ -458,8 +463,8 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
 
       // Create deposit address for USDC (SOL)
       const depositResponseUSDCSOL = await createDeposit(token, {
-        label: `Create USDC-SOL address ${newUser[0].id}`,
-        tracking_id: `Create USDC-SOL address ${email}`,
+        label: `Create USDCSOL address ${newUser[0].id}`,
+        tracking_id: `Create USDCSOL address ${email}`,
         confirmations_needed: 1,
         payment_page_redirect_url: 'https://btc-x.pro/dashboard',
         payment_page_button_text: 'Вернуться в кабинет',
@@ -473,14 +478,12 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
         },
       });
 
-      console.log('USDC-SOL Deposit response:', depositResponseUSDCSOL);
-
       if (
         !depositResponseUSDCSOL.data?.attributes?.address ||
         !depositResponseUSDCSOL.data?.id
       ) {
         console.error(
-          'Failed to create USDC-SOL deposit address:',
+          `[${formatDate(new Date())}] Failed to create USDC-SOL deposit address:`,
           depositResponseUSDCSOL,
         );
         throw new Error('Failed to create USDC-SOL deposit address');
@@ -515,8 +518,12 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
         depositResponseUSDCSOL.data.id,
       );
 
-      console.log('User added successfully with all addresses:', email);
+      console.log(
+        `[${formatDate(new Date())}] User added successfully with all addresses:`,
+        email,
+      );
     } catch (error) {
+      console.error(`[${formatDate(new Date())}] Error creating user:`, error);
       return {
         errors: {
           email: undefined,

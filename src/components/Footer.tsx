@@ -56,7 +56,7 @@ export default function Footer() {
               {t('airdrop')}
             </Link>{' '}
             <Link
-              href='#'
+              href={`/support`}
               className='text-font18 leading-[110%] transition delay-200 hover:text-[#FD6B06] focus:text-[#FD6B06]'
               rel='noopener noreferrer'
             >

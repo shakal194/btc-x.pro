@@ -68,15 +68,6 @@ export const transactionsTable = pgTable('transactions', {
   isPurchase: boolean().notNull(), // Покупка или продажа (true - покупка, false - продажа)
 });
 
-export const miningIncomeTable = pgTable('mining_income', {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  uuid: uuid().defaultRandom(), // ID записи
-  algorithm_id: integer()
-    .notNull()
-    .references(() => algorithmTable.id), // Алгоритм (ссылка на ID алгоритма)
-  coinsPerHashrate: decimal({ precision: 30, scale: 8 }).notNull(), // Количество монет в сутки на единицу хешрейта
-});
-
 export const electricityPriceTable = pgTable('electricity_price', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   uuid: uuid().defaultRandom(), // ID записи

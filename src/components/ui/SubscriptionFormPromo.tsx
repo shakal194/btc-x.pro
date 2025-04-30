@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import StoreButtons from '@/components/ui/StoreButtons';
 import FullScreenSpinner from '@/components/ui/Spinner';
+import { formatDate } from '@/lib/utils';
 
 export default function SubscriptionFormPromo() {
   const t = useTranslations('promo');
@@ -46,6 +47,9 @@ export default function SubscriptionFormPromo() {
       const result = await response.json();
 
       if (response.ok) {
+        console.log(
+          `[${formatDate(new Date())}] Successfully subscribed user with email: ${formData.email}`,
+        );
         setSuccessMessage(result.message);
         Notiflix.Notify.success(`${t('form_success_message')}`);
         setFormData({
@@ -56,19 +60,26 @@ export default function SubscriptionFormPromo() {
           rating: '',
         });
       } else {
-        if (result.error === 'You are already subscribed') {
+        if (result.message === 'You are already subscribed') {
+          console.log(
+            `[${formatDate(new Date())}] Attempt to subscribe with existing email: ${formData.email}`,
+          );
           Notiflix.Notify.failure(`${t('form_error_already_subscribed')}`);
         } else {
-          // Для других ошибок
-          setErrorMessage(result.error || `${t('form_error_default')}`);
+          console.log(
+            `[${formatDate(new Date())}] Error subscribing user with email: ${formData.email}, error: ${result.message}`,
+          );
+          setErrorMessage(result.message || `${t('form_error_default')}`);
           Notiflix.Notify.failure(
-            `${t('form_error_message')}` || `${t('form_error_default')}`,
+            result.message || `${t('form_error_default')}`,
           );
         }
       }
     } catch (error: unknown) {
+      console.log(
+        `[${formatDate(new Date())}] Unexpected error while subscribing user with email: ${formData.email}`,
+      );
       setErrorMessage('An error occurred while subscribing');
-      // Проверка типа ошибки
       if (error instanceof Error) {
         Notiflix.Notify.failure(`${t('form_error_message')}` || error.message);
       } else {

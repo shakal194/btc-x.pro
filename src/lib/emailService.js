@@ -1,7 +1,6 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import { getTranslations } from 'next-intl/server';
-import { createTranslator } from 'next-intl';
 
 
 dotenv.config();
@@ -166,7 +165,7 @@ export async function sendOTPEmail(email, otpCode) {
     const t = await getTranslations('emailTemplates.otp');
        
     const mailOptions = {
-      from: SMTP_USER,
+      from: `"BTC-X.PRO" <${SMTP_USER}>`,
       to: email,
       subject: t('title'),
       text: `${replacePlaceholders(t('greeting'), { email })}\n${t('content')} ${otpCode}\n${t('expiration')}\n${t('ignore')}`,
@@ -214,11 +213,10 @@ export async function sendPromoEmail(data) {
     const t = await getTranslations('emailTemplates.promo');
 
     const mailOptions = {
-      from: SMTP_USER,
-      //to: 'shakal194@gmail.com',
+      from: `"BTCXtoUSDT" <${SMTP_USER}>`,
       to: 'ispitmua@gmail.com',
       cc: 'uplinetour@gmail.com',
-      subject: t.title,
+      subject: t('title'),
       text: `YouTube: ${data.youtube}\nTelegram: ${data.telegram}\nInstagram: ${data.instagram}\nRating: ${data.rating}\nEmail: ${data.email}`,
       html: `
         <!DOCTYPE html>
@@ -231,9 +229,9 @@ export async function sendPromoEmail(data) {
             <div class="container">
               <div class="header">
                 ${createLogoHtml()}
-                <h1>${t.title}</h1>
+                <h1>${t('title')}</h1>
               </div>
-              <p>${t.content}</p>
+              <p>${t('content')}</p>
               <div class="data-item">
                 <span class="data-label">Email:</span> ${data.email}
               </div>
@@ -242,8 +240,8 @@ export async function sendPromoEmail(data) {
               ${data.instagram ? `<div class="data-item"><span class="data-label">Instagram:</span> ${data.instagram}</div>` : ''}
               ${data.rating ? `<div class="data-item"><span class="data-label">Rating:</span> ${data.rating}</div>` : ''}
               <div class="footer">
-                <p>${t.footer}</p>
-                <p>${t.copyright}</p>
+                <p>${t('footer')}</p>
+                <p>${t('copyright')}</p>
               </div>
             </div>
           </body>
@@ -253,8 +251,7 @@ export async function sendPromoEmail(data) {
 
     console.log('Sending email with data:', data);
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully:', info.response);
+    await transporter.sendMail(mailOptions);
     return {
       status: 200,
       message: 'Email sent successfully',
@@ -273,11 +270,10 @@ export async function sendSubscriptionEmail(email) {
     const t = await getTranslations('emailTemplates.newsletter');
 
     const mailOptions = {
-      from: SMTP_USER,
-      //to: 'shakal194@gmail.com',
+      from: `"BTCXtoNewsSubscribe" <${SMTP_USER}>`,
       to: 'ispitmua@gmail.com',
       cc: 'uplinetour@gmail.com',
-      subject: t.title,
+      subject: t('title'),
       text: `New subscriber - ${email}`,
       html: `
         <!DOCTYPE html>
@@ -290,15 +286,15 @@ export async function sendSubscriptionEmail(email) {
             <div class="container">
               <div class="header">
                 ${createLogoHtml()}
-                <h1>${t.title}</h1>
+                <h1>${t('title')}</h1>
               </div>
-              <p>${t.content}</p>
+              <p>${t('content')}</p>
               <div class="data-item">
                 <span class="data-label">Email:</span> ${email}
               </div>
               <div class="footer">
-                <p>${t.footer}</p>
-                <p>${t.copyright}</p>
+                <p>${t('footer')}</p>
+                <p>${t('copyright')}</p>
               </div>
             </div>
           </body>
@@ -331,7 +327,7 @@ export async function sendWithdrawalOTPEmail(email, otpCode, amount, coinTicker,
     const supportLink = `<a href="${supportUrl}">Support Page</a>`;
     
     const mailOptions = {
-      from: SMTP_USER,
+      from: `"BTC-X.PRO" <${SMTP_USER}>`,
       to: email,
       subject: t('title'),
       text: `${t('title')}\n\n${t('initiated')} ${amount} ${coinTicker} ${t('toAddress')}:\n${address}\n\n${t('warning')}\n\n${t('code')}: ${otpCode}\n\n${t('expiration')}\n\n${t('contact', { supportLink: supportUrl })}`,
@@ -426,8 +422,7 @@ export async function sendSupportEmail(email, message) {
     const t = await getTranslations('emailTemplates.support');
     
     const mailOptions = {
-      from: SMTP_USER,
-      //to: 'shakal194@gmail.com',
+      from: `"BTC-X.PRO Support" <${SMTP_USER}>`,
       to: 'ispitmua@gmail.com',
       cc: 'uplinetour@gmail.com',
       subject: t('title'),

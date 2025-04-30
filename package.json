@@ -2,6 +2,18 @@
   "name": "btc-x-pro",
   "version": "0.1.0",
   "private": true,
+  "description": "BTC-X PRO",
+  "homepage": "https://github.com/shakal194/btc-x.pro#readme",
+  "bugs": {
+    "url": "https://github.com/shakal194/btc-x.pro/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shakal194/btc-x.pro.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "main": "postcss.config.js",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -14,15 +26,12 @@
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.5.10",
     "@heroicons/react": "^2.2.0",
-    "@heroui/modal": "^2.2.8",
     "@heroui/react": "^2.6.14",
     "@livechat/widget-core": "^1.3.3",
     "@livechat/widget-react": "^1.3.3",
     "@neondatabase/serverless": "^0.10.4",
     "@next/third-parties": "^15.2.4",
-    "@splinetool/react-spline": "^4.0.0",
     "@types/negotiator": "^0.6.3",
-    "argon2": "^0.41.1",
     "axios": "^1.7.9",
     "crypto-js": "^4.0.0",
     "dotenv": "^16.4.7",
@@ -68,17 +77,5 @@
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
-  },
-  "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
-  "main": "postcss.config.js",
-  "author": "",
-  "license": "ISC",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/shakal194/btc-x.pro.git"
-  },
-  "bugs": {
-    "url": "https://github.com/shakal194/btc-x.pro/issues"
-  },
-  "homepage": "https://github.com/shakal194/btc-x.pro#readme"
+  }
 }
