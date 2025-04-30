@@ -1069,8 +1069,13 @@ export async function ensureBalanceRecordExists(
 // Вспомогательная функция для создания балансов при регистрации
 export async function createInitialBalances(userId: number): Promise<void> {
   try {
-    // Создаем записи для USDT и USDC
-    await ensureBalanceRecordExists(userId, ['USDT', 'USDC']);
+    // Создаем записи для всех поддерживаемых токенов
+    await ensureBalanceRecordExists(userId, [
+      'USDT',
+      'USDC',
+      'USDT_SOL',
+      'USDC_SOL',
+    ]);
     console.log('Created initial balance records for new user');
   } catch (error) {
     console.error('Error creating initial balances:', error);
@@ -1212,7 +1217,7 @@ export async function createWithdrawal({
 
     // Проверка формата чисел (должны быть числа с не более чем 8 знаками после точки)
     const amountRegex = /^\d+(\.\d{1,8})?$/;
-    const feeRegex = /^\d+(\.\d{1,8})?$/;
+    const feeRegex = /^\d+(\.\d{1,9})?$/; // Увеличиваем количество знаков после запятой для комиссии
 
     if (!amountRegex.test(cleanAmount)) {
       throw new Error('Некорректный формат суммы вывода');
@@ -1224,20 +1229,37 @@ export async function createWithdrawal({
 
     // Преобразуем значения в числа с фиксированной точностью
     const amountNum = parseFloat(parseFloat(cleanAmount).toFixed(8));
-    const feeNum = parseFloat(parseFloat(cleanFee).toFixed(8));
+    const feeNum = parseFloat(parseFloat(cleanFee).toFixed(8)); // Округляем до 8 знаков для SOL
+
+    // Для USDT_SOL и USDC_SOL конвертируем комиссию из SOL в USDT
+    let finalFee = feeNum;
+    if (coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL') {
+      try {
+        const solPrice = await fetchCoinPrice('SOL');
+        if (solPrice > 0) {
+          finalFee = parseFloat((feeNum * solPrice).toFixed(2)); // Округляем до 2 знаков для USDT
+          console.log(
+            `[Withdrawal] Converted SOL fee to USDT: ${feeNum} SOL = ${finalFee} USDT (rate: ${solPrice})`,
+          );
+        }
+      } catch (error) {
+        console.error('[Withdrawal] Error converting SOL fee to USDT:', error);
+        throw new Error('Ошибка при конвертации комиссии из SOL в USDT');
+      }
+    }
 
     // Дополнительные проверки
     if (amountNum <= 0) {
       throw new Error('Сумма вывода должна быть больше 0');
     }
 
-    if (feeNum < 0) {
+    if (finalFee < 0) {
       throw new Error('Комиссия не может быть отрицательной');
     }
 
     // Проверяем достаточность баланса
     const currentBalance = await fetchUserBalance(userId, coinTicker);
-    const totalAmount = amountNum + feeNum;
+    const totalAmount = amountNum + finalFee;
 
     if (currentBalance < totalAmount) {
       throw new Error(
@@ -1272,7 +1294,7 @@ export async function createWithdrawal({
       network,
       address: address.trim(),
       amount: amountNum.toString(),
-      fee: feeNum.toString(),
+      fee: finalFee.toString(), // Используем конвертированную и округленную комиссию
       status: 'created',
       created_at: now,
       updated_at: now,
@@ -1666,15 +1688,24 @@ export async function calculateTotalBalanceInUSDT(
 
     // Для каждой монеты получаем цену в USDT и считаем общий баланс
     for (const balance of Object.values(uniqueBalances)) {
-      if (balance.coinTicker === 'USDT') {
-        totalUSDT += Number(balance.coinAmount);
-      } else {
-        const priceInUSDT = await fetchCoinPrice(balance.coinTicker);
-        totalUSDT += Number(balance.coinAmount) * priceInUSDT;
+      const amount = Number(balance.coinAmount) || 0;
+      if (amount > 0) {
+        if (balance.coinTicker === 'USDT' || balance.coinTicker === 'USDC') {
+          totalUSDT += amount;
+        } else if (
+          balance.coinTicker === 'USDT_SOL' ||
+          balance.coinTicker === 'USDC_SOL'
+        ) {
+          // Для токенов на сети Solana используем 1:1 курс к USDT
+          totalUSDT += amount;
+        } else {
+          const priceInUSDT = await fetchCoinPrice(balance.coinTicker);
+          totalUSDT += amount * priceInUSDT;
+        }
       }
     }
 
-    return totalUSDT;
+    return parseFloat(totalUSDT.toFixed(2));
   } catch (error) {
     console.error('Error calculating total balance in USDT:', error);
     return 0;

@@ -366,7 +366,7 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
       // Create deposit addresses for USDT and USDC
       const token = await getToken();
 
-      // Create deposit address for USDT
+      // Create deposit address for USDT (TRC20)
       const depositResponseUSDT = await createDeposit(token, {
         label: `Create USDT address ${newUser[0].id}`,
         tracking_id: `Create USDT address ${email}`,
@@ -396,7 +396,7 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
         throw new Error('Failed to create USDT deposit address');
       }
 
-      // Create deposit address for USDC
+      // Create deposit address for USDC (TRC20)
       const depositResponseUSDC = await createDeposit(token, {
         label: `Create USDC address ${newUser[0].id}`,
         tracking_id: `Create USDC address ${email}`,
@@ -426,7 +426,67 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
         throw new Error('Failed to create USDC deposit address');
       }
 
-      // Save addresses for both USDT and USDC
+      // Create deposit address for USDT (SOL)
+      const depositResponseUSDTSOL = await createDeposit(token, {
+        label: `Create USDT-SOL address ${newUser[0].id}`,
+        tracking_id: `Create USDT-SOL address ${email}`,
+        confirmations_needed: 1,
+        payment_page_redirect_url: 'https://btc-x.pro/dashboard',
+        payment_page_button_text: 'Вернуться в кабинет',
+        relationships: {
+          wallet: {
+            data: {
+              type: 'wallet',
+              id: getWalletId('USDT_SOL'),
+            },
+          },
+        },
+      });
+
+      console.log('USDT-SOL Deposit response:', depositResponseUSDTSOL);
+
+      if (
+        !depositResponseUSDTSOL.data?.attributes?.address ||
+        !depositResponseUSDTSOL.data?.id
+      ) {
+        console.error(
+          'Failed to create USDT-SOL deposit address:',
+          depositResponseUSDTSOL,
+        );
+        throw new Error('Failed to create USDT-SOL deposit address');
+      }
+
+      // Create deposit address for USDC (SOL)
+      const depositResponseUSDCSOL = await createDeposit(token, {
+        label: `Create USDC-SOL address ${newUser[0].id}`,
+        tracking_id: `Create USDC-SOL address ${email}`,
+        confirmations_needed: 1,
+        payment_page_redirect_url: 'https://btc-x.pro/dashboard',
+        payment_page_button_text: 'Вернуться в кабинет',
+        relationships: {
+          wallet: {
+            data: {
+              type: 'wallet',
+              id: getWalletId('USDC_SOL'),
+            },
+          },
+        },
+      });
+
+      console.log('USDC-SOL Deposit response:', depositResponseUSDCSOL);
+
+      if (
+        !depositResponseUSDCSOL.data?.attributes?.address ||
+        !depositResponseUSDCSOL.data?.id
+      ) {
+        console.error(
+          'Failed to create USDC-SOL deposit address:',
+          depositResponseUSDCSOL,
+        );
+        throw new Error('Failed to create USDC-SOL deposit address');
+      }
+
+      // Save addresses for all tokens
       await saveAddress(
         newUser[0].id,
         'USDT',
@@ -441,10 +501,21 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
         depositResponseUSDC.data.id,
       );
 
-      console.log(
-        'User added successfully with USDT and USDC addresses:',
-        email,
+      await saveAddress(
+        newUser[0].id,
+        'USDT_SOL',
+        depositResponseUSDTSOL.data.attributes.address,
+        depositResponseUSDTSOL.data.id,
       );
+
+      await saveAddress(
+        newUser[0].id,
+        'USDC_SOL',
+        depositResponseUSDCSOL.data.attributes.address,
+        depositResponseUSDCSOL.data.id,
+      );
+
+      console.log('User added successfully with all addresses:', email);
     } catch (error) {
       return {
         errors: {

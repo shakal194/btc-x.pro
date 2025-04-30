@@ -411,7 +411,11 @@ export default function EquipmentsListUser({
                       <span>{balance.coinTicker}</span>
                       <span className='font-bold'>
                         {Number(balance.coinAmount).toFixed(
-                          ['USDT', 'USDC'].includes(balance.coinTicker) ? 2 : 8,
+                          ['USDT', 'USDC', 'USDT_SOL', 'USDC_SOL'].includes(
+                            balance.coinTicker,
+                          )
+                            ? 2
+                            : 8,
                         )}
                       </span>
                     </div>

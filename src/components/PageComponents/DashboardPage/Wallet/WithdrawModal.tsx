@@ -61,6 +61,8 @@ export default function WithdrawModal({
     const noFeeInclusionList = [
       'USDT', // USDT-TRX token
       'USDC', // USDC-TRX token
+      'USDT_SOL', // USDT-SOL token
+      'USDC_SOL', // USDC-SOL token
       'TRX',
       'ETH',
       'BNB',
@@ -80,11 +82,17 @@ export default function WithdrawModal({
   const getRate = async () => {
     try {
       const token = await getAccessToken();
-      // Для USDT/USDC запрашиваем курс USDT к TRX
-      const leftCurrency =
-        coinTicker === 'USDT' || coinTicker === 'USDC' ? coinTicker : 'TRX';
-      const rightCurrency =
-        coinTicker === 'USDT' || coinTicker === 'USDC' ? 'TRX' : coinTicker;
+      console.log('Getting rate for coin:', coinTicker); // Debug log
+
+      // Определяем валюты для запроса курса
+      let leftCurrency = 'USDT'; // Всегда используем USDT как базовую валюту для конвертации
+      let rightCurrency = 'TRX'; // По умолчанию TRX
+
+      if (coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL') {
+        rightCurrency = 'SOL';
+      }
+
+      console.log(`Requesting rate for ${leftCurrency}/${rightCurrency}`); // Debug log
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_COINSBUY_API_URL}/rates/?filter[left]=${leftCurrency}&filter[right]=${rightCurrency}`,
@@ -101,12 +109,16 @@ export default function WithdrawModal({
       }
 
       const data = await response.json();
-      const rate = data.data[0].attributes.ask;
+      console.log('Rate response:', data); // Debug log
 
-      // Для USDT/USDC берем обратный курс
-      return coinTicker === 'USDT' || coinTicker === 'USDC'
-        ? (1 / Number(rate)).toString()
-        : rate;
+      const rate = data.data[0].attributes.ask;
+      console.log('Raw rate:', rate); // Debug log
+
+      // Для всех случаев берем обратный курс, так как нам нужно конвертировать из TRX/SOL в USDT
+      const finalRate = (1 / Number(rate)).toString();
+      console.log('Final rate:', finalRate); // Debug log
+
+      return finalRate;
     } catch (error) {
       console.error('Error fetching rate:', error);
       return '0';
@@ -193,21 +205,32 @@ export default function WithdrawModal({
       }
 
       const feeData = await feeResponse.json();
+      console.log('Fee calculation response:', feeData); // Debug log
 
       if (!feeData?.data?.attributes?.fee?.medium) {
         throw new Error('Invalid fee data received from API');
       }
 
       const calculatedFee = feeData.data.attributes.fee.medium;
+      console.log('Calculated fee:', calculatedFee); // Debug log
       setFeeAmount(calculatedFee);
 
       // Calculate fee in withdrawal currency if needed
-      if (coinTicker === 'USDT' || coinTicker === 'USDC') {
+      if (
+        coinTicker === 'USDT' ||
+        coinTicker === 'USDC' ||
+        coinTicker === 'USDT_SOL' ||
+        coinTicker === 'USDC_SOL'
+      ) {
         const rate = await getRate();
+        console.log('Conversion rate:', rate); // Debug log
+
         if (!rate || rate === '0') {
           throw new Error('Invalid rate received');
         }
+
         const feeInCurrency = (Number(calculatedFee) * Number(rate)).toFixed(2);
+        console.log('Fee in currency:', feeInCurrency); // Debug log
         setFeeInUSDT(feeInCurrency);
       }
 
@@ -319,26 +342,37 @@ export default function WithdrawModal({
       // Generate 6-digit OTP code
       const generatedOTP = Math.floor(10000 + Math.random() * 90000).toString();
 
+      // Подготовка данных для отправки
+      const requestData = {
+        email: userEmail,
+        otpCode: generatedOTP,
+        amount: amount.toString(),
+        coinTicker: formatCoinTicker(coinTicker), // Используем отформатированный тикер
+        address: address.trim(),
+        fee: feeAmount,
+        feeInUSDT: feeInUSDT,
+        totalAmount: Number(Number(amount) + Number(feeInUSDT)).toFixed(2),
+      };
+
+      console.log('Sending OTP request with data:', requestData); // Debug log
+
       // Send email with OTP through API
       const response = await fetch('/api/sendWithdrawalOTP', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email: userEmail,
-          otpCode: generatedOTP,
-          amount: amount.toString(),
-          coinTicker,
-          address: address.trim(),
-        }),
+        body: JSON.stringify(requestData),
       });
 
       // Read response body once
       const responseData = await response.json();
+      console.log('OTP API response:', responseData); // Debug log
 
       if (!response.ok) {
-        throw new Error(responseData.error || 'Failed to send OTP');
+        throw new Error(
+          responseData.error || responseData.message || 'Failed to send OTP',
+        );
       }
 
       setIsOtpSent(true);
@@ -431,6 +465,13 @@ export default function WithdrawModal({
     onClose();
   };
 
+  // Функция для форматирования отображения тикера
+  const formatCoinTicker = (ticker: string) => {
+    if (ticker === 'USDT_SOL') return 'USDT(SOL)';
+    if (ticker === 'USDC_SOL') return 'USDC(SOL)';
+    return ticker;
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -445,22 +486,24 @@ export default function WithdrawModal({
               <FullScreenSpinner />
             </div>
           )}
-          <ModalHeader className='text-white'>Вывести {coinTicker}</ModalHeader>
+          <ModalHeader className='text-white'>
+            Вывести {formatCoinTicker(coinTicker)}
+          </ModalHeader>
           <ModalBody>
             <div className='space-y-4'>
               <div className='rounded bg-gray-700 p-3'>
                 <p className='text-sm text-gray-300'>Доступно для вывода:</p>
                 <p className='text-lg font-bold text-green-400'>
-                  {balance} {coinTicker}
+                  {balance} {formatCoinTicker(coinTicker)}
                 </p>
               </div>
 
               <Input
                 type='text'
-                label={`Адрес ${coinTicker}`}
+                label={`Адрес ${formatCoinTicker(coinTicker)}`}
                 value={address}
                 onChange={(e) => handleAddressChange(e.target.value)}
-                placeholder={`Введите адрес ${coinTicker}`}
+                placeholder={`Введите адрес ${formatCoinTicker(coinTicker)}`}
                 className='w-full'
                 isInvalid={!!addressError}
                 errorMessage={addressError}
@@ -469,7 +512,7 @@ export default function WithdrawModal({
               <Input
                 type='text'
                 inputMode='decimal'
-                label={`Сумма ${coinTicker}`}
+                label={`Сумма ${formatCoinTicker(coinTicker)}`}
                 value={amount}
                 onChange={(e) => handleAmountChange(e.target.value)}
                 onBlur={handleAmountBlur}
@@ -522,7 +565,8 @@ export default function WithdrawModal({
                 </div>
                 <ul className='mt-2 list-inside list-disc space-y-4 text-sm text-gray-300'>
                   <li>
-                    Минимальная сумма вывода: {minDeposit} {coinTicker}
+                    Минимальная сумма вывода: {minDeposit}{' '}
+                    {formatCoinTicker(coinTicker)}
                   </li>
                   <li>Комиссия сети будет рассчитана автоматически</li>
                   <li>
@@ -530,16 +574,21 @@ export default function WithdrawModal({
                     <Chip color='danger' size='sm' variant='shadow'>
                       {feeAmount}
                       {coinTicker === 'USDT' || coinTicker === 'USDC'
-                        ? ` TRX (≈$${feeInUSDT} ${coinTicker})`
-                        : ''}
+                        ? ` TRX (≈$${feeInUSDT} ${formatCoinTicker(coinTicker)})`
+                        : coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL'
+                          ? ` SOL (≈$${feeInUSDT} ${formatCoinTicker(coinTicker)})`
+                          : ''}
                     </Chip>
                   </li>
-                  {(coinTicker === 'USDT' || coinTicker === 'USDC') && (
+                  {(coinTicker === 'USDT' ||
+                    coinTicker === 'USDC' ||
+                    coinTicker === 'USDT_SOL' ||
+                    coinTicker === 'USDC_SOL') && (
                     <li>
                       Итого с баланса спишется:{' '}
                       <Chip color='success' size='sm' variant='shadow'>
                         {Number(Number(amount) + Number(feeInUSDT)).toFixed(2)}{' '}
-                        {coinTicker}
+                        {formatCoinTicker(coinTicker)}
                       </Chip>
                     </li>
                   )}

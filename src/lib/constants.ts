@@ -25,6 +25,24 @@ export const COIN_CONFIG: Record<string, CoinConfig> = {
     walletId: '1422',
     currencyId: '2142',
   },
+  USDT_SOL: {
+    network: 'SOL',
+    minDeposit: 50,
+    walletId: '1527',
+    currencyId: '2030',
+  },
+  USDC_SOL: {
+    network: 'SOL',
+    minDeposit: 50,
+    walletId: '1528',
+    currencyId: '2031',
+  },
+  SOL: {
+    network: 'SOL',
+    minDeposit: 0.1,
+    walletId: '1526',
+    currencyId: '1028',
+  },
   TRX: {
     network: 'TRC-20',
     minDeposit: 50,

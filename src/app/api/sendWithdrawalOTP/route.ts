@@ -6,10 +6,26 @@ import { sql } from 'drizzle-orm';
 
 export async function POST(request: Request) {
   try {
-    const { email, otpCode, amount, coinTicker, address, locale } =
-      await request.json();
+    const {
+      email,
+      otpCode,
+      amount,
+      coinTicker,
+      address,
+      fee,
+      feeInUSDT,
+      totalAmount,
+    } = await request.json();
 
-    if (!email || !otpCode || !amount || !coinTicker || !address || !locale) {
+    // Validate required fields
+    if (!email || !otpCode || !amount || !coinTicker || !address) {
+      console.error('Missing required fields:', {
+        email: !!email,
+        otpCode: !!otpCode,
+        amount: !!amount,
+        coinTicker: !!coinTicker,
+        address: !!address,
+      });
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 },
@@ -21,9 +37,9 @@ export async function POST(request: Request) {
       .delete(otpCodesTable)
       .where(sql`${otpCodesTable.email} = ${email}`);
 
-    // Calculate expiration time (30 minutes from now)
+    // Calculate expiration time (5 minutes from now)
     const expiredAt = new Date();
-    expiredAt.setMinutes(expiredAt.getMinutes() + 30);
+    expiredAt.setMinutes(expiredAt.getMinutes() + 5);
 
     // Save new OTP code to database
     await db.insert(otpCodesTable).values({
@@ -38,9 +54,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error sending OTP email:', error);
+    console.error('Error sending OTP:', error);
     return NextResponse.json(
-      { error: 'Failed to send OTP email' },
+      { error: error instanceof Error ? error.message : 'Failed to send OTP' },
       { status: 500 },
     );
   }

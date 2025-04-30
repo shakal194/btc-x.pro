@@ -327,11 +327,14 @@ export async function sendWithdrawalOTPEmail(email, otpCode, amount, coinTicker,
     const siteUrl = NEXT_PUBLIC_SITE_URL || 'https://btc-x.pro';
     const supportUrl = `${siteUrl}/support`;
     
+    // Создаем HTML для ссылки поддержки
+    const supportLink = `<a href="${supportUrl}">Support Page</a>`;
+    
     const mailOptions = {
       from: SMTP_USER,
       to: email,
       subject: t('title'),
-      text: `${t('title')}\n\n${t('initiated')} ${amount} ${coinTicker} ${t('toAddress')}:\n${address}\n\n${t('warning')}\n\n${t('code')}: ${otpCode}\n\n${t('expiration')}\n\n${replacePlaceholders(t('contact'), { supportUrl })}`,
+      text: `${t('title')}\n\n${t('initiated')} ${amount} ${coinTicker} ${t('toAddress')}:\n${address}\n\n${t('warning')}\n\n${t('code')}: ${otpCode}\n\n${t('expiration')}\n\n${t('contact', { supportLink: supportUrl })}`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -393,7 +396,7 @@ export async function sendWithdrawalOTPEmail(email, otpCode, amount, coinTicker,
                 </div>
 
                 <div class="contact-section">
-                  <p>${t('contact')}</p>
+                  <p>${t('contact', { supportLink })}</p>
                 </div>
               </div>
 

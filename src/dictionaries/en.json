@@ -886,7 +886,7 @@
       "warning": "Please double check your withdrawal address before proceeding. BTC-X.PRO is not responsible for any loss of funds sent to an incorrect address.",
       "code": "Your confirmation code",
       "expiration": "The confirmation code will expire in 30 minutes. Do not share the code with anyone.",
-      "contact": "If it was not you, please contact us immediately at {supportUrl}",
+      "contact": "If it was not you, please contact us immediately at {supportLink}",
       "footer": "Best regards, The BTC-X.PRO Team",
       "copyright": "© 2024 BTC-X.PRO. All rights reserved."
     },
