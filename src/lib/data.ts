@@ -590,25 +590,61 @@ export async function insertTransactionsTable(transactionData: {
 }
 
 //Получаем Реферальный код
-export async function fetchReferralCodeByUserId(user_id: number) {
+export async function fetchUserReferralData(userId: number) {
   try {
-    // Проверяем, является ли user_id числом
-    if (isNaN(user_id) || user_id === null) {
+    if (isNaN(userId) || userId === null) {
       throw new Error('Invalid User. Try again later');
     }
 
-    const result = await db
-      .select()
+    // Получаем данные пользователя
+    const userData = await db
+      .select({
+        referral_code: usersTable.referral_code,
+        referral_bonus: usersTable.referral_bonus,
+        referral_percent: usersTable.referral_percent,
+      })
       .from(usersTable)
-      .where(sql`${usersTable.id} = ${user_id}`) // Фильтруем по user_id
-      .limit(1); // Ограничиваем результат одним значением
+      .where(sql`${usersTable.id} = ${userId}`)
+      .limit(1);
 
-    // Проверяем, есть ли записи, и если есть, возвращаем referral_code, иначе 0
+    if (!userData[0]) {
+      throw new Error('User not found');
+    }
 
-    return result[0];
+    let referralPercent: number;
+
+    // Проверяем, является ли процент null или 0 (учитывая decimal формат)
+    if (
+      userData[0].referral_percent === null ||
+      parseFloat(userData[0].referral_percent?.toString() || '0') === 0
+    ) {
+      const defaultPercentData = await db
+        .select({
+          referral_percent_default:
+            electricityPriceTable.referral_percent_default,
+        })
+        .from(electricityPriceTable)
+        .where(
+          sql`${electricityPriceTable.referral_percent_default} IS NOT NULL`,
+        )
+        .orderBy(desc(electricityPriceTable.id))
+        .limit(1);
+
+      referralPercent = parseFloat(
+        defaultPercentData[0]?.referral_percent_default?.toString() || '0',
+      );
+    } else {
+      referralPercent = parseFloat(userData[0].referral_percent.toString());
+    }
+
+    return {
+      referral_code: userData[0].referral_code,
+      referral_bonus: Number(userData[0].referral_bonus ?? 0),
+      referral_percent: referralPercent,
+    };
   } catch (error) {
-    console.error('Ошибка получения реферального кода', error);
-    throw new Error('Ошибка получения реферального кода');
+    console.error('[User Referral Data] Error fetching data:', error);
+    throw new Error('Error fetching user referral data');
   }
 }
 
@@ -1956,4 +1992,18 @@ export async function validateOTPCode(
     .limit(1);
 
   return result.length > 0;
+}
+
+export async function fetchUserReferralsCount(userId: number): Promise<number> {
+  try {
+    const result = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(usersTable)
+      .where(sql`${usersTable.referrer_id} = ${userId}`);
+
+    return Number(result[0].count) || 0;
+  } catch (error) {
+    console.error('Error fetching referrals count:', error);
+    return 0;
+  }
 }

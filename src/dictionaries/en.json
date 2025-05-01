@@ -510,6 +510,12 @@
       "form_validate_errorTimeOut": "Something went wrong. Please try again later",
       "form_validate_errorDatabase": "Database Error: Failed to Create User",
       "form_error_email_send": "Email not sent",
+      "form_success_password_reset": "Password reset successfully",
+      "form_success_password_reset_redirect": "Redirecting to signin page...",
+      "form_success_password_reset_redirect_timeout": "Redirecting in",
+      "form_success_password_reset_redirect_seconds": "seconds",
+      "form_success_password_reset_redirect_error": "An error occurred. Please try again later",
+      "form_validate_current_password": "Current password is incorrect",
       "button": "Send"
     },
     "dashboard": {

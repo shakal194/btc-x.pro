@@ -22,6 +22,23 @@ import FullScreenSpinner from '@/components/ui/Spinner';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
+type ServerActionState = {
+  errors?: {
+    otpcode?: string[];
+    email?: string[];
+    password?: string[];
+    error?: string[];
+  };
+  message?: string;
+  success?: boolean;
+};
+
+const initialState: ServerActionState = {
+  errors: undefined,
+  success: false,
+  message: undefined,
+};
+
 export default function RecoveryForm() {
   const t = useTranslations('cloudMiningPage.recovery');
   const [errorMessageEmail, setErrorMessageEmail] = useState('');
@@ -36,8 +53,6 @@ export default function RecoveryForm() {
   const router = useRouter();
   const [touchedOTP, setTouchedOTP] = useState(false);
 
-  // Серверный экшн для useActionState
-  const initialState = { errors: undefined, success: false };
   const [state, formAction] = useActionState(
     handlePasswordResetServer,
     initialState,
@@ -292,13 +307,13 @@ export default function RecoveryForm() {
             <div id='form-error' aria-live='polite' aria-atomic='true'>
               {(state.errors?.otpcode?.[0] ||
                 state.errors?.password?.[0] ||
-                state.errors?.confirmPassword?.[0]) && (
+                state.errors?.error?.[0]) && (
                 <div className='mt-2 flex items-center'>
                   <ExclamationCircleIcon className='mr-2 h-5 w-5 text-danger' />
                   <p className='text-sm text-danger'>
                     {state.errors?.otpcode?.[0] ||
                       state.errors?.password?.[0] ||
-                      state.errors?.confirmPassword?.[0]}
+                      state.errors?.error?.[0]}
                   </p>
                 </div>
               )}

@@ -511,6 +511,12 @@
       "form_validate_errorTimeOut": "Щось пішло не так. Спробуйте пізніше",
       "form_validate_errorDatabase": "Помилка сервісу: Користувач не створений",
       "form_error_email_send": "Email не відправлено",
+      "form_success_password_reset": "Пароль успішно оновлено",
+      "form_success_password_reset_redirect": "Перенаправлення на сторінку входу...",
+      "form_success_password_reset_redirect_timeout": "Перенаправлення через",
+      "form_success_password_reset_redirect_seconds": "секунд",
+      "form_success_password_reset_redirect_error": "Сталася помилка. Спробуйте пізніше",
+      "form_validate_current_password": "Поточний пароль не вірний",
       "button": "Надіслати"
     },
     "dashboard": {

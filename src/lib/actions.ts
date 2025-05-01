@@ -333,7 +333,7 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
   }
 
   if (validatedFields.success) {
-    const { email, /*referral_code,*/ password } = validatedFields.data;
+    const { email, password } = validatedFields.data;
 
     try {
       const existingUser = await db
@@ -546,45 +546,50 @@ export async function handlePasswordResetServer(
   prevState: any,
   formData: FormData,
 ) {
-  const t = await getTranslations('cloudMiningPage.recovery');
+  const t = await getTranslations('cloudMiningPage.signin');
   const email = formData.get('email') as string;
+  const otpCode = formData.get('otpcode') as string;
   const password = formData.get('password') as string;
-  const otpcode = formData.get('otpcode') as string;
+  const confirmPassword = formData.get('confirmPassword') as string;
 
-  // Проверка OTP
-  const isValidOTP = await validateOTPCode(email, otpcode);
+  // Проверяем OTP код
+  const isValidOTP = await validateOTPCode(email, otpCode);
   if (!isValidOTP) {
     return {
       errors: {
-        email: undefined,
         otpcode: [t('form_validate_otpcode_notValid')],
-        password: undefined,
-        confirmPassword: undefined,
       },
-      success: false,
+      message: t('form_validate_errorValidation'),
+    };
+  }
+
+  // Проверяем существование пользователя
+  const user = await db
+    .select()
+    .from(usersTable)
+    .where(sql`${usersTable.email} = ${email}`)
+    .limit(1);
+
+  if (user.length === 0) {
+    return {
+      errors: {
+        email: [t('form_error_email_notFound')],
+      },
+      message: t('form_validate_errorValidation'),
+    };
+  }
+
+  // Проверяем совпадение паролей
+  if (password !== confirmPassword) {
+    return {
+      errors: {
+        password: [t('form_password_notMatch')],
+      },
+      message: t('form_validate_errorValidation'),
     };
   }
 
   try {
-    // Проверяем существование пользователя
-    const existingUser = await db
-      .select()
-      .from(usersTable)
-      .where(sql`${usersTable.email} = ${email}`)
-      .limit(1);
-
-    if (existingUser.length === 0) {
-      return {
-        errors: {
-          email: [t('form_error_email_notFound')],
-          otpcode: undefined,
-          password: undefined,
-          confirmPassword: undefined,
-        },
-        success: false,
-      };
-    }
-
     // Хешируем новый пароль
     const hashedPassword = await hashPassword(password);
 
@@ -599,12 +604,136 @@ export async function handlePasswordResetServer(
     console.error('Error resetting password:', error);
     return {
       errors: {
-        email: [t('form_validate_errorTimeOut')],
-        otpcode: undefined,
-        password: undefined,
-        confirmPassword: undefined,
+        error: [t('form_validate_errorTimeOut')],
       },
+      message: t('form_validate_errorValidation'),
+    };
+  }
+}
+
+// Функция для проверки пароля
+async function verifyPassword(
+  password: string,
+  hashedPassword: string,
+): Promise<boolean> {
+  try {
+    // Хешируем введенный пароль и сравниваем с сохраненным хешем
+    const inputHashedPassword = await hashPassword(password);
+    return inputHashedPassword === hashedPassword;
+  } catch (error) {
+    console.error('Error verifying password:', error);
+    return false;
+  }
+}
+
+export async function handlePasswordChangeServer(
+  prevState: any,
+  formData: FormData,
+) {
+  const t = await getTranslations('cloudMiningPage.signin');
+  const email = formData.get('email') as string;
+  const currentPassword = formData.get('currentPassword') as string;
+  const newPassword = formData.get('newPassword') as string;
+  const confirmPassword = formData.get('confirmPassword') as string;
+  const otpCode = formData.get('otpcode') as string;
+
+  // Проверяем OTP код
+  const isValidOTP = await validateOTPCode(email, otpCode);
+  if (!isValidOTP) {
+    return {
+      errors: {
+        otpcode: [t('form_validate_otpcode_notValid')],
+      },
+      message: t('form_validate_errorValidation'),
+    };
+  }
+
+  // Проверяем существование пользователя
+  const user = await db
+    .select()
+    .from(usersTable)
+    .where(sql`${usersTable.email} = ${email}`)
+    .limit(1);
+
+  if (user.length === 0) {
+    return {
+      errors: {
+        email: [t('form_error_email_notFound')],
+      },
+      message: t('form_validate_errorValidation'),
+    };
+  }
+
+  // Проверяем текущий пароль
+  const isValidPassword = await verifyPassword(
+    currentPassword,
+    user[0].password,
+  );
+
+  if (!isValidPassword) {
+    return {
+      errors: {
+        currentPassword: [t('form_validate_current_password')],
+      },
+      message: t('form_validate_errorValidation'),
+    };
+  }
+
+  // Проверяем совпадение нового пароля с подтверждением
+  if (newPassword !== confirmPassword) {
+    return {
+      errors: {
+        newPassword: [t('form_password_notMatch')],
+      },
+      message: t('form_validate_errorValidation'),
+    };
+  }
+
+  // Проверяем, что новый пароль отличается от текущего
+  if (currentPassword === newPassword) {
+    return {
+      errors: {
+        newPassword: [t('form_password_same')],
+      },
+      message: t('form_validate_errorValidation'),
+    };
+  }
+
+  try {
+    // Хешируем новый пароль
+    const hashedPassword = await hashPassword(newPassword);
+
+    // Обновляем пароль пользователя
+    await db
+      .update(usersTable)
+      .set({ password: hashedPassword })
+      .where(sql`${usersTable.email} = ${email}`);
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error changing password:', error);
+    return {
+      errors: {
+        error: [t('form_validate_errorTimeOut')],
+      },
+      message: t('form_validate_errorValidation'),
+    };
+  }
+}
+
+export async function sendChangePasswordOTP(email: string) {
+  try {
+    const otpCode = await createOTPCode(email);
+
+    // Отправляем email с OTP кодом
+    await sendOTPEmail(email, otpCode);
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error sending OTP:', error);
+    return {
       success: false,
+      error: 'Ошибка при отправке кода подтверждения',
     };
   }
 }
