@@ -94,7 +94,7 @@ export function ReferralSettings({ userId }: ReferralSettingsProps) {
                 Количество рефералов
               </p>
             </CardHeader>
-            <CardBody className='text-center'>${referralsCount}</CardBody>
+            <CardBody className='text-center'>{referralsCount}</CardBody>
           </Card>
         </div>
 

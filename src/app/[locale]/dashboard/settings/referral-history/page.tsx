@@ -1,5 +1,5 @@
 import { auth } from '@/auth';
-import ReferralHistoryTable from '@/components/PageComponents/DashboardPage/Referral/ReferralHistoryTable';
+import ReferralHistoryTable from '@/components/PageComponents/DashboardPage/Settings/ReferralHistoryTable';
 
 export default async function ReferralHistoryPage() {
   const session = await auth();

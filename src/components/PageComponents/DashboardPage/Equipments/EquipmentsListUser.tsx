@@ -16,7 +16,15 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import BuySellShareCountComponent from '@/components/PageComponents/DashboardPage/Equipments/BuySellShareCountComponent';
 import FullScreenSpinner from '@/components/ui/Spinner';
-import { Tabs, Tab, Button, Card, CardHeader, CardBody } from '@heroui/react';
+import {
+  Tabs,
+  Tab,
+  Button,
+  Card,
+  CardHeader,
+  CardBody,
+  Tooltip,
+} from '@heroui/react';
 import DepositModal from '../Wallet/DepositModal';
 import WithdrawModal from '../Wallet/WithdrawModal';
 import {
@@ -24,20 +32,14 @@ import {
   MiningRewardsSkeleton,
 } from '@/components/ui/Skeletons';
 import { useRouter } from 'next/navigation';
-
 import { getAccessToken } from '@/lib/coinsbuy';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
-import { Tooltip } from '@heroui/react';
+import { ConvertModal } from '@/components/PageComponents/DashboardPage/Wallet/ConvertModal';
+import { Balance } from '@/types/equipment';
 
 interface EquipmentsListUserProps {
   serverUserId: string;
   serverUserEmail: string;
-}
-
-interface Balance {
-  id: number;
-  coinTicker: string;
-  coinAmount: string;
 }
 
 interface Equipment {
@@ -115,6 +117,9 @@ export default function EquipmentsListUser({
   const [totalBalance, setTotalBalance] = useState<number>(0);
   const [isLoadingMiningStats, setIsLoadingMiningStats] =
     useState<boolean>(true);
+  const [isConvertModalOpen, setIsConvertModalOpen] = useState(false);
+  const [selectedCoinForConvert, setSelectedCoinForConvert] =
+    useState<string>('');
 
   useEffect(() => {
     const initializeAllData = async () => {
@@ -251,6 +256,11 @@ export default function EquipmentsListUser({
   const handleDepositClick = (ticker: string) => {
     setSelectedModalCoin(ticker);
     setIsDepositModalOpen(true);
+  };
+
+  const handleConvertClick = (coinTicker: string) => {
+    setSelectedCoinForConvert(coinTicker);
+    setIsConvertModalOpen(true);
   };
 
   const fetchAllMiningStats = useCallback(async () => {
@@ -402,40 +412,50 @@ export default function EquipmentsListUser({
               </div>
 
               <div className='flex flex-col gap-4 md:min-w-[350px]'>
-                {balances.map((balance) => (
-                  <div
-                    key={balance.id}
-                    className='flex items-center justify-between gap-4'
-                  >
-                    <div className='flex items-center gap-2'>
-                      <span>{balance.coinTicker}</span>
-                      <span className='font-bold'>
-                        {Number(balance.coinAmount).toFixed(
-                          ['USDT', 'USDC', 'USDT_SOL', 'USDC_SOL'].includes(
-                            balance.coinTicker,
-                          )
-                            ? 2
-                            : 8,
-                        )}
-                      </span>
+                {[...balances]
+                  .sort((a, b) => a.coinTicker.localeCompare(b.coinTicker))
+                  .map((balance) => (
+                    <div
+                      key={balance.id}
+                      className='flex items-center justify-between gap-4'
+                    >
+                      <div className='flex items-center gap-2'>
+                        <span>{balance.coinTicker}</span>
+                        <span className='font-bold'>
+                          {Number(balance.coinAmount).toFixed(
+                            ['USDT', 'USDC', 'USDT_SOL', 'USDC_SOL'].includes(
+                              balance.coinTicker,
+                            )
+                              ? 2
+                              : 8,
+                          )}
+                        </span>
+                      </div>
+                      <div className='flex gap-2'>
+                        <Button
+                          color='success'
+                          className='text-white'
+                          onPress={() => handleDepositClick(balance.coinTicker)}
+                        >
+                          Пополнить
+                        </Button>
+                        <Button
+                          color='primary'
+                          onPress={() =>
+                            handleWithdrawClick(balance.coinTicker)
+                          }
+                        >
+                          Вывести
+                        </Button>
+                        <Button
+                          color='secondary'
+                          onPress={() => handleConvertClick(balance.coinTicker)}
+                        >
+                          Конвертировать
+                        </Button>
+                      </div>
                     </div>
-                    <div className='flex gap-2'>
-                      <Button
-                        color='success'
-                        className='text-white'
-                        onPress={() => handleDepositClick(balance.coinTicker)}
-                      >
-                        Пополнить
-                      </Button>
-                      <Button
-                        color='primary'
-                        onPress={() => handleWithdrawClick(balance.coinTicker)}
-                      >
-                        Вывести
-                      </Button>
-                    </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
           </div>
@@ -1009,6 +1029,24 @@ export default function EquipmentsListUser({
             balances.find((b) => b.coinTicker === selectedModalCoin)
               ?.coinAmount || '0',
           )}
+        />
+      )}
+
+      {isConvertModalOpen && user_id && (
+        <ConvertModal
+          isOpen={isConvertModalOpen}
+          onClose={() => {
+            setIsConvertModalOpen(false);
+            setSelectedCoinForConvert('');
+          }}
+          onSuccess={async () => {
+            setIsConvertModalOpen(false);
+            setSelectedCoinForConvert('');
+            await updateEquipmentData(user_id as string, 0);
+          }}
+          userId={Number(user_id)}
+          balances={balances}
+          defaultFromCoin={selectedCoinForConvert}
         />
       )}
     </section>

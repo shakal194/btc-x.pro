@@ -20,6 +20,7 @@ import fs from 'fs';
 import { createDepositForCoin } from './balance';
 import { formatDate } from './utils';
 import { sendOTPEmail } from './emailService';
+import { Balance } from '@/types/equipment';
 
 export interface MiningStats {
   totalMined: number;
@@ -2005,5 +2006,110 @@ export async function fetchUserReferralsCount(userId: number): Promise<number> {
   } catch (error) {
     console.error('Error fetching referrals count:', error);
     return 0;
+  }
+}
+
+async function updateUserBalance(
+  userId: number,
+  coinTicker: string,
+  amount: string,
+): Promise<void> {
+  await db.insert(balancesTable).values({
+    user_id: userId,
+    coinTicker,
+    coinAmount: amount,
+  });
+}
+
+async function getUserBalance(
+  userId: number,
+  coinTicker: string,
+): Promise<Balance | null> {
+  const balances = await fetchAllUserBalances(userId);
+  return balances.find((b) => b.coinTicker === coinTicker) || null;
+}
+
+export async function convertCoins(
+  userId: number,
+  fromCoin: string,
+  toCoin: string,
+  amount: number,
+) {
+  try {
+    const isStablecoin = (coin: string) =>
+      coin === 'USDT' ||
+      coin === 'USDC' ||
+      coin === 'USDT_SOL' ||
+      coin === 'USDC_SOL';
+
+    // Получаем текущие балансы
+    const fromBalance = await getUserBalance(userId, fromCoin);
+    if (!fromBalance || Number(fromBalance.coinAmount) < amount) {
+      throw new Error('Недостаточно средств');
+    }
+
+    const now = new Date();
+    const timestamp = formatDate(now);
+
+    // Если оба токена - стейблкоины, конвертируем 1:1
+    if (isStablecoin(fromCoin) && isStablecoin(toCoin)) {
+      // Логирование конвертации стейблкоинов
+      console.log(
+        `[CONVERT] userId=${userId} | ${fromCoin} → ${toCoin} | amount=${amount} | rate=1 | at=${timestamp}`,
+      );
+
+      const newFromAmount = (Number(fromBalance.coinAmount) - amount).toFixed(
+        8,
+      );
+
+      const toBalance = await getUserBalance(userId, toCoin);
+      const newToAmount = (Number(toBalance?.coinAmount || 0) + amount).toFixed(
+        8,
+      );
+
+      await updateUserBalance(userId, fromCoin, newFromAmount);
+      await updateUserBalance(userId, toCoin, newToAmount);
+
+      return {
+        convertedAmount: amount,
+        fromAmount: amount,
+        toAmount: amount,
+      };
+    }
+
+    // Для остальных токенов используем Binance API
+    const fromPrice = await fetchCoinPrice(fromCoin);
+    const toPrice = await fetchCoinPrice(toCoin);
+
+    if (!fromPrice || !toPrice) {
+      throw new Error('Не удалось получить цены для конвертации');
+    }
+
+    const convertedAmount = (amount * fromPrice) / toPrice;
+
+    // Логирование конвертации по курсу
+    console.log(
+      `[CONVERT] userId=${userId} | ${fromCoin} → ${toCoin} | amount=${amount} | rate=${fromPrice}/${toPrice} | convertedAmount=${convertedAmount} | at=${timestamp}`,
+    );
+
+    // Обновляем балансы с учетом текущих значений
+    const newFromAmount = (Number(fromBalance.coinAmount) - amount).toFixed(8);
+
+    const toBalance = await getUserBalance(userId, toCoin);
+    const newToAmount = (
+      Number(toBalance?.coinAmount || 0) + convertedAmount
+    ).toFixed(8);
+
+    await updateUserBalance(userId, fromCoin, newFromAmount);
+    await updateUserBalance(userId, toCoin, newToAmount);
+
+    return {
+      convertedAmount,
+      fromAmount: amount,
+      toAmount: convertedAmount,
+    };
+  } catch (error) {
+    console.error('Error in convertCoins:', error);
+    throw error;
   }
 }

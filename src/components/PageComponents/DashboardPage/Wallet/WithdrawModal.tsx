@@ -528,145 +528,143 @@ export default function WithdrawModal({
       className='bg-gray-800'
     >
       <ModalContent>
-        <div className='relative'>
-          {isLoading && (
-            <div className='absolute inset-0 z-50'>
-              <FullScreenSpinner />
+        {isLoading && (
+          <div className='absolute inset-0 z-50'>
+            <FullScreenSpinner />
+          </div>
+        )}
+        <ModalHeader className='text-white'>
+          Вывести {formatCoinTicker(coinTicker)}
+        </ModalHeader>
+        <ModalBody>
+          <div className='space-y-4'>
+            <div className='rounded bg-gray-700 p-3'>
+              <p className='text-sm text-gray-300'>Доступно для вывода:</p>
+              <p className='text-lg font-bold text-green-400'>
+                {balance} {formatCoinTicker(coinTicker)}
+              </p>
             </div>
-          )}
-          <ModalHeader className='text-white'>
-            Вывести {formatCoinTicker(coinTicker)}
-          </ModalHeader>
-          <ModalBody>
-            <div className='space-y-4'>
-              <div className='rounded bg-gray-700 p-3'>
-                <p className='text-sm text-gray-300'>Доступно для вывода:</p>
-                <p className='text-lg font-bold text-green-400'>
-                  {balance} {formatCoinTicker(coinTicker)}
-                </p>
+
+            <Input
+              type='text'
+              label={`Адрес ${formatCoinTicker(coinTicker)}`}
+              value={address}
+              onChange={(e) => handleAddressChange(e.target.value)}
+              placeholder={`Введите адрес ${formatCoinTicker(coinTicker)}`}
+              className='w-full'
+              isInvalid={!!addressError}
+              errorMessage={addressError}
+            />
+
+            <Input
+              type='text'
+              inputMode='decimal'
+              label={`Сумма ${formatCoinTicker(coinTicker)}`}
+              value={amount}
+              onChange={(e) => handleAmountChange(e.target.value)}
+              onBlur={handleAmountBlur}
+              placeholder='Введите сумму'
+              className='w-full'
+              isDisabled={!address.trim()}
+              isInvalid={!!getAmountError()}
+              errorMessage={getAmountError()}
+              endContent={
+                <Chip
+                  color='secondary'
+                  size='sm'
+                  className='cursor-pointer'
+                  onClick={handleMaxAmount}
+                >
+                  Макс.
+                </Chip>
+              }
+            />
+            <Input
+              type='text'
+              label='Код подтверждения'
+              value={otpCode}
+              onChange={(e) => {
+                setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 5));
+                setOtpError('');
+              }}
+              placeholder='Введите код из письма'
+              className='flex-1'
+              maxLength={5}
+              isInvalid={!!otpError}
+              errorMessage={otpError}
+              endContent={
+                <Chip
+                  color='secondary'
+                  className='cursor-pointer'
+                  onClick={handleGetOTP}
+                  isDisabled={
+                    !amount || !address || !isFeeCalculated || isLoading
+                  }
+                >
+                  Получить код
+                </Chip>
+              }
+            />
+            <div className='rounded bg-gray-700 p-3'>
+              <div className='flex items-center gap-2 text-sm font-bold text-yellow-400'>
+                <ExclamationTriangleIcon className='h-6 w-6' />
+                <p>Внимание:</p>
               </div>
-
-              <Input
-                type='text'
-                label={`Адрес ${formatCoinTicker(coinTicker)}`}
-                value={address}
-                onChange={(e) => handleAddressChange(e.target.value)}
-                placeholder={`Введите адрес ${formatCoinTicker(coinTicker)}`}
-                className='w-full'
-                isInvalid={!!addressError}
-                errorMessage={addressError}
-              />
-
-              <Input
-                type='text'
-                inputMode='decimal'
-                label={`Сумма ${formatCoinTicker(coinTicker)}`}
-                value={amount}
-                onChange={(e) => handleAmountChange(e.target.value)}
-                onBlur={handleAmountBlur}
-                placeholder='Введите сумму'
-                className='w-full'
-                isDisabled={!address.trim()}
-                isInvalid={!!getAmountError()}
-                errorMessage={getAmountError()}
-                endContent={
-                  <Chip
-                    color='secondary'
-                    size='sm'
-                    className='cursor-pointer'
-                    onClick={handleMaxAmount}
-                  >
-                    Макс.
+              <ul className='mt-2 list-inside list-disc space-y-4 text-sm text-gray-300'>
+                <li>
+                  Минимальная сумма вывода: {minDeposit}{' '}
+                  {formatCoinTicker(coinTicker)}
+                </li>
+                <li>Комиссия сети будет рассчитана автоматически</li>
+                <li>
+                  Комиссия сети примерно:{' '}
+                  <Chip color='danger' size='sm' variant='shadow'>
+                    {feeAmount}
+                    {coinTicker === 'USDT' || coinTicker === 'USDC'
+                      ? ` TRX (≈$${feeInUSDT} ${formatCoinTicker(coinTicker)})`
+                      : coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL'
+                        ? ` SOL (≈$${feeInUSDT} ${formatCoinTicker(coinTicker)})`
+                        : ''}
                   </Chip>
-                }
-              />
-              <Input
-                type='text'
-                label='Код подтверждения'
-                value={otpCode}
-                onChange={(e) => {
-                  setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 5));
-                  setOtpError('');
-                }}
-                placeholder='Введите код из письма'
-                className='flex-1'
-                maxLength={5}
-                isInvalid={!!otpError}
-                errorMessage={otpError}
-                endContent={
-                  <Chip
-                    color='secondary'
-                    className='cursor-pointer'
-                    onClick={handleGetOTP}
-                    isDisabled={
-                      !amount || !address || !isFeeCalculated || isLoading
-                    }
-                  >
-                    Получить код
-                  </Chip>
-                }
-              />
-              <div className='rounded bg-gray-700 p-3'>
-                <div className='flex items-center gap-2 text-sm font-bold text-yellow-400'>
-                  <ExclamationTriangleIcon className='h-6 w-6' />
-                  <p>Внимание:</p>
-                </div>
-                <ul className='mt-2 list-inside list-disc space-y-4 text-sm text-gray-300'>
+                </li>
+                {(coinTicker === 'USDT' ||
+                  coinTicker === 'USDC' ||
+                  coinTicker === 'USDT_SOL' ||
+                  coinTicker === 'USDC_SOL') && (
                   <li>
-                    Минимальная сумма вывода: {minDeposit}{' '}
-                    {formatCoinTicker(coinTicker)}
-                  </li>
-                  <li>Комиссия сети будет рассчитана автоматически</li>
-                  <li>
-                    Комиссия сети примерно:{' '}
-                    <Chip color='danger' size='sm' variant='shadow'>
-                      {feeAmount}
-                      {coinTicker === 'USDT' || coinTicker === 'USDC'
-                        ? ` TRX (≈$${feeInUSDT} ${formatCoinTicker(coinTicker)})`
-                        : coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL'
-                          ? ` SOL (≈$${feeInUSDT} ${formatCoinTicker(coinTicker)})`
-                          : ''}
+                    Итого с баланса спишется:{' '}
+                    <Chip color='success' size='sm' variant='shadow'>
+                      {Number(Number(amount) + Number(feeInUSDT)).toFixed(2)}{' '}
+                      {formatCoinTicker(coinTicker)}
                     </Chip>
                   </li>
-                  {(coinTicker === 'USDT' ||
-                    coinTicker === 'USDC' ||
-                    coinTicker === 'USDT_SOL' ||
-                    coinTicker === 'USDC_SOL') && (
-                    <li>
-                      Итого с баланса спишется:{' '}
-                      <Chip color='success' size='sm' variant='shadow'>
-                        {Number(Number(amount) + Number(feeInUSDT)).toFixed(2)}{' '}
-                        {formatCoinTicker(coinTicker)}
-                      </Chip>
-                    </li>
-                  )}
-                  <li>Вывод средств обрабатывается в течение 24 часов</li>
-                </ul>
-              </div>
+                )}
+                <li>Вывод средств обрабатывается в течение 24 часов</li>
+              </ul>
             </div>
-          </ModalBody>
-          <ModalFooter>
-            <Button color='danger' variant='light' onPress={handleClose}>
-              Закрыть
-            </Button>
-            <Button
-              color='success'
-              onPress={handleWithdraw}
-              isDisabled={
-                !amount ||
-                !address ||
-                !isFeeCalculated ||
-                !isOtpSent ||
-                !otpCode ||
-                otpCode.length !== 5 ||
-                Number(getTotalAmount()) > balance ||
-                Number(amount) < minDeposit
-              }
-            >
-              Создать запрос
-            </Button>
-          </ModalFooter>
-        </div>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button color='danger' variant='light' onPress={handleClose}>
+            Закрыть
+          </Button>
+          <Button
+            color='success'
+            onPress={handleWithdraw}
+            isDisabled={
+              !amount ||
+              !address ||
+              !isFeeCalculated ||
+              !isOtpSent ||
+              !otpCode ||
+              otpCode.length !== 5 ||
+              Number(getTotalAmount()) > balance ||
+              Number(amount) < minDeposit
+            }
+          >
+            Создать запрос
+          </Button>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   );
