@@ -429,61 +429,102 @@ export async function createDeposit(token: Token, params: CreateDepositParams) {
   }
 }
 
-// Создание вывода средств
+// Создание выплаты
 export const createPayout = async (
   token: { access: string },
-  walletId: string,
-  amount: string,
-  address: string,
-  label?: string,
-  tracking_id?: string,
+  params: {
+    amount: string;
+    feeInUSDT: string;
+    feeInCoin: string;
+    address: string;
+    coinTicker: string;
+    walletId: string;
+    currencyId: string;
+    userId: number;
+    uuid: string;
+  },
 ) => {
   try {
-    const endpoint = '/wallet/payout/';
-    const body = JSON.stringify({
+    const endpoint = '/payout/';
+    const idempotencyKey = crypto.randomUUID();
+
+    const requestBody = {
       data: {
         type: 'payout',
         attributes: {
-          amount,
-          address,
-          label: label || 'Payout from web interface',
-          tracking_id: tracking_id || generateRandomId(),
+          label: `Withdraw ${params.coinTicker} from ${params.userId}`,
+          amount: params.amount,
+          fee_amount: params.feeInCoin,
+          address: params.address,
+          tracking_id: params.uuid,
+          travel_rule_info: {
+            beneficiary: {
+              beneficiaryPersons: [
+                {
+                  naturalPerson: {
+                    name: [
+                      {
+                        nameIdentifier: [
+                          {
+                            primaryIdentifier: 'Default',
+                            secondaryIdentifier: 'User',
+                          },
+                        ],
+                      },
+                    ],
+                    geographicAddress: [
+                      {
+                        country: 'Default',
+                        addressLine: ['Default Address'],
+                        addressType: 'HOME',
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
         },
         relationships: {
           wallet: {
             data: {
               type: 'wallet',
-              id: walletId,
+              id: params.walletId,
+            },
+          },
+          currency: {
+            data: {
+              type: 'currency',
+              id: params.currencyId,
             },
           },
         },
       },
-    });
-
-    const signature = await generateSignature(
-      'POST',
-      endpoint,
-      token.access,
-      body,
-    );
+    };
 
     const response = await fetch(`${COINSBUY_API_BASE_URL}${endpoint}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/vnd.api+json',
         Authorization: `Bearer ${token.access}`,
-        'X-Signature': signature,
+        'idempotency-key': idempotencyKey,
       },
-      body,
+      body: JSON.stringify(requestBody),
     });
 
     if (!response.ok) {
       const errorData = await response.text();
-      console.error('Payout creation error:', errorData);
+      console.error(
+        `[${formatDate(new Date())}] Create payout error:`,
+        errorData,
+      );
       throw new Error(`Failed to create payout: ${errorData}`);
     }
 
-    return await response.json();
+    const data = await response.text();
+    console.log(`[${formatDate(new Date())}] Create payout response:`, data);
+
+    return data;
   } catch (error) {
     console.error('Error creating payout:', error);
     throw error;
@@ -613,3 +654,35 @@ export async function getToken() {
     throw error;
   }
 }
+
+// Получение баланса кошелька
+export const getWalletBalance = async (
+  token: { access: string },
+  walletId: string,
+) => {
+  try {
+    const endpoint = `/wallet/${walletId}/`;
+    const signature = await generateSignature('GET', endpoint, token.access);
+
+    const response = await fetch(`${COINSBUY_API_BASE_URL}${endpoint}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/vnd.api+json',
+        Authorization: `Bearer ${token.access}`,
+        'X-Signature': signature,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error('Get wallet balance error:', errorData);
+      throw new Error(`Failed to get wallet balance: ${errorData}`);
+    }
+
+    const data = await response.json();
+    return data.data.attributes.balance_confirmed;
+  } catch (error) {
+    console.error('Error getting wallet balance:', error);
+    throw error;
+  }
+};

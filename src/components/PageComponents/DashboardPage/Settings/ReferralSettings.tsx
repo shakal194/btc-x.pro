@@ -33,7 +33,7 @@ export function ReferralSettings({ userId }: ReferralSettingsProps) {
         // Set default values in case of error
         setRefCode(0);
         setRefBalance(0);
-        setReferralPercent(5);
+        setReferralPercent(0);
         setReferralsCount(0);
       }
     };
@@ -73,23 +73,23 @@ export function ReferralSettings({ userId }: ReferralSettingsProps) {
 
         <div className='grid grid-cols-1 gap-2 md:grid-cols-3'>
           <Card isHoverable={true}>
-            <CardHeader>
+            <CardHeader className='justify-center'>
               <p className='text-center font-bold text-white md:text-[12px] lg:text-[14px]'>
                 Реферальный баланс
               </p>
             </CardHeader>
-            <CardBody className='text-center'>${refBalance}</CardBody>
+            <CardBody className='text-center'>$ {refBalance}</CardBody>
           </Card>
           <Card isHoverable={true}>
-            <CardHeader>
+            <CardHeader className='justify-center'>
               <p className='text-center font-bold text-white md:text-[12px] lg:text-[14px]'>
                 Реферальный процент
               </p>
             </CardHeader>
-            <CardBody className='text-center'>${referralPercent}</CardBody>
+            <CardBody className='text-center'>{referralPercent}</CardBody>
           </Card>
           <Card isHoverable={true}>
-            <CardHeader>
+            <CardHeader className='justify-center'>
               <p className='text-center font-bold text-white md:text-[12px] lg:text-[14px]'>
                 Количество рефералов
               </p>

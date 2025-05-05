@@ -483,10 +483,8 @@ export default function WithdrawModal({
         network: getCoinNetwork(coinTicker),
         address: address.trim(),
         amount: amount,
-        fee:
-          coinTicker === 'USDT' || coinTicker === 'USDC'
-            ? feeInUSDT
-            : feeAmount,
+        feeInUSDT: feeInUSDT,
+        feeInCoin: feeAmount,
       });
 
       onSuccess();

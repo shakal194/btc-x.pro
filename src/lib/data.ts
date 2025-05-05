@@ -1231,24 +1231,27 @@ export async function createWithdrawal({
   network,
   address,
   amount,
-  fee,
+  feeInUSDT,
+  feeInCoin,
 }: {
   userId: number;
   coinTicker: string;
   network: string;
   address: string;
   amount: string;
-  fee: string;
+  feeInUSDT: string;
+  feeInCoin: string;
 }) {
   try {
     const now = new Date();
 
     // Проверяем валидность значений и форматируем их
     const cleanAmount = amount?.toString().trim();
-    const cleanFee = fee?.toString().trim();
+    const cleanFeeInCoin = feeInCoin?.toString().trim();
+    const cleanFeeInUSDT = feeInUSDT?.toString().trim();
 
     // Проверка на пустые значения
-    if (!cleanAmount || !cleanFee) {
+    if (!cleanAmount || !cleanFeeInCoin || !cleanFeeInUSDT) {
       throw new Error('Сумма вывода или комиссия не указаны');
     }
 
@@ -1260,43 +1263,30 @@ export async function createWithdrawal({
       throw new Error('Некорректный формат суммы вывода');
     }
 
-    if (!feeRegex.test(cleanFee)) {
+    if (!feeRegex.test(cleanFeeInCoin)) {
+      throw new Error('Некорректный формат комиссии');
+    }
+
+    if (!feeRegex.test(cleanFeeInUSDT)) {
       throw new Error('Некорректный формат комиссии');
     }
 
     // Преобразуем значения в числа с фиксированной точностью
     const amountNum = parseFloat(parseFloat(cleanAmount).toFixed(8));
-    const feeNum = parseFloat(parseFloat(cleanFee).toFixed(8)); // Округляем до 8 знаков для SOL
-
-    // Для USDT_SOL и USDC_SOL конвертируем комиссию из SOL в USDT
-    let finalFee = feeNum;
-    if (coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL') {
-      try {
-        const solPrice = await fetchCoinPrice('SOL');
-        if (solPrice > 0) {
-          finalFee = parseFloat((feeNum * solPrice).toFixed(2)); // Округляем до 2 знаков для USDT
-          console.log(
-            `[Withdrawal] Converted SOL fee to USDT: ${feeNum} SOL = ${finalFee} USDT (rate: ${solPrice})`,
-          );
-        }
-      } catch (error) {
-        console.error('[Withdrawal] Error converting SOL fee to USDT:', error);
-        throw new Error('Ошибка при конвертации комиссии из SOL в USDT');
-      }
-    }
+    const feeInCoinNum = parseFloat(parseFloat(cleanFeeInCoin).toFixed(8));
+    const feeInUSDTNum = parseFloat(parseFloat(cleanFeeInUSDT).toFixed(8));
 
     // Дополнительные проверки
     if (amountNum <= 0) {
       throw new Error('Сумма вывода должна быть больше 0');
     }
-
-    if (finalFee < 0) {
-      throw new Error('Комиссия не может быть отрицательной');
+    if (feeInCoinNum < 0 || feeInUSDTNum < 0) {
+      throw new Error('Комиссии не могут быть отрицательными');
     }
 
     // Проверяем достаточность баланса
     const currentBalance = await fetchUserBalance(userId, coinTicker);
-    const totalAmount = amountNum + finalFee;
+    const totalAmount = amountNum + feeInCoinNum;
 
     if (currentBalance < totalAmount) {
       throw new Error(
@@ -1324,14 +1314,15 @@ export async function createWithdrawal({
       );
     }
 
-    // Создаем запись о выводе
+    // Сохраняем комиссии как есть, без пересчёта
     await db.insert(withdrawalsTable).values({
       user_id: userId,
       coinTicker,
       network,
       address: address.trim(),
       amount: amountNum.toString(),
-      fee: finalFee.toString(), // Используем конвертированную и округленную комиссию
+      feeInUSDT: feeInUSDTNum.toString(),
+      feeInCoin: feeInCoinNum.toString(),
       status: 'created',
       created_at: now,
       updated_at: now,
@@ -1388,7 +1379,8 @@ export async function fetchAllWithdrawals() {
         network: withdrawalsTable.network,
         address: withdrawalsTable.address,
         amount: withdrawalsTable.amount,
-        fee: withdrawalsTable.fee,
+        feeInUSDT: withdrawalsTable.feeInUSDT,
+        feeInCoin: withdrawalsTable.feeInCoin,
         status: withdrawalsTable.status,
         created_at: withdrawalsTable.created_at,
         updated_at: withdrawalsTable.updated_at,
@@ -1461,9 +1453,9 @@ export async function cancelWithdrawal(id: number) {
       throw new Error('Баланс пользователя не найден');
     }
 
-    // Возвращаем средства на баланс пользователя (сумма вывода + комиссия)
+    // Возвращаем средства на баланс пользователя (сумма вывода + комиссия в монете)
     const totalAmount =
-      Number(withdrawal[0].amount) + Number(withdrawal[0].fee);
+      Number(withdrawal[0].amount) + Number(withdrawal[0].feeInUSDT);
     const newAmount = Number(currentBalance[0].coinAmount) + totalAmount;
 
     // Создаем новую запись баланса
@@ -1492,7 +1484,8 @@ export async function fetchUserWithdrawals(userId: number) {
         network: withdrawalsTable.network,
         address: withdrawalsTable.address,
         amount: withdrawalsTable.amount,
-        fee: withdrawalsTable.fee,
+        feeInUSDT: withdrawalsTable.feeInUSDT,
+        feeInCoin: withdrawalsTable.feeInCoin,
         status: withdrawalsTable.status,
         created_at: withdrawalsTable.created_at,
         updated_at: withdrawalsTable.updated_at,

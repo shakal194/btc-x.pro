@@ -19,10 +19,10 @@ import {
   ChipProps,
   SortDescriptor,
   Pagination,
-  Spinner,
 } from '@heroui/react';
-import { MagnifyingGlassIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
+import { COIN_CONFIG } from '@/lib/constants';
 
 interface WithdrawalData {
   id: number;
@@ -31,7 +31,8 @@ interface WithdrawalData {
   network: string;
   address: string;
   amount: string;
-  fee: string;
+  feeInUSDT: string;
+  feeInCoin: string;
   status: string;
   created_at: Date;
   updated_at: Date;
@@ -50,7 +51,8 @@ const INITIAL_VISIBLE_COLUMNS = [
   'network',
   'address',
   'amount',
-  'fee',
+  'feeInUSDT',
+  'feeInCoin',
   'status',
   'created_at',
   'updated_at',
@@ -90,7 +92,8 @@ export default function WithdrawalsTable({
       { name: 'Network', uid: 'network', sortable: true },
       { name: 'Address', uid: 'address', sortable: true },
       { name: 'Amount', uid: 'amount', sortable: true },
-      { name: 'Fee', uid: 'fee', sortable: true },
+      { name: 'Fee in USDT', uid: 'feeInUSDT', sortable: true },
+      { name: 'Fee in Coin', uid: 'feeInCoin', sortable: true },
       { name: 'Status', uid: 'status', sortable: true },
       { name: 'Created', uid: 'created_at', sortable: true },
       { name: 'Updated', uid: 'updated_at', sortable: true },
@@ -113,7 +116,12 @@ export default function WithdrawalsTable({
             .toLowerCase()
             .includes(filterValue.toLowerCase()) ||
           withdrawal.amount.toLowerCase().includes(filterValue.toLowerCase()) ||
-          withdrawal.fee.toLowerCase().includes(filterValue.toLowerCase()) ||
+          withdrawal.feeInUSDT
+            .toLowerCase()
+            .includes(filterValue.toLowerCase()) ||
+          withdrawal.feeInCoin
+            .toLowerCase()
+            .includes(filterValue.toLowerCase()) ||
           withdrawal.created_at
             .toLocaleString()
             .toLowerCase()
@@ -202,8 +210,11 @@ export default function WithdrawalsTable({
             ? cellValue.toLocaleString()
             : String(cellValue);
         case 'amount':
-        case 'fee':
-          return `${Number(cellValue).toFixed(4)} ${withdrawal.coinTicker}`;
+        case 'feeInUSDT':
+          return `${cellValue} USDT`;
+        case 'feeInCoin':
+          const network = COIN_CONFIG[withdrawal.coinTicker]?.network;
+          return `${cellValue} ${network}`;
         default:
           return String(cellValue);
       }

@@ -32,8 +32,9 @@ const authPages = ['/signin'];
 const protectedPaths = [
   '/dashboard/algorithms',
   '/dashboard/equipments',
-  //'/dashboard/users',
-  //'/dashboard/withdrawals',
+  '/dashboard/users',
+  '/dashboard/withdrawals',
+  '/dashboard/coinsbuy',
 ];
 
 function getProtectedRoutes(protectedPaths: string[], locales: Locale[]) {

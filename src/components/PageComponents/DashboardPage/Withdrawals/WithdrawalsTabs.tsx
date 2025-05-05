@@ -10,12 +10,15 @@ import { confirmWithdrawal, cancelWithdrawal } from '@/lib/data';
 
 interface WithdrawalData {
   id: number;
+  user_id: number;
+  uuid: string | null;
   userEmail: string;
   coinTicker: string;
   network: string;
   address: string;
   amount: string;
-  fee: string;
+  feeInUSDT: string;
+  feeInCoin: string;
   status: string;
   created_at: Date;
   updated_at: Date;
@@ -123,6 +126,7 @@ export default function WithdrawalsTabs({
             withdrawals={withdrawals}
             onConfirmWithdrawal={handleConfirmWithdrawal}
             onCancelWithdrawal={handleCancelWithdrawal}
+            onRefresh={() => onWithdrawalUpdate?.()}
           />
         </Tab>
         <Tab key='all' title='Все запросы'>

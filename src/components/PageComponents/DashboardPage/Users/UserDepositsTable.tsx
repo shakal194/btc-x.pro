@@ -51,7 +51,8 @@ interface Operation {
   updated_at: Date;
   network?: string;
   address?: string;
-  fee?: string;
+  feeInUSDT?: string;
+  feeInCoin?: string;
 }
 
 const ROWS_PER_PAGE_OPTIONS = [20, 50, 100, 200];
@@ -147,7 +148,8 @@ export default function UserDepositsTable({
           updated_at: withdrawal.updated_at,
           network: withdrawal.network,
           address: withdrawal.address,
-          fee: withdrawal.fee,
+          feeInUSDT: withdrawal.feeInUSDT,
+          feeInCoin: withdrawal.feeInCoin,
         }));
 
         setOperations([...transformedDeposits, ...transformedWithdrawals]);
@@ -403,6 +405,20 @@ export default function UserDepositsTable({
                 Сумма
               </TableColumn>
               <TableColumn
+                key='feeInUSDT'
+                allowsSorting
+                className='whitespace-nowrap bg-gray-800 px-4 py-2 text-sm text-white'
+              >
+                Fee in USDT
+              </TableColumn>
+              <TableColumn
+                key='feeInCoin'
+                allowsSorting
+                className='whitespace-nowrap bg-gray-800 px-4 py-2 text-sm text-white'
+              >
+                Fee in Coin
+              </TableColumn>
+              <TableColumn
                 key='status'
                 allowsSorting
                 className='whitespace-nowrap bg-gray-800 px-4 py-2 text-sm text-white'
@@ -445,6 +461,12 @@ export default function UserDepositsTable({
                   </TableCell>
                   <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
                     {operation.amount}
+                  </TableCell>
+                  <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
+                    {operation.feeInUSDT}
+                  </TableCell>
+                  <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
+                    {operation.feeInCoin}
                   </TableCell>
                   <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
                     <Chip
