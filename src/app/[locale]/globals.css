@@ -3,8 +3,6 @@
 @import 'tailwindcss/utilities';
 
 @layer components {
-
-
   input:-webkit-autofill {
     transition-delay: 0s, 0s;
     transition-timing-function: ease-in-out, ease-in-out;
@@ -12,9 +10,7 @@
     transition-property: color, background-color;
     -webkit-text-fill-color: rgb(234, 236, 239);
   }
-
 }
-
 
 :root {
   --heroui-background: #000000;

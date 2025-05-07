@@ -14,6 +14,7 @@ import {
   withdrawalsTable,
   miningRewardsTable,
   otpCodesTable,
+  convertationTable,
 } from '@/db/schema'; // Импортируем таблицу
 import { sql, desc, asc, eq, and, gte, gt } from 'drizzle-orm';
 import fs from 'fs';
@@ -751,6 +752,7 @@ export async function updateUSDTBalance(
       user_id: sql`${userId}`,
       coinTicker: 'USDT',
       coinAmount: sql`${newBalance}`,
+      created_at: new Date(),
     });
 
     console.log(
@@ -1089,6 +1091,7 @@ export async function ensureBalanceRecordExists(
           user_id: userId,
           coinTicker: ticker,
           coinAmount: '0',
+          created_at: new Date(),
         });
         console.log(`Created balance record for ${ticker}`);
       }
@@ -1463,6 +1466,7 @@ export async function cancelWithdrawal(id: number) {
       user_id: withdrawal[0].user_id,
       coinTicker: withdrawal[0].coinTicker,
       coinAmount: newAmount.toString(),
+      created_at: new Date(),
     });
 
     return { success: true };
@@ -2011,6 +2015,7 @@ async function updateUserBalance(
     user_id: userId,
     coinTicker,
     coinAmount: amount,
+    created_at: new Date(),
   });
 }
 
@@ -2020,6 +2025,29 @@ async function getUserBalance(
 ): Promise<Balance | null> {
   const balances = await fetchAllUserBalances(userId);
   return balances.find((b) => b.coinTicker === coinTicker) || null;
+}
+
+// Функция для создания записи о конвертации
+async function createConvertationRecord(
+  userId: number,
+  fromCoin: string,
+  toCoin: string,
+  amountFrom: number,
+  amountTo: number,
+) {
+  try {
+    await db.insert(convertationTable).values({
+      user_id: userId,
+      coinTickerFrom: fromCoin,
+      coinTickerTo: toCoin,
+      coinAmountFrom: amountFrom.toString(),
+      coinAmountTo: amountTo.toString(),
+      created_at: new Date(),
+    });
+  } catch (error) {
+    console.error('Error creating convertation record:', error);
+    throw error;
+  }
 }
 
 export async function convertCoins(
@@ -2063,6 +2091,9 @@ export async function convertCoins(
       await updateUserBalance(userId, fromCoin, newFromAmount);
       await updateUserBalance(userId, toCoin, newToAmount);
 
+      // Создаем запись о конвертации
+      await createConvertationRecord(userId, fromCoin, toCoin, amount, amount);
+
       return {
         convertedAmount: amount,
         fromAmount: amount,
@@ -2096,6 +2127,15 @@ export async function convertCoins(
     await updateUserBalance(userId, fromCoin, newFromAmount);
     await updateUserBalance(userId, toCoin, newToAmount);
 
+    // Создаем запись о конвертации
+    await createConvertationRecord(
+      userId,
+      fromCoin,
+      toCoin,
+      amount,
+      convertedAmount,
+    );
+
     return {
       convertedAmount,
       fromAmount: amount,
@@ -2103,6 +2143,21 @@ export async function convertCoins(
     };
   } catch (error) {
     console.error('Error in convertCoins:', error);
+    throw error;
+  }
+}
+
+export async function fetchUserConvertations(userId: number) {
+  try {
+    const userConvertations = await db
+      .select()
+      .from(convertationTable)
+      .where(eq(convertationTable.user_id, userId))
+      .orderBy(convertationTable.created_at);
+
+    return userConvertations;
+  } catch (error) {
+    console.error('Error fetching user convertations:', error);
     throw error;
   }
 }

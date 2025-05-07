@@ -11,6 +11,7 @@ export async function POST(request: Request) {
       user_id: userId,
       coinTicker,
       coinAmount,
+      created_at: new Date(),
     });
 
     return NextResponse.json({ success: true });

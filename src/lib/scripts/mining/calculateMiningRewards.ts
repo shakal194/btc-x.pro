@@ -155,6 +155,7 @@ export async function calculateAndInsertMiningRewards() {
             user_id: user.id,
             coinTicker: coinTicker.name,
             coinAmount: newBalance.toString(),
+            created_at: new Date(),
           });
         }
       }

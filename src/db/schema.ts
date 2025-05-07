@@ -112,6 +112,18 @@ export const balancesTable = pgTable('balances', {
   user_id: integer('user_id').notNull(),
   coinTicker: varchar({ length: 10 }).notNull(), // Тиккер монеты (например, BTC)
   coinAmount: decimal({ precision: 30, scale: 8 }).notNull(), // Количество монет
+  created_at: timestamp().defaultNow(), // Дата создания
+});
+
+export const convertationTable = pgTable('convertation', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  uuid: uuid('uuid').defaultRandom(),
+  user_id: integer('user_id').notNull(),
+  coinTickerFrom: varchar({ length: 10 }).notNull(), // Тиккер монеты (например, BTC)
+  coinTickerTo: varchar({ length: 10 }).notNull(), // Тиккер монеты (например, BTC)
+  coinAmountFrom: decimal({ precision: 30, scale: 8 }).notNull(), // Количество монет
+  coinAmountTo: decimal({ precision: 30, scale: 8 }).notNull(), // Количество монет
+  created_at: timestamp().defaultNow(), // Дата создания
 });
 
 export const usersAddressTable = pgTable('users_address', {
@@ -136,8 +148,8 @@ export const withdrawalsTable = pgTable('withdrawals', {
   network: varchar({ length: 50 }).notNull(), // Сеть для снятия средств (например, Bitcoin, Ethereum)
   address: varchar({ length: 255 }).notNull(), // Адрес для перевода средств
   amount: decimal({ precision: 30, scale: 8 }).notNull(), // Сумма для снятия
-  feeInUSDT: decimal({ precision: 30, scale: 8 }).notNull(), // Сумма комиссии в USDT
-  feeInCoin: decimal({ precision: 30, scale: 8 }).notNull(), // Сумма комиссии в монете
+  feeInUSDT: decimal({ precision: 30, scale: 8 }), // Сумма комиссии в USDT
+  feeInCoin: decimal({ precision: 30, scale: 8 }), // Сумма комиссии в монете
   status: varchar({ length: 255 }).notNull(), // Статус запроса (подтверждён, одобрен, выполнен, отменён)
   created_at: timestamp().notNull(), // Дата создания
   updated_at: timestamp().notNull(), // Дата обновления

@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Button,
   Input,
@@ -81,7 +81,7 @@ export default function BuyShareCountComponent({
   }, [equipmentUuid]);
 
   // Вынесем функцию загрузки баланса USDT
-  const fetchAndSetUsdtBalance = async () => {
+  const fetchAndSetUsdtBalance = useCallback(async () => {
     if (user_id) {
       try {
         const balance = await fetchUSDTBalance(Number(user_id));
@@ -91,12 +91,12 @@ export default function BuyShareCountComponent({
         setUsdtBalance(0);
       }
     }
-  };
+  }, [user_id]);
 
   // Получаем баланс USDT при монтировании компонента
   useEffect(() => {
     fetchAndSetUsdtBalance();
-  }, [user_id]);
+  }, [fetchAndSetUsdtBalance]);
 
   // Получаем баланс долей пользователя при монтировании компонента
   useEffect(() => {

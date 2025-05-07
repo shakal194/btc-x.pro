@@ -172,6 +172,7 @@ export async function checkAndProcessDeposits() {
               user_id: userAddress.user_id,
               coinTicker: userAddress.coinTicker,
               coinAmount: newBalance,
+              created_at: new Date(),
             });
 
             console.log(
@@ -232,6 +233,7 @@ export async function checkAndProcessDeposits() {
                 user_id: userAddress.user_id,
                 coinTicker: userAddress.coinTicker,
                 coinAmount: newBalance,
+                created_at: new Date(),
               });
 
               console.log(

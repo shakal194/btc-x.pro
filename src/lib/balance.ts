@@ -76,6 +76,7 @@ export async function updateUserBalance({
           user_id: userId,
           coinTicker,
           coinAmount: amount.toString(),
+          created_at: new Date(),
         });
       }
 

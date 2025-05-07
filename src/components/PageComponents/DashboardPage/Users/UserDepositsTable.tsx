@@ -51,8 +51,8 @@ interface Operation {
   updated_at: Date;
   network?: string;
   address?: string;
-  feeInUSDT?: string;
-  feeInCoin?: string;
+  feeInUSDT?: string | null;
+  feeInCoin?: string | null;
 }
 
 const ROWS_PER_PAGE_OPTIONS = [20, 50, 100, 200];
@@ -148,8 +148,8 @@ export default function UserDepositsTable({
           updated_at: withdrawal.updated_at,
           network: withdrawal.network,
           address: withdrawal.address,
-          feeInUSDT: withdrawal.feeInUSDT,
-          feeInCoin: withdrawal.feeInCoin,
+          feeInUSDT: withdrawal.feeInUSDT || undefined,
+          feeInCoin: withdrawal.feeInCoin || undefined,
         }));
 
         setOperations([...transformedDeposits, ...transformedWithdrawals]);

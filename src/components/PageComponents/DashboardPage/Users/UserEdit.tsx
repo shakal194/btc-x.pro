@@ -18,6 +18,7 @@ import {
 import Notiflix from 'notiflix';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import { useRouter } from 'next/navigation';
+import { ListBulletIcon } from '@heroicons/react/24/outline';
 
 export default function UserEdit({ uuid }: { uuid: string }) {
   const [email, setEmail] = useState('');
@@ -215,41 +216,80 @@ export default function UserEdit({ uuid }: { uuid: string }) {
               </div>
               <div className='mt-4 flex flex-col space-y-4'>
                 <Button
-                  className='mr-2 w-full bg-blue-500 p-2 text-white md:w-[400px] md:text-sm'
+                  color='secondary'
+                  variant='ghost'
+                  className='w-full p-2 text-white md:w-[400px] md:text-sm'
                   onPress={() =>
                     router.push(
                       `/dashboard/users/${uuid}/equipment-transactions`,
                     )
                   }
                 >
+                  <ListBulletIcon className='h-5 w-5' />
                   История покупок и продаж оборудования
                 </Button>
                 <Button
-                  className='mr-2 w-full bg-blue-500 p-2 text-white md:w-[400px] md:text-sm'
+                  color='secondary'
+                  variant='ghost'
+                  className='w-full p-2 text-white md:w-[400px] md:text-sm'
                   onPress={() =>
                     router.push(`/dashboard/users/${uuid}/mining-rewards`)
                   }
                 >
+                  <ListBulletIcon className='h-5 w-5' />
                   История начисления вознаграждений за майнинг
                 </Button>
                 <Button
-                  className='mr-2 w-full bg-blue-500 p-2 text-white md:w-[400px] md:text-sm'
+                  color='secondary'
+                  variant='ghost'
+                  className='w-full p-2 text-white md:w-[400px] md:text-sm'
                   onPress={() =>
                     router.push(`/dashboard/users/${uuid}/referral-bonus`)
                   }
                 >
+                  <ListBulletIcon className='h-5 w-5' />
                   История начисления реферальных бонусов
                 </Button>
                 <Button
-                  className='mr-2 w-full bg-blue-500 p-2 text-white md:w-[400px] md:text-sm'
+                  color='secondary'
+                  variant='ghost'
+                  className='w-full p-2 text-white md:w-[400px] md:text-sm'
                   onPress={() =>
                     router.push(`/dashboard/users/${uuid}/deposits`)
                   }
                 >
+                  <ListBulletIcon className='h-5 w-5' />
                   История ввода-вывода средств
                 </Button>
-                <Button className='w-full bg-blue-500 p-2 text-white md:w-[400px] md:text-sm'>
+                <Button
+                  color='secondary'
+                  variant='ghost'
+                  className='w-full p-2 text-white md:w-[400px] md:text-sm'
+                >
+                  <ListBulletIcon className='h-5 w-5' />
                   История изменений аккаунта
+                </Button>
+                <Button
+                  color='secondary'
+                  variant='ghost'
+                  onPress={() =>
+                    router.push(`/dashboard/users/${userId}/ref-bonus`)
+                  }
+                  className='w-full p-2 text-white md:w-[400px] md:text-sm'
+                >
+                  <ListBulletIcon className='h-5 w-5' />
+                  История реферальных начислений
+                </Button>
+                <Button
+                  color='secondary'
+                  variant='ghost'
+                  onPress={() =>
+                    router.push(`/dashboard/users/${uuid}/convertations`)
+                  }
+                  className='w-full p-2 text-white md:w-[400px] md:text-sm'
+                >
+                  <ListBulletIcon className='h-5 w-5' />
+                  История конвертаций
                 </Button>
               </div>
             </div>

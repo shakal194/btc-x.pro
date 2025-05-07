@@ -40,8 +40,8 @@ interface WithdrawalData {
   network: string;
   address: string;
   amount: string;
-  feeInUSDT: string;
-  feeInCoin: string;
+  feeInUSDT: string | '';
+  feeInCoin: string | '';
   status: string;
   created_at: Date;
   updated_at: Date;
