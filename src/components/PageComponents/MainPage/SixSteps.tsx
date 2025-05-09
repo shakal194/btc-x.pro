@@ -95,16 +95,16 @@ export default function FiveSteps() {
           <div className='relative xl:sticky xl:top-4 xl:h-[635px] 2xl:h-[700px]'>
             {/* Фоновое изображение */}
             <Image
-              src='/client.png'
+              src='/client.jpg'
               alt='Client image'
               width={670}
               height={700}
-              className='w-full rounded-lg'
+              className='mx-auto rounded-lg xl:h-[770px] xl:w-[600px]'
             />
 
             {/* Отзыв */}
 
-            <blockquote className='absolute bottom-[10px] left-1/2 w-[90%] -translate-x-1/2 transform rounded-3xl pb-[15px] pl-[11px] shadow-lg backdrop-blur-lg xl:bottom-4 xl:pb-[27px] xl:pl-[40px]'>
+            <blockquote className='absolute bottom-[10px] left-1/2 w-[90%] -translate-x-1/2 transform rounded-3xl pb-[15px] pl-[11px] shadow-lg backdrop-blur-lg md:w-[85%] lg:w-[60%] xl:-bottom-12 xl:w-[80%] xl:pb-[27px] xl:pl-[20px]'>
               <Image
                 src='/quote.svg'
                 alt='quote'

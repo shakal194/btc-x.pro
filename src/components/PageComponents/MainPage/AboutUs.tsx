@@ -27,7 +27,7 @@ export default function AboutUs() {
             </p>
             <div>
               <Image
-                src='/our_team.png'
+                src='/our_team.jpg'
                 alt='Команда BTC-X'
                 width={400}
                 height={300}
@@ -69,7 +69,7 @@ export default function AboutUs() {
           <div className='flex flex-col justify-between rounded-xl shadow-lg lg:px-[45px]'>
             <div>
               <div className='mb-[40px] hidden border-t border-white opacity-[33%] lg:block'></div>
-              <p className='lg:text-font18 text-[13px] leading-[130%] opacity-[33%] lg:leading-[120%] lg:opacity-100'>
+              <p className='text-[13px] leading-[130%] opacity-[33%] lg:text-font18 lg:leading-[120%] lg:opacity-100'>
                 {t('mission_subtitle_3')}
               </p>
             </div>
@@ -96,7 +96,7 @@ export default function AboutUs() {
           href='https://onelink.to/js2s8h'
           target='_blank'
           rel='noopener noreferrer'
-          className='text-font18 mt-[30px] block w-full rounded-full border px-5 py-3 text-center font-bold leading-[110%] transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white lg:hidden'
+          className='mt-[30px] block w-full rounded-full border px-5 py-3 text-center text-font18 font-bold leading-[110%] transition delay-200 hover:border-[#FD6B06] hover:bg-[#FD6B06] hover:text-white focus:bg-[#FD6B06] focus:text-white lg:hidden'
         >
           {t('mission_link')}
         </Link>

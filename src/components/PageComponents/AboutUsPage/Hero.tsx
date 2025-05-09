@@ -9,7 +9,7 @@ export default function HeroSection() {
     <section className='bg-black py-[15px] xl:pt-[100px]'>
       <div className='container relative mx-auto px-4'>
         <div className='flex'>
-          <div className='relative z-20 mx-auto flex flex-col-reverse gap-2 md:grid md:grid-cols-2 md:gap-4'>
+          <div className='relative z-20 mx-auto flex flex-col-reverse items-center gap-2 md:flex md:flex-row md:gap-4'>
             <div className='absolute top-2/3 z-10 flex w-[300px] flex-col justify-between md:relative md:top-0 lg:w-[450px] xl:w-[610px]'>
               <h1 className='text-[35px] leading-[110%] tracking-tight lg:text-font50Leading110 xl:text-font70Leading110'>
                 {t('title')}{' '}
@@ -31,7 +31,7 @@ export default function HeroSection() {
             </div>
             <div>
               <Image
-                src='/hero_about_us_mobile.png'
+                src='/hero_about_us_mobile.jpg'
                 alt='Our Team'
                 width={670}
                 height={600}
@@ -39,11 +39,11 @@ export default function HeroSection() {
                 priority={true}
               />
               <Image
-                src='/hero_about_us.png'
+                src='/hero_about_us.jpg'
                 alt='Our Team'
-                width={670}
+                width={870}
                 height={600}
-                className='hidden w-[670px] rounded-3xl object-cover md:block xl:h-[600px]'
+                className='hidden w-[870px] rounded-3xl object-cover md:block xl:h-[600px]'
                 priority={true}
               />
             </div>

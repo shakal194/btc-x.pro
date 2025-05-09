@@ -114,11 +114,11 @@ export default function LaunchingTokenSection() {
           <div className='relative'>
             {/* Фоновое изображение */}
             <Image
-              src='/airdrop_btcxtoken.png'
+              src='/airdrop_btcxt_token.jpg'
               alt='BTCXT Token'
               width={620}
               height={600}
-              className='hidden rounded-lg lg:block'
+              className='hidden h-[500px] w-[420px] rounded-lg lg:block'
             />
           </div>
           <div className='flex flex-col justify-between rounded-xl'>
@@ -131,11 +131,11 @@ export default function LaunchingTokenSection() {
                 {t('earn_with_us_text')}
               </p>
               <Image
-                src='/airdrop_btcxt_token_mobile.png'
+                src='/airdrop_btcxt_token_mobile.jpg'
                 alt='BTCXT Token'
                 width={300}
-                height={145}
-                className='mt-[25px] w-full rounded-lg lg:hidden'
+                height={425}
+                className='mt-[25px] h-[425px] w-full rounded-lg lg:hidden'
               />
               <Link
                 href='https://onelink.to/js2s8h'

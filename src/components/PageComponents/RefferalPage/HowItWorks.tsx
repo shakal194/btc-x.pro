@@ -70,11 +70,11 @@ export default function HowItWorksSection() {
           </div>
           <div>
             <Image
-              src='/ref_client.png'
+              src='/ref_client.jpg'
               alt='Referral client'
-              width={670}
-              height={560}
-              className='w-full lg:h-[560px] lg:w-[670px]'
+              width={570}
+              height={680}
+              className='w-full rounded-lg lg:h-[680px] lg:w-[570px]'
             ></Image>
           </div>
         </div>
