@@ -84,7 +84,7 @@ const config = {
   ],
   session: {
     strategy: 'jwt' as const,
-    maxAge: 60 * 60 * 24, // How long until an idle session expires and is no longer valid.
+    maxAge: 60 * 60 * 168, // How long until an idle session expires and is no longer valid.
   },
   callbacks: {
     jwt: async ({ token, user }: { token: any; user: any }) => {
