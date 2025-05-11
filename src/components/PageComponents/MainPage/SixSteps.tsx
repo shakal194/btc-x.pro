@@ -104,7 +104,7 @@ export default function FiveSteps() {
 
             {/* Отзыв */}
 
-            <blockquote className='absolute bottom-[10px] left-1/2 w-[90%] -translate-x-1/2 transform rounded-3xl p-[11px] shadow-lg backdrop-blur-lg md:w-[85%] lg:w-[60%] xl:-bottom-2 xl:w-[80%] xl:p-[15px]'>
+            <blockquote className='absolute bottom-[10px] left-1/2 w-[90%] -translate-x-1/2 transform rounded-3xl p-[11px] shadow-lg backdrop-blur-lg md:w-[80%] lg:w-[60%] xl:bottom-0 xl:w-[80%] xl:p-[15px]'>
               <p className='text-[10px] leading-[120%] text-[#fd6b06] md:text-[16px] xl:text-[20px]'>
                 {t('quotes_text')}
               </p>
