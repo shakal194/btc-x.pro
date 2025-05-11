@@ -52,14 +52,14 @@ export default function AboutUs() {
           <div>
             {/* Фоновое изображение */}
             <Image
-              src='/our_mission.png'
+              src='/our_mission.jpg'
               alt='Our Mission'
               width={670}
               height={700}
               className='hidden rounded-lg xl:block'
             />
             <Image
-              src='/airdrop_btcxtoken.png'
+              src='/our_mission.jpg'
               alt='Our Mission'
               width={130}
               height={145}

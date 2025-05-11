@@ -92,27 +92,20 @@ export default function FiveSteps() {
             </div>
           </div>
           {/* Image Section */}
-          <div className='relative xl:sticky xl:top-4 xl:h-[635px] 2xl:h-[700px]'>
+          <div className='relative xl:sticky xl:top-4 xl:h-[635px] 2xl:h-[670px]'>
             {/* Фоновое изображение */}
             <Image
               src='/client.jpg'
               alt='Client image'
-              width={670}
-              height={700}
-              className='mx-auto rounded-lg xl:h-[770px] xl:w-[600px]'
+              width={600}
+              height={670}
+              className='mx-auto rounded-lg xl:h-[670px] xl:w-[600px]'
             />
 
             {/* Отзыв */}
 
-            <blockquote className='absolute bottom-[10px] left-1/2 w-[90%] -translate-x-1/2 transform rounded-3xl pb-[15px] pl-[11px] shadow-lg backdrop-blur-lg md:w-[85%] lg:w-[60%] xl:-bottom-12 xl:w-[80%] xl:pb-[27px] xl:pl-[20px]'>
-              <Image
-                src='/quote.svg'
-                alt='quote'
-                width={30}
-                height={22}
-                className='my-[10px] h-[10px] w-[14px] rounded-full md:my-[14px] md:h-[16px] md:w-[20px] xl:mb-[20px] xl:mt-[25px] xl:h-[22px] xl:w-[30px]'
-              />
-              <p className='text-[10px] leading-[120%] text-white md:text-[16px] xl:text-[22px]'>
+            <blockquote className='absolute bottom-[10px] left-1/2 w-[90%] -translate-x-1/2 transform rounded-3xl p-[11px] shadow-lg backdrop-blur-lg md:w-[85%] lg:w-[60%] xl:-bottom-2 xl:w-[80%] xl:p-[15px]'>
+              <p className='text-[10px] leading-[120%] text-[#fd6b06] md:text-[16px] xl:text-[20px]'>
                 {t('quotes_text')}
               </p>
               <div className='mt-5'>

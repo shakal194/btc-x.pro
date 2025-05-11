@@ -27,8 +27,8 @@ export default function AboutUsSection() {
               src='/founder_btc-x.jpg'
               alt='Founder BTC-X'
               width={412}
-              height={373}
-              className='h-[373px] w-[412px] rounded-lg'
+              height={453}
+              className='h-[453px] w-[412px] rounded-lg'
             />
             <p className='mt-[10px] w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
               {t('image_alt')}

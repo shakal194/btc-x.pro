@@ -9,23 +9,18 @@ export default function OurBenefitsSection() {
   return (
     <section className='rounded-t-xl bg-[#F4F4F4] py-[30px] text-black lg:py-[100px]'>
       <div className='container mx-auto px-4'>
-        <div className='md:grid md:grid-cols-2 md:gap-4 lg:gap-8'>
+        <h2 className='text-font30Leading110 lg:text-font50Leading110'>
+          {t('title')}
+        </h2>
+        <div className='mt-4 md:grid md:grid-cols-2 md:gap-4 lg:gap-8'>
           <div className='flex justify-between md:flex-col'>
-            <h2 className='text-font30Leading110 lg:text-font50Leading110'>
-              {t('title')}
-            </h2>
-            <div className='flex w-full items-end justify-end md:block'>
-              <Image
-                src='/ref_page_btcx.png'
-                width={140}
-                height={140}
-                alt='Bitcoin coin'
-                className='h-[57px] w-[57px] object-cover lg:h-[140px] lg:w-[140px]'
-              />
-              <p className='mt-[15px] hidden w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] md:block lg:text-ibm16Leading130'>
-                {t('subtitle')}
-              </p>
-            </div>
+            <Image
+              src='/cloud_mining_our_benefits.png'
+              alt='Our benefits'
+              width={660}
+              height={660}
+              className='h-[660px] w-[600px] rounded-lg object-cover'
+            />
           </div>
           <div>
             {[
