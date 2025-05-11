@@ -46,6 +46,7 @@ export default function Promo() {
             <ul className='mt-2 list-inside list-disc space-y-2 text-gray-400'>
               <li>{t('terms_conent1')}</li>
               <li>{t('terms_conent2')}</li>
+              <li>{t('terms_conent2_1')}</li>
               <li>{t('terms_conent3')}</li>
               <li>{t('terms_conent4')}</li>
               <li>{t('terms_conent5')}</li>
