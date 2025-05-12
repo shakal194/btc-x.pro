@@ -217,7 +217,7 @@ export async function sendPromoEmail(data) {
       to: 'ispitmua@gmail.com',
       cc: 'uplinetour@gmail.com',
       subject: t('title'),
-      text: `YouTube: ${data.youtube}\nTelegram: ${data.telegram}\nInstagram: ${data.instagram}\nRating: ${data.rating}\nEmail: ${data.email}`,
+      text: `YouTube: ${data.youtube}\nTelegram: ${data.telegram}\nInstagram: ${data.instagram}\nEmail: ${data.email}`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -238,7 +238,6 @@ export async function sendPromoEmail(data) {
               ${data.youtube ? `<div class="data-item"><span class="data-label">YouTube:</span> ${data.youtube}</div>` : ''}
               ${data.telegram ? `<div class="data-item"><span class="data-label">Telegram:</span> ${data.telegram}</div>` : ''}
               ${data.instagram ? `<div class="data-item"><span class="data-label">Instagram:</span> ${data.instagram}</div>` : ''}
-              ${data.rating ? `<div class="data-item"><span class="data-label">Rating:</span> ${data.rating}</div>` : ''}
               <div class="footer">
                 <p>${t('footer')}</p>
                 <p>${t('copyright')}</p>

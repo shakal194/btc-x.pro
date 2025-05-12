@@ -7,7 +7,7 @@ import { eq } from 'drizzle-orm';
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    const { email, youtube, telegram, instagram, rating } = data;
+    const { email, youtube, telegram, instagram } = data;
 
     if (!email) {
       return NextResponse.json(
@@ -42,7 +42,6 @@ export async function POST(req: Request) {
       youtube: youtube || null,
       telegram: telegram || null,
       instagram: instagram || null,
-      rating: rating || null,
       isActive: true,
     });
 

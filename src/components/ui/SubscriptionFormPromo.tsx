@@ -15,7 +15,6 @@ export default function SubscriptionFormPromo() {
     youtube: '',
     telegram: '',
     instagram: '',
-    rating: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -57,7 +56,6 @@ export default function SubscriptionFormPromo() {
           youtube: '',
           telegram: '',
           instagram: '',
-          rating: '',
         });
       } else {
         if (result.message === 'You are already subscribed') {
@@ -241,27 +239,7 @@ export default function SubscriptionFormPromo() {
                 <label className='text-font18Leading130 lg:text-font30Leading130'>
                   {t('form_label_5')}
                 </label>
-                <p className='text-gray-400'>{t('form_title_2')}</p>
-              </div>
-            </div>
-            <div className='grid grid-cols-1 items-center gap-2 md:grid-cols-2 md:gap-4 lg:gap-8'>
-              <input
-                type='text'
-                name='rating'
-                value={formData.rating}
-                onChange={handleChange}
-                placeholder={t('form_placeholder_5')}
-                className='w-full rounded border border-gray-600 bg-gray-800 p-2'
-                required
-              />
-              <div>
-                <Link
-                  href='https://onelink.to/js2s8h'
-                  target='_blank'
-                  className='block w-full cursor-pointer rounded-lg border-none bg-[#ff6600] p-[10px] text-center transition delay-200 hover:bg-[#FD6B06] hover:text-black focus:bg-[#FD6B06] focus:text-black lg:w-[300px]'
-                >
-                  {t('form_link_5')}
-                </Link>
+                <p className='text-gray-400'>{t('form_title_5')}</p>
               </div>
             </div>
           </div>
