@@ -50,11 +50,11 @@ export default function AboutUsSection() {
             <div className='relative'>
               {/* Фоновое изображение */}
               <Image
-                src='/about_us_team1.png'
+                src='/about_us_team.jpg'
                 alt='Our Team'
-                width={630}
-                height={480}
-                className='w-[630px] rounded-lg object-cover md:h-full lg:h-[480px]'
+                width={4160}
+                height={2757}
+                className='w-[4160px] rounded-lg md:h-full'
               />
             </div>
             <div className='hidden flex-col justify-between lg:flex'>
