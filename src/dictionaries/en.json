@@ -578,6 +578,8 @@
         "payback": "Payback",
         "days": "days",
         "buy": "Buy",
+        "buy_shares_only_usdt": "Buy shares only in USDT",
+        "convert_to_usdt": "Convert to USDT",
         "userData": "User data",
         "changePassword": "Change password",
         "referralPercent": "Referral percent",

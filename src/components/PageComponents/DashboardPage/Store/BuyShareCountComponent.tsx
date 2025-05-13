@@ -30,6 +30,7 @@ import { createDepositForCoin } from '@/lib/balance';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import { ConvertModal } from '@/components/PageComponents/DashboardPage/Store/ConvertModal';
 import type { Balance } from '@/types/equipment';
+import { useTranslations } from 'next-intl';
 
 interface BuyShareCountComponentProps {
   equipmentId: number;
@@ -42,6 +43,7 @@ export default function BuyShareCountComponent({
   equipmentUuid,
   updateEquipmentData,
 }: BuyShareCountComponentProps) {
+  const t = useTranslations('cloudMiningPage.dashboard.userContent');
   const { data: session } = useSession();
   const user_id = session?.user?.id;
   const [isLoading, setIsLoading] = useState(false);
@@ -71,14 +73,14 @@ export default function BuyShareCountComponent({
           setEquipmentName(data.name || '');
         }
       } catch (error) {
-        console.error('Ошибка при получении данных оборудования', error);
+        console.error(t('errorGetEquipmentData'), error);
       }
     };
 
     if (equipmentUuid) {
       getEquipmentById();
     }
-  }, [equipmentUuid]);
+  }, [equipmentUuid, t]);
 
   // Вынесем функцию загрузки баланса USDT
   const fetchAndSetUsdtBalance = useCallback(async () => {
@@ -87,11 +89,11 @@ export default function BuyShareCountComponent({
         const balance = await fetchUSDTBalance(Number(user_id));
         setUsdtBalance(Number(balance) || 0);
       } catch (error) {
-        console.error('Ошибка при получении баланса USDT:', error);
+        console.error(t('errorGetUsdtBalance'), error);
         setUsdtBalance(0);
       }
     }
-  }, [user_id]);
+  }, [user_id, t]);
 
   // Получаем баланс USDT при монтировании компонента
   useEffect(() => {
@@ -111,13 +113,13 @@ export default function BuyShareCountComponent({
         );
         setUserShareBalance(equipmentBalance?.balanceShareCount || 0);
       } catch (error) {
-        console.error('Ошибка при получении баланса долей:', error);
+        console.error(t('errorGetShareBalance'), error);
         setUserShareBalance(0);
       }
     };
 
     getUserShareBalance();
-  }, [user_id, equipmentId]);
+  }, [user_id, equipmentId, t]);
 
   // Рассчитываем общую сумму при изменении количества долей
   useEffect(() => {
@@ -133,11 +135,12 @@ export default function BuyShareCountComponent({
         const balances = await fetchAllUserBalances(Number(user_id));
         setUserBalances(balances);
       } catch (error) {
+        console.error(t('errorGetBalances'), error);
         setUserBalances([]);
       }
     }
     loadBalances();
-  }, [user_id]);
+  }, [user_id, t]);
 
   const handleCloseModal = () => {
     setTransactionError('');
@@ -154,14 +157,14 @@ export default function BuyShareCountComponent({
     const numValue = Number(value);
 
     if (isNaN(numValue) || numValue <= 0) {
-      setShareCountError('Количество долей должно быть положительным числом');
+      setShareCountError(t('shareCountError'));
       return;
     }
 
     const total = numValue * (sharePurchasePrice / totalShareCount);
     if (total > usdtBalance) {
       setShareCountError(
-        `Необходимо пополнить баланс на ${(total - usdtBalance).toFixed(2)} USDT`,
+        t('needToTopUpBalance', { amount: (total - usdtBalance).toFixed(2) }),
       );
       return;
     }
@@ -174,8 +177,8 @@ export default function BuyShareCountComponent({
     try {
       const shareCount = Number(shareCountInput) || 0;
       if (!shareCount || sharePurchasePrice <= 0) {
-        setTransactionError('Пожалуйста, заполните все поля корректно');
-        Notiflix.Notify.warning('Пожалуйста, заполните все поля корректно');
+        setTransactionError(t('pleaseFillAllFieldsCorrectly'));
+        Notiflix.Notify.warning(t('pleaseFillAllFieldsCorrectly'));
         return;
       }
 
@@ -183,7 +186,7 @@ export default function BuyShareCountComponent({
       const equipment = equipmentData[0];
 
       if (!equipment?.algorithm?.coinTickers?.length) {
-        throw new Error('Не удалось определить тикеры монет для оборудования');
+        throw new Error(t('errorGetEquipmentData'));
       }
 
       // Создаем депозиты для всех монет алгоритма
@@ -251,7 +254,7 @@ export default function BuyShareCountComponent({
   return (
     <div>
       <Button color='success' onPress={onOpen}>
-        Купить
+        {t('buy')}
       </Button>
 
       <Modal
@@ -264,14 +267,14 @@ export default function BuyShareCountComponent({
       >
         <ModalContent>
           <ModalHeader className='flex flex-col gap-1 text-white'>
-            Купить доли {equipmentName}
+            {t('buy')} {equipmentName}
           </ModalHeader>
 
           <ModalBody className='mx-auto'>
             {/* Уведомление и кнопка конвертации */}
             <div className='mb-4 flex items-center gap-2'>
               <span className='text-sm font-medium text-warning'>
-                Покупка возможна только за USDT.
+                {t('buy_shares_only_usdt')}
               </span>
               <Button
                 size='sm'
@@ -279,16 +282,16 @@ export default function BuyShareCountComponent({
                 variant='bordered'
                 onPress={() => setIsConvertModalOpen(true)}
               >
-                Конвертировать в USDT
+                {t('convert_to_usdt')}
               </Button>
             </div>
 
             <Form>
               <Input
                 size='sm'
-                label='Название оборудования'
+                label={t('equipmentName')}
                 labelPlacement='inside'
-                placeholder='Название'
+                placeholder={t('equipmentName')}
                 isRequired
                 value={equipmentName}
                 className='w-full sm:w-[350px] md:w-[400px]'
@@ -296,9 +299,9 @@ export default function BuyShareCountComponent({
               />
               <Input
                 size='sm'
-                label='Количество долей'
+                label={t('shareCount')}
                 labelPlacement='inside'
-                placeholder='Количество долей'
+                placeholder={t('shareCount')}
                 type='number'
                 min={1}
                 isRequired
@@ -311,26 +314,32 @@ export default function BuyShareCountComponent({
 
               <div className='mt-2 w-full space-y-3 sm:w-[350px] md:w-[400px]'>
                 <Card className='p-3'>
-                  <div className='mb-1 text-xs text-gray-500'>Баланс долей</div>
+                  <div className='mb-1 text-xs text-gray-500'>
+                    {t('shareCount')}
+                  </div>
                   <div className='font-mono text-lg font-bold text-gray-900'>
                     {userShareBalance > 0 ? userShareBalance : 0}
                   </div>
                 </Card>
                 <Card className='p-3'>
-                  <div className='mb-1 text-xs text-gray-500'>Цена за долю</div>
+                  <div className='mb-1 text-xs text-gray-500'>
+                    {t('sellPriceOneShare')}
+                  </div>
                   <div className='font-mono text-lg font-bold text-gray-900'>
                     {(sharePurchasePrice / totalShareCount || 0).toFixed(2)}
                   </div>
                 </Card>
                 <Card className='p-3'>
-                  <div className='mb-1 text-xs text-gray-500'>Баланс USDT</div>
+                  <div className='mb-1 text-xs text-gray-500'>
+                    {t('usdtBalance')}
+                  </div>
                   <div className='font-mono text-lg font-bold text-gray-900'>
                     {usdtBalance.toFixed(2)}
                   </div>
                 </Card>
                 <Card className='p-3'>
                   <div className='mb-1 text-xs text-gray-500'>
-                    Итого к оплате
+                    {t('totalAmount')}
                   </div>
                   <div
                     className={`font-mono text-lg font-bold ${totalAmount > usdtBalance ? 'text-red-600' : 'text-green-600'}`}
@@ -347,7 +356,7 @@ export default function BuyShareCountComponent({
 
           <ModalFooter className='flex flex-col gap-2 sm:flex-row'>
             <Button color='danger' onPress={handleCloseModal}>
-              Отменить
+              {t('cancel')}
             </Button>
             <Button
               color='success'
@@ -358,7 +367,7 @@ export default function BuyShareCountComponent({
                 totalAmount > usdtBalance
               }
             >
-              Купить
+              {t('buy')}
             </Button>
             {isLoading && <FullScreenSpinner />}
           </ModalFooter>

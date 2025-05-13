@@ -940,7 +940,7 @@ export default function EquipmentsListUser({
                                                       priceDifference /
                                                         totalProfitUSDT,
                                                     ).toLocaleString()}{' '}
-                                                    дней
+                                                    {t('days')}
                                                     <Tooltip
                                                       content={
                                                         <div className='w-[200px] p-3 text-sm'>

@@ -18,6 +18,7 @@ import { convertCoins, fetchCoinPrice } from '@/lib/data';
 import { ConvertModalProps } from '@/types/equipment';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import Notiflix from 'notiflix';
+import { useTranslations } from 'next-intl';
 
 export const ConvertModal: React.FC<
   Omit<ConvertModalProps, 'defaultFromCoin'>
@@ -31,6 +32,9 @@ export const ConvertModal: React.FC<
   const [inputError, setInputError] = useState<string | null>(null);
   const [isReadyToShow, setIsReadyToShow] = useState(false);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const t = useTranslations(
+    'cloudMiningPage.dashboard.userContent.convertModal',
+  );
 
   useEffect(() => {
     if (isOpen) {
@@ -60,33 +64,31 @@ export const ConvertModal: React.FC<
         .map((balance) => balance.coinTicker);
       setToCoin(availableToCoins.length > 0 ? availableToCoins[0] : '');
     }
-  }, [fromCoin, balances]);
+  }, [fromCoin, balances, toCoin]);
 
   const handleConvert = async () => {
     if (!fromCoin || !toCoin || !amount || Number(amount) <= 0) {
-      setError('Пожалуйста, введите положительное число больше 0');
-      Notiflix.Notify.warning(
-        'Пожалуйста, введите положительное число больше 0',
-      );
+      setError(t('please_enter_positive_number'));
+      Notiflix.Notify.warning(t('please_enter_positive_number'));
       return;
     }
 
     if (fromCoin === toCoin) {
-      setError('Нельзя конвертировать монету в саму себя');
-      Notiflix.Notify.failure('Нельзя конвертировать монету в саму себя');
+      setError(t('cannot_convert_coin_to_itself'));
+      Notiflix.Notify.failure(t('cannot_convert_coin_to_itself'));
       return;
     }
 
     const fromBalance = balances.find((b) => b.coinTicker === fromCoin);
     if (!fromBalance || Number(fromBalance.coinAmount) <= 0) {
-      setError('Недостаточно средств для конвертации');
-      Notiflix.Notify.failure('Недостаточно средств для конвертации');
+      setError(t('not_enough_funds_for_conversion'));
+      Notiflix.Notify.failure(t('not_enough_funds_for_conversion'));
       return;
     }
 
     if (Number(amount) > Number(fromBalance.coinAmount)) {
-      setError('Сумма конвертации превышает доступный баланс');
-      Notiflix.Notify.failure('Сумма конвертации превышает доступный баланс');
+      setError(t('conversion_amount_exceeds_available_balance'));
+      Notiflix.Notify.failure(t('conversion_amount_exceeds_available_balance'));
       return;
     }
 
@@ -95,12 +97,14 @@ export const ConvertModal: React.FC<
 
     try {
       await convertCoins(userId, fromCoin, toCoin, Number(amount));
-      Notiflix.Notify.success('Конвертация успешно выполнена');
+      Notiflix.Notify.success(t('conversion_successfully_completed'));
       onSuccess();
       onClose();
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : 'Произошла ошибка при конвертации';
+        err instanceof Error
+          ? err.message
+          : t('error_occurred_during_conversion');
       setError(errorMessage);
       Notiflix.Notify.failure(errorMessage);
     } finally {
@@ -137,11 +141,11 @@ export const ConvertModal: React.FC<
         const maxAmount = fromBalance ? Number(fromBalance.coinAmount) : 0;
         if (isNaN(amountNum) || amountNum <= 0) {
           setConvertedAmount(null);
-          setInputError('Введите положительное число больше 0');
+          setInputError(t('please_enter_positive_number_greater_than_0'));
           return;
         } else if (amountNum > maxAmount) {
           setConvertedAmount(null);
-          setInputError('Сумма превышает доступный баланс');
+          setInputError(t('amount_exceeds_available_balance'));
           return;
         } else {
           setInputError(null);
@@ -213,17 +217,17 @@ export const ConvertModal: React.FC<
           <div className='absolute inset-0 z-50 flex flex-col items-center justify-center gap-4 rounded-lg bg-black/50'>
             <FullScreenSpinner />
             <span className='text-lg font-medium text-white'>
-              Выполняется конвертация...
+              {t('converting')}
             </span>
           </div>
         )}
         <ModalHeader className='text-white'>
-          Конвертация криптовалюты
+          {t('convert_modal_title')}
         </ModalHeader>
         <ModalBody>
           <div className='space-y-4'>
             <Select
-              label='Из'
+              label={t('from')}
               selectedKeys={fromCoin ? new Set([fromCoin]) : new Set()}
               onSelectionChange={(keys: Selection) => {
                 const selectedKey = Array.from(keys)[0];
@@ -267,7 +271,7 @@ export const ConvertModal: React.FC<
             </div>
 
             <Select
-              label='В'
+              label={t('to')}
               selectedKeys={toCoin ? new Set([toCoin]) : new Set()}
               onSelectionChange={(keys: Selection) => {
                 const selectedKey = Array.from(keys)[0];
@@ -302,7 +306,7 @@ export const ConvertModal: React.FC<
             </Select>
 
             <Input
-              label='Количество'
+              label={t('amount')}
               value={amount}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handleAmountChange(e.target.value)
@@ -316,13 +320,13 @@ export const ConvertModal: React.FC<
                   className='cursor-pointer'
                   onClick={handleMaxAmount}
                 >
-                  Макс.
+                  {t('max')}
                 </Chip>
               }
             />
 
             <div className='flex items-center gap-2 text-sm text-white'>
-              Вы получите:
+              {t('you_will_receive')}
               {!amount || inputError ? (
                 <span className='ml-1 opacity-60'>...</span>
               ) : !isReadyToShow ? (
@@ -340,7 +344,7 @@ export const ConvertModal: React.FC<
         </ModalBody>
         <ModalFooter>
           <Button color='danger' variant='light' onPress={onClose}>
-            Отмена
+            {t('cancel')}
           </Button>
           <Button
             color='success'
@@ -354,7 +358,7 @@ export const ConvertModal: React.FC<
               !!error
             }
           >
-            Конвертировать
+            {t('convert')}
           </Button>
         </ModalFooter>
       </ModalContent>
