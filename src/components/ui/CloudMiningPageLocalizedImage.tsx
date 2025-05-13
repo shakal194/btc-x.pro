@@ -82,14 +82,14 @@ export function DiagramCloudMiningPageLocalizedImage() {
     : i18n.defaultLocale;
 
   const imageMap: { [key in Locale]: { src: string; alt: string } } = {
-    en: { src: '/cloud_mining_diagram_en.png', alt: 'Referral program' },
-    ru: { src: '/cloud_mining_diagram_en.png', alt: 'Referral program' },
-    ua: { src: '/cloud_mining_diagram_en.png', alt: 'Referral program' },
+    en: { src: '/cloud_mining_diagram.png', alt: 'Referral program' },
+    ru: { src: '/cloud_mining_diagram.png', alt: 'Referral program' },
+    ua: { src: '/cloud_mining_diagram.png', alt: 'Referral program' },
   };
 
   // Выбираем данные для изображения
   const imageData = imageMap[currentLocale] || {
-    src: '/cloud_mining_diagram_en.png',
+    src: '/cloud_mining_diagram.png',
     alt: 'Cloud Mining Diagram',
   };
 
