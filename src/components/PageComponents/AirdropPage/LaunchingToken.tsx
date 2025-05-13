@@ -118,7 +118,7 @@ export default function LaunchingTokenSection() {
               alt='BTCXT Token'
               width={620}
               height={600}
-              className='hidden h-[500px] w-[420px] rounded-lg lg:block'
+              className='hidden h-[500px] w-[350px] rounded-lg lg:block'
             />
           </div>
           <div className='flex flex-col justify-between rounded-xl'>
