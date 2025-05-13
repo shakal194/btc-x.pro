@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   fetchEquipments,
   fetchAlgorithms,
@@ -35,11 +35,10 @@ export default function Store() {
   };
 
   //Получаем список всего оборудования
-  const getEquipments = async () => {
+  const getEquipments = useCallback(async () => {
     setIsLoading(true);
     try {
-      const data = await fetchEquipments(); // Получаем данные с сервера
-
+      const data = await fetchEquipments();
       setEquipmentsFetch(data);
       return data;
     } catch (error) {
@@ -47,11 +46,11 @@ export default function Store() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [t]);
 
   useEffect(() => {
     getEquipments();
-  }, []);
+  }, [getEquipments]);
 
   //Получаем список всех алгоритмов
   useEffect(() => {
