@@ -39,7 +39,7 @@ export default function HeroSection() {
                 priority={true}
               />
               <Image
-                src='/hero_about_us.jpg'
+                src='/hero_about_us1.jpg'
                 alt='Our Team'
                 width={870}
                 height={600}

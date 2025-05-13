@@ -26,9 +26,9 @@ export default function AboutUsSection() {
             <Image
               src='/founder_btc-x.jpg'
               alt='Founder BTC-X'
-              width={412}
+              width={375}
               height={453}
-              className='h-[453px] w-[412px] rounded-lg'
+              className='h-[453px] w-[375px] rounded-lg'
             />
             <p className='mt-[10px] w-[250px] font-ibm text-ibm13Leading130 opacity-[33%] lg:text-ibm16Leading130'>
               {t('image_alt')}
@@ -50,7 +50,7 @@ export default function AboutUsSection() {
             <div className='relative'>
               {/* Фоновое изображение */}
               <Image
-                src='/about_us_team.png'
+                src='/about_us_team1.png'
                 alt='Our Team'
                 width={630}
                 height={480}
