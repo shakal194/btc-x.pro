@@ -28,6 +28,7 @@ import {
   ChevronUpIcon,
   ChevronDownIcon,
 } from '@heroicons/react/24/outline';
+import { formatCoinTicker } from '@/lib/utils';
 
 type DepositStatus =
   | 'all'
@@ -457,16 +458,17 @@ export default function UserDepositsTable({
                     {operation.depositId || '-'}
                   </TableCell>
                   <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
-                    {operation.coinTicker}
+                    {formatCoinTicker(operation.coinTicker)}
                   </TableCell>
                   <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
-                    {operation.amount}
+                    {operation.amount} {formatCoinTicker(operation.coinTicker)}
                   </TableCell>
                   <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
-                    {operation.feeInUSDT}
+                    {operation.feeInUSDT} USDT
                   </TableCell>
                   <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
-                    {operation.feeInCoin}
+                    {operation.feeInCoin}{' '}
+                    {formatCoinTicker(operation.coinTicker)}
                   </TableCell>
                   <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
                     <Chip

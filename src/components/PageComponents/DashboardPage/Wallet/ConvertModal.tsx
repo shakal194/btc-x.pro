@@ -54,12 +54,26 @@ export const ConvertModal: React.FC<ConvertModalProps> = ({
         ).coinTicker;
       }
       setFromCoin(from);
-      setToCoin('USDT');
+      // Выбираем первую доступную монету, отличную от from
+      const availableToCoins = balances
+        .filter((balance) => balance.coinTicker !== from)
+        .map((balance) => balance.coinTicker);
+      setToCoin(availableToCoins.length > 0 ? availableToCoins[0] : '');
       setAmount('');
       setConvertedAmount(null);
       setError(null);
     }
   }, [isOpen, defaultFromCoin, balances]);
+
+  // Добавляем эффект для обновления toCoin при изменении fromCoin
+  useEffect(() => {
+    if (fromCoin && toCoin === fromCoin) {
+      const availableToCoins = balances
+        .filter((balance) => balance.coinTicker !== fromCoin)
+        .map((balance) => balance.coinTicker);
+      setToCoin(availableToCoins.length > 0 ? availableToCoins[0] : '');
+    }
+  }, [fromCoin, toCoin, balances]);
 
   useEffect(() => {
     if (fromCoin && toCoin && amount) {
@@ -67,8 +81,6 @@ export const ConvertModal: React.FC<ConvertModalProps> = ({
         try {
           // Проверяем, являются ли монеты стейблкоинами
           const isStablecoinPair =
-            (fromCoin === 'USDT' && toCoin === 'USDC') ||
-            (fromCoin === 'USDC' && toCoin === 'USDT') ||
             (fromCoin === 'USDT_SOL' && toCoin === 'USDC_SOL') ||
             (fromCoin === 'USDC_SOL' && toCoin === 'USDT_SOL');
 
@@ -101,6 +113,12 @@ export const ConvertModal: React.FC<ConvertModalProps> = ({
       Notiflix.Notify.warning(
         'Пожалуйста, введите положительное число больше 0',
       );
+      return;
+    }
+
+    if (fromCoin === toCoin) {
+      setError('Нельзя конвертировать монету в саму себя');
+      Notiflix.Notify.failure('Нельзя конвертировать монету в саму себя');
       return;
     }
 
@@ -180,10 +198,7 @@ export const ConvertModal: React.FC<ConvertModalProps> = ({
         }
         debounceTimeout.current = setTimeout(async () => {
           const isStablecoin = (coin: string) =>
-            coin === 'USDT' ||
-            coin === 'USDC' ||
-            coin === 'USDT_SOL' ||
-            coin === 'USDC_SOL';
+            coin === 'USDT_SOL' || coin === 'USDC_SOL';
 
           let preview = null;
           if (isStablecoin(fromCoin) && isStablecoin(toCoin)) {
@@ -214,10 +229,7 @@ export const ConvertModal: React.FC<ConvertModalProps> = ({
 
   const getDecimalPlaces = () => {
     const isStablecoin = (coin: string) =>
-      coin === 'USDT' ||
-      coin === 'USDC' ||
-      coin === 'USDT_SOL' ||
-      coin === 'USDC_SOL';
+      coin === 'USDT_SOL' || coin === 'USDC_SOL';
 
     return isStablecoin(fromCoin) && isStablecoin(toCoin) ? 2 : 8;
   };
@@ -226,6 +238,11 @@ export const ConvertModal: React.FC<ConvertModalProps> = ({
     coinTicker: string;
     coinAmount: string;
   }) => {
+    if (balance.coinTicker === 'USDT_SOL') {
+      return 'USDT(SOL)';
+    } else if (balance.coinTicker === 'USDC_SOL') {
+      return 'USDC(SOL)';
+    }
     return balance.coinTicker;
   };
 
@@ -311,20 +328,22 @@ export const ConvertModal: React.FC<ConvertModalProps> = ({
                 </div>
               }
             >
-              {balances.map((balance) => (
-                <SelectItem
-                  key={balance.coinTicker}
-                  endContent={
-                    <div className='pointer-events-none flex items-center'>
-                      <span className='text-gray-400'>
-                        {Number(balance.coinAmount).toFixed(8)}
-                      </span>
-                    </div>
-                  }
-                >
-                  {formatBalance(balance)}
-                </SelectItem>
-              ))}
+              {balances
+                .filter((balance) => balance.coinTicker !== fromCoin)
+                .map((balance) => (
+                  <SelectItem
+                    key={balance.coinTicker}
+                    endContent={
+                      <div className='pointer-events-none flex items-center'>
+                        <span className='text-gray-400'>
+                          {Number(balance.coinAmount).toFixed(8)}
+                        </span>
+                      </div>
+                    }
+                  >
+                    {formatBalance(balance)}
+                  </SelectItem>
+                ))}
             </Select>
 
             <Input
@@ -355,7 +374,8 @@ export const ConvertModal: React.FC<ConvertModalProps> = ({
                 <Spinner size='sm' color='secondary' className='ml-1' />
               ) : (
                 <span className='ml-1'>
-                  {convertedAmount?.toFixed(getDecimalPlaces())} {toCoin}
+                  {convertedAmount?.toFixed(getDecimalPlaces())}{' '}
+                  {formatBalance({ coinTicker: toCoin, coinAmount: '0' })}
                 </span>
               )}
             </div>

@@ -706,7 +706,7 @@ export async function fetchUSDTBalance(userId: number) {
       .from(balancesTable)
       .where(
         sql`${balancesTable.user_id} = ${userId} 
-        AND ${balancesTable.coinTicker} = 'USDT'`,
+        AND ${balancesTable.coinTicker} = 'USDT_SOL'`,
       )
       .orderBy(desc(balancesTable.id));
 
@@ -715,7 +715,7 @@ export async function fetchUSDTBalance(userId: number) {
 
     return currentBalance;
   } catch (error) {
-    console.error('[USDT Balance] Error fetching balance:', error);
+    console.error('[USDT_SOL Balance] Error fetching balance:', error);
     throw new Error('Ошибка при получении баланса USDT');
   }
 }
@@ -750,7 +750,7 @@ export async function updateUSDTBalance(
     // Создаем новую запись в таблице balances
     await db.insert(balancesTable).values({
       user_id: sql`${userId}`,
-      coinTicker: 'USDT',
+      coinTicker: 'USDT_SOL',
       coinAmount: sql`${newBalance}`,
       created_at: new Date(),
     });
@@ -1110,12 +1110,7 @@ export async function ensureBalanceRecordExists(
 export async function createInitialBalances(userId: number): Promise<void> {
   try {
     // Создаем записи для всех поддерживаемых токенов
-    await ensureBalanceRecordExists(userId, [
-      'USDT',
-      'USDC',
-      'USDT_SOL',
-      'USDC_SOL',
-    ]);
+    await ensureBalanceRecordExists(userId, ['USDT_SOL', 'USDC_SOL']);
     console.log('Created initial balance records for new user');
   } catch (error) {
     console.error('Error creating initial balances:', error);
@@ -1191,7 +1186,13 @@ export async function fetchCoinPrice(coinName: string): Promise<number> {
     const isMainApiAvailable = await checkApiAvailability(binanceApi);
     const apiUrl = isMainApiAvailable ? binanceApi : binanceUsApi;
 
-    const response = await fetch(apiUrl + coinName + 'USDT');
+    // Обработка специальных случаев для USDT_SOL и USDC_SOL
+    let symbol = coinName;
+    if (coinName === 'USDT_SOL' || coinName === 'USDC_SOL') {
+      symbol = coinName.split('_')[0]; // Берем только USDT или USDC
+    }
+
+    const response = await fetch(apiUrl + symbol + 'USDT');
     if (!response.ok) {
       throw new Error(`Failed to fetch price for ${coinName}`);
     }
@@ -1724,9 +1725,7 @@ export async function calculateTotalBalanceInUSDT(
     for (const balance of Object.values(uniqueBalances)) {
       const amount = Number(balance.coinAmount) || 0;
       if (amount > 0) {
-        if (balance.coinTicker === 'USDT' || balance.coinTicker === 'USDC') {
-          totalUSDT += amount;
-        } else if (
+        if (
           balance.coinTicker === 'USDT_SOL' ||
           balance.coinTicker === 'USDC_SOL'
         ) {
@@ -2058,10 +2057,7 @@ export async function convertCoins(
 ) {
   try {
     const isStablecoin = (coin: string) =>
-      coin === 'USDT' ||
-      coin === 'USDC' ||
-      coin === 'USDT_SOL' ||
-      coin === 'USDC_SOL';
+      coin === 'USDT_SOL' || coin === 'USDC_SOL';
 
     // Получаем текущие балансы
     const fromBalance = await getUserBalance(userId, fromCoin);

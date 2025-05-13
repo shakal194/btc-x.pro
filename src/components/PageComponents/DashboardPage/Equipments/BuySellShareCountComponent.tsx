@@ -402,9 +402,7 @@ export default function BuySellShareCountComponent({
                     isDisabled
                     value={totalAmount.toFixed(2)}
                     className={`w-full sm:w-[350px] md:w-[400px] ${
-                      totalAmount > usdtBalance
-                        ? 'text-danger'
-                        : 'text-green-500'
+                      totalAmount > usdtBalance ? 'text-danger' : 'text-success'
                     }`}
                   />
                 </>

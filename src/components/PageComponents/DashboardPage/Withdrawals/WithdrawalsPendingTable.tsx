@@ -30,6 +30,7 @@ import { CancelWithdrawalModal } from './CancelWithdrawalModal';
 import { getWalletId, getCurrencyId } from '@/lib/constants';
 import { getAccessToken, createPayout } from '@/lib/coinsbuy';
 import { COIN_CONFIG } from '@/lib/constants';
+import { formatCoinTicker } from '@/lib/utils';
 
 interface WithdrawalData {
   id: number;
@@ -327,12 +328,14 @@ export default function WithdrawalsTable({
             ? cellValue.toLocaleString()
             : String(cellValue);
         case 'amount':
-          return `${cellValue} ${withdrawal.coinTicker}`;
+          return `${cellValue} ${formatCoinTicker(withdrawal.coinTicker)}`;
         case 'feeInUSDT':
           return `${cellValue} USDT`;
         case 'feeInCoin':
           const network = COIN_CONFIG[withdrawal.coinTicker]?.network;
-          return `${cellValue} ${network}`;
+          return `${cellValue} ${formatCoinTicker(network)}`;
+        case 'coinTicker':
+          return formatCoinTicker(String(cellValue));
         default:
           return String(cellValue);
       }

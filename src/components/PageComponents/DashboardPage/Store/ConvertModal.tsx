@@ -43,12 +43,24 @@ export const ConvertModal: React.FC<
         ).coinTicker;
       }
       setFromCoin(from);
-      setToCoin('USDT');
+      const availableToCoins = balances
+        .filter((balance) => balance.coinTicker !== from)
+        .map((balance) => balance.coinTicker);
+      setToCoin(availableToCoins.length > 0 ? availableToCoins[0] : '');
       setAmount('');
       setConvertedAmount(null);
       setError(null);
     }
   }, [isOpen, balances]);
+
+  useEffect(() => {
+    if (fromCoin && toCoin === fromCoin) {
+      const availableToCoins = balances
+        .filter((balance) => balance.coinTicker !== fromCoin)
+        .map((balance) => balance.coinTicker);
+      setToCoin(availableToCoins.length > 0 ? availableToCoins[0] : '');
+    }
+  }, [fromCoin, balances]);
 
   const handleConvert = async () => {
     if (!fromCoin || !toCoin || !amount || Number(amount) <= 0) {
@@ -56,6 +68,12 @@ export const ConvertModal: React.FC<
       Notiflix.Notify.warning(
         'Пожалуйста, введите положительное число больше 0',
       );
+      return;
+    }
+
+    if (fromCoin === toCoin) {
+      setError('Нельзя конвертировать монету в саму себя');
+      Notiflix.Notify.failure('Нельзя конвертировать монету в саму себя');
       return;
     }
 
@@ -135,10 +153,7 @@ export const ConvertModal: React.FC<
         }
         debounceTimeout.current = setTimeout(async () => {
           const isStablecoin = (coin: string) =>
-            coin === 'USDT' ||
-            coin === 'USDC' ||
-            coin === 'USDT_SOL' ||
-            coin === 'USDC_SOL';
+            coin === 'USDT_SOL' || coin === 'USDC_SOL';
 
           let preview = null;
           if (isStablecoin(fromCoin) && isStablecoin(toCoin)) {
@@ -169,10 +184,7 @@ export const ConvertModal: React.FC<
 
   const getDecimalPlaces = () => {
     const isStablecoin = (coin: string) =>
-      coin === 'USDT' ||
-      coin === 'USDC' ||
-      coin === 'USDT_SOL' ||
-      coin === 'USDC_SOL';
+      coin === 'USDT_SOL' || coin === 'USDC_SOL';
 
     return isStablecoin(fromCoin) && isStablecoin(toCoin) ? 2 : 8;
   };
@@ -181,6 +193,11 @@ export const ConvertModal: React.FC<
     coinTicker: string;
     coinAmount: string;
   }) => {
+    if (balance.coinTicker === 'USDT_SOL') {
+      return 'USDT(SOL)';
+    } else if (balance.coinTicker === 'USDC_SOL') {
+      return 'USDC(SOL)';
+    }
     return balance.coinTicker;
   };
 
@@ -266,20 +283,22 @@ export const ConvertModal: React.FC<
                 </div>
               }
             >
-              {balances.map((balance) => (
-                <SelectItem
-                  key={balance.coinTicker}
-                  endContent={
-                    <div className='pointer-events-none flex items-center'>
-                      <span className='text-gray-400'>
-                        {Number(balance.coinAmount).toFixed(8)}
-                      </span>
-                    </div>
-                  }
-                >
-                  {formatBalance(balance)}
-                </SelectItem>
-              ))}
+              {balances
+                .filter((balance) => balance.coinTicker !== fromCoin)
+                .map((balance) => (
+                  <SelectItem
+                    key={balance.coinTicker}
+                    endContent={
+                      <div className='pointer-events-none flex items-center'>
+                        <span className='text-gray-400'>
+                          {Number(balance.coinAmount).toFixed(8)}
+                        </span>
+                      </div>
+                    }
+                  >
+                    {formatBalance(balance)}
+                  </SelectItem>
+                ))}
             </Select>
 
             <Input
@@ -310,7 +329,8 @@ export const ConvertModal: React.FC<
                 <Spinner size='sm' color='secondary' className='ml-1' />
               ) : (
                 <span className='ml-1'>
-                  {convertedAmount?.toFixed(getDecimalPlaces())} {toCoin}
+                  {convertedAmount?.toFixed(getDecimalPlaces())}{' '}
+                  {formatBalance({ coinTicker: toCoin, coinAmount: '0' })}
                 </span>
               )}
             </div>

@@ -378,7 +378,7 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
       const token = await getToken();
 
       // Create deposit address for USDT (TRC20)
-      const depositResponseUSDT = await createDeposit(token, {
+      /*const depositResponseUSDT = await createDeposit(token, {
         label: `Create USDT address ${newUser[0].id}`,
         tracking_id: `Create USDT address ${email}`,
         confirmations_needed: 1,
@@ -403,10 +403,10 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
           depositResponseUSDT,
         );
         throw new Error('Failed to create USDT deposit address');
-      }
+      }*/
 
       // Create deposit address for USDC (TRC20)
-      const depositResponseUSDC = await createDeposit(token, {
+      /*const depositResponseUSDC = await createDeposit(token, {
         label: `Create USDC address ${newUser[0].id}`,
         tracking_id: `Create USDC address ${email}`,
         confirmations_needed: 1,
@@ -431,7 +431,7 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
           depositResponseUSDC,
         );
         throw new Error('Failed to create USDC deposit address');
-      }
+      }*/
 
       // Create deposit address for USDT (SOL)
       const depositResponseUSDTSOL = await createDeposit(token, {
@@ -490,7 +490,7 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
       }
 
       // Save addresses for all tokens
-      await saveAddress(
+      /*await saveAddress(
         newUser[0].id,
         'USDT',
         depositResponseUSDT.data.attributes.address,
@@ -502,7 +502,7 @@ export async function addUser(prevState: AddUserState, formData: FormData) {
         'USDC',
         depositResponseUSDC.data.attributes.address,
         depositResponseUSDC.data.id,
-      );
+      );*/
 
       await saveAddress(
         newUser[0].id,

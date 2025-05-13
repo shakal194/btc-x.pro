@@ -22,6 +22,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import { fetchUserConvertations } from '@/lib/data';
+import { formatCoinTicker } from '@/lib/utils';
 
 interface Convertation {
   id: number;
@@ -227,13 +228,13 @@ export default function UserConvertationsTable({
                       : 'Нет данных'}
                   </TableCell>
                   <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
-                    {convertation.coinTickerFrom}
+                    {formatCoinTicker(convertation.coinTickerFrom)}
                   </TableCell>
                   <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
                     {parseFloat(convertation.coinAmountFrom).toFixed(8)}
                   </TableCell>
                   <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
-                    {convertation.coinTickerTo}
+                    {formatCoinTicker(convertation.coinTickerTo)}
                   </TableCell>
                   <TableCell className='whitespace-pre-wrap px-4 py-2 text-sm text-white'>
                     {parseFloat(convertation.coinAmountTo).toFixed(8)}

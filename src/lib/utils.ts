@@ -52,3 +52,12 @@ export function formatDate(date: Date | string): string {
 export function formatNumber(value: number, decimalPlaces: number = 8): string {
   return value.toFixed(decimalPlaces);
 }
+
+export const formatCoinTicker = (ticker: string) => {
+  if (ticker === 'USDT_SOL') {
+    return 'USDT(SOL)';
+  } else if (ticker === 'USDC_SOL') {
+    return 'USDC(SOL)';
+  }
+  return ticker;
+};

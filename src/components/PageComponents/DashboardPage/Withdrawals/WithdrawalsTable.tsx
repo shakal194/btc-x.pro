@@ -23,6 +23,7 @@ import {
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
 import { COIN_CONFIG } from '@/lib/constants';
+import { formatCoinTicker } from '@/lib/utils';
 
 interface WithdrawalData {
   id: number;
@@ -210,11 +211,14 @@ export default function WithdrawalsTable({
             ? cellValue.toLocaleString()
             : String(cellValue);
         case 'amount':
+          return `${cellValue} ${formatCoinTicker(withdrawal.coinTicker)}`;
         case 'feeInUSDT':
           return `${cellValue} USDT`;
         case 'feeInCoin':
           const network = COIN_CONFIG[withdrawal.coinTicker]?.network;
-          return `${cellValue} ${network}`;
+          return `${cellValue} ${formatCoinTicker(network)}`;
+        case 'coinTicker':
+          return formatCoinTicker(String(cellValue));
         default:
           return String(cellValue);
       }

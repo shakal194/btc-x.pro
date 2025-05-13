@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Modal,
   ModalContent,
@@ -10,6 +10,9 @@ import {
   Button,
   Input,
   Chip,
+  Select,
+  SelectItem,
+  Spinner,
 } from '@heroui/react';
 import { getAccessToken } from '@/lib/coinsbuy';
 import Notiflix from 'notiflix';
@@ -23,6 +26,7 @@ import {
 import { createWithdrawal, validateOTPCode } from '@/lib/data';
 import { useLocale } from 'next-intl';
 import FullScreenSpinner from '@/components/ui/Spinner';
+import { formatCoinTicker, formatNumber } from '@/lib/utils';
 
 interface WithdrawModalProps {
   isOpen: boolean;
@@ -59,8 +63,6 @@ export default function WithdrawModal({
 
   const canIncludeFee = (ticker: string) => {
     const noFeeInclusionList = [
-      'USDT', // USDT-TRX token
-      'USDC', // USDC-TRX token
       'USDT_SOL', // USDT-SOL token
       'USDC_SOL', // USDC-SOL token
       'TRX',
@@ -86,11 +88,7 @@ export default function WithdrawModal({
 
       // Определяем валюты для запроса курса
       let leftCurrency = 'USDT'; // Всегда используем USDT как базовую валюту для конвертации
-      let rightCurrency = 'TRX'; // По умолчанию TRX
-
-      if (coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL') {
-        rightCurrency = 'SOL';
-      }
+      let rightCurrency = 'SOL'; // Всегда используем SOL для USDT_SOL и USDC_SOL
 
       console.log(`Requesting rate for ${leftCurrency}/${rightCurrency}`); // Debug log
 
@@ -114,7 +112,7 @@ export default function WithdrawModal({
       const rate = data.data[0].attributes.ask;
       console.log('Raw rate:', rate); // Debug log
 
-      // Для всех случаев берем обратный курс, так как нам нужно конвертировать из TRX/SOL в USDT
+      // Для всех случаев берем обратный курс, так как нам нужно конвертировать из SOL в USDT
       const finalRate = (1 / Number(rate)).toString();
       console.log('Final rate:', finalRate); // Debug log
 
@@ -201,6 +199,10 @@ export default function WithdrawModal({
           throw new Error('Некорректный адрес');
         }
 
+        if (errorDetail?.toLowerCase().includes('insufficient funds')) {
+          throw new Error('Ошибка сервиса. Пожалуйста, попробуйте позже');
+        }
+
         throw new Error(errorDetail || 'Failed to calculate fee');
       }
 
@@ -216,12 +218,7 @@ export default function WithdrawModal({
       setFeeAmount(calculatedFee);
 
       // Calculate fee in withdrawal currency if needed
-      if (
-        coinTicker === 'USDT' ||
-        coinTicker === 'USDC' ||
-        coinTicker === 'USDT_SOL' ||
-        coinTicker === 'USDC_SOL'
-      ) {
+      if (coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL') {
         const rate = await getRate();
         console.log('Conversion rate:', rate); // Debug log
 
@@ -270,7 +267,7 @@ export default function WithdrawModal({
   const handleAmountBlur = () => {
     if (amount && !isNaN(Number(amount))) {
       const numValue = parseFloat(amount);
-      if (coinTicker === 'USDT' || coinTicker === 'USDC') {
+      if (coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL') {
         setAmount(numValue.toFixed(2));
       } else {
         setAmount(numValue.toFixed(8));
@@ -306,22 +303,14 @@ export default function WithdrawModal({
       // После расчета комиссии вычисляем максимально доступную сумму
       let maxAvailable = balance;
 
-      if (coinTicker === 'USDT' || coinTicker === 'USDC') {
-        // Для USDT/USDC (TRC20) вычитаем комиссию в USDT
-        maxAvailable = Math.max(0, balance - Number(feeInUSDT));
-      } else if (coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL') {
+      if (coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL') {
         // Для USDT/USDC (SOL) устанавливаем полный баланс,
         // так как комиссия уже будет учтена в проверке getTotalAmount
         maxAvailable = balance;
       }
 
       let formattedAmount = maxAvailable.toString();
-      if (
-        coinTicker === 'USDT' ||
-        coinTicker === 'USDC' ||
-        coinTicker === 'USDT_SOL' ||
-        coinTicker === 'USDC_SOL'
-      ) {
+      if (coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL') {
         formattedAmount = maxAvailable.toFixed(2);
       } else {
         formattedAmount = maxAvailable.toFixed(8);
@@ -350,12 +339,7 @@ export default function WithdrawModal({
   const getTotalAmount = () => {
     if (!amount || isNaN(Number(amount))) return 0;
     // Учитываем комиссию в USDT для всех стейблкоинов
-    if (
-      coinTicker === 'USDT' ||
-      coinTicker === 'USDC' ||
-      coinTicker === 'USDT_SOL' ||
-      coinTicker === 'USDC_SOL'
-    ) {
+    if (coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL') {
       return Number(amount) + Number(feeInUSDT);
     }
     return Number(amount);
@@ -492,11 +476,14 @@ export default function WithdrawModal({
       handleClose();
     } catch (error) {
       console.error('Error creating withdrawal:', error);
-      Notiflix.Notify.failure(
-        error instanceof Error
-          ? error.message
-          : 'Ошибка при создании запроса на вывод',
-      );
+      // Показываем уведомление только если это не ошибка insufficient funds
+      if (!(error instanceof Error && error.message === 'insufficient_funds')) {
+        Notiflix.Notify.failure(
+          error instanceof Error
+            ? error.message
+            : 'Ошибка при создании запроса на вывод',
+        );
+      }
     } finally {
       setIsLoading(false);
     }
@@ -509,13 +496,6 @@ export default function WithdrawModal({
     setFeeInUSDT('0');
     setIsFeeCalculated(false);
     onClose();
-  };
-
-  // Функция для форматирования отображения тикера
-  const formatCoinTicker = (ticker: string) => {
-    if (ticker === 'USDT_SOL') return 'USDT(SOL)';
-    if (ticker === 'USDC_SOL') return 'USDC(SOL)';
-    return ticker;
   };
 
   return (
@@ -539,7 +519,8 @@ export default function WithdrawModal({
             <div className='rounded bg-gray-700 p-3'>
               <p className='text-sm text-gray-300'>Доступно для вывода:</p>
               <p className='text-lg font-bold text-green-400'>
-                {balance} {formatCoinTicker(coinTicker)}
+                {formatNumber(Number(balance), 8)}{' '}
+                {formatCoinTicker(coinTicker)}
               </p>
             </div>
 
@@ -618,17 +599,12 @@ export default function WithdrawModal({
                   Комиссия сети примерно:{' '}
                   <Chip color='danger' size='sm' variant='shadow'>
                     {feeAmount}
-                    {coinTicker === 'USDT' || coinTicker === 'USDC'
-                      ? ` TRX (≈$${feeInUSDT} ${formatCoinTicker(coinTicker)})`
-                      : coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL'
-                        ? ` SOL (≈$${feeInUSDT} ${formatCoinTicker(coinTicker)})`
-                        : ''}
+                    {coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL'
+                      ? ` SOL (≈$${feeInUSDT} ${formatCoinTicker(coinTicker)})`
+                      : ''}
                   </Chip>
                 </li>
-                {(coinTicker === 'USDT' ||
-                  coinTicker === 'USDC' ||
-                  coinTicker === 'USDT_SOL' ||
-                  coinTicker === 'USDC_SOL') && (
+                {(coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL') && (
                   <li>
                     Итого с баланса спишется:{' '}
                     <Chip color='success' size='sm' variant='shadow'>

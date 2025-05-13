@@ -420,10 +420,16 @@ export default function EquipmentsListUser({
                       className='flex items-center justify-between gap-4'
                     >
                       <div className='flex items-center gap-2'>
-                        <span>{balance.coinTicker}</span>
+                        <span>
+                          {balance.coinTicker === 'USDT_SOL'
+                            ? 'USDT(SOL)'
+                            : balance.coinTicker === 'USDC_SOL'
+                              ? 'USDC(SOL)'
+                              : balance.coinTicker}
+                        </span>
                         <span className='font-bold'>
                           {Number(balance.coinAmount).toFixed(
-                            ['USDT', 'USDC', 'USDT_SOL', 'USDC_SOL'].includes(
+                            ['USDT_SOL', 'USDC_SOL'].includes(
                               balance.coinTicker,
                             )
                               ? 2
