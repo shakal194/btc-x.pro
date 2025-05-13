@@ -50,7 +50,7 @@ export default function AboutUsSection() {
             <div className='relative'>
               {/* Фоновое изображение */}
               <Image
-                src='/about_us_team.jpg'
+                src='/about_us_team1.jpg'
                 alt='Our Team'
                 width={4160}
                 height={2757}
