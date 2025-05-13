@@ -97,7 +97,7 @@ export default function HeroMainPage() {
           height={1200}
           className='relative h-[396px] w-[270px] object-fill sm:h-[496px] sm:w-[350px] md:h-[500px] md:w-[350px] lg:h-[600px] lg:w-[400px] xl:h-[750px] xl:w-[500px]'
           priority={true}
-          unoptimized={true}
+          loading='eager'
         />
       </div>
       <div className='pointer-events-none absolute -left-[16%] top-[60%] z-10 w-screen md:-left-[15%] md:top-[25%] lg:-top-[50%] lg:left-[75%] lg:w-[900px]'>
