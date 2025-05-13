@@ -9,12 +9,14 @@ import {
 } from '@/lib/data';
 import Image from 'next/image';
 import BuyShareCountComponent from '@/components/PageComponents/DashboardPage/Store/BuyShareCountComponent';
-import { Tabs, Tab, divider } from '@heroui/react';
+import { Tabs, Tab } from '@heroui/react';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { Tooltip } from '@heroui/react';
 import { StoreSkeleton } from '@/components/ui/Skeletons';
+import { useTranslations } from 'next-intl';
 
 export default function Store() {
+  const t = useTranslations('cloudMiningPage.dashboard.userContent');
   const [isLoading, setIsLoading] = useState<boolean>(false); // Флаг загрузки
   const [algorithms, setAlgorithms] = useState<any[]>([]); // Состояние для хранения алгоритмов
   const [equipmentsFetch, setEquipmentsFetch] = useState<any[]>([]);
@@ -41,7 +43,7 @@ export default function Store() {
       setEquipmentsFetch(data);
       return data;
     } catch (error) {
-      console.error('Ошибка при получении данных по алгоритмам', error);
+      console.error(t('error_fetching_equipments'), error);
     } finally {
       setIsLoading(false);
     }
@@ -61,12 +63,12 @@ export default function Store() {
           setSelectedAlgorithm(data[0].name);
         }
       } catch (error) {
-        console.error('Ошибка при получении алгоритмов', error);
+        console.error(t('error_fetching_algorithms'), error);
       }
     };
 
     getAlgorithms();
-  }, []);
+  }, [t]);
 
   // Получаем цену электричества
   useEffect(() => {
@@ -75,11 +77,11 @@ export default function Store() {
         const price = await fetchElectricityPrice();
         setElectricityPrice(Number(price?.pricePerKWh) || 0);
       } catch (error) {
-        console.error('Error fetching electricity price:', error);
+        console.error(t('error_fetching_electricity_price'), error);
       }
     };
     getElectricityPrice();
-  }, []);
+  }, [t]);
 
   // Рассчитываем доход для каждого устройства
   useEffect(() => {
@@ -98,7 +100,9 @@ export default function Store() {
             };
           } catch (error) {
             console.error(
-              `Error calculating revenue for ${equipment.name}:`,
+              t('error_calculating_revenue_for_equipment', {
+                equipmentName: equipment.name,
+              }),
               error,
             );
           }
@@ -111,7 +115,7 @@ export default function Store() {
     if (equipmentsFetch.length > 0 && electricityPrice > 0) {
       calculateRevenue();
     }
-  }, [equipmentsFetch, electricityPrice]);
+  }, [equipmentsFetch, electricityPrice, t]);
 
   useEffect(() => {
     const getCoinPrices = async () => {
@@ -127,14 +131,14 @@ export default function Store() {
         }
         setCoinPrices(newCoinPrices);
       } catch (error) {
-        console.error('Error fetching coin prices:', error);
+        console.error(t('error_fetching_coin_prices'), error);
       }
     };
 
     if (algorithms.length > 0) {
       getCoinPrices();
     }
-  }, [algorithms]);
+  }, [algorithms, t]);
 
   return (
     <section className='space-y-4'>
@@ -150,7 +154,7 @@ export default function Store() {
             <Tab key={algorithm.name} title={algorithm.name}>
               <ul className='space-y-4'>
                 {isLoading ? (
-                  <p>Загрузка оборудования...</p>
+                  <p>{t('loading_equipment')}</p>
                 ) : (
                   equipmentsFetch
                     .filter(
@@ -199,25 +203,25 @@ export default function Store() {
                             <div>
                               <div className='flex flex-col gap-2'>
                                 <p>
-                                  <b>Алгоритм:</b> {algorithm.name}
+                                  <b>{t('algorithm')}:</b> {algorithm.name}
                                 </p>
                                 <p>
-                                  <b>Мощность:</b> {equipment.power} кВт
+                                  <b>{t('power')}:</b> {equipment.power} кВт
                                 </p>
                                 <p>
-                                  <b>Доли:</b> {equipment.shareCount}
+                                  <b>{t('shares')}:</b> {equipment.shareCount}
                                 </p>
                                 <p>
-                                  <b>Цена покупки:</b> $
+                                  <b>{t('buingPrice')}:</b> $
                                   {equipment.purchasePrice}
                                 </p>
                                 <p>
-                                  <b>Цена одной доли:</b> $
+                                  <b>{t('sharePrice')}:</b> $
                                   {equipment.purchasePrice /
                                     equipment.shareCount}
                                 </p>
                                 <p>
-                                  <b>Доход в сутки одного устройства:</b>{' '}
+                                  <b>{t('dailyIncomePerDevice')}:</b>{' '}
                                 </p>
                                 {algorithm.coinTickers &&
                                   algorithm.coinTickers.map((coin: any) => (
@@ -230,7 +234,7 @@ export default function Store() {
                                     </p>
                                   ))}
                                 <p>
-                                  <b>Прибыль в сутки всех долей:</b>
+                                  <b>{t('dailyProfitPerDevice')}:</b>
                                 </p>
                                 {algorithm.coinTickers && (
                                   <div className='flex flex-col gap-2'>
@@ -309,7 +313,7 @@ export default function Store() {
                                       );
                                     })()}
                                     <div className='flex items-center gap-1'>
-                                      <span>Окупаемость: </span>
+                                      <span>{t('payback')}: </span>
                                       {(() => {
                                         // Рассчитываем общий доход в USDT
                                         const totalIncomeUSDT =
@@ -348,16 +352,12 @@ export default function Store() {
                                                   equipment.purchasePrice,
                                                 ) / totalProfitUSDT,
                                               ).toLocaleString()}{' '}
-                                              дней
+                                              {t('days')}
                                               <Tooltip
                                                 content={
                                                   <div className='w-[200px] p-3 text-sm'>
                                                     <p>
-                                                      Расчёт по текущему курсу
-                                                      всех криптовалют, которые
-                                                      добываются, без учёта
-                                                      остаточной стоимости
-                                                      оборудования
+                                                      {t('breakeven_text_4')}
                                                     </p>
                                                   </div>
                                                 }
@@ -370,14 +370,14 @@ export default function Store() {
                                         } else {
                                           return (
                                             <span className='text-danger'>
-                                              Не окупится
+                                              {t('not_payback')}
                                             </span>
                                           );
                                         }
                                       })()}
                                     </div>
                                     <div className='flex items-center gap-1'>
-                                      <span>Выход в безубыток: </span>
+                                      <span>{t('breakeven')}: </span>
                                       {(() => {
                                         // Рассчитываем общий доход в USDT
                                         const totalIncomeUSDT =
@@ -420,16 +420,14 @@ export default function Store() {
                                                 priceDifference /
                                                   totalProfitUSDT,
                                               ).toLocaleString()}{' '}
-                                              дней
+                                              {t('days')}
                                               <Tooltip
                                                 content={
                                                   <div className='w-[200px] p-3 text-sm'>
                                                     <p>
-                                                      Расчёт по текущему курсу с
-                                                      учетом разницы между ценой
-                                                      покупки ($
+                                                      {t('breakeven_text')} ($
                                                       {equipment.purchasePrice})
-                                                      и продажи ($
+                                                      {t('breakeven_text_2')} ($
                                                       {equipment.salePrice})
                                                     </p>
                                                   </div>
@@ -468,9 +466,7 @@ export default function Store() {
                 {!isLoading &&
                   equipmentsFetch.filter(
                     (equipment) => equipment.algorithm_id === algorithm.id,
-                  ).length === 0 && (
-                    <p>Нет доступного оборудования для этого алгоритма</p>
-                  )}
+                  ).length === 0 && <p>{t('no_available_equipment')}</p>}
               </ul>
             </Tab>
           ))}

@@ -1,23 +1,22 @@
 import { auth } from '@/auth';
 import { ReferralSettings } from '@/components/PageComponents/DashboardPage/Settings/ReferralSettings';
 import { ChangePasswordForm } from '@/components/PageComponents/DashboardPage/Settings/ChangePasswordForm';
+import { useTranslations } from 'next-intl';
 
-export default async function Page() {
-  const session = await auth();
-
-  if (!session?.user?.id) {
-    return null;
-  }
+function SettingsContent({ session }: { session: any }) {
+  const t = useTranslations('cloudMiningPage.dashboard.userContent.settings');
 
   return (
     <main className='container mx-auto p-4'>
-      <h1 className='mb-8 text-2xl font-bold text-white'>Настройки</h1>
+      <h1 className='mb-8 text-2xl font-bold text-white'>{t('title')}</h1>
       <div className='grid grid-cols-1 gap-6 rounded-lg p-6 md:grid-cols-2'>
         <div>
           <h2 className='mb-2 text-lg font-semibold text-white'>
-            Данные пользователя
+            {t('user_data')}
           </h2>
-          <p className='text-white'>Email: {session.user.email}</p>
+          <p className='text-white'>
+            {t('email')}: {session.user.email}
+          </p>
           <div className='mt-4'>
             <ChangePasswordForm
               userId={session.user.id}
@@ -30,4 +29,13 @@ export default async function Page() {
       </div>
     </main>
   );
+}
+
+export default async function Page() {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return null;
+  }
+
+  return <SettingsContent session={session} />;
 }

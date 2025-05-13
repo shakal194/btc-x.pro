@@ -21,7 +21,7 @@ import {
 } from '@/lib/actions';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { signOut } from 'next-auth/react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 interface ChangePasswordFormProps {
   userId: string;
@@ -47,7 +47,7 @@ export function ChangePasswordForm({
   userEmail,
 }: ChangePasswordFormProps) {
   const locale = useLocale();
-
+  const t = useTranslations('cloudMiningPage.dashboard.userContent.settings');
   // States for form visibility and loading
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -92,16 +92,16 @@ export function ChangePasswordForm({
   useEffect(() => {
     const errors = [];
     if (newPassword.length < 8) {
-      errors.push('Пароль должен содержать минимум 8 символов');
+      errors.push(t('password_must_contain_at_least_8_characters'));
     }
     if ((newPassword.match(/[!@#$%^&*(),.?":{}|<>]/) || []).length < 1) {
-      errors.push('Пароль должен содержать минимум 1 специальный символ');
+      errors.push(t('password_must_contain_at_least_1_special_character'));
     }
     if (newPassword === currentPassword && newPassword !== '') {
-      errors.push('Новый пароль не должен совпадать с текущим');
+      errors.push(t('new_password_must_not_match_current_password'));
     }
     setErrorMessagePassword(errors);
-  }, [newPassword, currentPassword]);
+  }, [newPassword, currentPassword, t]);
 
   // Validation states
   const isInvalidCurrentPassword = useMemo(
@@ -148,7 +148,7 @@ export function ChangePasswordForm({
         setErrorMessageForm(state.errors.error[0]);
       }
     } else if (state.success) {
-      Notify.success('Пароль успешно изменен', {
+      Notify.success(t('password_successfully_changed'), {
         timeout: 3000,
       });
 
@@ -167,7 +167,7 @@ export function ChangePasswordForm({
         signOut({ callbackUrl: `/${locale}/signin?tab=signin` });
       }, 1500);
     }
-  }, [state, locale]);
+  }, [state, locale, t]);
 
   // Handler for OTP request
   const handleRequestOTP = async () => {
@@ -175,21 +175,21 @@ export function ChangePasswordForm({
       setIsLoading(true);
       const result = await sendChangePasswordOTP(userEmail);
       if (result.success) {
-        Notify.success('Код подтверждения отправлен на ваш email', {
+        Notify.success(t('otp_code_sent_to_email'), {
           timeout: 3000,
         });
       } else {
-        Notify.failure(result.error || 'Ошибка при отправке кода', {
+        Notify.failure(result.error || t('error_sending_otp_code'), {
           timeout: 3000,
         });
-        setErrorMessageForm(result.error || 'Ошибка при отправке кода');
+        setErrorMessageForm(result.error || t('error_sending_otp_code'));
       }
     } catch (error) {
       console.error('Error requesting OTP:', error);
-      Notify.failure('Ошибка при отправке кода', {
+      Notify.failure(t('error_sending_otp_code'), {
         timeout: 3000,
       });
-      setErrorMessageForm('Ошибка при отправке кода');
+      setErrorMessageForm(t('error_sending_otp_code'));
     } finally {
       setIsLoading(false);
     }
@@ -240,7 +240,7 @@ export function ChangePasswordForm({
         onPress={() => setIsFormVisible(!isFormVisible)}
         className='text-white'
       >
-        Изменить пароль
+        {t('change_password')}
       </Button>
 
       <div
@@ -248,13 +248,13 @@ export function ChangePasswordForm({
       >
         <Form onSubmit={handleSubmit} className='w-full max-w-xs space-y-4'>
           <Input
-            label='Текущий пароль'
+            label={t('current_password')}
             labelPlacement='inside'
             isInvalid={isInvalidCurrentPassword}
             color={isInvalidCurrentPassword ? 'danger' : 'success'}
             name='currentPassword'
             className='text-white'
-            placeholder='Введите текущий пароль'
+            placeholder={t('current_password_placeholder')}
             isRequired
             type={showCurrentPassword ? 'text' : 'password'}
             value={currentPassword}
@@ -285,13 +285,13 @@ export function ChangePasswordForm({
           />
 
           <Input
-            label='Новый пароль'
+            label={t('new_password')}
             labelPlacement='inside'
             isInvalid={errorMessagePassword.length > 0}
             color={isInvalidNewPassword ? 'danger' : 'success'}
             name='newPassword'
             className='text-white'
-            placeholder='Введите новый пароль'
+            placeholder={t('new_password_placeholder')}
             isRequired
             type={showNewPassword ? 'text' : 'password'}
             value={newPassword}
@@ -323,19 +323,21 @@ export function ChangePasswordForm({
           />
 
           <Input
-            label='Подтвердить пароль'
+            label={t('confirm_password')}
             labelPlacement='inside'
             isInvalid={isInvalidConfirmPassword}
             color={isInvalidConfirmPassword ? 'danger' : 'success'}
             name='confirmPassword'
             className='text-white'
-            placeholder='Подтвердите новый пароль'
+            placeholder={t('confirm_password_placeholder')}
             isRequired
             type={showConfirmPassword ? 'text' : 'password'}
             value={confirmPassword}
             variant='bordered'
             onValueChange={setConfirmPassword}
-            errorMessage={isInvalidConfirmPassword && 'Пароли не совпадают'}
+            errorMessage={
+              isInvalidConfirmPassword && t('passwords_do_not_match')
+            }
             endContent={
               <div className='flex items-center gap-2'>
                 <div
@@ -361,13 +363,13 @@ export function ChangePasswordForm({
           />
 
           <Input
-            label='OTP код'
+            label={t('otp_code')}
             labelPlacement='inside'
             isInvalid={isInvalidOTP}
             color={isInvalidOTP ? 'danger' : 'success'}
             name='otpCode'
             className='text-white'
-            placeholder='Введите OTP код'
+            placeholder={t('otp_code_placeholder')}
             isRequired
             type='text'
             value={otpCode}
@@ -383,7 +385,7 @@ export function ChangePasswordForm({
                 onClick={handleRequestOTP}
                 isDisabled={isLoading}
               >
-                Получить код
+                {t('get_otp_code')}
               </Chip>
             }
           />
@@ -408,7 +410,7 @@ export function ChangePasswordForm({
               isLoading
             }
           >
-            Сохранить
+            {t('save')}
           </Button>
         </Form>
       </div>

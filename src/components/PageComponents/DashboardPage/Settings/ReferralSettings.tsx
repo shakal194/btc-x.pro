@@ -6,12 +6,14 @@ import { Snippet, Button, Card, CardHeader, CardBody } from '@heroui/react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { useTranslations } from 'next-intl';
 
 interface ReferralSettingsProps {
   userId: string;
 }
 
 export function ReferralSettings({ userId }: ReferralSettingsProps) {
+  const t = useTranslations('cloudMiningPage.dashboard.userContent.settings');
   const { locale } = useParams();
   const [refCode, setRefCode] = useState<number>(0);
   const [refBalance, setRefBalance] = useState<number>(0);
@@ -50,7 +52,7 @@ export function ReferralSettings({ userId }: ReferralSettingsProps) {
 
   const handleCopyFullLink = () => {
     navigator.clipboard.writeText(referralLink);
-    Notify.success('Ссылка скопирована', {
+    Notify.success(t('referral_link_copied'), {
       timeout: 2000,
     });
   };
@@ -67,7 +69,7 @@ export function ReferralSettings({ userId }: ReferralSettingsProps) {
             hideSymbol={true}
             onCopy={handleCopyFullLink}
           >
-            Реф.ссылка
+            {t('referral_link')}
           </Snippet>
         </div>
 
@@ -75,7 +77,7 @@ export function ReferralSettings({ userId }: ReferralSettingsProps) {
           <Card isHoverable={true}>
             <CardHeader className='justify-center'>
               <p className='text-center font-bold text-white md:text-[12px] lg:text-[14px]'>
-                Реферальный баланс
+                {t('referral_balance')}
               </p>
             </CardHeader>
             <CardBody className='text-center'>$ {refBalance}</CardBody>
@@ -83,7 +85,7 @@ export function ReferralSettings({ userId }: ReferralSettingsProps) {
           <Card isHoverable={true}>
             <CardHeader className='justify-center'>
               <p className='text-center font-bold text-white md:text-[12px] lg:text-[14px]'>
-                Реферальный процент
+                {t('referral_percent')}
               </p>
             </CardHeader>
             <CardBody className='text-center'>{referralPercent}</CardBody>
@@ -91,7 +93,7 @@ export function ReferralSettings({ userId }: ReferralSettingsProps) {
           <Card isHoverable={true}>
             <CardHeader className='justify-center'>
               <p className='text-center font-bold text-white md:text-[12px] lg:text-[14px]'>
-                Количество рефералов
+                {t('referral_count')}
               </p>
             </CardHeader>
             <CardBody className='text-center'>{referralsCount}</CardBody>
@@ -101,7 +103,7 @@ export function ReferralSettings({ userId }: ReferralSettingsProps) {
         <div>
           <Link href={`/${locale}/dashboard/settings/referral-history`}>
             <Button color='secondary' variant='ghost' className='text-white'>
-              История реферальных начислений
+              {t('referral_history')}
             </Button>
           </Link>
         </div>

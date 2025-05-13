@@ -26,6 +26,7 @@ import {
 import Notiflix from 'notiflix';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import { createDepositForCoin } from '@/lib/balance';
+import { useTranslations } from 'next-intl';
 
 interface BuySellShareCountComponentProps {
   equipmentId: number;
@@ -57,6 +58,7 @@ export default function BuySellShareCountComponent({
   const [isPurchase, setIsPurchase] = useState(true);
   const [transactionError, setTransactionError] = useState('');
   const [shareCountError, setShareCountError] = useState('');
+  const t = useTranslations('cloudMiningPage.dashboard.userContent');
 
   useEffect(() => {
     const currentBalance = async () => {
@@ -68,7 +70,7 @@ export default function BuySellShareCountComponent({
           userBalanceShares[equipmentId]?.balanceShareCount || 0;
         setUserShareBalance(balanceShareCount);
       } catch (error) {
-        console.error('Ошибка при получении баланса долей', error);
+        console.error(t('errorGetShareBalance'), error);
         setUserShareBalance(0);
       }
     };
@@ -76,7 +78,7 @@ export default function BuySellShareCountComponent({
     if (user_id && equipmentId) {
       currentBalance();
     }
-  }, [user_id, equipmentId]);
+  }, [user_id, equipmentId, t]);
 
   // Получаем данные оборудования по ID
   useEffect(() => {
@@ -92,14 +94,14 @@ export default function BuySellShareCountComponent({
           setTotalShareCount(data.shareCount);
         }
       } catch (error) {
-        console.error('Ошибка при получении данных оборудования', error);
+        console.error(t('errorGetEquipmentData'), error);
       }
     };
 
     if (equipmentUuid) {
       getEquipmentById();
     }
-  }, [equipmentUuid]);
+  }, [equipmentUuid, t]);
 
   // Получаем баланс USDT при монтировании компонента
   useEffect(() => {
@@ -109,13 +111,13 @@ export default function BuySellShareCountComponent({
           const balance = await fetchUSDTBalance(Number(user_id));
           setUsdtBalance(Number(balance) || 0);
         } catch (error) {
-          console.error('Ошибка при получении баланса USDT:', error);
+          console.error(t('errorGetUsdtBalance'), error);
           setUsdtBalance(0);
         }
       };
       fetchBalance();
     }
-  }, [user_id]);
+  }, [user_id, t]);
 
   // Рассчитываем общую сумму при изменении количества долей
   useEffect(() => {
@@ -152,12 +154,14 @@ export default function BuySellShareCountComponent({
     const numValue = Number(value);
 
     if (isNaN(numValue) || numValue <= 0) {
-      setShareCountError('Количество долей должно быть положительным числом');
+      setShareCountError(t('shareCountError'));
       return;
     }
 
     if (!isPurchase && numValue > userShareBalance) {
-      setShareCountError(`У вас только ${userShareBalance} долей для продажи`);
+      setShareCountError(
+        `${t('youHaveOnly')} ${userShareBalance} ${t('sharesForSale')}`,
+      );
       return;
     }
 
@@ -165,7 +169,7 @@ export default function BuySellShareCountComponent({
       const total = numValue * (sharePurchasePrice / totalShareCount);
       if (total > usdtBalance) {
         setShareCountError(
-          `Необходимо пополнить баланс на ${(total - usdtBalance).toFixed(2)} USDT`,
+          `${t('needToTopUpBalance')} ${(total - usdtBalance).toFixed(2)} ${t('usdt')}`,
         );
         return;
       }
@@ -179,8 +183,8 @@ export default function BuySellShareCountComponent({
     try {
       const shareCount = Number(shareCountInput) || 0;
       if (!shareCount || sharePurchasePrice <= 0) {
-        setTransactionError('Пожалуйста, заполните все поля корректно');
-        Notiflix.Notify.warning('Пожалуйста, заполните все поля корректно');
+        setTransactionError(t('pleaseFillAllFieldsCorrectly'));
+        Notiflix.Notify.warning(t('pleaseFillAllFieldsCorrectly'));
         return;
       }
 
@@ -190,9 +194,7 @@ export default function BuySellShareCountComponent({
         const equipment = equipmentData[0];
 
         if (!equipment?.algorithm?.coinTickers?.length) {
-          throw new Error(
-            'Не удалось определить тикеры монет для оборудования',
-          );
+          throw new Error(t('errorGetCoinTickers'));
         }
 
         // Создаем депозиты для всех монет алгоритма
@@ -208,7 +210,7 @@ export default function BuySellShareCountComponent({
               );
             } catch (error) {
               console.error(
-                `Error creating deposit address for ${coinTicker.name}:`,
+                `${t('errorCreatingDepositAddress')} ${coinTicker.name}:`,
                 error,
               );
             }
@@ -221,8 +223,8 @@ export default function BuySellShareCountComponent({
         : userShareBalance - shareCount;
 
       if (!isPurchase && updatedShareBalance < 0) {
-        setTransactionError('Недостаточно долей для продажи');
-        Notiflix.Notify.warning('Недостаточно долей для продажи');
+        setTransactionError(t('notEnoughSharesForSale'));
+        Notiflix.Notify.warning(t('notEnoughSharesForSale'));
         return;
       }
 
@@ -274,15 +276,15 @@ export default function BuySellShareCountComponent({
 
       handleCloseModal();
       Notiflix.Notify.success(
-        `Успешно ${isPurchase ? 'куплено' : 'продано'} ${shareCount} долей`,
+        `${t('successfully')} ${isPurchase ? t('bought') : t('sold')} ${shareCount} ${t('shares')}`,
       );
     } catch (error) {
-      console.error('Ошибка при обработке транзакции:', error);
-      setTransactionError('Ошибка при обработке транзакции');
+      console.error(t('errorProcessingTransaction'), error);
+      setTransactionError(t('errorProcessingTransaction'));
       Notiflix.Notify.failure(
         error instanceof Error
           ? error.message
-          : 'Ошибка при обработке транзакции',
+          : t('errorProcessingTransaction'),
       );
     } finally {
       setIsLoading(false);
@@ -301,7 +303,7 @@ export default function BuySellShareCountComponent({
           onOpen();
         }}
       >
-        Купить доли
+        {t('buyShares')}
       </Button>
       <Button
         size='md'
@@ -313,7 +315,7 @@ export default function BuySellShareCountComponent({
           onOpen();
         }}
       >
-        Продать доли
+        {t('sellShares')}
       </Button>
 
       <Modal
@@ -327,17 +329,17 @@ export default function BuySellShareCountComponent({
         <ModalContent>
           <ModalHeader className='flex flex-col gap-1 text-white'>
             {isPurchase
-              ? `Купить доли ${equipmentName}`
-              : `Продать доли ${equipmentName}`}
+              ? `${t('buyShares')} ${equipmentName}`
+              : `${t('sellShares')} ${equipmentName}`}
           </ModalHeader>
 
           <ModalBody className='mx-auto'>
             <Form>
               <Input
                 size='sm'
-                label='Название оборудования'
+                label={t('equipmentName')}
                 labelPlacement='inside'
-                placeholder='Название'
+                placeholder={t('equipmentName')}
                 isRequired
                 value={equipmentName}
                 onChange={(e) => setEquipmentName(e.target.value)}
@@ -346,9 +348,9 @@ export default function BuySellShareCountComponent({
               />
               <Input
                 size='sm'
-                label='Количество долей'
+                label={t('shareCount')}
                 labelPlacement='inside'
-                placeholder='Количество долей'
+                placeholder={t('shareCount')}
                 type='number'
                 min={0}
                 isRequired
@@ -360,9 +362,9 @@ export default function BuySellShareCountComponent({
               />
               <Input
                 size='sm'
-                label='Баланс долей'
+                label={t('shareBalance')}
                 labelPlacement='inside'
-                placeholder='Баланс долей'
+                placeholder={t('shareBalance')}
                 type='number'
                 isDisabled
                 value={userShareBalance > 0 ? userShareBalance.toString() : ''}
@@ -370,9 +372,9 @@ export default function BuySellShareCountComponent({
               />
               <Input
                 size='sm'
-                label='Цена за долю'
+                label={t('sharePrice')}
                 labelPlacement='inside'
-                placeholder='Цена за долю'
+                placeholder={t('sharePrice')}
                 type='number'
                 isRequired
                 isDisabled
@@ -387,7 +389,7 @@ export default function BuySellShareCountComponent({
                 <>
                   <Input
                     size='sm'
-                    label='Баланс USDT'
+                    label={t('usdtBalance')}
                     labelPlacement='inside'
                     type='number'
                     isDisabled
@@ -396,7 +398,7 @@ export default function BuySellShareCountComponent({
                   />
                   <Input
                     size='sm'
-                    label='Итого к оплате'
+                    label={t('totalAmount')}
                     labelPlacement='inside'
                     type='number'
                     isDisabled
@@ -415,7 +417,7 @@ export default function BuySellShareCountComponent({
 
           <ModalFooter className='flex flex-col gap-2 sm:flex-row'>
             <Button color='danger' onPress={handleCloseModal}>
-              Отменить
+              {t('cancel')}
             </Button>
             <Button
               color='success'
@@ -424,7 +426,7 @@ export default function BuySellShareCountComponent({
                 !!shareCountError || (isPurchase && totalAmount > usdtBalance)
               }
             >
-              {isPurchase ? 'Купить' : 'Продать'}
+              {isPurchase ? t('buyShares') : t('sellShares')}
             </Button>
             {isLoading && <FullScreenSpinner />}
           </ModalFooter>

@@ -11,6 +11,8 @@ import {
 import { getOrCreateDepositAddress } from '@/lib/data';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { getCoinNetwork, getMinDeposit } from '@/lib/constants';
+import { useTranslations } from 'next-intl';
+import { formatCoinTicker } from '@/lib/utils';
 
 interface DepositModalProps {
   isOpen: boolean;
@@ -31,6 +33,9 @@ export default function DepositModal({
   const [depositAddress, setDepositAddress] = useState<string>('');
   const network = getCoinNetwork(coinTicker);
   const minDeposit = getMinDeposit(coinTicker);
+  const t = useTranslations(
+    'cloudMiningPage.dashboard.userContent.depositModal',
+  );
 
   useEffect(() => {
     if (isOpen && userId) {
@@ -41,20 +46,23 @@ export default function DepositModal({
           setIsLoading(false);
         })
         .catch((error: Error) => {
-          console.error('Error getting/creating deposit address:', error);
+          console.error(t('errorGettingDepositAddress'), error);
           setIsLoading(false);
         });
     }
-  }, [isOpen, userId, userEmail, coinTicker]);
+  }, [isOpen, userId, userEmail, coinTicker, t]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size='xl' className='bg-gray-800'>
       <ModalContent>
-        <ModalHeader className='text-white'>Пополнить {coinTicker}</ModalHeader>
+        <ModalHeader className='text-white'>
+          {t('depositBalance')} {formatCoinTicker(coinTicker)}
+        </ModalHeader>
         <ModalBody>
           <div className='space-y-4'>
             <p className='text-white'>
-              Для пополнения баланса отправьте {coinTicker} на следующий адрес:
+              {t('depositBalance')} {formatCoinTicker(coinTicker)}{' '}
+              {t('onTheFollowingAddress')}:
             </p>
             {isLoading ? (
               <div className='flex justify-center'>
@@ -77,25 +85,22 @@ export default function DepositModal({
             <div className='mt-4 space-y-2 text-sm text-gray-400'>
               <div className='flex items-center gap-2'>
                 <ExclamationCircleIcon className='h-5 w-5 text-secondary' />
-                <p className='text-secondary'>Важно:</p>
+                <p className='text-secondary'>{t('important')}</p>
               </div>
               <ul className='list-inside list-disc space-y-1 pl-4'>
-                <li>Отправляйте только {coinTicker} на этот адрес</li>
-                <li>Отправляйте только в сети {network}</li>
+                <li>{t('sendOnly')}</li>
+                <li>{t('sendOnlyInTheNetwork')}</li>
                 <li>
-                  Минимальная сумма пополнения: {minDeposit} {coinTicker}
+                  {t('minimumDeposit')}: {minDeposit} {coinTicker}
                 </li>
-                <li>
-                  После подтверждения транзакции в сети {network}, ваш баланс
-                  будет автоматически обновлен
-                </li>
+                <li>{t('afterTheTransactionIsConfirmedInTheNetwork')}</li>
               </ul>
             </div>
           </div>
         </ModalBody>
         <ModalFooter>
           <Button color='danger' variant='light' onPress={onClose}>
-            Закрыть
+            {t('close')}
           </Button>
         </ModalFooter>
       </ModalContent>

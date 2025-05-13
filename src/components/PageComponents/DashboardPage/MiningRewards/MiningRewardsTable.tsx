@@ -29,6 +29,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { formatDate, formatNumber } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 interface MiningRewardsTableProps {
   userId: string;
@@ -36,16 +37,19 @@ interface MiningRewardsTableProps {
 
 const ROWS_PER_PAGE_OPTIONS = [20, 50, 100, 200];
 
-const columns = [
-  { uid: 'id', name: 'ID' },
-  { uid: 'minedAmount', name: 'Доходность' },
-  { uid: 'electricityCost', name: 'Стоимость электричества' },
-  { uid: 'rewardAmount', name: 'Прибыль' },
-  { uid: 'balanceAfter', name: 'Итоговый баланс' },
-  { uid: 'recordDate', name: 'Дата' },
-];
-
 export function MiningRewardsTable({ userId }: MiningRewardsTableProps) {
+  const t = useTranslations(
+    'cloudMiningPage.dashboard.userContent.miningRewards',
+  );
+
+  const columns = [
+    { uid: 'id', name: t('id') },
+    { uid: 'minedAmount', name: t('minedAmount') },
+    { uid: 'electricityCost', name: t('electricityCost') },
+    { uid: 'rewardAmount', name: t('rewardAmount') },
+    { uid: 'balanceAfter', name: t('balanceAfter') },
+    { uid: 'recordDate', name: t('recordDate') },
+  ];
   const [records, setRecords] = useState<MiningRewardRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -145,16 +149,16 @@ export function MiningRewardsTable({ userId }: MiningRewardsTableProps) {
             className='text-gray-300'
             onClick={() => router.back()}
           >
-            Дашбоард
+            {t('dashboard')}
           </BreadcrumbItem>
           <BreadcrumbItem isCurrent className='text-gray-200'>
-            История начислений майнинга
+            {t('history')}
           </BreadcrumbItem>
         </Breadcrumbs>
         <div className='space-y-4 md:flex md:items-center md:justify-between md:space-y-0'>
           <div>
             <h1 className='text-2xl font-bold text-default-500'>
-              История начислений майнинга
+              {t('history')}
             </h1>
           </div>
           <div className='flex justify-between gap-3'>
@@ -175,12 +179,12 @@ export function MiningRewardsTable({ userId }: MiningRewardsTableProps) {
                     )
                   }
                 >
-                  Столбцы
+                  {t('columns')}
                 </Button>
               </DropdownTrigger>
               <DropdownMenu
                 disallowEmptySelection
-                aria-label='Выбор столбцов'
+                aria-label={t('select_columns')}
                 closeOnSelect={false}
                 selectedKeys={visibleColumns}
                 selectionMode='multiple'
@@ -227,11 +231,11 @@ export function MiningRewardsTable({ userId }: MiningRewardsTableProps) {
                   {/*{Array.from(selectedCoin).length
                     ? `Выбрано: ${Array.from(selectedCoin).length}`
                     : 'Выберите монету'}*/}
-                  Выберите монету
+                  {t('select_coin')}
                 </Button>
               </DropdownTrigger>
               <DropdownMenu
-                aria-label='Выбор монеты'
+                aria-label={t('select_coin')}
                 selectionMode='multiple'
                 selectedKeys={selectedCoin}
                 onSelectionChange={(keys) => {
@@ -256,7 +260,7 @@ export function MiningRewardsTable({ userId }: MiningRewardsTableProps) {
                   color='success'
                   className='text-success'
                 >
-                  Выбрать все
+                  {t('select_all')}
                 </DropdownItem>
                 <DropdownItem
                   key='clear-all-coins'
@@ -264,7 +268,7 @@ export function MiningRewardsTable({ userId }: MiningRewardsTableProps) {
                   color='danger'
                   className='text-danger'
                 >
-                  Очистить все
+                  {t('clear_all')}
                 </DropdownItem>
                 <React.Fragment>
                   {uniqueCoins.map((coin) => (
@@ -284,7 +288,7 @@ export function MiningRewardsTable({ userId }: MiningRewardsTableProps) {
           )}
 
           <Table
-            aria-label='Mining rewards table'
+            aria-label={t('mining_rewards_table')}
             sortDescriptor={sortDescriptor}
             onSortChange={setSortDescriptor}
             isHeaderSticky
@@ -310,7 +314,7 @@ export function MiningRewardsTable({ userId }: MiningRewardsTableProps) {
             </TableHeader>
             <TableBody
               items={paginatedRecords}
-              emptyContent={isLoading ? ' ' : 'Нет данных'}
+              emptyContent={isLoading ? ' ' : t('no_data')}
               className='text-white'
             >
               {(record) => (
@@ -342,10 +346,10 @@ export function MiningRewardsTable({ userId }: MiningRewardsTableProps) {
         <div className='flex flex-col justify-between space-y-4 text-gray-400 md:items-center'>
           <div className='flex w-full items-center justify-between'>
             <span className='text-sm'>
-              Всего записей: {filteredRecords.length}
+              {t('total_records')}: {filteredRecords.length}
             </span>
             <div className='flex items-center gap-2'>
-              <p className='text-sm text-white'>Строк на странице:</p>
+              <p className='text-sm text-white'>{t('rows_per_page')}:</p>
               <Dropdown isOpen={isRowsOpen} onOpenChange={setIsRowsOpen}>
                 <DropdownTrigger>
                   <Button

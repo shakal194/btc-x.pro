@@ -36,6 +36,8 @@ import { getAccessToken } from '@/lib/coinsbuy';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { ConvertModal } from '@/components/PageComponents/DashboardPage/Wallet/ConvertModal';
 import { Balance } from '@/types/equipment';
+import { useTranslations } from 'next-intl';
+import { formatCoinTicker } from '@/lib/utils';
 
 interface EquipmentsListUserProps {
   serverUserId: string;
@@ -120,6 +122,8 @@ export default function EquipmentsListUser({
   const [isConvertModalOpen, setIsConvertModalOpen] = useState(false);
   const [selectedCoinForConvert, setSelectedCoinForConvert] =
     useState<string>('');
+
+  const t = useTranslations('cloudMiningPage.dashboard.userContent');
 
   useEffect(() => {
     const initializeAllData = async () => {
@@ -386,23 +390,23 @@ export default function EquipmentsListUser({
             <div className='flex flex-col justify-between gap-4 lg:flex-row'>
               <div className='flex flex-col gap-2'>
                 <div className='flex items-center gap-2'>
-                  <span>Стоимость электроэнергии</span>
+                  <span>{t('electricityPrice')}</span>
                   <span className='font-bold'>
                     {electricityPrice
                       ? parseFloat(
                           electricityPrice.pricePerKWh || '0.0000',
                         ).toFixed(4)
                       : '0.0000'}{' '}
-                    $/кВт
+                    $/{t('kW')}
                   </span>
                 </div>{' '}
                 <div>
                   <p className='mb-1 text-white'>
-                    Ваш реферальный баланс: <b>${refBalance}</b>
+                    {t('referralBalance')}: <b>${refBalance}</b>
                   </p>
                 </div>
                 <div className='flex flex-col'>
-                  <span>Всего активов</span>
+                  <span>{t('totalBalance')}</span>
                   <div className='flex items-center gap-2'>
                     <span className='text-2xl font-bold'>
                       ${totalBalance.toFixed(2)}
@@ -420,13 +424,7 @@ export default function EquipmentsListUser({
                       className='flex items-center justify-between gap-4'
                     >
                       <div className='flex items-center gap-2'>
-                        <span>
-                          {balance.coinTicker === 'USDT_SOL'
-                            ? 'USDT(SOL)'
-                            : balance.coinTicker === 'USDC_SOL'
-                              ? 'USDC(SOL)'
-                              : balance.coinTicker}
-                        </span>
+                        <span>{formatCoinTicker(balance.coinTicker)}</span>
                         <span className='font-bold'>
                           {Number(balance.coinAmount).toFixed(
                             ['USDT_SOL', 'USDC_SOL'].includes(
@@ -443,7 +441,7 @@ export default function EquipmentsListUser({
                           className='text-white'
                           onPress={() => handleDepositClick(balance.coinTicker)}
                         >
-                          Пополнить
+                          {t('deposit')}
                         </Button>
                         <Button
                           color='primary'
@@ -451,13 +449,13 @@ export default function EquipmentsListUser({
                             handleWithdrawClick(balance.coinTicker)
                           }
                         >
-                          Вывести
+                          {t('withdraw')}
                         </Button>
                         <Button
                           color='secondary'
                           onPress={() => handleConvertClick(balance.coinTicker)}
                         >
-                          Конвертировать
+                          {t('convert')}
                         </Button>
                       </div>
                     </div>
@@ -483,7 +481,7 @@ export default function EquipmentsListUser({
                       router.push(`/dashboard/${userUuid}/mining-rewards`)
                     }
                   >
-                    История начислений
+                    {t('historyRewards')}
                   </Button>
                   {isLoadingMiningStats || !miningStats[algorithm.name] ? (
                     <MiningRewardsSkeleton />
@@ -491,17 +489,17 @@ export default function EquipmentsListUser({
                     <div className='mb-4 grid grid-cols-1 gap-4 rounded-lg p-4 md:grid-cols-2 md:justify-between xl:grid-cols-4'>
                       <Card className='border-1 border-secondary bg-warning-100/50 shadow-md shadow-secondary'>
                         <CardHeader className='flex items-center justify-center'>
-                          Хешрейт
+                          {t('hashrate')}
                         </CardHeader>
                         <CardBody className='flex items-center justify-center'>
                           {miningStats[algorithm.name]?.totalHashrate > 0
                             ? `${miningStats[algorithm.name].totalHashrate.toFixed(2)} ${miningStats[algorithm.name].hashrate_unit}`
-                            : 'N/A'}
+                            : '0'}
                         </CardBody>
                       </Card>
                       <Card className='border-1 border-secondary bg-warning-200/50 shadow-md shadow-secondary'>
                         <CardHeader className='flex items-center justify-center'>
-                          Намайнено всего
+                          {t('totalMined')}
                         </CardHeader>
                         <CardBody className='flex flex-col gap-2'>
                           {algorithm.coinTickers?.map((coinTicker) => (
@@ -517,7 +515,7 @@ export default function EquipmentsListUser({
                                   ? miningStats[algorithm.name].stats[
                                       coinTicker.name
                                     ].totalMined.toFixed(8)
-                                  : 'N/A'}
+                                  : '0'}
                               </span>
                             </div>
                           ))}
@@ -525,7 +523,7 @@ export default function EquipmentsListUser({
                       </Card>
                       <Card className='border-1 border-secondary bg-warning-300/50 shadow-md shadow-secondary'>
                         <CardHeader className='flex items-center justify-center'>
-                          Намайнено за 24ч.
+                          {t('mined24h')}
                         </CardHeader>
                         <CardBody className='flex flex-col gap-2'>
                           {algorithm.coinTickers?.map((coinTicker) => (
@@ -541,7 +539,7 @@ export default function EquipmentsListUser({
                                   ? miningStats[algorithm.name].stats[
                                       coinTicker.name
                                     ].mined24h.toFixed(8)
-                                  : 'N/A'}
+                                  : '0'}
                               </span>
                             </div>
                           ))}
@@ -549,7 +547,7 @@ export default function EquipmentsListUser({
                       </Card>
                       <Card className='border-1 border-secondary bg-warning-400/50 shadow-md shadow-secondary'>
                         <CardHeader className='flex items-center justify-center'>
-                          Прибыль за 24ч.
+                          {t('profit24h')}
                         </CardHeader>
                         <CardBody className='flex flex-col gap-2'>
                           {algorithm.coinTickers?.map((coinTicker) => (
@@ -565,7 +563,7 @@ export default function EquipmentsListUser({
                                   ? miningStats[algorithm.name].stats[
                                       coinTicker.name
                                     ].profit24h.toFixed(8)
-                                  : 'N/A'}
+                                  : '0'}
                               </span>
                             </div>
                           ))}
@@ -603,12 +601,12 @@ export default function EquipmentsListUser({
                         if (algorithmEquipment.length === 0) {
                           return (
                             <p className='mt-4'>
-                              У вас ещё нет оборудования в данной категории.{' '}
+                              {t('emptyEquipment')}.{' '}
                               <Link
                                 href='/dashboard/store'
                                 className='text-success'
                               >
-                                В магазин
+                                {t('store')}
                               </Link>
                             </p>
                           );
@@ -704,28 +702,30 @@ export default function EquipmentsListUser({
                                   <div>
                                     <div className='flex flex-col gap-2'>
                                       <p>
-                                        <b>Мощность:</b> {equipment.power} кВт
+                                        <b>{t('power')}:</b> {equipment.power}{' '}
+                                        {t('kW')}
                                       </p>
                                       <p>
-                                        <b>Устройств в работе:</b>{' '}
+                                        <b>{t('deviceOperation')}:</b>{' '}
                                         {devicesInUse}
                                       </p>
                                       <p>
-                                        <b>Долей в работе:</b> {sharesInUse}
+                                        <b>{t('sharesOperation')}:</b>{' '}
+                                        {sharesInUse}
                                       </p>
                                       <p>
-                                        <b>Цена продажи одной доли:</b> $
+                                        <b>{t('sellPriceOneShare')}:</b> $
                                         {equipment.salePrice /
                                           equipment.shareCount}
                                       </p>
                                       <p>
-                                        <b>Цена продажи всех ваших долей:</b> $
+                                        <b>{t('sellPriceAllShares')}:</b> $
                                         {(equipment.salePrice /
                                           equipment.shareCount) *
                                           userBalanceShareCount}
                                       </p>
                                       <p>
-                                        <b>Доход в сутки всех долей:</b>
+                                        <b>{t('dailyIncomeAllShares')}:</b>
                                       </p>
                                       {algorithm.coinTickers &&
                                         algorithm.coinTickers.map(
@@ -762,7 +762,7 @@ export default function EquipmentsListUser({
                                           },
                                         )}
                                       <p>
-                                        <b>Прибыль в сутки всех долей:</b>
+                                        <b>{t('profitDailyAllShares')}:</b>
                                       </p>
                                       {algorithm.coinTickers && (
                                         <div className='flex flex-col gap-2'>
@@ -863,12 +863,12 @@ export default function EquipmentsListUser({
                                             );
                                           })()}
                                           <div className='flex items-center gap-1'>
-                                            <span>Выход в безубыток: </span>
+                                            <span>{t('breakeven')}: </span>
                                             {(() => {
                                               if (!algorithm.coinTickers) {
                                                 return (
                                                   <span className='text-danger'>
-                                                    Нет данных
+                                                    {t('noData')}
                                                   </span>
                                                 );
                                               }
@@ -945,20 +945,27 @@ export default function EquipmentsListUser({
                                                       content={
                                                         <div className='w-[200px] p-3 text-sm'>
                                                           <p>
-                                                            Расчёт по текущему
-                                                            курсу с учетом
-                                                            разницы между ценой
-                                                            покупки ($
+                                                            {t(
+                                                              'breakeven_text',
+                                                            )}{' '}
+                                                            ($
                                                             {(
                                                               purchasePricePerShare *
                                                               userBalanceShareCount
                                                             ).toFixed(2)}
-                                                            ) и ценой продажи ($
+                                                            ){' '}
+                                                            {t(
+                                                              'breakeven_text_2',
+                                                            )}{' '}
+                                                            ($
                                                             {(
                                                               salePricePerShare *
                                                               userBalanceShareCount
                                                             ).toFixed(2)}
-                                                            ) ваших долей
+                                                            ){' '}
+                                                            {t(
+                                                              'breakeven_text_3',
+                                                            )}
                                                           </p>
                                                         </div>
                                                       }
@@ -971,7 +978,7 @@ export default function EquipmentsListUser({
                                               } else {
                                                 return (
                                                   <span className='text-danger'>
-                                                    Не окупится
+                                                    {t('notPayback')}
                                                   </span>
                                                 );
                                               }

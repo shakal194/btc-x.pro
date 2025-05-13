@@ -24,7 +24,7 @@ import {
   getCoinNetwork,
 } from '@/lib/constants';
 import { createWithdrawal, validateOTPCode } from '@/lib/data';
-import { useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import FullScreenSpinner from '@/components/ui/Spinner';
 import { formatCoinTicker, formatNumber } from '@/lib/utils';
 
@@ -47,6 +47,9 @@ export default function WithdrawModal({
   balance,
   userEmail,
 }: WithdrawModalProps) {
+  const t = useTranslations(
+    'cloudMiningPage.dashboard.userContent.withdrawModal',
+  );
   const minDeposit = getMinDeposit(coinTicker);
   const [amount, setAmount] = useState('');
   const [address, setAddress] = useState('');
@@ -59,7 +62,6 @@ export default function WithdrawModal({
   const [otpCode, setOtpCode] = useState('');
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otpError, setOtpError] = useState('');
-  const locale = useLocale();
 
   const canIncludeFee = (ticker: string) => {
     const noFeeInclusionList = [
@@ -84,13 +86,10 @@ export default function WithdrawModal({
   const getRate = async () => {
     try {
       const token = await getAccessToken();
-      console.log('Getting rate for coin:', coinTicker); // Debug log
 
       // Определяем валюты для запроса курса
       let leftCurrency = 'USDT'; // Всегда используем USDT как базовую валюту для конвертации
       let rightCurrency = 'SOL'; // Всегда используем SOL для USDT_SOL и USDC_SOL
-
-      console.log(`Requesting rate for ${leftCurrency}/${rightCurrency}`); // Debug log
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_COINSBUY_API_URL}/rates/?filter[left]=${leftCurrency}&filter[right]=${rightCurrency}`,
@@ -107,18 +106,15 @@ export default function WithdrawModal({
       }
 
       const data = await response.json();
-      console.log('Rate response:', data); // Debug log
 
       const rate = data.data[0].attributes.ask;
-      console.log('Raw rate:', rate); // Debug log
 
       // Для всех случаев берем обратный курс, так как нам нужно конвертировать из SOL в USDT
       const finalRate = (1 / Number(rate)).toString();
-      console.log('Final rate:', finalRate); // Debug log
 
       return finalRate;
     } catch (error) {
-      console.error('Error fetching rate:', error);
+      console.error(t('errorGettingRate'), error);
       return '0';
     }
   };
@@ -178,16 +174,11 @@ export default function WithdrawModal({
         if (feeResponse.status === 429) {
           const retryAfter = feeResponse.headers.get('Retry-After') || '10';
           const seconds = parseInt(retryAfter, 10);
-          Notiflix.Notify.warning(
-            `Слишком много запросов. Пожалуйста, подождите ${seconds} секунд.`,
-            {
-              ID: 'rate-limit',
-              timeout: seconds * 1000,
-            },
-          );
-          throw new Error(
-            `Rate limit exceeded. Retry after ${seconds} seconds`,
-          );
+          Notiflix.Notify.warning(t('rateLimitExceeded', { seconds }), {
+            ID: 'rate-limit',
+            timeout: seconds * 1000,
+          });
+          throw new Error(t('rateLimitExceeded', { seconds }));
         }
         const errorData = await feeResponse.json();
         const errorDetail = errorData?.errors?.[0]?.detail;
@@ -195,48 +186,45 @@ export default function WithdrawModal({
         if (errorDetail?.includes('Incorrect address')) {
           setFeeAmount('0');
           setFeeInUSDT('0');
-          setAddressError('Некорректный адрес кошелька');
-          throw new Error('Некорректный адрес');
+          setAddressError(t('incorrectAddress'));
+          throw new Error(t('incorrectAddress'));
         }
 
         if (errorDetail?.toLowerCase().includes('insufficient funds')) {
-          throw new Error('Ошибка сервиса. Пожалуйста, попробуйте позже');
+          throw new Error(t('insufficientFunds'));
         }
 
-        throw new Error(errorDetail || 'Failed to calculate fee');
+        throw new Error(errorDetail || t('failedToCalculateFee'));
       }
 
       const feeData = await feeResponse.json();
       console.log('Fee calculation response:', feeData); // Debug log
 
       if (!feeData?.data?.attributes?.fee?.medium) {
-        throw new Error('Invalid fee data received from API');
+        throw new Error(t('invalidFeeDataReceivedFromAPI'));
       }
 
       const calculatedFee = feeData.data.attributes.fee.medium;
-      console.log('Calculated fee:', calculatedFee); // Debug log
       setFeeAmount(calculatedFee);
 
       // Calculate fee in withdrawal currency if needed
       if (coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL') {
         const rate = await getRate();
-        console.log('Conversion rate:', rate); // Debug log
 
         if (!rate || rate === '0') {
-          throw new Error('Invalid rate received');
+          throw new Error(t('invalidRateReceived'));
         }
 
         const feeInCurrency = (Number(calculatedFee) * Number(rate)).toFixed(2);
-        console.log('Fee in currency:', feeInCurrency); // Debug log
         setFeeInUSDT(feeInCurrency);
       }
 
       setIsFeeCalculated(true);
     } catch (error) {
-      console.error('Error calculating fee:', error);
+      console.error(t('errorCalculatingFee'), error);
       setIsFeeCalculated(false);
       Notiflix.Notify.failure(
-        error instanceof Error ? error.message : 'Ошибка при расчете комиссии',
+        error instanceof Error ? error.message : t('errorCalculatingFee'),
       );
     }
   };
@@ -283,7 +271,7 @@ export default function WithdrawModal({
 
     if (!trimmedValue) {
       setAmount('');
-      setFeeAmount('Введите адрес');
+      setFeeAmount(t('enterWithdrawalAddress'));
       setFeeInUSDT('0');
     } else if (amount && Number(amount) > 0) {
       await calculateFee(amount, trimmedValue);
@@ -292,7 +280,7 @@ export default function WithdrawModal({
 
   const handleMaxAmount = async () => {
     if (!address.trim()) {
-      Notiflix.Notify.warning('Пожалуйста, введите адрес кошелька');
+      Notiflix.Notify.warning(t('enterWithdrawalAddress'));
       return;
     }
 
@@ -331,8 +319,8 @@ export default function WithdrawModal({
         }
       }
     } catch (error) {
-      console.error('Error calculating max amount:', error);
-      Notiflix.Notify.failure('Ошибка при расчете максимальной суммы');
+      console.error(t('errorCalculatingMaxAmount'), error);
+      Notiflix.Notify.failure(t('errorCalculatingMaxAmount'));
     }
   };
 
@@ -349,17 +337,23 @@ export default function WithdrawModal({
     if (!amount || isNaN(Number(amount))) return '';
     const totalAmount = getTotalAmount();
     if (totalAmount > balance) {
-      return `Сумма с комиссией (${totalAmount.toFixed(2)} ${coinTicker}) превышает доступные средства`;
+      return t('totalAmountExceedsBalance', {
+        totalAmount: totalAmount.toFixed(2),
+        coinTicker,
+      });
     }
     if (Number(amount) < minDeposit) {
-      return `Минимальная сумма вывода ${minDeposit} ${coinTicker}`;
+      return t('minWithdrawAmount', {
+        minDeposit,
+        coinTicker,
+      });
     }
     return '';
   };
 
   const handleGetOTP = async () => {
     if (!amount || !address || !isFeeCalculated) {
-      Notiflix.Notify.warning('Пожалуйста, заполните все поля корректно');
+      Notiflix.Notify.warning(t('pleaseFillAllFieldsCorrectly'));
       return;
     }
 
@@ -386,8 +380,6 @@ export default function WithdrawModal({
         totalAmount: Number(Number(amount) + Number(feeInUSDT)).toFixed(2),
       };
 
-      console.log('Sending OTP request with data:', requestData); // Debug log
-
       // Send email with OTP through API
       const response = await fetch('/api/sendWithdrawalOTP', {
         method: 'POST',
@@ -399,22 +391,19 @@ export default function WithdrawModal({
 
       // Read response body once
       const responseData = await response.json();
-      console.log('OTP API response:', responseData); // Debug log
 
       if (!response.ok) {
         throw new Error(
-          responseData.error || responseData.message || 'Failed to send OTP',
+          responseData.error || responseData.message || t('failedToSendOTP'),
         );
       }
 
       setIsOtpSent(true);
-      Notiflix.Notify.success('Код подтверждения отправлен на вашу почту');
+      Notiflix.Notify.success(t('otpSentToEmail'));
     } catch (error) {
       console.error('Error sending OTP:', error);
       Notiflix.Notify.failure(
-        error instanceof Error
-          ? error.message
-          : 'Ошибка при отправке кода подтверждения',
+        error instanceof Error ? error.message : t('errorSendingOTP'),
       );
     } finally {
       setIsLoading(false);
@@ -425,28 +414,28 @@ export default function WithdrawModal({
     if (isLoading) return;
 
     if (!otpCode || otpCode.length !== 5) {
-      setOtpError('Введите корректный код подтверждения');
+      setOtpError(t('enterCorrectOTPCode'));
       return;
     }
 
     if (!isFeeCalculated) {
-      Notiflix.Notify.warning('Дождитесь расчета комиссии');
+      Notiflix.Notify.warning(t('waitForFeeCalculation'));
       return;
     }
 
     if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
-      Notiflix.Notify.warning('Пожалуйста, введите корректную сумму');
+      Notiflix.Notify.warning(t('enterCorrectAmount'));
       return;
     }
 
     if (!address || address.trim() === '') {
-      Notiflix.Notify.warning('Пожалуйста, введите адрес кошелька');
+      Notiflix.Notify.warning(t('enterWalletAddress'));
       return;
     }
 
     const totalAmount = getTotalAmount();
     if (totalAmount > balance) {
-      Notiflix.Notify.warning('Недостаточно средств с учетом комиссии');
+      Notiflix.Notify.warning(t('insufficientFunds'));
       return;
     }
 
@@ -455,9 +444,7 @@ export default function WithdrawModal({
       // Verify OTP code
       const isValidOTP = await validateOTPCode(userEmail, otpCode);
       if (!isValidOTP) {
-        throw new Error(
-          'Неверный код подтверждения или срок его действия истек',
-        );
+        throw new Error(t('invalidOTPCode'));
       }
 
       // Create withdrawal record
@@ -472,16 +459,14 @@ export default function WithdrawModal({
       });
 
       onSuccess();
-      Notiflix.Notify.success('Запрос на вывод создан успешно');
+      Notiflix.Notify.success(t('withdrawalRequestCreatedSuccessfully'));
       handleClose();
     } catch (error) {
       console.error('Error creating withdrawal:', error);
       // Показываем уведомление только если это не ошибка insufficient funds
       if (!(error instanceof Error && error.message === 'insufficient_funds')) {
         Notiflix.Notify.failure(
-          error instanceof Error
-            ? error.message
-            : 'Ошибка при создании запроса на вывод',
+          error instanceof Error ? error.message : t('errorCreatingWithdrawal'),
         );
       }
     } finally {
@@ -512,12 +497,14 @@ export default function WithdrawModal({
           </div>
         )}
         <ModalHeader className='text-white'>
-          Вывести {formatCoinTicker(coinTicker)}
+          {t('withdraw_modal_title')} {formatCoinTicker(coinTicker)}
         </ModalHeader>
         <ModalBody>
           <div className='space-y-4'>
             <div className='rounded bg-gray-700 p-3'>
-              <p className='text-sm text-gray-300'>Доступно для вывода:</p>
+              <p className='text-sm text-gray-300'>
+                {t('available_for_withdrawal')}:
+              </p>
               <p className='text-lg font-bold text-green-400'>
                 {formatNumber(Number(balance), 8)}{' '}
                 {formatCoinTicker(coinTicker)}
@@ -526,10 +513,10 @@ export default function WithdrawModal({
 
             <Input
               type='text'
-              label={`Адрес ${formatCoinTicker(coinTicker)}`}
+              label={`${t('address')} ${formatCoinTicker(coinTicker)}`}
               value={address}
               onChange={(e) => handleAddressChange(e.target.value)}
-              placeholder={`Введите адрес ${formatCoinTicker(coinTicker)}`}
+              placeholder={`${t('enter_address')} ${formatCoinTicker(coinTicker)}`}
               className='w-full'
               isInvalid={!!addressError}
               errorMessage={addressError}
@@ -538,11 +525,11 @@ export default function WithdrawModal({
             <Input
               type='text'
               inputMode='decimal'
-              label={`Сумма ${formatCoinTicker(coinTicker)}`}
+              label={`${t('amount')} ${formatCoinTicker(coinTicker)}`}
               value={amount}
               onChange={(e) => handleAmountChange(e.target.value)}
               onBlur={handleAmountBlur}
-              placeholder='Введите сумму'
+              placeholder={`${t('enter_amount')}`}
               className='w-full'
               isDisabled={!address.trim()}
               isInvalid={!!getAmountError()}
@@ -554,19 +541,19 @@ export default function WithdrawModal({
                   className='cursor-pointer'
                   onClick={handleMaxAmount}
                 >
-                  Макс.
+                  {t('max')}
                 </Chip>
               }
             />
             <Input
               type='text'
-              label='Код подтверждения'
+              label={t('otp_code')}
               value={otpCode}
               onChange={(e) => {
                 setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 5));
                 setOtpError('');
               }}
-              placeholder='Введите код из письма'
+              placeholder={t('enter_otp_code')}
               className='flex-1'
               maxLength={5}
               isInvalid={!!otpError}
@@ -580,23 +567,23 @@ export default function WithdrawModal({
                     !amount || !address || !isFeeCalculated || isLoading
                   }
                 >
-                  Получить код
+                  {t('get_otp_code')}
                 </Chip>
               }
             />
             <div className='rounded bg-gray-700 p-3'>
               <div className='flex items-center gap-2 text-sm font-bold text-yellow-400'>
                 <ExclamationTriangleIcon className='h-6 w-6' />
-                <p>Внимание:</p>
+                <p>{t('attention')}</p>
               </div>
               <ul className='mt-2 list-inside list-disc space-y-4 text-sm text-gray-300'>
                 <li>
-                  Минимальная сумма вывода: {minDeposit}{' '}
+                  {t('min_withdraw_amount')}: {minDeposit}{' '}
                   {formatCoinTicker(coinTicker)}
                 </li>
-                <li>Комиссия сети будет рассчитана автоматически</li>
+                <li>{t('network_fee_will_be_calculated_automatically')}</li>
                 <li>
-                  Комиссия сети примерно:{' '}
+                  {t('network_fee_approximately')}:{' '}
                   <Chip color='danger' size='sm' variant='shadow'>
                     {feeAmount}
                     {coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL'
@@ -606,21 +593,21 @@ export default function WithdrawModal({
                 </li>
                 {(coinTicker === 'USDT_SOL' || coinTicker === 'USDC_SOL') && (
                   <li>
-                    Итого с баланса спишется:{' '}
+                    {t('total_amount_will_be_debited_from_balance')}:{' '}
                     <Chip color='success' size='sm' variant='shadow'>
                       {Number(Number(amount) + Number(feeInUSDT)).toFixed(2)}{' '}
                       {formatCoinTicker(coinTicker)}
                     </Chip>
                   </li>
                 )}
-                <li>Вывод средств обрабатывается в течение 24 часов</li>
+                <li>{t('withdrawal_processing_time')}</li>
               </ul>
             </div>
           </div>
         </ModalBody>
         <ModalFooter>
           <Button color='danger' variant='light' onPress={handleClose}>
-            Закрыть
+            {t('close')}
           </Button>
           <Button
             color='success'
@@ -636,7 +623,7 @@ export default function WithdrawModal({
               Number(amount) < minDeposit
             }
           >
-            Создать запрос
+            {t('create_request')}
           </Button>
         </ModalFooter>
       </ModalContent>
