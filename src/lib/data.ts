@@ -1172,27 +1172,18 @@ async function checkApiAvailability(apiUrl: string): Promise<boolean> {
   }
 }
 
-export async function fetchCoinPrice(coinName: string): Promise<number> {
+export const fetchCoinPrice = async (coinName: string): Promise<number> => {
   try {
-    // Проверяем доступность обоих API
-    const binanceApi = process.env.BINANCE_API_URL;
-    const binanceUsApi = process.env.BINANCE_US_API_URL;
-
-    if (!binanceApi || !binanceUsApi) {
-      throw new Error('Binance API URLs are not configured');
-    }
-
-    // Проверяем доступность основного API
-    const isMainApiAvailable = await checkApiAvailability(binanceApi);
-    const apiUrl = isMainApiAvailable ? binanceApi : binanceUsApi;
-
-    // Обработка специальных случаев для USDT_SOL и USDC_SOL
-    let symbol = coinName;
+    // Для стейблкоинов возвращаем фиксированную цену 1
     if (coinName === 'USDT_SOL' || coinName === 'USDC_SOL') {
-      symbol = coinName.split('_')[0]; // Берем только USDT или USDC
+      return 1;
     }
 
-    const response = await fetch(apiUrl + symbol + 'USDT');
+    // Формируем символ для запроса к Binance API
+    const symbol = coinName.replace('_SOL', '') + 'USDT';
+    const apiUrl = 'https://api.binance.com/api/v3/ticker/price?symbol=';
+    const response = await fetch(apiUrl + symbol);
+
     if (!response.ok) {
       throw new Error(`Failed to fetch price for ${coinName}`);
     }
@@ -1201,9 +1192,9 @@ export async function fetchCoinPrice(coinName: string): Promise<number> {
     return parseFloat(data.price);
   } catch (error) {
     console.error(`Error fetching price for ${coinName}:`, error);
-    return 0;
+    throw error;
   }
-}
+};
 
 // Функция для получения депозитов пользователя
 export async function fetchUserDeposits(userId: number) {

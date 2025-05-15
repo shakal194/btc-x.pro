@@ -205,17 +205,37 @@ export const ConvertModal: React.FC<ConvertModalProps> = ({
             coin === 'USDT_SOL' || coin === 'USDC_SOL';
 
           let preview = null;
-          if (isStablecoin(fromCoin) && isStablecoin(toCoin)) {
-            preview = amountNum;
-          } else {
-            const fromPrice = await fetchCoinPrice(fromCoin);
-            const toPrice = await fetchCoinPrice(toCoin);
-            if (fromPrice && toPrice) {
-              preview = (amountNum * fromPrice) / toPrice;
+          try {
+            if (isStablecoin(fromCoin) && isStablecoin(toCoin)) {
+              // Если конвертируем между стейблкоинами, используем курс 1:1
+              preview = amountNum;
+            } else if (isStablecoin(fromCoin)) {
+              // Если конвертируем из стейблкоина, используем только цену целевой монеты
+              const toPrice = await fetchCoinPrice(toCoin);
+              if (toPrice) {
+                preview = amountNum / toPrice;
+              }
+            } else if (isStablecoin(toCoin)) {
+              // Если конвертируем в стейблкоин, используем только цену исходной монеты
+              const fromPrice = await fetchCoinPrice(fromCoin);
+              if (fromPrice) {
+                preview = amountNum * fromPrice;
+              }
+            } else {
+              // Для конвертации между обычными монетами используем обе цены
+              const fromPrice = await fetchCoinPrice(fromCoin);
+              const toPrice = await fetchCoinPrice(toCoin);
+              if (fromPrice && toPrice) {
+                preview = (amountNum * fromPrice) / toPrice;
+              }
             }
+            setConvertedAmount(preview);
+            setIsReadyToShow(true);
+          } catch (error) {
+            console.error('Error calculating conversion:', error);
+            setConvertedAmount(null);
+            setIsReadyToShow(false);
           }
-          setConvertedAmount(preview);
-          setIsReadyToShow(true);
         }, 700);
       } catch (err) {
         setConvertedAmount(null);

@@ -24,7 +24,7 @@ export const ConvertModal: React.FC<
   Omit<ConvertModalProps, 'defaultFromCoin'>
 > = ({ isOpen, onClose, onSuccess, userId, balances }) => {
   const [fromCoin, setFromCoin] = useState<string>('');
-  const [toCoin, setToCoin] = useState<string>('');
+  const [toCoin, setToCoin] = useState<string>('USDT_SOL');
   const [amount, setAmount] = useState<string>('');
   const [convertedAmount, setConvertedAmount] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -40,31 +40,38 @@ export const ConvertModal: React.FC<
     if (isOpen) {
       let from = '';
       if (balances.length > 0) {
-        from = balances.reduce(
-          (max, curr) =>
-            Number(curr.coinAmount) > Number(max.coinAmount) ? curr : max,
-          balances[0],
-        ).coinTicker;
+        if (toCoin === 'USDT_SOL') {
+          const nonZeroNonUSDT = balances.find(
+            (b) => Number(b.coinAmount) > 0 && b.coinTicker !== 'USDT_SOL',
+          );
+          if (nonZeroNonUSDT) {
+            from = nonZeroNonUSDT.coinTicker;
+          } else {
+            const nonUSDT = balances.find((b) => b.coinTicker !== 'USDT_SOL');
+            from = nonUSDT ? nonUSDT.coinTicker : balances[0].coinTicker;
+          }
+        } else {
+          const nonZeroBalance = balances.find((b) => Number(b.coinAmount) > 0);
+          from = nonZeroBalance
+            ? nonZeroBalance.coinTicker
+            : balances[0].coinTicker;
+        }
       }
       setFromCoin(from);
-      const availableToCoins = balances
-        .filter((balance) => balance.coinTicker !== from)
-        .map((balance) => balance.coinTicker);
-      setToCoin(availableToCoins.length > 0 ? availableToCoins[0] : '');
+      if (!toCoin) {
+        setToCoin('USDT_SOL');
+      }
       setAmount('');
       setConvertedAmount(null);
       setError(null);
     }
-  }, [isOpen, balances]);
+  }, [isOpen, balances, toCoin]);
 
   useEffect(() => {
     if (fromCoin && toCoin === fromCoin) {
-      const availableToCoins = balances
-        .filter((balance) => balance.coinTicker !== fromCoin)
-        .map((balance) => balance.coinTicker);
-      setToCoin(availableToCoins.length > 0 ? availableToCoins[0] : '');
+      setToCoin(fromCoin === 'USDT_SOL' ? 'USDC_SOL' : 'USDT_SOL');
     }
-  }, [fromCoin, balances, toCoin]);
+  }, [fromCoin, toCoin]);
 
   const handleConvert = async () => {
     if (!fromCoin || !toCoin || !amount || Number(amount) <= 0) {
@@ -97,7 +104,7 @@ export const ConvertModal: React.FC<
 
     try {
       await convertCoins(userId, fromCoin, toCoin, Number(amount));
-      Notiflix.Notify.success(t('conversion_successfully_completed'));
+      Notiflix.Notify.success(t('conversion_successful'));
       onSuccess();
       onClose();
     } catch (err) {
@@ -141,7 +148,7 @@ export const ConvertModal: React.FC<
         const maxAmount = fromBalance ? Number(fromBalance.coinAmount) : 0;
         if (isNaN(amountNum) || amountNum <= 0) {
           setConvertedAmount(null);
-          setInputError(t('please_enter_positive_number_greater_than_0'));
+          setInputError(t('please_enter_positive_number'));
           return;
         } else if (amountNum > maxAmount) {
           setConvertedAmount(null);
@@ -160,9 +167,20 @@ export const ConvertModal: React.FC<
             coin === 'USDT_SOL' || coin === 'USDC_SOL';
 
           let preview = null;
-          if (isStablecoin(fromCoin) && isStablecoin(toCoin)) {
-            preview = amountNum;
+          if (isStablecoin(toCoin)) {
+            // Если конвертируем в стейблкоин, используем цену исходной монеты
+            const fromPrice = await fetchCoinPrice(fromCoin);
+            if (fromPrice) {
+              preview = amountNum * fromPrice;
+            }
+          } else if (isStablecoin(fromCoin)) {
+            // Если конвертируем из стейблкоина, используем цену целевой монеты
+            const toPrice = await fetchCoinPrice(toCoin);
+            if (toPrice) {
+              preview = amountNum / toPrice;
+            }
           } else {
+            // Для конвертации между обычными монетами используем обе цены
             const fromPrice = await fetchCoinPrice(fromCoin);
             const toPrice = await fetchCoinPrice(toCoin);
             if (fromPrice && toPrice) {
@@ -259,7 +277,7 @@ export const ConvertModal: React.FC<
               ))}
             </Select>
 
-            <div className='flex justify-center'>
+            {/* <div className='flex justify-center'>
               <Button
                 isIconOnly
                 variant='light'
@@ -268,41 +286,32 @@ export const ConvertModal: React.FC<
               >
                 <ArrowPathRoundedSquareIcon className='h-6 w-6' />
               </Button>
-            </div>
+            </div>*/}
 
             <Select
               label={t('to')}
-              selectedKeys={toCoin ? new Set([toCoin]) : new Set()}
-              onSelectionChange={(keys: Selection) => {
-                const selectedKey = Array.from(keys)[0];
-                if (typeof selectedKey === 'string') {
-                  setToCoin(selectedKey);
-                }
-              }}
+              selectedKeys={new Set(['USDT_SOL'])}
+              isDisabled={true}
               endContent={
                 <div className='pointer-events-none flex items-center'>
                   <span className='text-gray-400'>
-                    {toCoin ? getBalanceForCoin(toCoin) : ''}
+                    {getBalanceForCoin('USDT_SOL')}
                   </span>
                 </div>
               }
             >
-              {balances
-                .filter((balance) => balance.coinTicker !== fromCoin)
-                .map((balance) => (
-                  <SelectItem
-                    key={balance.coinTicker}
-                    endContent={
-                      <div className='pointer-events-none flex items-center'>
-                        <span className='text-gray-400'>
-                          {Number(balance.coinAmount).toFixed(8)}
-                        </span>
-                      </div>
-                    }
-                  >
-                    {formatBalance(balance)}
-                  </SelectItem>
-                ))}
+              <SelectItem
+                key='USDT_SOL'
+                endContent={
+                  <div className='pointer-events-none flex items-center'>
+                    <span className='text-gray-400'>
+                      {getBalanceForCoin('USDT_SOL')}
+                    </span>
+                  </div>
+                }
+              >
+                {formatBalance({ coinTicker: 'USDT_SOL', coinAmount: '0' })}
+              </SelectItem>
             </Select>
 
             <Input

@@ -569,6 +569,7 @@
         "date": "Date",
         "linesPerPage": "Lines per page",
         "totalRecords": "Total records",
+        "loading_equipment": "Loading equipment...",
         "algorithm": "Algorithm",
         "shares": "Shares",
         "buingPrice": "Buying price",
